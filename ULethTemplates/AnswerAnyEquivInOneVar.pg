@@ -1,0 +1,107 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-05)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'answer can contain any variable', 'variables')
+
+
+#############################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Allows any variable value to be entered in the code and by the student.
+  # E.g. If y = f(x), it could also be entered as y = f(g).
+  "parserFormulaAnyVar.pl"
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+Context("Numeric");
+
+#-ULETH-#
+# Since FormulaAnyVar is used, the answer does not have to use 'x' as the
+# variable name.
+   $answerA = FormulaAnyVar("2*x");
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+
+Enter [`2x`] or [`2t`] or [`2W`] or the product of [`2`] and any variable of
+your choice (except [`y`]).
+
+[` y = `] [_______________][@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($answerA->cmp());
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Given three points: [`(x_0, y_0)`], [`(x_1, y_1)`], and [`(x_2, y_2)`]
+
+    If [`x_0=x_1=x_2`] then the three points are on the vertical line [`x=x_0`].
+
+    If the points are not on a vertical line then
+    if the slope of the line segment from [`(x_0, y_0)`] to [`(x_1, y_1)`],
+    is the same as the slope of the line segment from [`(x_1, y_1)`] to [`(x_2, y_2)`],
+    then all three points are on the same line.
+    That is, if [`\frac{y_1-y_0}{x_1-x_0} = \frac{y_2-y_1}{x_2-x_1}`], then the three points
+    are collinear.
+    Further, the line can be written [`y=mx+b`]
+    where [`m=\frac{y_1-y_0}{x_1-x_0}`] and you can solve [`y_0=mx_0+b`] to find [`b`].
+
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

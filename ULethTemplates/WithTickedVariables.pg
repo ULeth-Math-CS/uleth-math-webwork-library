@@ -1,0 +1,107 @@
+## DESCRIPTION
+## Differential Equations: allowing primes in student answers.
+## ENDDESCRIPTION
+
+
+## DBsubject(WeBWorK)
+## DBchapter(WeBWorK tutorial)
+## DBsection(PGML tutorial 2017)
+## Date(2017-05-19)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'differential equations', 'allowing primes in student answers')
+
+
+##############################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Implements an answer checker for implicitly-defined equations.
+  # Checks the zeroes of the student's answer against the actual answer
+  # to see if they match.
+  "parserImplicitEquation.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+# Defines variables x and y by default.
+Context("ImplicitEquation");
+# Specifies the regular expression naming pattern for variables in the equation.
+Context()->variables->{namePattern} = qr/[a-z][a-z0-9_]*'*/i;
+#-ULETH-#
+# Defines variables y, y', y'', and t.
+Context()->variables->are(
+"y"   => "Real",
+"y'"  => "Real",
+"y''" => "Real",
+"t"   => "Real",
+);
+
+# The answer equation.
+$diffeq = ImplicitEquation("y'' + 2y' + y = cos(t)");
+#-ENDULETH-#
+
+
+###########################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+Template Details: Special care must be taken when defining [`y'`] and [`y''`] as variables
+students may use in an equation.
+
+Enter the equation [`[$diffeq]`].
+
+[___________________][@ AnswerFormatHelp("equations") @]*
+END_PGML
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($diffeq->cmp());
+#-ENDULETH-#
+
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT("Uses PGML.");
+#-ENDULETH-#
+
+ENDDOCUMENT();

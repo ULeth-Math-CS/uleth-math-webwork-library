@@ -1,0 +1,168 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+## DBsubject(WeBWorK)
+## DBchapter(WeBWorK tutorial)
+## DBsection(PGML tutorial 2017)
+## Date(2017-05-19)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## TitleText1('')
+## EditionText1('')
+## AuthorText1('')
+## Section1('')
+## Problem1('')
+
+## KEYWORDS('ULeth Template', 'vector field graph 2D', 'graphing')
+
+
+##############################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Needed to support graph generation.
+  "PGgraphmacros.pl",
+  # Allows us to specify a formula for the vector field and its parameters.
+  "VectorField2D.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+# Refreshes the graph image every time the page is loaded, as opposed to
+# retrieving a cached version.
+$refreshCachedImages = 1;
+
+
+#############################
+#  Setup
+
+#-ULETH-#
+# Defines the variable y as being a real number within the context.
+# Thus, when 'y' is included in the question or answer, it will be
+# recognized as a real number variable instead of a letter.
+Context()->variables->add(y=>"Real");
+
+# Vectors to graph.
+# You can change these (or add more) if you want to add more vectors to
+# the graph.
+Context("Vector");
+$p = Compute("<".random(1,10,1).", ".random(1,10,1).">");
+$v = Compute("<".random(1,10,1).", ".random(1,10,1).">");
+$answer = $v->norm;
+
+# Used to define the graph's size.
+$minX = -1;
+$minY = -1;
+$maxX = 11;
+$maxY = 11;
+# Origin point for the graph.
+$originX = 0;
+$originY = 0;
+# The display size for the graph when the student clicks it to enlarge it.
+$graphImageWidth = 400;
+$graphImageHeight = 400;
+#-ENDULETH-#
+
+# The number of boxes in the background grid for the graph.
+$gridHoriz = $maxX-$minX;
+$gridVert = $maxY-$minY;
+#
+# init_graph arguments: minX, minY, maxX, maxY, origin, gridSize, graphSize
+$gr = init_graph($minX,$minY,$maxX,$maxY,axes=>[$originX,$originY],grid=>[$gridHoriz,$gridVert],size=>[$graphImageWidth,$graphImageHeight]);
+
+# Resets all the graph labels.
+$gr -> lb('reset');
+
+#-ULETH-#
+# Graph labels and functions
+# Label arguments: xPosition, yPosition, labelText, colour, xJustification, yJustification
+# Initializes the x-axis positive and negative number labels.
+foreach my $i (1..$maxX-1) {
+  $gr -> lb(new Label ( $i,-0.25, $i,'black','center','middle'));
+}
+foreach my $i (1..-$minX-1) {
+  $gr -> lb(new Label (-$i,-0.25,-$i,'black','center','middle'));
+}
+
+# Initializes the y-axis positive and negative number labels.
+foreach my $i (1..$maxY-1) {
+  $gr -> lb(new Label (-0.25,$i,$i,'black','center','middle'));
+}
+foreach my $i (1..-$minY-1) {
+  $gr -> lb(new Label (-0.25,-$i,-$i,'black','center','middle'));
+}
+$gr -> lb(new Label ( $maxX-0.5,0,'x','black','center','middle'));
+$gr -> lb(new Label ( 0.25,$maxY-0.5,'y','black','center','middle'));
+
+# Defines the colours to use for the graph.
+$gr->new_color("orange", 230,159,0);
+$gr->new_color("skyblue", 86,180,233);
+# Defines the vectors that will be displayed.
+# moveTo() defines the x and y coordinates for the start of the vector.
+# arrowTo() defines the x and y coordinates for the end of the vector,
+# colour of the vector, and weight of the line being drawn.
+# Also, each moveTo and arrowTo sets the start point for the next vector
+# that gets drawn.
+# We're using extract to pull the coordinates of the pre-defined vectors
+# and then draw the vectors.
+$gr->moveTo(0,0);
+$gr->arrowTo($p->extract(1),$p->extract(2),'orange',4);
+$gr->arrowTo($v->extract(1),$v->extract(2),'skyblue',4);
+$gr->moveTo(0,0);
+$gr->arrowTo($v->extract(1),$v->extract(2),'black',4);
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+What is the magnitude of the black vector? [__________]
+>> [@ image(insertGraph($gr),width=>$graphImageWidth,height=>$graphImageHeight,tex_size=>700) @]* <<
+END_PGML
+#-ENDULETH-#
+
+
+############################
+#  Answers
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($answer->cmp());
+#-ENDULETH-#
+
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT("Uses PGML.");
+#-ENDULETH-#
+
+ENDDOCUMENT();

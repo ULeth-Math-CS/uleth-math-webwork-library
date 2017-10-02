@@ -1,0 +1,232 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-04)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'GeoGebra applet example','Accumulation function','Fundamental Theorem of Calculus')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to support the GeoGebra applet.
+  "AppletObjects.pl",
+  # Formats problem data into two layout columns.
+  "unionTables.pl",
+  # Provides course-specific initializations.
+  "PGcourse.pl",
+  "PGML.pl",
+  "parserRadioButtons.pl"
+);
+
+TEXT(beginproblem());
+
+
+##########################################
+#  Setup
+
+######################################
+# Create  link to applet:
+###################################
+# You can name your applet (anything reasonable :-) )
+# Adjust the height and width as desired
+# Paste the geogebra parameters in at the bottom of the page just above the
+# command end command so that they don't get in the way.
+# See the note down there for more information.
+###################################
+
+#-ULETH-#
+# Choose an appropriate name for your applet.  Can also leave as ggbfoo.
+$appletName = "ggbfoo";
+#-ENDULETH-#
+
+$applet =  GeogebraWebApplet(
+   code       => "geogebra.GeoGebraApplet",
+   archive    => "geogebra.jar",
+   codebase                 => findAppletCodebase("geogebra.jar"),
+   appletName              => $appletName,
+   appletId                    => $appletName,
+   submitActionAlias     => 'getAppletValues',  # default actionAlias
+   initializeActionAlias   => 'configure',  # default actionAlias
+   setStateAlias             => 'setXML',
+   getStateAlias             => 'getXML',
+   setConfigAlias           => '',
+   getConfigAlias           => '',
+   returnFieldName       => '',
+   #-ULETH-#
+   width                 => 497,              # may want to modify width
+   height                => 361,              # may want to modify height
+   #-ENDULETH-#
+   # mayscript             => "true",
+   #-ULETH-#
+   debugMode             => 0,   # set debugMode to 0 for no debug
+                                              # to 1 to make xml representation visible
+                                              # to 2 to add alerts detailing progression
+                                              # through the applet
+   #-ENDULETH-#
+   onInit                => 'ggbOnInit',
+   type                  => 'geogebraweb',
+   #submitActionScript    => qq{ getQE('answerBox').value = getAppletValues() },
+   submitActionScript => '',
+   selfLoading           => 1,
+
+   # Defined as a separate subroutine so the parameters can go at the bottom of
+   # the page.
+   params     => GEOGEBRA_PARAMS(),# paste parameters in
+
+);
+
+$answer = RadioButtons(["True", "False"], "True");
+
+
+##################################
+# Setup GeogebraWebApplet --
+###################################
+
+###############################################
+#
+#  For persistence of GeoGebra applet state
+#  when answers are submitted or page is refreshed.
+#  Uses JavaScript interface to GeoGebra.
+#  This fetches the GeoGebra applet with $appletname.
+#  Note that this variable gets set in the "Create link to applet" section.
+
+HEADER_TEXT(
+qq!
+<script language="javascript">
+   function ggbOnInit(param) {
+       if (param == "$appletName") {
+           applet_loaded(param,1);  // report that applet is ready.
+           ww_applet_list[param].safe_applet_initialize(2);
+       }
+   }
+</script>
+<noscript>For this question to work properly,
+you must enable JavaScript, or use another browser
+(or computer) on which JavaScript works.</noscript>
+!);
+
+
+#######################################################
+#
+#  For setting initial values in GeoGebra from WeBWorK
+#  Uses JavaScript interface to GeoGebra.
+#  Note the area right under all the ///////////////.
+#  This is where you match up your variables from WeBWorK
+#  with your variables in GeoGebra.
+
+TEXT( MODES(TeX=>'', HTML=><<END_SCRIPT ) );
+<script language="javascript">
+function setAppletCoefficients() {
+   var applet=getApplet("$appletName");   // alert("Updating coefficients");
+   if (typeof(applet)!="undefined") {
+     if (typeof(applet.setValue)!="undefined") {
+
+     ////////////////////////////////////////////////////////////////
+     //  List the values of the parameters to be set in the applet here
+
+          // Set variables "c" and "d" in GeoGebra to values $c and $d from WebWork
+          // applet.setValue("c", $c);
+          // applet.setValue("d", $d);
+
+     } else {
+          setTimeout("setAppletCoefficients()", 1000);
+     }
+   } else {
+      setTimeout("setAppletCoefficients()",1000);
+   }
+}
+ww_applet_list["$appletName"].setConfig = function() {setAppletCoefficients()};
+</script>
+END_SCRIPT
+
+
+#######################################
+# TEXT
+#######################################
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+[@
+ColumnTable("This graph is interactive.$BR".$answer->buttons()
+,
+$BCENTER.
+$BBOLD."Title".$EBOLD.$PAR.
+MODES(HTML=>$applet->insertAll(debug=>0, reinitialize_button=>1, includeAnswerBox=>0,), TeX=>$im).
+$BBOLD."Graphic Interface: You can use your mouse to zoom or move the view area
+of this graphic.".$EBOLD.
+$ECENTER
+,
+indent => 0, separation => 30, valign => "TOP"
+);
+@]*
+END_PGML
+
+
+#########################################
+# ANSWER section
+#########################################
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($answer->cmp());
+
+
+#########################################
+# The applet as a base64 string
+#########################################
+
+sub GEOGEBRA_PARAMS {
+    my $result = {
+showResetIcon=>"false" ,
+enableRightClick=>"false" ,
+enableLabelDrags=>"false",
+showMenuBar=>"false" ,
+showToolBar=>"false",
+showAlgebraInput=>"false",
+useBrowserForJS=>"true",
+#-ULETH-#
+# In the GeoGebra desktop application, create your applet.  Once you are done,
+# press Ctrl + Shift + B.  This will copy the base64 string (like the one below)
+# to your clipboard.  Paste this string between the double quotes below.  Make
+# sure not to paste over the }; or $result lines that follow this section.
+# You should end up with (e.g. ggbbase64=>"skj8981519+!KJ!MSD!.....") as the
+# parameter below.
+ggbbase64=>"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"
+#-ENDULETH-#
+};
+
+$result;
+}
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT('Uses GeoGebraWeb (JavaScript), so it should work on computers and tablets.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

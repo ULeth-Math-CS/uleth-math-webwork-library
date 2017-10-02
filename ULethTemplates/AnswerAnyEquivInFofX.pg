@@ -1,0 +1,101 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-05)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'equivalent in f(x)', 'scaling and translating functions', 'transforming functions')
+
+
+#############################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Used to create the function that will be transformed.
+  "parserFunction.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+Context("Numeric");
+
+#-ULETH-#
+# Defines f as a function that can undergo a transformation.
+# This will not be shown to the student.
+parserFunction(f => "sin(e*x)+5.5*pi*x^2");
+$a = random(1,10,1);
+$b = non_zero_random(-5,5,0.5);
+# Ensures that operations between constants will not be performed when we reduce.
+Context()->flags->set(reduceConstants=>0);
+$answer = Formula("f(x-$a) + $b")->reduce;
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+Enter [`f(x-[$a])+[$b]`]. [_______________][@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($answer->cmp());
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+To shift a function right by [`[$a]`] units, subtract [`[$a]`] from [`x`] to
+get [`f(x-[$a])`].
+
+To shift a function by [`[$b]`] vertically, add [`[$b]`] to the function to
+get [`f(x)+[$b]`].
+
+Thus, to do both, we write [`f(x-[$a])+[$b]`].
+END_PGML_SOLUTION
+
+COMMENT('MathObject version. Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

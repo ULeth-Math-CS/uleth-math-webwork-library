@@ -1,0 +1,108 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-06)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'domain and range using intervals')
+
+
+#############################
+#   Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  "PGML.pl"
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+
+# The Numeric context is used while defining the formula, as it only
+# requires numeric values.
+Context("Numeric");
+
+#-ULETH-#
+# $a will be a random integer between 1 and 50 (step 1) for each student.
+$a = random(1,50,1);
+#$a = non_zero_random(-50,50,1);
+
+# $f is the formula used in the question.
+$f = Compute("sqrt(x-$a)");
+
+# Answers can only be entered as intervals.
+Context("Interval")->variables->are(x=>"Real");
+
+# This ensures that the student's answer is kept in the form it is entered.
+# E.g. If a fraction is entered, it will not be reduced to a decimal.
+Context()->flags->set(formatStudentAnswer=>'parsed');
+
+# The following flag can be uncommented to allow open and closed intervals.
+# E.g. 1 < x < 2, 1 <= x < 2, 1 < x <= 2, and 1 <= x <= 2 would all be marked correct.
+# Context()->flags->set(ignoreEndpointTypes=>1);
+
+$domain = Compute("[$a, inf)");
+#-ENDULETH-#
+
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+# Don't forget to change the problem text if you change whether the answer is
+# an interval, inequality, or both!
+BEGIN_PGML
+Enter [`[[$a],Inf)`].  Notice [`([$a],Inf)`] and [`x \geq [$a]`] are marked incorrect.
+
+[____________________][@ AnswerFormatHelp("intervals") @]*
+
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#   Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS( $domain->cmp() );
+#-ENDULETH-#
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Since [`x - [$a]`] is under a square root, we must have [`x - [$a] \geq 0`], so [`x \geq [$a]`].
+In interval format we have [`x \in [8,\infty)`].
+END_PGML_SOLUTION
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

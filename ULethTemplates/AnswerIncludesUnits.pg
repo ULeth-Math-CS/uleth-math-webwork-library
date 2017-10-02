@@ -1,0 +1,116 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-06-30)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## Static(1)
+## MO(1)
+## KEYWORDS('ULeth Template', 'units', 'number with units', 'formula with units')
+
+
+##############################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Parser can interpret answers that include units of measure.
+  "parserNumberWithUnits.pl",
+  # Formulas can also include units of measure.
+  "parserFormulaWithUnits.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+#-ULETH-#
+# Defines the variable t as being a real number within the context.
+# Thus, when 't' is included in the question or answer, it will be recognized
+# as a real number variable instead of a letter.
+Context("Numeric")->variables->are(t=>"Real");
+
+# Initial variable assignments for starting height and velocity
+$y = random(10,15,1);
+$z = non_zero_random(1,5,0.5);
+
+$h = Compute("$y +$z*t - 16 t^2")->reduce; # Formula
+$v = $h->D('t'); # Derivative of $h
+$tGround = ($z + sqrt($z^2 + 65*$y))/32;
+$v1 = $v->eval(t=>$tGround); # $v evaluated when the ball hits the ground
+$a = $v->D('t'); # Derivative of $v
+
+# Answer values.  Note that $answer2 is a number, while the others are formulas.
+# This is because $v1 is an evaluated formula, and thus returns a number.
+$answer1 = FormulaWithUnits("$v","ft/s");
+$answer2 = NumberWithUnits("$v1","ft/s");
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+You can ask for a formula with units.  Enter [`[$answer1]`].
+
+    + [`v(t) = `][______________][@ AnswerFormatHelp("units") @]*
+
+You can ask for a number with units.  Enter [`[$answer2]`].
+You can also enter this as [`[$v1*0.3048] m/s`].
+
+    + [______________][@ AnswerFormatHelp("units") @]*
+END_PGML
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($answer1->cmp());
+ANS($answer2->cmp());
+#-ENDULETH-#
+
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT("Uses PGML.");
+#-ENDULETH-#
+
+ENDDOCUMENT();

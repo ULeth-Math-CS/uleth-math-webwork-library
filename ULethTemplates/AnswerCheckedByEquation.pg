@@ -1,0 +1,103 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-06-30)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'answer is any solution to an equation', 'equation solutions')
+
+
+####################################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Answer checker to check if student's answer satisfies an implicit equation.
+  "parserSolutionFor.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+##################################
+#  Set-up
+
+Context("Vector");
+
+#-ULETH-#
+# Random value that will be squared to get the result of the equation.
+$r = non_zero_random(1,6,1);
+
+# Specifies the equality that the student's answer must satisfy,
+# and a point that does satisfy the equation.
+# Note: The point values are in order of x, y, z.
+# Thus, in this sample, x = $r, and y = z = 0.
+$answer = SolutionFor("x^2 + y^2 + z^2 = $r^2", [$r,0,0]);
+
+# Gets the formula in the $answer MathObject.  This is used in the problem text.
+$eqn = $answer->{f};
+#-ENDULETH-#
+
+
+####################################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+A solution to the equation [`[$eqn]`]
+is [`(x,y,z) =`][_______________][@ AnswerFormatHelp("points") @]*
+
+Any point that meets the requirements will work.  Try [`([$r],0,0)`],
+[`(0,[$r],0)`], or even [`(0,[$r]-0.25,\sqrt{0.5*[$r]-0.0625})`].
+END_PGML
+#-ENDULETH-#
+
+
+#####################################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($answer->cmp(requireParenMatch=>1));
+#-ENDULETH-#
+
+
+#####################################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT("Uses PGML.");
+#-ENDULETH-#
+
+ENDDOCUMENT();

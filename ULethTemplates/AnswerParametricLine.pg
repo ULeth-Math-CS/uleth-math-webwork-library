@@ -1,0 +1,136 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-04)
+## Revised 2017-08-10 by Nicole Wilson
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'parametric line', 'vector lines')
+
+
+#################################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Provides general utility routines for working with vectors.
+  "parserVectorUtils.pl",
+  # Provides a subroutine to allow students to enter any parametrization.
+  "parserParametricLine.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#################################
+#  Setup
+
+#-ULETH-#
+# Defines the variable t as being a real number within the context.
+# Thus, when 't' is included in the question or answer, it will be
+# recognized as a real number variable instead of a letter.
+# Also sets the context to support 3D vectors.
+Context("Vector")->variables->are(t=>"Real");
+
+# Initializes a 3D point, and a 3D vector, each from -9 to 9, excluding 0.
+$P = non_zero_point3D(-9,9,1);
+$V = non_zero_vector3D(-9,9,1);
+
+# Defines the second points that each parametric line passes through.
+$Q1 = Point($P + $V);
+$Q2 = Point($P + 2*$V);
+$Q3 = Point($P/2);
+
+# The solution for part a - Find any vector equation
+# that goes through 2 specific points.
+$general = ParametricLine($P,$V);
+# The solution for part b - Find any vector equation
+# that goes through 2 specific points at 2 specific points in time.
+$particular = Line($P,$V,'2t');
+# The solution for part c - Find any set of parametric equations for the
+# line that goes through 2 specific points at 2 specific points in time.
+$x0 = $P->extract(1);
+$y0 = $P->extract(2);
+$z0 = $P->extract(3);
+$x1 = $Q3->extract(1);
+$y1 = $Q3->extract(2);
+$z1 = $Q3->extract(3);
+$xPartC = Compute("$x0+(($x1-$x0)/2)t")->reduce;
+$yPartC = Compute("$y0+(($y1-$y0)/2)t")->reduce;
+$zPartC = Compute("$z0+(($z1-$z0)/2)t")->reduce;
+
+
+#-ENDULETH-#
+
+
+#####################################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+a. Enter [`[$general]`].
+
+    [` \vec{L}(t) = `] [____________________][@ AnswerFormatHelp("vectors") @]*
+
+b. Enter [`[$particular]`].
+
+    [` \vec{L}(t) = `] [____________________][@ AnswerFormatHelp("vectors") @]*
+
+b. Enter [`[$xPartC]`], [`[$yPartC]`], and [`[$zPartC]`].
+
+    [` x = `] [____________________][` y = `] [____________________][` z = `] [____________________][@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($general->cmp());
+ANS($particular->cmp());
+ANS($xPartC->cmp());
+ANS($yPartC->cmp());
+ANS($zPartC->cmp());
+#-ENDULETH-#
+
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

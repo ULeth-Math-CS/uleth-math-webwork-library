@@ -1,0 +1,107 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-06-30)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## Static(1)
+## MO(1)
+## KEYWORDS('ULeth Template', 'factored polynomial', 'factoring')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Needed to use the strict context for factored polynomials.
+  "contextPolynomialFactors.pl",
+  # Provides restrictions on powers.  See below for details.
+  "contextLimitedPowers.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+Context("Numeric");
+
+#-ULETH-#
+# Computes the polynomial in expanded form
+$poly = Compute("8x^2+28x+12");
+
+# The strict context requires polynomials in answers to be completely simplified.
+Context("PolynomialFactors-Strict");
+# Makes it so that repeated, non-simplified factors do not generate errors.
+Context()->flags->set(singleFactors=>0);
+# Restricts the allowed powers to only 0 or 1.
+LimitedPowers::OnlyIntegers(minPower => 0, maxPower => 1,message => "either 0 or 1");
+
+# The factored polynomial (answer).
+$factored = Compute("4(2x+1)(x+3)");
+#-ENDULETH-#
+
+
+###########################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+Write the quadratic expression [`[$poly]`] in factored form [`k(ax+b)(cx+d)`].
+
+[____________________][@ AnswerFormatHelp("formulas") @]*
+
+Try any one of [`4(2x+1)(x+3)`] or [`2(2x+1)(2x+6)`] or [`(4x+2)(2x+6)`].
+END_PGML
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($factored->cmp());
+#-ENDULETH-#
+
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

@@ -1,0 +1,107 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-06-30)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'fraction answer')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Implements a fraction object that works like a Real, but keeps the
+  # numerator and denominator separate.
+  "contextFraction.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+#-ULETH-#
+# Decimals cannot be entered, but can be produced from functions and named constants.
+Context("Fraction-NoDecimals");
+# If you want to allow intermixing of fractions and real numbers, use:
+# Context("Fraction")
+# If you want to limit input to either whole numbers, fractions, or
+# whole numbers with fractions, use:
+# Context("LimitedFraction")
+# If you want to limit input to proper fractions only, use:
+# Context("LimitedProperFraction")
+
+# The answer fraction.
+$y = non_zero_random(-2,2,1);
+$z = random(2,7,1);
+$answer = Compute("$y/$z");
+#-ENDULETH-#
+
+
+###########################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+Enter [`\frac{[$y]}{[$z]}`].  The fraction entered must be reduced, but the negative
+can be in the numerator or the denominator.
+
+[_______________][@ AnswerFormatHelp("fractions") @]*
+END_PGML
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+
+# Set flags so that fractions must be reduced by the student, the fraction
+# answer gets reduced, and mixed numbers are not allowed.
+ANS($answer->cmp(studentsMustReduceFractions=>1, reduceFractions=>1, allowMixedNumbers=>0));
+#-ENDULETH-#
+
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Factor and cancel to obtain [`[$answer]`].
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

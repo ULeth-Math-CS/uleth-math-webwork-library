@@ -1,0 +1,165 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-06-30)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'graph polar curve', 'polar graph', 'graphing')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Needed to support graph generation.
+  "PGgraphmacros.pl",
+  # Allows the graph and text to be placed in side-by-side columns.
+  "unionTables.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl"
+);
+
+TEXT(beginproblem());
+
+# Refreshes the graph image every time the page is loaded, as opposed to
+# retrieving a cached version.
+$refreshCachedImages = 1;
+
+
+##########################
+#  Setup
+
+#-ULETH-#
+# Defines the variable t as being a real number within the context.
+# Thus, when 't' is included in the question or answer, it will be
+# recognized as a real number variable instead of a letter.
+Context("Numeric")->variables->are(t=>"Real");
+
+# Used to define the graph's size.
+$minX = -1.1;
+$minY = -1.1;
+$maxX = 1.1;
+$maxY = 1.1;
+# Origin point for the graph.
+$originX = 0;
+$originY = 0;
+# The display size for the graph when the student clicks it to enlarge it.
+$graphImageWidth = 300;
+$graphImageHeight = 300;
+# Specify a start point for the shading.  This point needs to be somewhere
+# within the bounds of the area you want shaded.  The bounds are defined by
+# the graph lines.
+$shadedMinX = $originX + 0.1;
+$shadedMinY = $originY;
+#-ENDULETH-#
+#
+# init_graph arguments: minX, minY, maxX, maxY, origin, gridSize, graphSize
+$gr = init_graph($minX,$minY,$maxX,$maxY,axes=>[$originX,$originY],grid=>[$gridHoriz,$gridVert],size=>[$graphImageWidth*2,$graphImageHeight*2]);
+# Resets all the graph labels.
+$gr -> lb('reset');
+
+# Defines a set of colours that can be used for the graph.
+$gr->new_color("skyblue", 86,180,233); # RGB
+$gr->new_color("darkskyblue", 38,79,233);
+$gr->new_color("orange", 230,159,0);
+$gr->new_color("darkorange", 182, 58, 0);
+
+#  If the polar curve is r = f(t) = cos(5*t), then
+#
+#  x = r cos(t) = f(t) cos(t)
+#  y = r sin(t) = f(t) sin(t)
+#
+# If you want to change the functions to graph, define new Formulas here.
+$x = Formula("cos(5*t) * cos(t)");
+$y = Formula("cos(5*t) * sin(t)");
+#-ENDULETH-#
+
+#-ULETH-#
+# Converts the functions to perl subroutines and attaches them to the graph.
+# Add any Formulas you want on the graph here.  Make sure you add the
+# ->perlFunction after each one so it shows up.
+$f = new Fun( $x->perlFunction, $y->perlFunction, $gr );
+
+# Sets the graph options.
+$f->domain(0,3.14);
+$f->steps(90);
+$f->color('darkskyblue');
+$f->weight('4');
+
+# Fills the region enclosing the specified point with sky blue.
+$gr->fillRegion([$shadedMinX,$shadedMinY,'skyblue']);
+#-ENDULETH-#
+
+############################
+# Main Text
+
+#-ULETH-#
+# Initializes problem text and input formatting help for numbers.
+# Problem text is in the left layout column, and the graph is in the right one.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+$column1 = PGML::Format(<<END_PGML);
+Find the area enclosed by one petal of the
+rose curve [` r = \cos(5\theta) `].
+
+Area = [________________][@ AnswerFormatHelp("numbers") @]*
+
+The answer is [`\pi`].
+END_PGML
+
+# Places the graph image in column2 (the rightmost) of the layout table.
+# The additional arguments after insertGraph($gr) specify the width and height
+# of the image when it's on-screen, while the tex_size is a percentage multiplier
+# determining what size the image will print at in a hard copy version.
+$column2 = $BCENTER.
+image( insertGraph($gr), width=>$graphImageWidth, height=>$graphImageHeight ).
+$PAR.
+"Graph of \( r = \cos(5\theta) \)".
+$ECENTER;
+#-ENDULETH-#
+
+# Sets the columns in the table and the table's formatting.
+TEXT(ColumnTable($column1, $column2, indent => 0, separation => 30, valign => "TOP"));
+
+
+############################
+# Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS(Compute("pi")->cmp());
+#-ENDULETH-#
+
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH
+
+ENDDOCUMENT();

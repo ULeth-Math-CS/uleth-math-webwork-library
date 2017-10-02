@@ -1,0 +1,111 @@
+## DESCRIPTION
+## Vector Calculus: graph of a 2D vector field
+## ENDDESCRIPTION
+
+## DBsubject(WeBWorK)
+## DBchapter(WeBWorK tutorial)
+## DBsection(PGML tutorial 2017)
+## Date(2017-05-19)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## KEYWORDS('ULeth Template', 'weighted grading', 'vector calculus', 'vector field graph 2D')
+
+
+#############################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Macros for multiple choice, matching, and true/false questions.
+  "PGchoicemacros.pl",
+  # Allows weights to be assigned to each answer blank.  Not needed if standard
+  # grading is being used.
+  "weightedGrader.pl",
+  "parserPopUp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+#-ULETH-#
+# Changes the grader to use the weighted one.  Not needed if a standard grader
+# is used.
+install_weighted_grader();
+#-ENDULETH-#
+
+$answerBlank = Compute("42");
+# Create the drop-down list.
+$popup = PopUp(["?", "Pink Floyd", "Massive Attack", "Glass Animals", "Gorillaz", "alt-J"], "Glass Animals");
+#-ENDULETH-#
+
+
+#############################
+#  Main Text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+# Note the NAMED_ANS_RULE and NAMED_POP_UP_LIST, which
+# create answer entry fields with labels that can be referenced later.
+# Also, NAMED_POP_UP_LIST is a drop-down with all of the listed options.
+# Places the following information in column1 (the leftmost) of the layout table.
+BEGIN_PGML
+Template Details: The number field is worth 90% of the total question mark
+and the drop-down menu answers is worth 10% of the total question mark.
+
+a. Enter [`42`] into this blank.
+[@ NAMED_ANS_RULE('answer1',30) @]*
+
+b. Choose "Glass Animals" from the drop-down list.
+[@ NAMED_POP_UP_LIST('answer2', ["?", "Pink Floyd", "Massive Attack", "Glass Animals", "Gorillaz", "alt-J"]) @]*
+END_PGML
+#-ENDULETH-#
+
+
+########################################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+
+# Gives a weight of 90 to the answer and compares to the student's input.
+NAMED_WEIGHTED_ANS('answer1',$answerBlank->cmp(),90);
+
+# Compares drop-down value to answer.
+# Gives a weight of 10 to the answer and compares to the student's input.
+NAMED_WEIGHTED_ANS('answer2',$popup->cmp(),10);
+#-ENDULETH-#
+
+
+#####################################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

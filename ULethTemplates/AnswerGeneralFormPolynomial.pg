@@ -1,0 +1,117 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-06-30)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## Static(1)
+## MO(1)
+## KEYWORDS('ULeth Template', 'expanded polynomial', 'general form polynomial')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Students can only enter expanded polynomials.
+  "contextLimitedPolynomial.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+Context("Numeric");
+
+#-ULETH-#
+$h = random(1,10,1);
+$k = non_zero_random(-5,5,0.5);
+
+# Defines the vertex form of the quadratic equation with two pre-defined
+# MathObjects ($h and $k) and an unknown variable (x).
+$vertexForm = Compute("(x-$h)^2-$k")->reduce;
+
+# Defines the expanded form of the quadratic equation (used for the answer)
+# using the $h and $k values defined above and the x variable.
+Context("LimitedPolynomial-Strict");
+$b = -2 * $h;
+$c = $h**2 - $k;
+
+# Reduces the answer to deal with variables with 0 and 1 coefficients and such.
+$expandedForm = Compute("x^2 + $b x + $c")->reduce();
+#-ENDULETH-#
+
+
+###########################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+Enter [`[$expandedForm]`].  Only the expanded general form will be marked correct.
+Try entering [`[$vertexForm]`] or [`[$expandedForm]+5x-5x`] to see the error
+messages generated.
+
+[_____________________][@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($expandedForm->cmp());
+#-ENDULETH-#
+
+############################
+#  Solution
+
+#-ULETH-#
+# Create and reduce the Formula to use in the solution.
+Context("Numeric");
+$solFormula = Compute("x^2 + $b*x + $h^2")->reduce;
+
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Expand the squared factor, then gather like terms to get
+
+[`[$vertexForm]`]
+
+[`=[$solFormula]-[$k]`]
+
+[`=[$expandedForm]`]
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

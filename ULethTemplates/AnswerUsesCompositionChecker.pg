@@ -1,0 +1,117 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-05)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## TitleText1('')
+## EditionText1('')
+## AuthorText1('')
+## Section1('')
+## Problem1('')
+## KEYWORDS('ULeth Template', 'function decomposition')
+
+
+#############################
+#  Initialization
+
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Answer checker that determines if one function is composed of two others.
+  "answerComposition.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl"
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+Context("Numeric");
+#-ULETH-#
+# Defines the variable 'u' as a real number when entered in the context.
+# E.g. When entered in the student's answer.
+Context()->variables->add(u=>"Real");
+
+# Random value to add to x^2 in $g.
+$a = random(2,9,1);
+#$a = non_zero_random(-9,9,1);
+# The formulas that the function decomposes into.
+$f = Formula("sqrt(u)");
+$g = Formula("x^2+$a");
+#-ENDULETH-#
+
+
+#############################
+#  Main Text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+Express the function [` y = \sqrt{ x^2 + [$a] } `]
+as a composition [` y = f(g(x)) `] of two simpler
+functions [` y = f(u) `] and [` u = g(x) `].
+
++ [` f(u) = `] [_______________] [@ AnswerFormatHelp("formulas") @]*
+
++ [` g(x) = `]  [_______________] [@ AnswerFormatHelp("formulas") @]*
+
+Notice you can choose [`f(u) = \sqrt{u}`] and [`g(x) = x^2 + 9`] or
+[`f(u) = \sqrt{u+9}`] and [`g(x) = x^2`], but you cannot use
+[`f(u) = u`] and [`g(x) = \sqrt{x^2 + 9}`] because the identity function is
+not permitted.
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+
+# Checks the answer, comparing the student's answers to $f and $g, with the
+# variables being used in each set to 'u' and 'x', respectively.
+# showVariableHints determines whether (1) or not (0) the usage of the wrong
+# variable will display an error to the student.
+COMPOSITION_ANS( $f, $g, vars=>['u','x'], showVariableHints=>1);
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT('MathObject version. Uses PGML.');
+#ENDULETH-#
+
+ENDDOCUMENT();

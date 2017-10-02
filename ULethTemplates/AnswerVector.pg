@@ -1,0 +1,106 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-06-30)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'vector operations', 'vectors')
+
+
+##############################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Provides general utility routines for working with vectors.
+  "parserVectorUtils.pl",
+  # Allows the question to be formatted more cleanly, since there are so many parts.
+  "unionTables.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "AnswerFormatHelp.pl"
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+# Sets the context to support 3D vectors.
+Context("Vector");
+
+#-ULETH-#
+# Initializes two 3D vectors from -9 to 9, excluding 0.
+$U = non_zero_vector3D(-9,9,1);
+$V = non_zero_vector3D(-9,9,1);
+
+# Defines the results of various operations between the vectors.
+# Note: The dot and cross operators are used between the vectors so that
+# they actually return the dot product and cross product of the vectors, respectively.
+$UplusV = $U + $V;
+
+# Prevent students from entering the dot and
+# cross products, and the vector functions
+# norm and unit.
+Context()->operators->undefine(".","><");
+Context()->functions->disable("Vector");
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+Enter [`[$UplusV]`].
+
+[___________][@ AnswerFormatHelp("vectors") @]*
+
+END_PGML
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($UplusV->cmp());
+#-ENDULETH-#
+
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT("Uses PGML.");
+#-ENDULETH-#
+
+ENDDOCUMENT();

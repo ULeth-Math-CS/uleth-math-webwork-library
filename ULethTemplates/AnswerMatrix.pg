@@ -1,0 +1,116 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-04)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'matrix')
+
+
+##################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+# Used for handling matrix problems.
+Context("Matrix");
+
+#-ULETH-#
+# $A and $B are the two 3x2 initial matrices for the question.
+# Each value in the matrices is a random number between -5 and 5.
+# None of the values in matrix B are equal to 0.
+# If a matrix only has one row, enter it as [row 1 entries], NOT [ [row 1 entries] ].
+$A = Matrix([
+[random(-5,5,1),random(-5,5,1),random(-5,5,1)],
+[random(-5,5,1),random(-5,5,1),random(-5,5,1)],
+]);
+
+$B = Matrix([
+[non_zero_random(-5,5,1),non_zero_random(-5,5,1),non_zero_random(-5,5,1)],
+[non_zero_random(-5,5,1),non_zero_random(-5,5,1),non_zero_random(-5,5,1)],
+]);
+
+# If $B = Matrix([a, b, c]), then $B->transpose = Matrix([[a], [b], [c]]).
+# If $B = 3 columns, each with 1 element,
+# then $B->transpose = 3 rows, each with 1 element.
+# We define two separate answers so that one can be converted to an array of
+# answer blanks.
+$answerArray = $A * ($B->transpose);
+$answerOneBlank = $A * ($B->transpose);
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+# The $answer->ans_array(5) statement takes the matrix stored in $answer, and
+# places text boxes for answer entry on the page based on the matrix layout.
+# Each box has space for 5 characters.
+# On the other hand, ans_box(r,c) gives a single text box with r rows and c columns.
+BEGIN_PGML
+Enter the matrix [`[$answerArray]`] using both methods.
+
+[`A B^T = `] [@ $answerArray->ans_array(5) @]* [@ AnswerFormatHelp("matrices") @]*
+
+[`A B^T = `] [@ ans_box(3,20) @]* [@ AnswerFormatHelp("matrices") @]*
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS( $answerArray->cmp() );
+ANS( $answerOneBlank->cmp() );
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+SOLUTION:
+Solution explanation goes here.
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+ENDDOCUMENT();

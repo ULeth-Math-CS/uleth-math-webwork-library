@@ -1,0 +1,133 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-19)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'drop-down menu', 'pop-up menu', 'radio buttons', 'checkbox')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "parserRadioButtons.pl",
+  "parserPopUp.pl",
+  "PGchoicemacros.pl"
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+$checkBoxes = new_checkbox_multiple_choice();
+#-ULETH-#
+# The first part is the question text.
+# The following parts each get assigned to a checkbox, and together
+# they make up the answer.
+$checkBoxes->qa(
+  "Complete the sentence: 'I just want to feel...' $BR Hint: The answer is purple, yellow, red, and blue.",
+  "Purple",
+  "Yellow",
+  "Red",
+  "Blue"
+);
+# The next two options for the checkboxes are technically optional.
+
+# This is an extra "red herring" answer to add to the list.
+# You can include more than one in a comma-separated list here.
+$checkBoxes->extra("None of the above");
+# This specifies that regardless of the random order that is chosen
+# for the possible answers, "None of the above" will always appear last.
+# Putting multiple comma-separated values here will specify an order for
+# those answer options.
+$checkBoxes->makeLast("None of the above");
+
+# Within the square brackets are the options that will be available in the
+# drop-down menu.  The last argument is the correct answer.
+$popup = PopUp(["?", "something to believe in", "'cause everything just falls in place like that"], "something to believe in");
+
+# The options in the square brackets are the different radio button options
+# that will be available.
+# The next argument is the correct answer.
+# The arguments in the square brackets after last=> dictate which options
+# come last in the radio button list.  In this case, since all the options
+# are listed, it just makes sure the options will always appear in this order
+# rather than being randomized.
+$radioButtons = RadioButtons(
+  ["A movie star, or on TV", "A rich kid born celebrity", "Both"],
+  "Both",
+  last=>["A movie star, or on TV", "A rich kid born celebrity", "Both"]);
+#-ENDULETH-#
+
+
+###########################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+[@ $checkBoxes->print_q() @]*
+[@ $checkBoxes->print_a() @]*
+
+All that I'm needing is:
+
+[@ $popup->menu() @]*
+
+When I grow up, I wanna be:
+
+[@ $radioButtons->buttons() @]*
+END_PGML
+
+
+###########################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS(checkbox_cmp($checkBoxes->correct_ans()));
+ANS($popup->cmp());
+ANS($radioButtons->cmp());
+#-ENDULETH-#
+
+
+###########################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

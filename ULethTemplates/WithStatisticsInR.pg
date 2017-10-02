@@ -1,0 +1,160 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-06-16)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'statistics', 'R')
+
+
+##############################
+#  Initialization
+
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  "RserveClient.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+
+#-ULETH-#
+Context("Numeric");
+
+# Normal Distribution
+$mean = 0;
+$stdDev = 1;
+$zScore = random(-3,3,0.01);
+
+# Uncomment the following line (and comment the other @normProb calculation)
+# if you want to be calculating the lower tail.
+# @normProb = rserve_eval("pnorm(${zScore}, mean=${mean}, sd=${stdDev}, lower.tail=TRUE);");
+#-ENDULETH-#
+@normProb = rserve_eval("pnorm(${zScore}, mean=${mean}, sd=${stdDev}, lower.tail=FALSE);");
+
+# Poisson Distribution
+#-ULETH-#
+$numOccurrence = random(1,10,1);
+$lambda = random(2,5,1);
+
+# Uncomment the following line (and comment the other @poisson calculation)
+# if you want to be calculating the lower tail.
+# @poisson = rserve_eval("ppois(${numOccurrence}, lambda=${lambda}, lower=TRUE);");
+#-ENDULETH-#
+@poisson = rserve_eval("ppois(${numOccurrence}, lambda=${lambda}, lower=FALSE);");
+
+# Binomial Distribution
+#-ULETH-#
+$n = random(10,50,1);
+$p = random(0.1,0.9,0.01);
+$x = random(floor($n*$p) - 2, floor($n*$p) + 2, 1);
+
+# Uncomment the following line (and comment the other @binom calculation)
+# if you don't want to calculate cumulative probability.
+# @binom = rserve_eval("dbinom(${x}, size=${n}, prob=${p});");
+#-ENDULETH-#
+@binom = rserve_eval("pbinom(${x}, size=${n}, prob=${p});");
+
+# Student-T Distribution
+#-ULETH-#
+$stuDegOfFreedom = random(10,30,1);
+$stuPercentile = random(0.01,0.25,0.01);
+#-ENDULETH-#
+@studentT = rserve_eval("qt(${stuPercentile}, df=${stuDegOfFreedom});");
+
+$chiDegOfFreedom = random(8,30,1);
+$chiPercentile = random(0.005,0.25,0.001);
+@chiSquared = rserve_eval("qchisq(${chiPercentile}, df=${chiDegOfFreedom});");
+
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+Given a z-score of [`[$zScore]`], a mean of [`[$mean]`], and a standard deviation of [`[$stdDev]`], find the following:
+
+[`P(Z > [$zScore])=`][________] Answer: [`[@ round($normProb[0]*10000) / 10000 @]*`]
+
+Let [`X`] be a Poisson random variable with [`\lambda = [$lambda]`], find the following:
+
+[`P(X > [$numOccurrence])=`][________] Answer: [`[@ round($poisson[0]*10000) / 10000 @]*`]
+
+Let [`X`] be a binomial random variable with [`n=[$n]`],  [`p=[$p]`], find the following:
+
+[`P(X <= [$x])=`][________] Answer: [`[@ round($binom[0]*10000) / 10000 @]*`]
+
+Let [`X`] be a student t random variable with [`n=[$stuDegOfFreedom+1]`], find the following:
+
+[`P(X < x)=[$stuPercentile]`], find [`x`].
+
+[`x = `][________] Answer: [`[@ round($studentT[0]*100) / 100 @]*`]
+
+Let [`\chi^2`] be a Chi squared random variable with [`n=[$chiDegOfFreedom+1]`], find the following:
+
+[`P(\chi^2 < x)=[$chiPercentile]`], find [`x`].
+
+[`x = `][________] Answer: [`[@ round($chiSquared[0]*100) / 100 @]*`]
+END_PGML
+#-ENDULETH-#
+
+#############################
+#   Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS(Compute(round($normProb[0]*10000) / 10000)->cmp());
+ANS(Compute(round($poisson[0]*10000) / 10000)->cmp());
+ANS(Compute(round($binom[0]*10000) / 10000)->cmp());
+ANS(Compute(round($studentT[0]*100) / 100)->cmp());
+ANS(Compute(round($chiSquared[0]*100) / 100)->cmp());
+#-ENDULETH-#
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+# Marks the end of the problem document.
+ENDDOCUMENT();

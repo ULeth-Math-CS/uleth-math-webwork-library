@@ -1,0 +1,372 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-04)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'GeoGebra applet example','Accumulation function','Fundamental Theorem of Calculus')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to support the GeoGebra applet.
+  "AppletObjects.pl",
+  # Formats problem data into two layout columns.
+  "unionTables.pl",
+  # Provides course-specific initializations.
+  "PGcourse.pl",
+  "PGML.pl"
+);
+
+TEXT(beginproblem());
+
+
+##########################################
+#  Setup
+
+#-ULETH-#
+@dataSet = ();
+
+# Use the following naming scheme if using multiple datasets:
+# @dataSetA = ();
+# @dataSetB = ();
+# ...
+
+# How many data points are in the graph.
+$numPoints = 25;
+# Number of units above the x-axis the image is drawn.
+$yOffset = 2.5;
+# Height of the box.
+$yScale = 1.25;
+
+# Set the bounds of the graph.
+$minX = 0;
+$minY = 0;
+$maxX = 25;
+$maxY = 5;
+#-ENDULETH-#
+
+foreach my $i (0..$numPoints - 1) {
+  #-ULETH-#
+  # Values to assign to each point in the dataset.
+  $dataSet[$i] = random(1,20,1);
+  #-ENDULETH-#
+}
+
+# sort the list
+@dataSet = num_sort(@dataSet);
+
+$minimum = min(@dataSet);
+# Convert to MathObject.
+$minimum = Compute($minimum);
+
+# Calculate first quartile  using the Moore and McCabe method to match the way GeoGebra does it.
+if ($numPoints % 4 == 0)
+{     $firstQuart = ($dataSet[$numPoints / 4] + $dataSet[($numPoints / 4)+1])/2;}
+elsif ($numPoints % 4 == 1)
+{     $firstQuart = ($dataSet[(($numPoints + 3) / 4)-1] + $dataSet[($numPoints + 3) / 4])/2;}
+elsif ($numPoints % 4 == 2)
+{     $firstQuart = $dataSet[($numPoints + 2)/4];}
+else # $numPoints % 4 == 3
+{     $firstQuart = $dataSet[($numPoints + 1)/4];}
+
+# Convert to MathObject.
+$firstQuart = Compute($firstQuart);
+
+# Calculate median.
+if ($numPoints % 2 == 1)
+{     $median = $dataSet[($numPoints + 1) / 2];}
+else # numPoints is even.
+{     $median = ($dataSet[$numPoints / 2] + $dataSet[($numPoints / 2) + 1]) / 2;}
+
+# Convert to MathObject.
+$median = Compute($median);
+
+# Calculate third quartile  using the Moore and McCabe method to match the way GeoGebra does it.
+if ($numPoints % 4 == 0)
+{     $thirdQuart = ($dataSet[3*$numPoints/4] + $dataSet[(3*$numPoints/4)+1])/2;}
+elsif ($numPoints % 4 == 1)
+{     $thirdQuart = ($dataSet[((3*$numPoints+1)/4)-1] + $dataSet[(3*$numPoints+1)/4])/2;}
+elsif ($numPoints % 4 == 2)
+{     $thirdQuart = $dataSet[(3*$numPoints+2)/4];}
+else # $numPoints % 4 == 3
+{     $thirdQuart = $dataSet[(3*$numPoints+3)/4];}
+
+
+# Convert to MathObject.
+$thirdQuart = Compute($thirdQuart);
+
+$maximum = max(@dataSet);
+# Convert to MathObject.
+$maximum = Compute($maximum);
+
+
+######################################
+# Create  link to applet:
+###################################
+# You can name your applet (anything reasonable :-) )
+# Adjust the height and width as desired
+# Paste the geogebra parameters in at the bottom of the page just above the
+# command end command so that they don't get in the way.
+# See the note down there for more information.
+###################################
+
+#-ULETH-#
+# Choose an appropriate name for your applet.  Can also leave as ggbfoo.
+$appletName = "ggbfoo";
+#-ENDULETH-#
+
+$applet =  GeogebraWebApplet(
+   code       => "geogebra.GeoGebraApplet",
+   archive    => "geogebra.jar",
+   codebase                 => findAppletCodebase("geogebra.jar"),
+   appletName              => $appletName,
+   appletId                    => $appletName,
+   submitActionAlias     => 'getAppletValues',  # default actionAlias
+   initializeActionAlias   => 'configure',  # default actionAlias
+   setStateAlias             => 'setXML',
+   getStateAlias             => 'getXML',
+   setConfigAlias           => '',
+   getConfigAlias           => '',
+   returnFieldName       => '',
+   #-ULETH-#
+   width                 => 500,              # may want to modify width
+   height                => 500,              # may want to modify height
+   #-ENDULETH-#
+   # mayscript             => "true",
+   #-ULETH-#
+   debugMode             => 0,   # set debugMode to 0 for no debug
+                                              # to 1 to make xml representation visible
+                                              # to 2 to add alerts detailing progression
+                                              # through the applet
+   #-ENDULETH-#
+   onInit                => 'ggbOnInit',
+   type                  => 'geogebraweb',
+   #submitActionScript    => qq{ getQE('answerBox').value = getAppletValues() },
+   submitActionScript => '',
+   selfLoading           => 1,
+
+   # Defined as a separate subroutine so the parameters can go at the bottom of
+   # the page.
+   params     => GEOGEBRA_PARAMS(),# paste parameters in
+
+);
+
+
+##################################
+# Setup GeogebraWebApplet --
+###################################
+
+###############################################
+#
+#  For persistence of GeoGebra applet state
+#  when answers are submitted or page is refreshed.
+#  Uses JavaScript interface to GeoGebra.
+#  This fetches the GeoGebra applet with $appletname.
+#  Note that this variable gets set in the "Create link to applet" section.
+
+HEADER_TEXT(
+qq!
+<script language="javascript">
+   function ggbOnInit(param) {
+       if (param == "$appletName") {
+           applet_loaded(param,1);  // report that applet is ready.
+           ww_applet_list[param].safe_applet_initialize(2);
+       }
+   }
+</script>
+<noscript>For this question to work properly,
+you must enable JavaScript, or use another browser
+(or computer) on which JavaScript works.</noscript>
+!);
+
+
+#######################################################
+#
+#  For setting initial values in GeoGebra from WeBWorK
+#  Uses JavaScript interface to GeoGebra.
+#  Note the area right under all the ///////////////.
+#  This is where you match up your variables from WeBWorK
+#  with your variables in GeoGebra.
+
+TEXT( MODES(TeX=>'', HTML=><<END_SCRIPT ) );
+<script language="javascript">
+function setAppletCoefficients() {
+   var applet=getApplet("$appletName");   // alert("Updating coefficients");
+   if (typeof(applet)!="undefined") {
+     if (typeof(applet.setValue)!="undefined") {
+
+     ////////////////////////////////////////////////////////////////
+     //  List the values of the parameters to be set in the applet here
+
+          // Set variables for GeoGebra from WebWork
+          applet.setValue("yOffset", $yOffset); // the number of units above the x-axis the image is drawn
+          applet.setValue("yScale", $yScale); // the height of the box
+          // #-ULETH-#
+          // Raw data variables get set here.  Do not change values here!
+          // You can, however, comment/uncomment lines to match the number of
+          // data points you are passing in.
+          applet.setListValue("xList",1,$dataSet[0]);
+          applet.setListValue("xList",2,$dataSet[1]);
+          applet.setListValue("xList",3,$dataSet[2]);
+          applet.setListValue("xList",4,$dataSet[3]);
+          applet.setListValue("xList",5,$dataSet[4]);
+          applet.setListValue("xList",6,$dataSet[5]);
+          applet.setListValue("xList",7,$dataSet[6]);
+          applet.setListValue("xList",8,$dataSet[7]);
+          applet.setListValue("xList",9,$dataSet[8]);
+          applet.setListValue("xList",10,$dataSet[9]);
+          applet.setListValue("xList",11,$dataSet[10]);
+          applet.setListValue("xList",12,$dataSet[11]);
+          applet.setListValue("xList",13,$dataSet[12]);
+          applet.setListValue("xList",14,$dataSet[13]);
+          applet.setListValue("xList",15,$dataSet[14]);
+          applet.setListValue("xList",16,$dataSet[15]);
+          applet.setListValue("xList",17,$dataSet[16]);
+          applet.setListValue("xList",18,$dataSet[17]);
+          applet.setListValue("xList",19,$dataSet[18]);
+          applet.setListValue("xList",20,$dataSet[19]);
+          applet.setListValue("xList",21,$dataSet[20]);
+          applet.setListValue("xList",22,$dataSet[21]);
+          applet.setListValue("xList",23,$dataSet[22]);
+          applet.setListValue("xList",24,$dataSet[23]);
+          applet.setListValue("xList",25,$dataSet[24]);
+          applet.setValue("outliers",1); // To show outliers set to 1, otherwise set this to 0
+          // Changing the text value will change the label text on the graph, and
+          // the coordinates at the end represent the point on the graph's grid
+          // where the label will be placed.
+          applet.evalCommand("Label=Text[\"My cool data\",(11,1.25)]");
+          applet.evalCommand("ZoomIn[$minX,$minY,$maxX,$maxY]");
+          // #-ENDULETH-#
+     } else {
+          setTimeout("setAppletCoefficients()", 1000);
+     }
+   } else {
+      setTimeout("setAppletCoefficients()",1000);
+   }
+}
+ww_applet_list["$appletName"].setConfig = function() {setAppletCoefficients()};
+</script>
+END_SCRIPT
+
+
+#######################################
+# TEXT
+#######################################
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+[@
+ColumnTable("Look at the box plot for numbers of suspicious origin to determine each of the following.
+$BR
+$BR
+Template Details: The graphic is made in GeoGebra, inserted via a code in this
+WeBWorK question, and certain variables can be altered within the question code.
+The values for the answers are calculated in the WeBWorK question because we cannot
+retrieve the values from GeoGebra and the Moore-McCabe method must be used for
+the quartiles calculated to match those depicted in the box plot.
+$BR
+$BR
+On a PC or Linux box, students can zoom in and move around to observe parts of
+the graphic in more detail.
+$BR
+$BR
+(a) The minimum is " .ans_rule(20).
+"$BR
+$BR
+(b)  The first quartile is "  .ans_rule(20).
+"$BR
+$BR
+(c) The median is " .ans_rule(20).
+"$BR
+$BR
+(d)  The third quartile is " .ans_rule(20).
+"$BR
+$BR
+(e) The maximum is " .ans_rule(20)
+,
+$BCENTER.
+$BBOLD."Title".$EBOLD.$PAR.
+MODES(HTML=>$applet->insertAll(debug=>0, reinitialize_button=>1, includeAnswerBox=>0,), TeX=>$im).
+$ECENTER
+,
+indent => 0, separation => 30, valign => "TOP"
+);
+@]*
+END_PGML
+
+
+#########################################
+# ANSWER section
+#########################################
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($minimum->cmp(tolerance=>0.5));
+ANS($firstQuart->cmp(tolerance=>0.5));
+ANS($median->cmp(tolerance=>0.5));
+ANS($thirdQuart->cmp(tolerance=>0.5));
+ANS($maximum->cmp(tolerance=>0.5));
+
+
+#########################################
+# The applet as a base64 string
+#########################################
+
+sub GEOGEBRA_PARAMS {
+    my $result = {
+showResetIcon=>"false" ,
+enableRightClick=>"false" ,
+enableLabelDrags=>"false",
+showMenuBar=>"false" ,
+showToolBar=>"false",
+showAlgebraInput=>"false",
+useBrowserForJS=>"true",
+#-ULETH-#
+# In the GeoGebra desktop application, create your applet.  Once you are done,
+# press Ctrl + Shift + B.  This will copy the base64 string (like the one below)
+# to your clipboard.  Paste this string between the double quotes below.  Make
+# sure not to paste over the }; or $result lines that follow this section.
+# You should end up with (e.g. ggbbase64=>"skj8981519+!KJ!MSD!.....") as the
+# parameter below.
+ggbbase64=>"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"
+#-ENDULETH-#
+};
+
+$result;
+}
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT('Uses GeoGebraWeb (JavaScript), so it should work on computers and tablets.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

@@ -1,0 +1,201 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-06-30)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'contour plot', 'graphing')
+
+
+####################################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Needed to support graph generation.
+  "PGgraphmacros.pl",
+  # Allows the graph and text to be placed in a uniform layout.
+  "unionTables.pl",
+  # Enables drop-down menus.
+  "parserPopUp.pl",
+  "PGML.pl"
+);
+
+TEXT(beginproblem());
+
+
+##################################
+#  Setup
+
+# Refreshes the graph image every time the page is loaded, as opposed to
+# retrieving a cached version.
+$refreshCachedImages = 1;
+
+#-ULETH-#
+# Defines the variables t, x, and y as being real numbers within the context.
+# Thus, when 't', 'x', or 'y' is included in the question or answer, they will be
+# recognized as real number variables instead of letters.
+Context("Numeric")->variables->are(t=>"Real",x=>"Real",y=>"Real");
+
+# Used to define the graph's size.
+$minX = -5;
+$minY = -5;
+$maxX = 5;
+$maxY = 5;
+# Origin point for the graph.
+$originX = 0;
+$originY = 0;
+# The display size for the graph when the student clicks it to enlarge it.
+$graphImageWidth=300;
+$graphImageHeight=300;
+#-ENDULETH-#
+# The number of boxes in the background grid for the graph.
+$gridHoriz = $maxX-$minX;
+$gridVert = $maxY-$minY;
+
+# Creates the graph canvas.
+# init_graph arguments: minX, minY, maxX, maxY, gridSize, origin, graphSize
+$gr = init_graph($minX,$minY,$maxX,$maxY,grid=>[$gridHoriz,$gridVert],axes=>[$originX,$originY],size=>[300,300]);
+# Resets graph labels.
+$gr->lb('reset');
+
+#-ULETH-#
+# Graph labels and functions
+# Label arguments: xPosition, yPosition, labelText, colour, xJustification, yJustification
+$gr -> lb(new Label ( $maxX-0.5,0,'x','black','left','bottom'));
+$gr -> lb(new Label ( 0.25,$maxY-0.5,'y','black','left','bottom'));
+#-ENDULETH-#
+
+
+# A subroutine for adding the color gradient to the graph object
+sub makegradient # ($graph, $steps, $r0, $g0, $b0, $r1, $g1, $b1)
+{
+  my ($graph, $steps, $r0, $g0, $b0, $r1, $g1, $b1) = @_;
+  my $dr = ($r1 - $r0) / $steps;
+  my $dg = ($g1 - $g0) / $steps;
+  my $db = ($b1 - $b0) / $steps;
+
+  my $r = $r0;
+  my $g = $g0;
+  my $b = $b0;
+  for my $i (0..$steps-1)
+  {
+    $graph->new_color("gradient$i",$r,$g,$b);
+    $r += $dr;
+    $g += $dg;
+    $b += $db;
+  }
+  return $graph;
+}
+
+#-ULETH-#
+# Add to $gr a 10 step color gradient
+# Takes in the target graph, the number of steps (distinct colours)
+# you want in the gradient, the starting colour (blue in this case),
+# and the ending colour (white in this case).
+# Changing these values will give you different colours for the gradient.
+$gr = &makegradient($gr, 10, # target graph and number of steps
+230, 159, 0,    # RGB blue
+255, 255, 255 # RGB white
+);
+#-ENDULETH-#
+
+#-ULETH-#
+# Constructs circular contours as parametrized curves
+# Graphs at each step that is specified in the below brackets.
+foreach my $k (5,10,15,20,25,30,35,40,45) {
+#-ENDULETH-#
+  my $a = sqrt($k);
+  $fn = new Fun(
+     #-ULETH-#
+     # Defines the functions to be graphed at each step.
+     Compute("$a*cos(t)")->perlFunction,
+     Compute("$a*sin(t)")->perlFunction,
+     #-ENDULETH-#
+     $gr
+  );
+
+  #-ULETH-#
+  # Adjust where the function is drawn and how it is drawn.
+  $fn->domain(0,6.3);
+  $fn->color("black");
+  $fn->steps(60);
+  $fn->weight(1.5);
+  #-ENDULETH-#
+}
+
+# Fill with gradient colors between contours
+foreach my $i (0..9) {
+  my $a = sqrt(2)/2 * sqrt(5*$i) - 0.1;
+  $gr->fillRegion([ $a, $a, "gradient$i"]);
+  $gr->fillRegion([-$a, $a, "gradient$i"]);
+  $gr->fillRegion([-$a,-$a, "gradient$i"]);
+  $gr->fillRegion([ $a,-$a, "gradient$i"]);
+}
+
+#-ULETH-#
+# Label the contours
+foreach my $k (5,15,25,35,45) {
+  $gr->lb(  new Label(0.707*sqrt($k),0.707*sqrt($k),$k,'black','center','middle'));
+}
+
+# Set up the drop-down menu options and the correct answer.
+$pop = PopUp(["Choose","True","False"],"False");
+#-ENDULETH-#
+
+
+####################################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+[@ $pop->menu() @]*  This could be a contour plot
+for [`f(x,y) = x^2 - y^2`].
+
+>>[@ image(insertGraph($gr),width=>$graphImageWidth,height=>$graphImageHeight,tex_size=>450) @]*<<
+
+END_PGML
+#-ENDULETH-#
+
+
+#####################################
+#  Answer evaluation
+
+#-ULETH-#
+# Do not provide feedback if the student gets the incorrect answer.
+$showPartialCorrectAnswers = 0;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+# Answer is selected from the drop-down menu.
+ANS( $pop->cmp() );
+#-ENDULETH-#
+
+
+#####################################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT("Uses PGML.");
+#-ENDULETH-#
+
+ENDDOCUMENT();

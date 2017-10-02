@@ -1,0 +1,116 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-06-30)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'answers can be entered in any order', 'unordered answers')
+
+
+##################################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Allows answers to be entered in any order.
+  "unorderedAnswer.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+###################################
+# Setup
+
+#-ULETH-#
+# Defines the variables y and z as being real numbers within the context.
+# Thus, when 'y' or 'z' is included in the question or answer, they will be
+# recognized as real number variables instead of letters.
+Context("Numeric")->variables->add(y=>"Real",z=>"Real");
+
+# The power that each variable is raised to.
+$a = random(2,9,1);
+
+# The three answer values.
+$answer1 = Compute("x^$a");
+$answer2 = Compute("y^$a");
+$answer3 = Compute("z^$a");
+#-ENDULETH-#
+
+
+###################################
+# Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+Rewrite the following expression without parentheses.
+Any ordering of [`x^[$a]`], [`y^[$a]`], [`z^[$a]`] is marked correct, but no
+ordering of [`xyz`], [`x^3 y^3 z^3`], [`x^[$a-4] y^[$a-4] z^[$a-4]`]
+is correct.
+
+[`(xyz)^{ [$a] } =`][_____]
+[`\cdot`][_____]
+[`\cdot`][_____][@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+
+###################################
+# Answers
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# Uses the all-or-nothing grader.  All parts have to be right for the question
+# to be marked correct.
+install_problem_grader(~~&std_problem_grader);
+
+# Compares the values in each box to each of the answers to see if they match.
+# I.e. The first answer the student enters will be compared against all possible
+# answers to see if any match.  Then, the second one will be compared, etc.
+# If you add additional questions, make sure you add answer checkers for them here!
+UNORDERED_ANS(
+$answer1->cmp(),
+$answer2->cmp(),
+$answer3->cmp(),
+);
+#-ENDULETH-#
+
+
+#####################################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT("Uses PGML.");
+#-ENDULETH-#
+
+ENDDOCUMENT();

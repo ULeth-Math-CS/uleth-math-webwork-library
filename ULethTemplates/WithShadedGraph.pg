@@ -1,0 +1,211 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-06-30)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'dynamic graph with shading', 'shaded graph')
+
+
+#############################################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Needed to support graph generation.
+  "PGgraphmacros.pl",
+  "unionTables.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+# Refreshes the graph image every time the page is loaded, as opposed to
+# retrieving a cached version.
+$refreshCachedImages = 1;
+
+
+#############################
+#  Setup
+
+Context("Numeric");
+
+#-ULETH-#
+# Value initialization.
+$a = random(0,3,1);
+$f = Compute("sqrt(x)+$a");
+
+# Used to define the graph's size.
+$minX = -5;
+$minY = -5;
+$maxX = 5;
+$maxY = 5;
+# Origin point for the graph.
+$originX = 0;
+$originY = 0;
+# The display size for the graph when the student clicks it to enlarge it.
+$graphImageWidth = 300;
+$graphImageHeight = 300;
+# Define the boundaries of the shaded area on the graph.
+$shadedMinX = 1;
+$shadedMinY = 0;
+$shadedMaxX = 4;
+$shadedMaxY = $f->eval(x=>$shadedMaxX);
+#-ENDULETH-#
+
+# The number of boxes in the background grid for the graph.
+$gridHoriz = $maxX-$minX;
+$gridVert = $maxY-$minY;
+
+# Converts $f to LaTeX for display later.
+$ftex = $f->TeX;
+
+#-ULETH-#
+# Calculates the value for the answer.
+$answer = (2/3) * (4**(3/2) - 1) + 3*$a;
+# Ensures that the answer properly reduces.
+$answer = Compute($answer);
+
+# Initialize graph at the required size.
+$gr = init_graph($minX,$minY,$maxX,$maxY,grid=>[$gridHoriz,$gridVert],axes=>[$originX,$originY],size=>[$graphImageWidth,$graphImageHeight]);
+$gr->lb('reset');
+
+# Initializes the x-axis positive and negative number labels.
+foreach my $i (1..$maxX-1) {
+  $gr -> lb(new Label ( $i,-0.25, $i,'black','center','middle'));
+}
+foreach my $i (1..-$minX-1) {
+  $gr -> lb(new Label (-$i,-0.25,-$i,'black','center','middle'));
+}
+
+# Initializes the y-axis positive and negative number labels.
+foreach my $i (1..$maxY-1) {
+  $gr -> lb(new Label (-0.25,$i,$i,'black','center','middle'));
+}
+foreach my $i (1..-$minY-1) {
+  $gr -> lb(new Label (-0.25,-$i,-$i,'black','center','middle'));
+}
+
+# Define new graph colors
+# Not all of these are used, but they are defined for easier use later.
+$gr->new_color("skyblue", 86,180,233); # RGB
+$gr->new_color("darkskyblue", 38,79,233);
+$gr->new_color("orange", 230,159,0);
+$gr->new_color("darkorange", 182, 58, 0);
+
+#
+#  Choose colors
+#
+$light = "skyblue";
+$dark = "darkskyblue";
+
+# Graph the function and the filled region
+add_functions($gr, "$f  for x in <$minX,$maxX> using color:$dark and weight:4");
+$gr->moveTo(1,$a+1);
+
+#-ULETH-#
+# Draws lines below function line to form boundary of shaded area.
+# If you just want a particular area to be shaded in, simply change
+# $shadingStartX and $shadingStartY to be some point that is in the
+# bounds of the area you want shaded.
+$gr->lineTo($shadedMinX,$shadedMinY,$dark,4);
+$gr->lineTo($shadedMaxX,$shadedMinY,$dark,4);
+$gr->lineTo($shadedMaxX,$shadedMaxY,$dark,4);
+$shadingStartX = $shadedMinX;
+$shadingStartY = $shadedMinY;
+#-ENDULETH-#
+
+if ($shadedMinX < $shadedMaxX)
+{
+  $shadingStartX = $shadedMinX + ($shadedMaxX/2);
+}
+else
+{
+  $shadingStartX = $shadedMaxX + ($shadedMinX / 2);
+}
+
+if ($shadedMinY < $shadedMaxY)
+{
+  $shadingStartY = $shadedMinY + ($shadedMaxY/2);
+}
+else
+{
+  $shadingStartY = $shadedMaxY + ($shadedMinY / 2);
+}
+# Fills in area that needs to be shaded.
+$gr->fillRegion([$shadingStartX,$shadingStartY,$light]);
+
+
+#############################
+#  Main Text
+
+#-ULETH-#
+# Places the following information in column1 (the leftmost) of the layout table.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+$column1 = PGML::Format(<<END_PGML);
+Use the graph to find the area of the shaded
+region under [``f(x) = $ftex``].
+
+Area = [______________][@ AnswerFormatHelp("numbers") @]*
+
+The answer is [`$answer`].
+END_PGML
+
+# Places the graph image in column2 (the rightmost) of the layout table.
+# The additional arguments after insertGraph($gr) specify the width and height
+# of the image when it's on-screen, while the tex_size is a percentage multiplier
+# determining what size the image will print at in a hard copy version.
+$column2 = image( insertGraph($gr),height=>$graphImageHeight,width=>$graphImageWidth,tex_size=>800 ).
+$BR.$BCENTER.
+$BR.
+"Graph of \( y = f(x) \)".
+$ECENTER;
+#-ENDULETH-#
+
+TEXT(ColumnTable($column1, $column2, indent => 0, separation => 30, valign => "TOP"));
+
+
+#############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($answer->cmp());
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.  Looks like pi.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

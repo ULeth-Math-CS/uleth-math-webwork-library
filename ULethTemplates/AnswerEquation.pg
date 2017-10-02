@@ -1,0 +1,109 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-06-30)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## Static(1)
+## MO(1)
+## KEYWORDS('ULeth Template', 'equation')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Implements an assignment operator that allows only a single variable
+  # reference on the left and any value on the right.
+  # Can be used to require students to enter things like y = 3x + 1
+  "parserAssignment.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+##########################
+#  Setup
+
+#-ULETH-#
+# Defines the variables x and y as being real numbers within the context.
+# Thus, when 'x' or 'y' is included in the question or answer, they will be
+# recognized as real number variables instead of letters.
+Context("Numeric")->variables->are(x=>"Real",y=>"Real");
+$coefficient0 = random(0,4,2);
+$coefficient1 = non_zero_random(-2,2,0.5);
+#-ENDULETH-#
+
+# Allow assignment so that f can be defined as a new function.  Then, define f
+# so it can be used in the context f(x) in the problem.
+parser::Assignment->Allow;
+parser::Assignment->Function("f");
+
+#-ULETH-#
+# Defines the answer equation and function.
+$function1 = Compute("y=5x+$coefficient0")->reduce;
+$function2 = Compute("f(x)=3x^2+$coefficient1*x")->reduce;
+#-ENDULETH-#
+
+
+#################################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+Enter [`[$function1]`] [___________][@ AnswerFormatHelp("equation") @]*
+
+Enter [`[$function2]`] [___________][@ AnswerFormatHelp("equation") @]*
+END_PGML
+#-ENDULETH-#
+
+
+#################################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($function1->cmp());
+ANS($function2->cmp());
+#-ENDULETH-#
+
+
+#################################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

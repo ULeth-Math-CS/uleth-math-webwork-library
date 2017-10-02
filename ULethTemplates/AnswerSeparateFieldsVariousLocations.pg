@@ -1,0 +1,175 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-04)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'answer blanks in limits of integration')
+
+
+###############################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used for table formatting commands to line up answer blanks with the limits
+  # of integration.
+  "PGunion.pl",
+  # Provides hints if the student gives certain incorrect answers.
+  "answerHints.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl"
+);
+
+TEXT(beginproblem());
+
+
+################################
+#  Setup
+
+Context("Numeric");
+#-ULETH-#
+# Defines the variables x, dx, t, and dt as being real numbers within the context.
+# Thus, when x, dx, t, or dt is included in the question or answer, they will be
+# recognized as real number variables instead of letters.
+Context()->variables->are(x=>"Real", dx=>"Real", t=>"Real", dt=>"Real", n=>"Real");
+
+# Defines sin formulas with x and t.
+$fpx = Formula("sin(x)");
+$fpt = Formula("sin(t)");
+
+# Define answer values.
+$constLim = Compute(5);
+$upperLim = Compute(x);
+$lowerLim = Compute(2);
+$formulaLim = Compute("$fpt * dt");
+
+$constSum = Compute(0);
+$upperSum = Compute(25);
+$lowerSum = Compute(1);
+$formulaSum = Compute("2n");
+
+#-ENDULETH-#
+
+# Display the answer blanks properly in different modes
+Context()->texStrings;
+if ($displayMode eq 'TeX') {
+   $integral =
+   '\(\displaystyle f(x) = '.
+   ans_rule(4).
+   '+ \int_{t = '.
+   ans_rule(4).
+   '}^{'.
+   ans_rule(4).
+   '}'.
+   ans_rule(20).
+   '\)';
+
+   $sum =
+   '\(\displaystyle S = '.
+   ans_rule(4).
+   '+ \sum_{n = '.
+   ans_rule(4).
+   '}^{n = '.
+   ans_rule(4).
+   '}'.
+   ans_rule(20).
+   '\)';
+  } else {
+   $integral =
+   BeginTable(center=>0).
+     Row([
+       '\(f(x)=\)'.$SPACE.ans_rule(4).$SPACE.'\(+\displaystyle\int\)',
+       ans_rule(4).$BR.$BR.'\( t = \)'.ans_rule(4),
+       ans_rule(20)],separation=>2).
+   EndTable();
+
+   $sum =
+   BeginTable(center=>0).
+     Row([
+       '\(S=\)'.$SPACE.ans_rule(4).$SPACE.'\(+\displaystyle\sum\)',
+       ans_rule(4).$BR.$BR.'\( n = \)'.ans_rule(4),
+       ans_rule(20)],separation=>2).
+   EndTable();
+ }
+Context()->normalStrings;
+
+
+#####################################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+# Calls $integral to properly display answer blanks.
+BEGIN_PGML
++ Find a formula for the function [` f(x) `] such that
+[`` f '(x) = [$fpx] ``] and [` f(2)=5 `].
+    [$integral]*** [@ AnswerFormatHelp("numbers") @]* [@ AnswerFormatHelp("formulas") @]*
+
++ Find a formula for the sum [`S`] such that [``S = [2 + 4 + 6 + 8 + ... + 50]``].
+    [$sum]*** [@ AnswerFormatHelp("numbers") @]* [@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+
+#####################################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($constLim->cmp());
+ANS($upperLim->cmp());
+ANS($lowerLim->cmp());
+
+# Provides various hints depending on whether the user's input matches some
+# of the other options (like if they use x instead of t).
+ANS($formulaLim->cmp()
+->withPostFilter(AnswerHints(
+  Formula("$fpx") => "Are you using the correct variable?",
+  Formula("$fpx*dx") => "Are you using the correct variable?",
+  Formula("$fpt") => "Don't forget the differential dt",
+))
+);
+
+ANS($constSum->cmp());
+ANS($upperSum->cmp());
+ANS($lowerSum->cmp());
+ANS($formulaSum->cmp());
+#-ENDULETH-#
+
+
+#####################################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

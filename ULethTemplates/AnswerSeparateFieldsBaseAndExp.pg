@@ -1,0 +1,122 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-06-30)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'exponents', 'answer blank for exponent')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Helps with proper layout of textboxes.
+  "unionTables.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "AnswerFormatHelp.pl"
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+#-ULETH-#
+# Defines the variables a and b as being real numbers within the context.
+# Thus, when they are included in the question or answer, they will be
+# recognized as real number variables instead of letters.
+Context("Numeric")->variables->are(a=>"Real",b=>"Real");
+
+# Randomize the value for the exponent in the question.
+$n = random(3,9,1);
+#$n = non_zero_random(-9,9,1);
+
+# Initialize the question's expression.
+$expression = "a^{$n} b^{$n}";
+
+# Separate the answer values into the base and the exponent, since they will be
+# entered separately by the student in this problem.
+$base = Compute("a*b");
+$exponent = Compute($n);
+#-ENDULETH-#
+
+# Display exponents nicely
+$w1 = 10; # width of 1st answer blank
+$w2 = 10; # width of 2nd answer blank
+Context()->texStrings;
+if ($displayMode eq 'TeX') {
+  $showpower =
+  "\( \displaystyle $expression = (" . ans_rule($w1) . ")^{" . ans_rule($w2) . "}\)";
+} else {
+  $showpower =
+  ColumnTable(
+  "\( \displaystyle $expression = \Big( \)" . ans_rule($w1) . "\( \Big) \)",
+  ans_rule($w2).$BR.$BR,
+  indent => 0, separation => 0, valign => "BOTTOM"
+  );
+}
+
+
+###########################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+# Calls the previously set up $showpower to display the answer boxes.
+BEGIN_PGML
+Rewrite the following using a single exponent.
+[$showpower]***[@ AnswerFormatHelp("formulas") @]* [@ AnswerFormatHelp("numbers") @]*
+END_PGML
+#-ENDULETH-#
+
+
+############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+
+# Compares the student's answers for the base and the exponent.
+ANS( $base->cmp() );
+ANS( $exponent->cmp() );
+#-ENDULETH-#
+
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

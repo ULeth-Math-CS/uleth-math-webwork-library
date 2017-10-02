@@ -1,0 +1,166 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-05)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'exact answer', 'disable functions')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Implements a fraction object that works like a Real, but keeps the
+  # numerator and denominator separate.
+  "contextFraction.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+#-ULETH-#
+# Fractions as answers are required; cannot use decimals.
+Context("Fraction-NoDecimals");
+#-ENDULETH-#
+
+# Prevent pi from becoming 3.1415... and cos(pi) from
+# becoming -1.
+Context()->constants->set(pi => {keepName => 1});
+
+# The next context changes are not necessary to
+# prevent cos(pi) from becoming -1, but they cannot hurt.
+Context()->flags->set(
+  reduceConstants=>0,
+  reduceConstantFunctions=>0
+);
+
+#-ULETH-#
+# pi will not get reduced because it was set to keep its name above.
+$val1 = list_random("-pi/6","-pi/4","-pi/3","pi/6","pi/4","pi/3");
+$val2 = list_random("-pi/6","-pi/4","-pi/3","pi/6","pi/4","pi/3");
+#-ENDULETH-#
+# Make sure that val3 doesn't equal val2.
+$val3 = $val2;
+while ($val3 eq $val2)
+{
+  #-ULETH-#
+  # The value for the third part of the question.
+  $val3 = list_random("-pi/6","-pi/4","-pi/3","pi/6","pi/4","pi/3");
+  #-ENDULETH-#
+}
+
+$f1 = Formula("cos($val1)");
+$f2 = Formula("sin($val2)");
+$f3 = Formula("sin($val3)");
+
+# Disables all functions, then just re-enables square roots,
+# since they are currently required for the answer.
+# See the bottom of the file for a breakdown
+# of the categories for the different functions.
+Context()->functions->disable("All");
+Context()->functions->enable("sqrt");
+# Also disables basic operators.  Note that "undefine" has to be used for operators.
+Context()->operators->undefine('+','-','*','/');
+# Redefines division for use with fractions.
+Context()->operators->redefine('/');
+
+# Simplified equations.
+Context()->flags->set(reduceFractions=>0);
+$answer1 = $f1->eval;
+$answer2 = $f2->eval;
+$answer3 = $f3->eval;
+#-ENDULETH-#
+
+
+###########################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+Enter your answers as simplified fractions.
+
+You cannot enter trig functions to solve this.  You can enter values like
+[`0.866025`] as [`\frac{\sqrt{3}}{2}`].
+
++ [` [$f1] = `] [_____________][@ AnswerFormatHelp("fractions") @]* Enter [`[$answer1]`].
+
++ [` [$f2] = `] [_____________][@ AnswerFormatHelp("fractions") @]* Enter [`[$answer2]`].
+
++ [` [$f3] = `] [_____________][@ AnswerFormatHelp("fractions") @]* Enter [`[$answer3]`].
+END_PGML
+#-ENDULETH-#
+
+
+###########################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add new questions, make sure to add new answer checkers here!
+# studentsMustReduceFractions => 1 requires all answers to be
+# entered as reduced fractions.
+ANS($answer1->cmp(studentsMustReduceFractions=>1));
+ANS($answer2->cmp());
+ANS($answer3->cmp());
+#-ENDULETH-#
+
+
+###########################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+The cosine of an angle is zero when
+the angle is an integer multiple of \( \pi \).
+END_PGML_SOLUTION
+
+COMMENT('MathObject version. Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();
+
+################################################################################################################################
+#   Category 	           #    Functions Included                                                                               #
+################################################################################################################################
+#   SimpleTrig           #    sin, cos, tan, sec, csc, cot                                                                     #
+#   InverseTrig 	       #    asin, acos, atan, asec, acsc, acot, arcsin, arccos, arctan, arcsec, arccsc, arccot, atan2        #
+#   SimpleHyperbolic 	   #    sinh, cosh, tanh, sech, csch, coth                                                               #
+#   InverseHyperbolic    #    asinh, acosh, atanh, asech, acsch, acoth, arcsinh, arccosh, arctanh, arcsech, arccsch, arccoth   #
+#   Numeric 	           #    log, log10, exp, sqrt, abs, int, sgn, ln, logten                                                 #
+#   Vector 	             #    norm, unit                                                                                       #
+#   Complex 	           #    arg, mod, Re, Im, conj                                                                           #
+#   Hyperbolic 	         #    all of SimpleHyperbolic and InverseHyperbolic                                                    #
+#   Trig 	               #    all of SimpleTrig, InverseTrig, and Hyperbolic                                                   #
+#   All 	               #    all of Trig, Numeric, Vector, and Complex                                                        #
+################################################################################################################################

@@ -1,0 +1,121 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-04)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'formula roots', 'equivalence in x')
+
+
+#############################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+Context("Numeric");
+
+#-ULETH-#
+# The solution value for the problem.  The quadratic equation is computed based
+# on the randomly-generated roots.
+$root1 = random(0,4,1);
+$root2 = non_zero_random(-2,2,1);
+$aSolution = Compute("(x+$root1)(x+$root2)")->reduce;
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+Enter [`[$aSolution]`] or any non-zero real multiple of [`[$aSolution]`].
+
+[` y = `] [______________] [@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+#-ENDULETH-#
+
+# This is an adaptive parameter for the solution.
+# In effect, it copies the context and checks that the formula the student
+# provides produces the desired roots.
+ANS( $aSolution->cmp(checker => sub {
+      my ( $correct, $student, $self ) = @_;
+      # Creates a local version of the Context.
+      my $context = Context()->copy;
+      # Automatically marks incorrect if the student answer equals 0.
+      return 0 if $student == 0;
+      $context->flags->set(no_parameters=>0);
+      $context->variables->add('C0'=>'Parameter');
+      my $c0 = Formula($context,'C0');
+      # Redefines the student answer and correct answer in the local Context.
+      $student = Formula($context,$student);
+      $correct = Formula($context,"$c0 * $aSolution");
+      # Returns true if the student answer is correct, and false if they're not.
+      return $correct == $student;
+    }
+) );
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+To find the formula for [`y`], recall that each root corresponds to a factor of y.
+
+So when [`y=0`]
+we know [`x = -[$root1]`] or [`x = -[$root2]`]
+
+so [`x + [$root1] = 0`] or [`x + [$root2] = 0`].
+
+Hence, [`y = c(x + [$root1])(x + [$root2])`] for any non-zero real constant [`c`].
+
+To answer the question we pick any non-zero real constant for [`c`].
+
+Thus  [`y = (x + [$root1])(x + [$root2])`] ,  [`y = -7(x + [$root1])(x + [$root2])`], and  [`y = \frac{11}{5}(x + [$root1])(x + [$root2])`]  are three of the infinite correct answers.
+END_PGML_SOLUTION
+
+COMMENT('MathObject version. Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

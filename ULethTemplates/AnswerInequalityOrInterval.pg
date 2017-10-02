@@ -1,0 +1,113 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-06-30)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'answer is an inequality', 'inequality')
+
+
+##################################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used in this problem to check that the student's answer is actually an inequality.
+  "contextInequalities.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "answerHints.pl"
+);
+
+TEXT(beginproblem());
+
+
+###################################
+# Setup
+
+#-ULETH-#
+# Allows both intervals and inequalities.
+Context("Inequalities");
+# Student answers don't get reduced.
+Context()->flags->set(formatStudentAnswer=>'parsed');
+
+# Initial random coefficient.
+$a = random(3,9,1);
+$b = random(2,7,1);
+# LaTeX inequality formula.
+$ineq = "-$a x \leq $b";  # TeX
+# Defines answer based on LaTeX formula.
+$answer = Compute("x >= -$b / $a");
+#-ENDULETH-#
+
+
+###################################
+# Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+Solve the inequality [`[$ineq]`].
+Enter your answer using either an inequality or an interval.
+
+[_________________][@ AnswerFormatHelp("inequalities") @]*
+END_PGML
+
+# The number of incorrect answers you have to give before this hint can be shown.
+$showHint = 2;
+BEGIN_PGML_HINT
+What happens to an inequality when you multiply both sides by a negative value?
+END_PGML_HINT
+
+#-ENDULETH-#
+
+
+#####################################
+#  Answer Evalution
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($answer->cmp());
+#-ENDULETH-#
+
+
+#####################################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+[`[$ineq]`]
+
+so [`[$a]x \geq -[$b]`]
+
+so [`x \geq -\frac{[$b]}{[$a]}`]
+END_PGML_SOLUTION
+
+COMMENT("Uses PGML.");
+#-ENDULETH-#
+
+ENDDOCUMENT();

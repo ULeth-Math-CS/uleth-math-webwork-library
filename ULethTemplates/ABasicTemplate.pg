@@ -1,0 +1,125 @@
+# <- Marks commented-out code.
+# Any text that follows the # sign (and is on the same line)
+# will not be read when the code is being executed.
+
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-05)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'basic template')
+
+
+###########################
+#  Initialization
+
+# The first line in the .pg file after any opening comments.
+# Defines the bounds of the document.
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+
+# Here is where the setup for the problem is done.
+# In general, this will include setting up any variables that are being
+# used in the question, including those that are equal to constants and formulas.
+
+# If there are additional restrictions being placed on the format of the
+# student's input, they will generally be set up here.
+
+# Some tips:
+#   * Variable names are preceded by a dollar sign ($).
+#   * To make a variable equal to a formula, use $var = Compute("<formula>");.
+#   * To generate random numbers (that will be randomized for each student),
+#     use random(<lower_bound>,<upper_bound>,<step>).
+
+$some_var = Compute("9x");
+
+
+#############################
+#   Problem Text
+
+# This is where the question text will be entered.
+
+# Encloses the problem text along with an END_PGML marker.
+# Using the # syntax for comments will not actually comment out code here.
+# Anything between the markers will be displayed in the problem text.
+
+# Some things to note when entering a problem:
+#   [` <some_equation> `] is used to insert an equation in-line with the text.
+
+#   [`` <some_equation> ``] is used for displayed equations (formatted separately
+#   from the problem text).
+
+#   [@ <some_equation> @]* contains code that will be executed in the problem's
+#   text.  This can be used for adding a help button, drawing a table, etc.
+#   Note that you need to include the asterisk after the closing square bracket.
+
+#   [______] inserts an answer box.  The number of underscores between the brackets
+#   represents the number of characters that can be entered into the box (how wide it is).
+
+#   To use previously-defined MathObjects in the problem text, enclose the MathObject
+#   name in square brackets.  In many cases, you may also want to enclose them in the
+#   "equation brackets" that were explained earlier, particularly if you're dealing
+#   with Formula MathObjects.
+BEGIN_PGML
+
+Some question that would inspire a student to enter [`9x`]. [__________][@ AnswerFormatHelp("formulas") @]*
+
+END_PGML
+# The above line marks the end of the problem text.
+
+
+#############################
+#   Answer Evaluation
+
+# Where the answer is checked.
+
+# Will compare the value provided by the student to the value defined in $some_var,
+# which should contain the answer.
+ANS( $some_var->cmp() );
+
+
+#############################
+#   Solution
+
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+Solution explanation goes here.
+Layout as you would with the problem text.
+
+
+END_PGML_SOLUTION
+# Marks the end of the solution text.
+
+# Marks the end of the problem document.
+ENDDOCUMENT();

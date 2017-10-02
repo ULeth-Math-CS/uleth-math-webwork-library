@@ -1,0 +1,119 @@
+## DESCRIPTION
+## Precalculus: answers are lists of points
+## ENDDESCRIPTION
+
+## DBsubject(WeBWorK)
+## DBchapter(WeBWorK tutorial)
+## DBsection(PGML tutorial 2017)
+## Date(2017-05-16)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'list of points')
+
+
+#############################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  #-ULETH-#
+  # Used to prevent operations between points.  Can be omitted if this is allowed.
+  "contextLimitedPoint.pl"
+  #-ENDULETH-#
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+#-ULETH-#
+# LimitedPoint context used to prevent operations between points.
+# "Point" can be used if operations between points are allowed.
+Context("LimitedPoint");
+
+$a = random(1,10,1);
+# The formula being used in the question.
+$f = Compute("x^2-$a");
+
+# Answer values for the x and y intercepts.  Defined as lists in the event that
+# there's more than one (as is the case with the x-intercept).
+$xint = List( Point("(sqrt($a),0)"), Point("(-sqrt($a),0)") );
+
+$yint = List( Point("(0,-$a)") );
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+Enter the list of two points [`[$xint]`].
+
++ [`x-`]axis: [_________________][@ AnswerFormatHelp("points") @]*
+
+Enter the point [`[$yint]`].
++ [`y-`]axis: [_________________][@ AnswerFormatHelp("points") @]*
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($xint->cmp());
+ANS($yint->cmp());
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+To determine when [`y = [$f]`] crosses the [`y`]-axis:
+
+Let [`y = 0`] then [`[$f] = 0`]
+
+so [`\left(x - \sqrt{[$a]} \right) \left(x + \sqrt{[$a]} \right) = 0`]
+
+so [`x = \pm \sqrt{[$a]}`], thus the points of interest are
+[`\left(-\sqrt{[$a]}, 0 \right), \left(\sqrt{[$a]}, 0 \right) = 0`].
+
+To determine when [`y = [$f]`] crosses the [`x`]-axis:
+
+Let [`x = 0`] then [`y = 0 - [$a] = -[$a]`].
+
+Thus, the point of interest is [`(0,-[$a])`].
+END_PGML_SOLUTION
+
+COMMENT('MathObject version. Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();
