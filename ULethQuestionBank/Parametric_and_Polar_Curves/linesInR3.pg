@@ -1,0 +1,164 @@
+## DESCRIPTION
+## This question code is based on a sample problem from the WeBWorK wiki.
+## It has been modified to meet the ULeth Template standards.
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-04)
+## Revised 2017-08-10 by Nicole Wilson
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('parametric line', 'vector lines')
+
+
+#################################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Provides general utility routines for working with vectors.
+  "parserVectorUtils.pl",
+  # Provides a subroutine to allow students to enter any parametrization.
+  "parserParametricLine.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#################################
+#  Setup
+
+#-ULETH-#
+# Defines the variable t as being a real number within the context.
+# Thus, when 't' is included in the question or answer, it will be
+# recognized as a real number variable instead of a letter.
+# Also sets the context to support 3D vectors.
+Context("Vector")->variables->are(t=>"Real");
+
+# Initializes a 3D point, and a 3D vector, each from -9 to 9, excluding 0.
+$P = non_zero_point3D(-9,9,1);
+$V = non_zero_vector3D(-9,9,1);
+
+# Defines the second points that each parametric line passes through.
+$Q1 = Point($P + $V);
+$Q2 = Point($P + 2*$V);
+$Q3 = Point($P/2);
+
+# The solution for part a - Find any vector equation
+# that goes through 2 specific points.
+$general = ParametricLine($P,$V);
+# The solution for part b - Find any vector equation
+# that goes through 2 specific points at 2 specific points in time.
+$particular = Line($P,$V,'2t');
+# The solution for part c - Find any set of parametric equations for the
+# line that goes through 2 specific points at 2 specific points in time.
+$x0 = $P->extract(1);
+$y0 = $P->extract(2);
+$z0 = $P->extract(3);
+$x1 = $Q3->extract(1);
+$y1 = $Q3->extract(2);
+$z1 = $Q3->extract(3);
+$xPartC = Compute("$x0+(($x1-$x0)/2)t")->reduce;
+$yPartC = Compute("$y0+(($y1-$y0)/2)t")->reduce;
+$zPartC = Compute("$z0+(($z1-$z0)/2)t")->reduce;
+
+
+#-ENDULETH-#
+
+
+#####################################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+a. Find any vector equation for the
+line that goes through the points [` [$P] `] and
+[` [$Q1] `].
+
+    [` \vec{L}(t) = `] [____________________][@ AnswerFormatHelp("vectors") @]*
+
+b. Find any vector equation for the
+line that goes through the point [` [$P] `]
+when [` t = 0 `] and the point [` [$Q2] `] when
+[` t = 1 `].
+
+    [` \vec{L}(t) = `] [____________________][@ AnswerFormatHelp("vectors") @]*
+b. Find parametric equations for the
+line that goes through the point [` [$P] `]
+when [` t = 0 `] and the point [` [$Q3] `] when
+[` t = 2 `].
+
+    [` x = `] [____________________][` y = `] [____________________][` z = `] [____________________][@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($general->cmp());
+ANS($particular->cmp());
+ANS($xPartC->cmp());
+ANS($yPartC->cmp());
+ANS($zPartC->cmp());
+#-ENDULETH-#
+
+
+############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+a.  Use the vector to one point and the vector between the points to get something like
+[`\vec{L}(t) = [$P] + t([$Q1]-[$P]) = [$general]`]
+
+b.  Since we know [`\vec{L}(t) = \vec{u} + t\vec{v}`] and
+
+    [`[$P] = \vec{L}(0) = \vec{u} + 0\vec{v} = \vec{u}`] and
+
+    [`[$Q2] = \vec{L}(1) = \vec{u} + (1)\vec{v} = \vec{u} + \vec{v} = [$P] + \vec{v}`],
+
+    we must have [`\vec{v} = [$Q2]-[$P] = [@ [$Q2]-[$P] @]*`].
+
+    So [`\vec{L}(t) = [$P] + t[@ [$Q2]-[$P] @]* = [$particular]`].
+
+c.  We know [`x = x_0 + tx_1`],[`y = y_0 + ty_1`], and [`z = z_0 + tz_1`].
+
+    When [`t=0`] we have [`[$x0] = x = x_0 + (0)x_1 = x_0`], [`[$y0] = y = y_0 + (0)y_1 = y_0`], and
+[`[$z0] = z = z_0 + (0)z_1 = z_0`] so [`x_0 = [$x0], y_0 = [$y0]`], and [`z_0 = [$z0]`].
+
+    When [`t = 2`] we have [`[$x1] = x = [$x0] + 2x_1`] so [`2x_1 = [$x1] - ([$x0]) = [@ $x1 - $x0 @]*`] so [`x_1 = [@ ($x1 - $x0)/2 @]*`]
+
+    and [`[$y1] = y = [$y0] + 2y_1`] so [`2y_1 = [$y1] - ([$y0]) = [@ $y1 - $y0 @]*`] so [`y_1 = [@ ($y1 - $y0)/2 @]*`]
+
+    and [`[$z1] = z = [$z0] + 2z_1`] so [`2z_1 = [$z1] - ([$z0]) = [@ $z1 - $z0 @]*`] so [`z_1 = [@ ($z1 - $z0)/2 @]*`]
+
+    Thus, [`x = [$xPartC]`], [`y = [$yPartC]`], and [`z = [$zPartC]`].
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

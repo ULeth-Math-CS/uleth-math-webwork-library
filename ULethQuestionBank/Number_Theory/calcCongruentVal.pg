@@ -1,0 +1,212 @@
+## DESCRIPTION
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-08-24)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('congruency')
+
+# How to add a new question:
+# Step 1. Change the value of $numInts to match the number of random
+#   integers you need in the question.
+# Step 2: If you want to change the pool of values to select the integer
+#   values from, change the range for the random number selectors.
+# Step 3: Define the period for the answer.  Chances are, you'll draw this value
+#   from the values you use for the question.
+# Step 4: Compute the answer.  Define it as a Real so that you can assign a
+#   period value to it.
+# Step 5. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Step 6. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Step 7. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+
+
+#################################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Answer checker to check if student's answer satisfies an equation.
+  "parserSolutionFor.pl",
+);
+
+TEXT(beginproblem());
+
+
+#################################
+#  Setup
+
+# Stores the integer values that will be used in the question.
+@randInt = ();
+#-ULETH-#
+# Step 1. Change the value of $numInts to match the number of random
+#   integers you need in the question.
+$numInts = 6;
+#-ENDULETH-#
+
+for (my $i = 0; $i < $numInts; $i++)
+{
+  #-ULETH-#
+  # Step 2: If you want to change the pool of values to select the integer
+  #   values from, change the range for the random number selector.
+  $randInt[$i] = random(4,24,1);
+  #-ENDULETH-#
+}
+
+#-ULETH-#
+# Define the max and min values that will be used in question A.
+# Not strictly necessary, but makes it easier to use these values later.
+$aMax = max($randInt[0], $randInt[1]);
+$aMin = min($randInt[0], $randInt[1]);
+# The period for the answer.  The student's answer will be modded with this
+# value to check if it's correct.
+$aPeriod = $aMin;
+$answerA = Real($aMax - $aMin)->with(period=>$aPeriod);
+
+# The period for the answer.  The student's answer will be modded with this
+# value to check if it's correct.
+$bPeriod = $randInt[4];
+$answerB = Real($randInt[2] + $randInt[3] + $randInt[4])->with(period=>$bPeriod);
+
+# The period for the answer.  The student's answer will be modded with this
+# value to check if it's correct.
+$cPeriod = $randInt[5];
+$answerC = Real($randInt[5])->with(period=>$cPeriod);
+
+# Step 3: Define the period for the answer.  Chances are, you'll draw this value
+#   from the values you use for the question.
+# Eg: $dPeriod = $randInt[6];
+# Step 4: Compute the answer.  Define it as a Real so that you can assign a
+#   period value to it.
+# Eg: $answerD = Real($randInt[6])->with(period=>$dPeriod);
+#-ENDULETH-#
+
+
+#####################################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# Step 5. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Eg: c.  [`[@ $randInt[6] @]* \equiv n (mod n)`]
+#
+#         [`n = `][____________][@ AnswerFormatHelp("numbers") @]*
+BEGIN_PGML
+In each part, determine a value for [`n`].
+If there is not solution for [`n`], enter DNE.
+
+a.  [`[$aMax] \equiv n (mod [$aMin])`]
+
+    [`n = `][____________][@ AnswerFormatHelp("numbers") @]*
+
+b.  [`(n - [@ 2*$randInt[2] @]*) \equiv ([@ 2*$randInt[3] @]* - n) mod [@ 2*$randInt[4] @]*`]
+
+    [`n = `][____________][@ AnswerFormatHelp("numbers") @]*
+
+c.  [`[@ 2*$randInt[5] @]* \equiv n (mod n)`]
+
+    [`n = `][____________][@ AnswerFormatHelp("numbers") @]*
+
+END_PGML
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+# Step 6. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Eg: ANS($answerD->cmp());
+ANS($answerA->cmp());
+ANS($answerB->cmp());
+ANS($answerC->cmp());
+#-ENDULETH-#
+
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# Step 7. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+BEGIN_PGML_SOLUTION
+a.  [`[$aMax] \equiv n(mod [$aMin])`]
+
+    iff [`[$aMin] | ([$aMax] - n)`]
+
+    iff for some integer [`k`], [`[$aMin] \cdot k = [$aMax] - n`],
+
+    so we need [`n = [$aMax] - [$aMin] \cdot k`].
+
+    If we let [`k = 1`], then [`n = [$aMax] - [$aMin] = [$aMax - $aMin]`] is a solution.
+
+b.  [`(n - [@ 2*$randInt[2] @]*) \equiv ([@ 2*$randInt[3] @]* - n) mod [@ 2*$randInt[4] @]*`]
+
+    iff [`[@ 2*$randInt[4] @]* | ((n - [@ 2*$randInt[2] @]*) - ([@ 2*$randInt[3] @]* - n))`]
+
+    iff for some integer [`k`], [`[@ 2*$randInt[4] @]*k = (n - [@ 2*$randInt[2] @]*) - ([@ 2*$randInt[3] @]* - n)`],
+
+    so we need [`[@ 2*$randInt[4] @]*k = 2n - [@ 2*$randInt[2] @]* - [@ 2*$randInt[3] @]*`],
+
+    so [`2n = [@ 2*$randInt[2] @]* + [@ 2*$randInt[3] @]* + [@ 2*$randInt[4] @]*k`].
+
+    If we choose to let [`k = 1`], then [`2n = [@ 2*$randInt[2] @]* + [@ 2*$randInt[3] @]* + [@ 2*$randInt[4] @]*`]
+    or [`n = [@ $randInt[2] @]* + [@ $randInt[3] @]* + [@ $randInt[4] @]* = [@ $randInt[2] + $randInt[3] + $randInt[4] @]*`] is a solution.
+
+c.  [`[@ 2*$randInt[5] @]* \equiv n (mod n)`]
+
+    iff [`n | ([@ 2*$randInt[5] @]* - n)`]
+
+    iff for some integer [`k`], [`nk = [@ 2*$randInt[5] @]* - n`],
+
+    so we need [`nk + n = [@ 2*$randInt[5] @]*`],
+
+    so [`n(k + 1) = [@ 2*$randInt[5] @]*`] if we choose [`k = 1`] then
+    [`2n = [@ 2*$randInt[5] @]*`], so [`n = [@ $randInt[5] @]*`] is a solution.
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

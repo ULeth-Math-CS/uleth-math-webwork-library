@@ -1,0 +1,322 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-05)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('contigency table')
+
+# How to add a new question:
+# Step 1. Indicate the number of columns (attributes) and rows (qualities) to be
+#   randomly generated, each number will be between the minVal and maxVal
+#   If you change the number of rows or columns you must change the table print
+#   command below.
+# Step 2. Compute the answers for your different questions based on the values in
+#   the table.  Use $table[row][col] to pull specific elements from the table, where
+#   row and col are both 0-based indices.
+# Step 3. Set up the table, along with the row and column titles that will be used.
+#   Also, use begintable(numColumns), where numColumns is the number of columns
+#   that are in the table.
+# Step 4. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+#   To add a previously-defined table, use "code brackets" [@ @]*** (note the
+#   three asterisks at the end), and reference the table name within.
+# Step 5. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Step 6. Define the different answer values as Formulas so that they don't get
+#   reduced when you display them as solutions.
+# Step 7. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+
+
+#############################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "contextLimitedNumeric.pl"
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+#-ULETH-#
+# Can switch to the LimitedNumeric Context if you don't want to
+# allow operations to be entered into the answer.
+Context("Numeric");
+# Context("LimitedNumeric");
+
+# Indicate the number of columns (attributes) and rows (qualities) to be
+# randomly generated, each number will be between the minVal and maxVal
+# If you change the number of rows or columns you must change the table print command below
+$numRowQualities = 3;
+$numColAttributes = 4;
+$minVal = 0;
+$maxVal = 250;
+#-ENDULETH-#
+
+@tableValue1 = ();
+
+
+# Generate the random table values
+for (my $row=0;$row<$numRowQualities;$row++) {
+  for (my $col=0;$col<$numColAttributes;$col++) {
+#-ULETH-#
+     $tableValue1[$row][$col] = random($minVal,$maxVal,1);
+#-ENDULETH-#
+  }
+}
+
+#Calculate the sum of each column
+$sum = 0;
+for (my $col=0;$col<$numColAttributes;$col++) {
+  for (my $row=0;$row<$numRowQualities;$row++) {
+     $sum = $sum + $tableValue1[$row][$col];
+  }
+  $tableValue1[$numRowQualities][$col] = $sum;
+  $sum = 0;
+}
+
+#Calculate the sum of each row
+for (my $row=0;$row<=$numRowQualities;$row++) {
+  for (my $col=0;$col<$numColAttributes;$col++) {
+     $sum = $sum + $tableValue1[$row][$col];
+  }
+  $tableValue1[$row][$numColAttributes] = $sum;
+  $sum = 0;
+}
+
+# Step 1. Indicate the number of columns (attributes) and rows (qualities) to be
+#   randomly generated, each number will be between the minVal and maxVal
+#   If you change the number of rows or columns you must change the table print
+#   command below.
+$numRowQualities = 3;
+$numColAttributes = 3;
+$minVal = 0;
+$maxVal = 250;
+#-ENDULETH-#
+
+@tableValue2 = ();
+
+
+# Generate the random table values
+for (my $row=0;$row<$numRowQualities;$row++) {
+  for (my $col=0;$col<$numColAttributes;$col++) {
+#-ULETH-#
+     $tableValue2[$row][$col] = random($minVal,$maxVal,1);
+#-ENDULETH-#
+  }
+}
+
+#Calculate the sum of each column
+$sum = 0;
+for (my $col=0;$col<$numColAttributes;$col++) {
+  for (my $row=0;$row<$numRowQualities;$row++) {
+     $sum = $sum + $tableValue2[$row][$col];
+  }
+  $tableValue2[$numRowQualities][$col] = $sum;
+  $sum = 0;
+}
+
+#Calculate the sum of each row
+for (my $row=0;$row<=$numRowQualities;$row++) {
+  for (my $col=0;$col<$numColAttributes;$col++) {
+     $sum = $sum + $tableValue2[$row][$col];
+  }
+  $tableValue2[$row][$numColAttributes] = $sum;
+  $sum = 0;
+}
+
+#-ULETH-#
+# Calculate answer values.
+$answerA = Compute("$tableValue1[1][4] / $tableValue1[3][4]");
+$answerB = Compute("$tableValue1[3][1] / $tableValue1[3][4]");
+$answerC = Compute("$tableValue1[0][3] / $tableValue1[3][4]");
+$answerD_Num = Compute($tableValue1[2][4] + ($tableValue1[3][0] + $tableValue1[3][1]) - ($tableValue1[2][0] + $tableValue1[2][1]));
+$answerD = Compute("$answerD_Num / $tableValue1[3][4]");
+$answerE_Num = Compute($tableValue1[0][3] + $tableValue1[1][3]);
+$answerE = Compute("$answerE_Num / $tableValue1[3][3]");
+
+# Print the table with titles.
+$table1 = $BCENTER.begintable(6) .
+row( "","7 heads","8 heads","9 heads","10 heads","Total" ) .
+row( "Fire breathing",     $tableValue1[0][0],$tableValue1[0][1],$tableValue1[0][2],$tableValue1[0][3],$tableValue1[0][4]) .
+row( "Lightning breathing",$tableValue1[1][0],$tableValue1[1][1],$tableValue1[1][2],$tableValue1[1][3],$tableValue1[1][4]) .
+row( "Acid breathing",     $tableValue1[2][0],$tableValue1[2][1],$tableValue1[2][2],$tableValue1[2][3],$tableValue1[2][4]) .
+row( "Total",              $tableValue1[3][0],$tableValue1[3][1],$tableValue1[3][2],$tableValue1[3][3],$tableValue1[3][4]) .
+endtable().$ECENTER;
+
+# Step 2. Compute the answers for your different questions based on the values in
+#   the table.  Use $table[row][col] to pull specific elements from the table, where
+#   row and col are both 0-based indices.
+$answerF = Compute("$tableValue2[1][3] / $tableValue2[3][3]");
+$answerG = Compute("$tableValue2[3][1] / $tableValue2[3][3]");
+$answerH = Compute("$tableValue2[0][3] / $tableValue2[3][3]");
+
+# Step 3. Set up the table, along with the row and column titles that will be used.
+#   Also, use begintable(numColumns), where numColumns is the number of columns
+#   that are in the table.
+$table2 = $BCENTER.begintable(5) .
+row( "","Christopher","Coach Skip","Mr. Fox","Total" ) .
+row( "2015",     $tableValue2[0][0],$tableValue2[0][1],$tableValue2[0][2],$tableValue2[0][3]) .
+row( "2016",     $tableValue2[1][0],$tableValue2[1][1],$tableValue2[1][2],$tableValue2[1][3]) .
+row( "2017",     $tableValue2[2][0],$tableValue2[2][1],$tableValue2[2][2],$tableValue2[2][3]) .
+row( "Total",    $tableValue2[3][0],$tableValue2[3][1],$tableValue2[3][2],$tableValue2[3][3]) .
+endtable().$ECENTER;
+
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# Step 4. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+#   To add a previously-defined table, use "code brackets" [@ @]*** (note the
+#   three asterisks at the end), and reference the table name within.
+BEGIN_PGML
+1.  Domas Volargen and the Silverhawks specialize in hydra hunting. Over their long and storied history, they have defeated many of the beasts.
+The contigency table below shows a breakdown of the types of hydras they have faced over the years.
+
+    a. What proportion of hydras have been lightning breathing?[__________][@ AnswerFormatHelp("numbers") @]*
+
+    b. What proportion of hydras have had 8 heads?[__________][@ AnswerFormatHelp("numbers") @]*
+
+    c. What proportion of hydras have been fire breathing and had 10 heads?[__________][@ AnswerFormatHelp("numbers") @]*
+
+    d. What proportion of hydras have been acid breathing or had no more than 8 heads?[__________][@ AnswerFormatHelp("numbers") @]*
+
+    e. The Silverhawks' log book contains a record of every hydra they've defeated.
+    Suppose a single entry was chosen at random.  If the hydra described has 10 heads, then
+what is the probability that it does not breath acid?[__________][@ AnswerFormatHelp("numbers") @]*
+
+    [@ $table1 @]***
+
+2.  Over the years, the forest's Whack-Bat team has seen a number of star players.
+Each competed fiercely with the others to achieve the highest scores in each season,
+but only one could come out on top.
+The contigency table below shows a breakdown of the players' scores over the years.
+
+    f. What proportion of the points were scored in 2016?[__________][@ AnswerFormatHelp("numbers") @]*
+
+    g. What proportion of the points did Coach Skip contribute?[__________][@ AnswerFormatHelp("numbers") @]*
+
+    h. What proportion of the points were scored by Mr. Fox in 2015?[__________][@ AnswerFormatHelp("numbers") @]*
+
+    [@ $table2 @]***
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+# Step 5. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+ANS($answerA->cmp());
+ANS($answerB->cmp());
+ANS($answerC->cmp());
+ANS($answerD->cmp());
+ANS($answerE->cmp());
+ANS($answerF->cmp());
+ANS($answerG->cmp());
+ANS($answerH->cmp());
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+Context()->flags->set(reduceConstants=>0);
+#-ULETH-#
+# Step 6. Define the different answer values as Formulas so that they don't get
+#   reduced when you display them as solutions.
+$solutionA = Formula("$tableValue1[1][4] / $tableValue1[3][4]");
+$solutionB = Formula("$tableValue1[3][1] / $tableValue1[3][4]");
+$solutionC = Formula("$tableValue1[0][3] / $tableValue1[3][4]");
+$solutionD = Formula("$answerD_Num / $tableValue1[3][4]");
+$solutionE = Formula("$answerE_Num / $tableValue1[3][3]");
+$solutionF = Formula("$tableValue2[1][3] / $tableValue2[3][3]");
+$solutionG = Formula("$tableValue2[3][1] / $tableValue2[3][3]");
+$solutionH = Formula("$tableValue2[0][3] / $tableValue2[3][3]");
+
+# Solution text to show after the due date.
+# Step 7. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+BEGIN_PGML_SOLUTION
+
+1.
+    a.  [`\frac{\text{number of lightning breathers}}{\text{total}} = [$solutionA]`]
+
+    b.  [`\frac{\text{number with 8 heads}}{\text{total}} = [$solutionB]`]
+
+    c.  [`\frac{\text{number of 10-headed fire breathers}}{\text{total}} = [$solutionC]`]
+
+    d.  [`\frac{(\text{number of acid breathers}) + (\text{number with 8 or fewer heads}) - (\text{number of 7- or 8-headed acid breathers})}{\text{total}}`]
+[`= \frac{[@ $tableValue1[2][4] @]* + ([@ $tableValue1[3][0] @]* + [@ $tableValue1[3][1] @]*) - ([@ $tableValue1[2][0] @]* + [@ $tableValue1[2][1] @]*)}{[@ $tableValue1[3][4] @]*}`]
+[`= [$solutionD]`]
+
+    e.  [`P((\text{not acid breather})|(\text{has 10 heads})) = \frac{P(\text{not acid breather and has 10 heads})}{P(\text{has 10 heads})}`]
+[`= \frac{\left(\frac{[@ $tableValue1[0][3] @]* + [@ $tableValue1[1][3] @]*}{[@ $tableValue1[3][4] @]*}\right)}{\left(\frac{[@ $tableValue1[3][3] @]*}{[@ $tableValue1[3][4] @]*}\right)}`]
+[`= \frac{[@ $tableValue1[0][3] @]* + [@ $tableValue1[1][3] @]*}{[@ $tableValue1[3][3] @]*} = [$solutionE]`]
+
+        or [`P((\text{not acid breather})|(\text{has 10 heads})) = \frac{\text{number of not acid breathers with 10 heads}}{\text{number with 10 heads}}`]
+[`= \frac{[@ $tableValue1[0][3] @]* + [@ $tableValue1[1][3] @]*}{[@ $tableValue1[3][3] @]*} = [$solutionE]`]
+
+2.
+
+    f.  [`\frac{\text{number of points scored in 2016}}{\text{total}} = [$solutionF]`]
+
+    g.  [`\frac{\text{number of points scored by Coach Skip}}{\text{total}} = [$solutionG]`]
+
+    h.  [`\frac{\text{number of points scored in 2015 by Mr. Fox}}{\text{total}} = [$solutionH]`]
+
+END_PGML_SOLUTION
+
+COMMENT('MathObject version. Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

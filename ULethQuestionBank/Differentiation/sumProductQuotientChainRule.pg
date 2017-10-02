@@ -1,0 +1,206 @@
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-08-10)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('chain rule', 'differentiation', 'derivatives of functions')
+
+# How to add a new question:
+# Step 1. Change the value of $numVals to match the number of unique random
+#   numbers you need to define all the functions you are using in the question.
+# Step 2. If you want to change the pool of values to select the numbers from,
+#   change the range for the random number selector.
+# Step 3. Define any new functions for the question here.  Reference the
+#   different integers you want to use from the array by using
+#   $randomIntegers[index].
+# Step 4. Compute the answer(s) for the new question.  Use ->D to compute the
+#   derivative of the value.  Include the variables that you want to take the
+#   derivatives by in quotes (one variable per set of quotes).
+# Step 5. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Step 6. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Step 7. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+
+
+###########################
+#  Initialization
+
+# The first line in the .pg file after any opening comments.
+# Defines the bounds of the document.
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+
+@randomIntegers = ();
+#-ULETH-#
+# Step 1. Change the value of $numVals to match the number of unique random
+#   numbers you need to define all the functions you are using in the question.
+$numIntegers = 100;
+#-ENDULETH-#
+
+for (my $i = 0; $i < $numIntegers; $i++)
+{
+  #-ULETH-#
+  # Set the range of values you want to generate from for the question.
+  # Step 2. If you want to change the pool of values to select the numbers from,
+  #   change the range for the random number selector.
+  # Eg: $randomIntegers[$i] = non_zero_random(-24,2,2);
+  $randomIntegers[$i] = non_zero_random(-12, 12, 1);
+  #-ENDULETH-#
+}
+
+#-ULETH-#
+# Defines the functions that will have their derivative taken for the questions.
+# Step 3. Define any new functions for the question here.  Reference the
+#   different integers you want to use by using $randomIntegers[index].
+# Eg: $iX = Compute("($randomIntegers[21]x^$randomIntegers[22] + $randomIntegers[23])");
+$fX = Compute("$randomIntegers[0]x^$randomIntegers[1] - $randomIntegers[2]x + $randomIntegers[3]");
+$gX = Compute("($randomIntegers[4]x^$randomIntegers[5] + $randomIntegers[6]) / ($randomIntegers[7]x^$randomIntegers[8] + $randomIntegers[9]x + $randomIntegers[10])");
+$hX = Compute("($randomIntegers[11]x + $randomIntegers[12]ln(x))sqrt($randomIntegers[13]x^$randomIntegers[14] + $randomIntegers[15])");
+$FX = Compute("$randomIntegers[16]sin($randomIntegers[17]x^$randomIntegers[18] - $randomIntegers[19]) + $randomIntegers[20]");
+
+# Separate display and question versions of the equation are defined so that the fractional exponent doesn't get reduced in LaTeX.
+$GXForDisplay = "($randomIntegers[23]cos($randomIntegers[24]x^{$randomIntegers[25]}))^\frac{$randomIntegers[21]}{$randomIntegers[22]}";
+$GXForQuestion = Compute("($randomIntegers[23]cos($randomIntegers[24]x^$randomIntegers[25]))^($randomIntegers[21] / $randomIntegers[22])");
+
+# Defining the different values for the answers.  These are all just taking
+# the derivative of different functions.
+# Step 4. Compute the answer(s) for the new question.  Use ->D to compute the
+#   derivative of the value.  Include the variables that you want to take the
+#   derivatives by in quotes (one variable per set of quotes).
+# Eg: $answerF = $iX->D('x');
+$answerA = $fX->D('x');
+$answerB = $gX->D('x');
+$answerC = $hX->D('x');
+$answerD = $FX->D('x');
+$answerE = $GXForQuestion->D('x');
+#-ENDULETH-#
+
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# Step 5. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Eg: f.  [`i(x) = [$iX]`]
+#
+#    [`i'(x) = `][________________________________________________________________________________________________________________________][@ AnswerFormatHelp("equations") @]*
+BEGIN_PGML
+
+Find the derivative of each of the following functions:
+
+a.  [`f(x) = [$fX]`]
+
+    [`f'(x) = `][________________________________________________________________________________________________________________________][@ AnswerFormatHelp("equations") @]*
+
+b.  [`g(x) = [$gX]`]
+
+    [`g'(x) = `][________________________________________________________________________________________________________________________][@ AnswerFormatHelp("equations") @]*
+
+c.  [`h(x) = [$hX]`]
+
+    [`h'(x) = `][________________________________________________________________________________________________________________________][@ AnswerFormatHelp("equations") @]*
+
+d.  [`F(x) = [$FX]`]
+
+    [`F'(x) = `][________________________________________________________________________________________________________________________][@ AnswerFormatHelp("equations") @]*
+
+e.  [`G(x) = [$GXForDisplay]`]
+
+    [`G'(x) = `][________________________________________________________________________________________________________________________][@ AnswerFormatHelp("equations") @]*
+
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#   Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+# Step 6. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Eg: ANS($answerF->cmp());
+ANS($answerA->cmp());
+ANS($answerB->cmp());
+ANS($answerC->cmp());
+ANS($answerD->cmp());
+ANS($answerE->cmp());
+#-ENDULETH-#
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# Step 7. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+BEGIN_PGML_SOLUTION
+
+Recall:
+
+*   Sum/difference rule:
+    [`\frac{d}{dx}(f(x) \pm g(x)) = f'(x) \pm g'(x)`]
+
+*   Product rule:
+    [`\frac{d}{dx}(f(x) * g(x)) = f'(x)g(x) + f(x)g'(x)`]
+
+*   Quotient rule:
+    [`\frac{d}{dx} \left(\frac{f(x)}{g(x)}\right) = \frac{f'(x)g(x) - f(x)g'(x)}{(g(x))^2}`]
+
+*   Chain rule:
+    [`\frac{d}{dx}(f(g(x))) = f'(g(x)) * g'(x)`]
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+# Marks the end of the problem document.
+ENDDOCUMENT();

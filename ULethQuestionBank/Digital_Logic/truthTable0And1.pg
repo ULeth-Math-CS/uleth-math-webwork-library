@@ -1,0 +1,723 @@
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-08-03)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('truth table', 'logic operators', 'digital logic')
+
+
+###########################
+#  Initialization
+
+# The first line in the .pg file after any opening comments.
+# Defines the bounds of the document.
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  # Used to display truth tables.
+  "niceTables.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+
+#-ULETH-#
+# FORMATTING RULE: Leave a space between each operator, operand, and bracket!
+# This is needed for proper parsing!
+# Expressions must use V1, V2, and V3.
+# O1, O2, and O3 are placeholders for distinct operators in the expression.
+# \sim is used not represent a NOT.
+@expressions =
+(
+  "( V1 O1 V2 ) O2 V3",
+  "V1 O1 ( V2 O2 V3 )",
+  "( V1 O1 V2 ) O2 ( V3 O1 V1 )",
+  "( V1 O1 V2 ) O2 ( V3 O3 V1 )",
+  "\sim ( V1 O1 V2 ) O2 V3",
+  "V1 O1 \sim ( V2 O2 V3 )",
+  "\sim ( V1 O1 V2 ) O2 ( V3 O1 V1 )",
+  "( V1 O1 V2 ) O2 \sim ( V3 O1 V1 )",
+  "\sim ( V1 O1 V2 ) O2 \sim ( V3 O1 V1 )",
+  "\sim ( V1 O1 V2 ) O2 ( V3 O3 V1 )",
+  "( V1 O1 V2 ) O2 \sim ( V3 O3 V1 )",
+  "\sim ( V1 O1 V2 ) O2 \sim ( V3 O3 V1 )"
+);
+#-ENDULETH-#
+
+#-ULETH-#
+# Array of potential logic operators in LaTeX notation.
+# Available operators are AND, OR, IF, IFF, and XOR.
+# You can remove from this list if you don't want certain operators.
+# Adding new operators will require heavy code modification.
+@operators =
+(
+  "\land",
+  "\lor",
+  "\to",
+  "\leftrightarrow",
+  "\oplus"
+);
+#-ENDULETH-#
+
+sub generateExpression
+{
+  # Randomly select an index to grab an expression template.
+  $expIndex = random(0, scalar(@expressions) - 1, 1);
+  $expressionString = $expressions[$expIndex];
+
+  # Substitute variables into the string.  The syntax used is s/FIND/REPLACE/flags,
+  # where FIND is the string being searched for, REPLACE is the replacement string,
+  # and flags are characters to indicate additional options.  In this case, we use
+  # g to find and replace all instances of the target string instead of just the first.
+  $expressionString =~ s/V1/p/g;
+  $expressionString =~ s/V2/q/g;
+  $expressionString =~ s/V3/r/g;
+
+  # Randomly select 3 indices to grab operations.
+  # The while loops will ensure that the three operations are unique between one
+  # another.
+  $opIndex1 = random(0, scalar(@operators) - 1, 1);
+  $opIndex2 = random(0, scalar(@operators) - 1, 1);
+  while ($opIndex2 == $opIndex1)
+  {
+    $opIndex2 = random(0, scalar(@operators) - 1, 1);
+  }
+  $opIndex3 = random(0, scalar(@operators) - 1, 1);
+  while ($opIndex3 == $opIndex2 || $opIndex3 == $opIndex1)
+  {
+    $opIndex3 = random(0, scalar(@operators) - 1, 1);
+  }
+
+  # Substitute operations into the string.  The syntax used is s/FIND/REPLACE/flags,
+  # where FIND is the string being searched for, REPLACE is the replacement string,
+  # and flags are characters to indicate additional options.  In this case, we use
+  # g to find and replace all instances of the target string instead of just the first.
+  $expressionString =~ s/O1/$operators[$opIndex1]/g;
+  $expressionString =~ s/O2/$operators[$opIndex2]/g;
+  $expressionString =~ s/O3/$operators[$opIndex3]/g;
+
+  # We should now have an expression string with all variables and operations
+  # randomly selected and appropriately filled-in.
+  return $expressionString;
+}
+
+# THIS CODE WILL ONLY WORK WITH EQUATIONS THAT USE THREE VARIABLES: 'p', 'q', and 'r'.
+# MODIFY AT YOUR OWN RISK.
+sub initTable
+{
+  $exprString = $_[0];
+  @expressionTable = ();
+
+  # Initialize the values in the p column.
+  $expressionTable[0][0] = 'p';
+  for (my $i = 1; $i <= 8; $i++)
+  {
+    if ($i <= 4)
+    {
+      $expressionTable[0][$i] = 0;
+    }
+    else
+    {
+      $expressionTable[0][$i] = 1;
+    }
+  }
+
+  # Initialize the values in the q column.
+  $expressionTable[1][0] = 'q';
+  for (my $i = 1; $i <= 8; $i++)
+  {
+    if ($i % 4 == 1 || $i % 4 == 2)
+    {
+      $expressionTable[1][$i] = 0;
+    }
+    else
+    {
+      $expressionTable[1][$i] = 1;
+    }
+  }
+
+  # Initialize the values in the r column.
+  $expressionTable[2][0] = 'r';
+  for (my $i = 1; $i <= 8; $i++)
+  {
+    if ($i % 2 == 1)
+    {
+      $expressionTable[2][$i] = 0;
+    }
+    else
+    {
+      $expressionTable[2][$i] = 1;
+    }
+  }
+
+  # Stores the number of the table index we are currently adding to.  Used to
+  # reference the appropriate table column in the expression string.
+  # Initialized to 3, because we've filled the first three columns with the equation
+  # variables.
+  $index = 3;
+
+  # Next, check through for bracketed expressions.
+  for (my $i = 0; $i < length($exprString); $i++)
+  {
+    if (substr($exprString, $i, 1) eq '(')
+    {
+      for (my $j = $i; $j < length($exprString); $j++)
+      {
+        if (substr($exprString, $j, 1) eq ')')
+        {
+          # Add the full sub-expression string to the array.
+          # Use $i+1 and $i-1 so the brackets don't get included in the table.
+          # E.g. From ( p V q ) -> r, extract "p V q".
+          $expression = substr($exprString, $i+1, $j-$i-1);
+          $expressionTable[$index][0] = $expression;
+
+          # Figure out which operation is being performed.
+          $exprOperator = "";
+          for (my $k = 0; $k < scalar(@operators); $k++)
+          {
+            # If the expression string contains the operator, save the operator string.
+            if (index($expression, $operators[$k]) != -1)
+            {
+              $exprOperator = $operators[$k];
+            }
+          }
+
+          # Get the operands, avoiding leading and trailing spaces.
+          $operand1 = ' ';
+          $opIndex = 0;
+          while ($operand1 eq ' ')
+          {
+            $operand1 = substr($expression, $opIndex, 1);
+            $opIndex += 1;
+          }
+
+          $operand2 = ' ';
+          $opIndex = length($expression) - 1;
+          while ($operand2 eq ' ')
+          {
+            $operand2 = substr($expression, $opIndex, 1);
+            $opIndex -= 1;
+          }
+
+          # Reassign operand values so they match the table column index for the operand.
+          if ($operand1 eq 'p')
+          {
+            $operand1 = 0;
+          }
+          elsif ($operand1 eq 'q')
+          {
+            $operand1 = 1;
+          }
+          elsif ($operand1 eq 'r')
+          {
+            $operand1 = 2;
+          }
+
+          # Reassign operand values so they match the table column index for the operand.
+          if ($operand2 eq 'p')
+          {
+            $operand2 = 0;
+          }
+          elsif ($operand2 eq 'q')
+          {
+            $operand2 = 1;
+          }
+          elsif ($operand2 eq 'r')
+          {
+            $operand2 = 2;
+          }
+
+          # Set up the column values.
+          # If two values are being ANDed...
+          if ($exprOperator eq "\land")
+          {
+            for (my $k = 1; $k <= 8; $k++)
+            {
+              $expressionTable[$index][$k] = $expressionTable[$operand1][$k] & $expressionTable[$operand2][$k];
+            }
+          }
+          # If two values are being ORed...
+          elsif ($exprOperator eq "\lor")
+          {
+            for (my $k = 1; $k <= 8; $k++)
+            {
+              $expressionTable[$index][$k] = $expressionTable[$operand1][$k] | $expressionTable[$operand2][$k];
+            }
+          }
+          # There is an implication...
+          elsif ($exprOperator eq "\to")
+          {
+            for ($k = 1; $k <= 8; $k++)
+            {
+              # Implication is logically equivalent to ~P | Q
+              $expressionTable[$index][$k] = !($expressionTable[$operand1][$k]) | $expressionTable[$operand2][$k];
+            }
+          }
+          # There is a biconditional...
+          elsif ($exprOperator eq "\leftrightarrow")
+          {
+            for ($k = 1; $k <= 8; $k++)
+            {
+              # Biconditional is logically equivalent to (~P | Q) & (P | ~Q)
+              $expressionTable[$index][$k] = (!($expressionTable[$operand1][$k]) | $expressionTable[$operand2][$k]) &
+                                             ($expressionTable[$operand1][$k] | !($expressionTable[$operand2][$k]));
+            }
+          }
+          # If two values are being XORed...
+          elsif ($exprOperator eq "\oplus")
+          {
+            for ($k = 1; $k <= 8; $k++)
+            {
+              # '^' is the XOR operator in Perl; it is not an exponent.
+              $expressionTable[$index][$k] = $expressionTable[$operand1][$k] ^ $expressionTable[$operand2][$k];
+            }
+          }
+
+          $index += 1;
+          # Break out of the loop.
+          last;
+        }
+      }
+    }
+  }
+
+  # Next, check for "not" expressions.
+  for (my $i = 0; $i < length($exprString); $i++)
+  {
+    if (substr($exprString, $i, 4) eq "\sim")
+    {
+      # Is the "not" being applied to an entire new expression?
+      # i+4 is used so that we check the character after the \sim.
+      if (substr($exprString, $i+4, 2) eq ' (')
+      {
+        $exprEndIndex = $i;
+        for (my $j = $i; $j < length($exprString); $j++)
+        {
+          if (substr($exprString, $j, 1) eq ')')
+          {
+            $exprEndIndex = $j;
+            # Break out of the loop.
+            last;
+          }
+        }
+        # Add the full sub-expression string to the array.
+        # E.g. From \sim ( p V q ) -> r, extract "\sim ( p V q )".
+        # Use $exprEndIndex-$i+1 to grab the space and closing bracket.
+        $expressionTable[$index][0] = substr($exprString, $i, $exprEndIndex-$i+1);
+
+        $expressionIndex = 3;
+        # Get the column index for the equation being NOTed.
+        for (my $j = 3; $j < $index; $j++)
+        {
+          if (index($expressionTable[$index][0], $expressionTable[$j][0]) != -1)
+          {
+            $expressionIndex = $j;
+          }
+        }
+
+        # Once we find the appropriate expression to NOT, calculate those values.
+        # Note that Perl converts "!1" into an empty string instead of 0.  Hence, we
+        # need to do some checks and hardcode 0s when they appear.
+        for (my $j = 1; $j <= 8; $j++)
+        {
+          if (!($expressionTable[$expressionIndex][$j]) == 1)
+          {
+            $expressionTable[$index][$j] = 1;
+          }
+          else
+          {
+            $expressionTable[$index][$j] = 0;
+          }
+        }
+
+        $index += 1;
+      }
+      # The "not" is being applied to a single variable in the expression.
+      else
+      {
+        # Grabs the "not" sign (\sim) and the variable that follows.
+        # E.g. From \sim p V ( q -> r ), extract "\sim p".
+        $expressionTable[$index][0] = substr($exprString, $i, 6);
+        # Get the name of the variable being NOTed.
+        $varName = substr($expressionTable[$index][0], length($expressionTable[$index][0]) - 1, 1);
+
+        # Note that Perl converts "!1" into an empty string instead of 0.  Hence, we
+        # need to do some checks and hardcode 0s when they appear.
+        if ($varName eq 'p')
+        {
+          for (my $j = 1; $j <= 8; $j++)
+          {
+            if (!($expressionTable[0][$j]) == 1)
+            {
+              $expressionTable[$index][$j] = 1;
+            }
+            else
+            {
+              $expressionTable[$index][$j] = 0;
+            }
+          }
+        }
+        elsif ($varName eq 'q')
+        {
+          for (my $j = 1; $j <= 8; $j++)
+          {
+            if (!($expressionTable[1][$j]) == 1)
+            {
+              $expressionTable[$index][$j] = 1;
+            }
+            else
+            {
+              $expressionTable[$index][$j] = 0;
+            }
+          }
+        }
+        elsif ($varName eq 'r')
+        {
+          for (my $j = 1; $j <= 8; $j++)
+          {
+            if (!($expressionTable[2][$j]) == 1)
+            {
+              $expressionTable[$index][$j] = 1;
+            }
+            else
+            {
+              $expressionTable[$index][$j] = 0;
+            }
+          }
+        }
+
+        $index += 1;
+      }
+    }
+  }
+
+  # Once we've parsed out all the sub-expressions, push the full string on.
+  $expressionTable[$index][0] = $exprString;
+
+  # Variables to store the column indices for the subexpressions.
+  $subExprIndexA = -1;
+  $subExprIndexB = -1;
+
+  # Copy the expression string so we have a version we can remove from.
+  $remainder = $exprString;
+
+  # Work backwards through the table headers to pull out the subexpressions.
+  for (my $i = $index - 1; $i >= 0; $i--)
+  {
+    # Once we find one subexpression...
+    if (index($remainder, $expressionTable[$i][0]) != -1)
+    {
+      # ...check if we are dealing with a single variable...
+      if ($i < 3)
+      {
+        # If our test string would be extracting from the end of the string
+        # (which is what happens if substr is called with a negative starting index), ...
+        if ((index($remainder, $expressionTable[$i][0]) - 1) < 0)
+        {
+          # ...we know that we're just concerned with the first two characters in the string.
+          $stringToCheck = substr($remainder, 0, 2);
+        }
+        else
+        {
+          $stringToCheck = substr($remainder, index($remainder, $expressionTable[$i][0]) - 1, 3);
+        }
+
+        # Check if the variable is on its own.  This prevents us from grabbing 'r'
+        # from "\lor", for instance.
+        if ($stringToCheck eq "$expressionTable[$i][0] " || $stringToCheck eq " $expressionTable[$i][0] " || $stringToCheck eq " $expressionTable[$i][0]")
+        {
+          $subExprIndexA = $i;
+        }
+        else
+        {
+          next;
+        }
+      }
+      # Otherwise, we're dealing with a "full" subexpression.
+      else
+      {
+        $subExprIndexA = $i;
+      }
+      # ...remove the subexpression.
+      substr($remainder, index($remainder, $expressionTable[$subExprIndexA][0]), length($expressionTable[$subExprIndexA][0]), "");
+      last;
+    }
+  }
+
+  for (my $j = $subExprIndexA; $j >= 0; $j--)
+  {
+    # Once we find the second subexpression...
+    if (index($remainder, $expressionTable[$j][0]) != -1)
+    {
+      # ...check if we are dealing with a single variable...
+      if ($j < 3)
+      {
+        # If our test string would be extracting from the end of the string
+        # (which is what happens if substr is called with a negative starting index), ...
+        if ((index($remainder, $expressionTable[$j][0]) - 1) < 0)
+        {
+          # ...we know that we're just concerned with the first two characters in the string.
+          $stringToCheck = substr($remainder, 0, 2);
+        }
+        else
+        {
+          $stringToCheck = substr($remainder, index($remainder, $expressionTable[$j][0]) - 1, 3);
+        }
+
+        # Check if the variable is on its own.  This prevents us from grabbing 'r'
+        # from "\lor", for instance.
+        if ($stringToCheck eq "$expressionTable[$j][0] " || $stringToCheck eq " $expressionTable[$j][0] " || $stringToCheck eq " $expressionTable[$j][0]")
+        {
+          $subExprIndexB = $j;
+        }
+        else
+        {
+          next;
+        }
+      }
+      # Otherwise, we're dealing with a "full" subexpression.
+      else
+      {
+        $subExprIndexB = $j;
+      }
+      # ...remove the subexpression.
+      substr($remainder, index($remainder, $expressionTable[$subExprIndexB][0]), length($expressionTable[$subExprIndexB][0]), "");
+      last;
+    }
+  }
+
+  # Figure out which operation is being performed.
+  $exprOperator = "";
+  for (my $i = 0; $i < scalar(@operators); $i++)
+  {
+    # If the remainder string contains the operator, save the operator string.
+    if (index($remainder, $operators[$i]) != -1)
+    {
+      $exprOperator = $operators[$i];
+    }
+  }
+
+  # If the subexpressions are in the improper order, swap them.
+  # This is only really important for implications.
+  if (index($exprString, $expressionTable[$subExprIndexA][0]) > index($exprString, $expressionTable[$subExprIndexB][0]))
+  {
+    $temp = $subExprIndexA;
+    $subExprIndexA = $subExprIndexB;
+    $subExprIndexB = $temp;
+  }
+
+  # Set up the column values.
+  # If two values are being ANDed...
+  if ($exprOperator eq "\land")
+  {
+    for (my $i = 1; $i <= 8; $i++)
+    {
+      $expressionTable[$index][$i] = $expressionTable[$subExprIndexA][$i] & $expressionTable[$subExprIndexB][$i];
+    }
+  }
+  # If two values are being ORed...
+  elsif ($exprOperator eq "\lor")
+  {
+    for (my $i = 1; $i <= 8; $i++)
+    {
+      $expressionTable[$index][$i] = $expressionTable[$subExprIndexA][$i] | $expressionTable[$subExprIndexB][$i];
+    }
+  }
+  # If there's an implication...
+  elsif ($exprOperator eq "\to")
+  {
+    for ($i = 1; $i <= 8; $i++)
+    {
+      # Implication is logically equivalent to ~P | Q
+      $expressionTable[$index][$i] = !($expressionTable[$subExprIndexA][$i]) | $expressionTable[$subExprIndexB][$i];
+    }
+  }
+  # If there's a biconditional...
+  elsif ($exprOperator eq "\leftrightarrow")
+  {
+    for ($i = 1; $i <= 8; $i++)
+    {
+      # Biconditional is logically equivalent to (~P | Q) & (P | ~Q)
+      $expressionTable[$index][$i] = (!($expressionTable[$subExprIndexA][$i]) | $expressionTable[$subExprIndexB][$i]) &
+                                     ($expressionTable[$subExprIndexA][$i] | !($expressionTable[$subExprIndexB][$i]));
+    }
+  }
+  # If the values are being XORed...
+  elsif ($exprOperator eq "\oplus")
+  {
+    for ($i = 1; $i <= 8; $i++)
+    {
+      # '^' is the XOR operator in Perl; it is not an exponent.
+      $expressionTable[$index][$i] = $expressionTable[$subExprIndexA][$i] ^ $expressionTable[$subExprIndexB][$i];
+    }
+  }
+
+  # Fill in the empty columns with blank strings.
+  for (my $i = $index + 1; $i < 8; $i++)
+  {
+    for (my $j = 0; $j <= 8; $j++)
+    {
+      $expressionTable[$i][$j] = "";
+    }
+  }
+
+  return @expressionTable;
+}
+
+
+$problemExpression = generateExpression();
+@opTable = initTable($problemExpression);
+
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+# Note: PG is used here instead of PGML, because displaying the table properly in
+# PGML is needlessly complicated and far too breakable.
+# The size of the table cannot be set dynamically, so depending on the number of
+# steps in the equation, you may end up with some blank rows/columns in the table.
+BEGIN_TEXT
+\{
+  DataTable(
+    [
+      [["\($opTable[0][0]\)", headerrow=>1], "\($opTable[1][0]\)", "\($opTable[2][0]\)", "\($opTable[3][0]\)", "\($opTable[4][0]\)", "\($opTable[5][0]\)", "\($opTable[6][0]\)", "\($opTable[7][0]\)"],
+      [ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1)],
+      [ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1)],
+      [ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1)],
+      [ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1)],
+      [ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1)],
+      [ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1)],
+      [ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1)],
+      [ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1), ans_rule(1)]
+    ],
+    caption=>"Truth Table for \($problemExpression\)",
+    midrules=>1,
+    # This makes it so each column has a bar on either side and the contents are centred.
+    align=>"|c|c|c|c|c|c|c|c|"
+  );
+\}
+END_TEXT
+#-ENDULETH-#
+
+
+#############################
+#   Answer Evaluation
+
+#-ULETH-#
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS(Compute($opTable[0][1])->cmp());
+ANS(Compute($opTable[1][1])->cmp());
+ANS(Compute($opTable[2][1])->cmp());
+ANS(Compute($opTable[3][1])->cmp());
+ANS(Compute($opTable[4][1])->cmp());
+ANS(Compute($opTable[5][1])->cmp());
+ANS(Compute($opTable[6][1])->cmp());
+ANS(Compute($opTable[7][1])->cmp());
+ANS(Compute($opTable[0][2])->cmp());
+ANS(Compute($opTable[1][2])->cmp());
+ANS(Compute($opTable[2][2])->cmp());
+ANS(Compute($opTable[3][2])->cmp());
+ANS(Compute($opTable[4][2])->cmp());
+ANS(Compute($opTable[5][2])->cmp());
+ANS(Compute($opTable[6][2])->cmp());
+ANS(Compute($opTable[7][2])->cmp());
+ANS(Compute($opTable[0][3])->cmp());
+ANS(Compute($opTable[1][3])->cmp());
+ANS(Compute($opTable[2][3])->cmp());
+ANS(Compute($opTable[3][3])->cmp());
+ANS(Compute($opTable[4][3])->cmp());
+ANS(Compute($opTable[5][3])->cmp());
+ANS(Compute($opTable[6][3])->cmp());
+ANS(Compute($opTable[7][3])->cmp());
+ANS(Compute($opTable[0][4])->cmp());
+ANS(Compute($opTable[1][4])->cmp());
+ANS(Compute($opTable[2][4])->cmp());
+ANS(Compute($opTable[3][4])->cmp());
+ANS(Compute($opTable[4][4])->cmp());
+ANS(Compute($opTable[5][4])->cmp());
+ANS(Compute($opTable[6][4])->cmp());
+ANS(Compute($opTable[7][4])->cmp());
+ANS(Compute($opTable[0][5])->cmp());
+ANS(Compute($opTable[1][5])->cmp());
+ANS(Compute($opTable[2][5])->cmp());
+ANS(Compute($opTable[3][5])->cmp());
+ANS(Compute($opTable[4][5])->cmp());
+ANS(Compute($opTable[5][5])->cmp());
+ANS(Compute($opTable[6][5])->cmp());
+ANS(Compute($opTable[7][5])->cmp());
+ANS(Compute($opTable[0][6])->cmp());
+ANS(Compute($opTable[1][6])->cmp());
+ANS(Compute($opTable[2][6])->cmp());
+ANS(Compute($opTable[3][6])->cmp());
+ANS(Compute($opTable[4][6])->cmp());
+ANS(Compute($opTable[5][6])->cmp());
+ANS(Compute($opTable[6][6])->cmp());
+ANS(Compute($opTable[7][6])->cmp());
+ANS(Compute($opTable[0][7])->cmp());
+ANS(Compute($opTable[1][7])->cmp());
+ANS(Compute($opTable[2][7])->cmp());
+ANS(Compute($opTable[3][7])->cmp());
+ANS(Compute($opTable[4][7])->cmp());
+ANS(Compute($opTable[5][7])->cmp());
+ANS(Compute($opTable[6][7])->cmp());
+ANS(Compute($opTable[7][7])->cmp());
+ANS(Compute($opTable[0][8])->cmp());
+ANS(Compute($opTable[1][8])->cmp());
+ANS(Compute($opTable[2][8])->cmp());
+ANS(Compute($opTable[3][8])->cmp());
+ANS(Compute($opTable[4][8])->cmp());
+ANS(Compute($opTable[5][8])->cmp());
+ANS(Compute($opTable[6][8])->cmp());
+ANS(Compute($opTable[7][8])->cmp());
+#-ENDULETH-#
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Can be used to show the student the solution to the problem.
+# Similar to BEGIN_TEXT, marks the start of the solution text.
+BEGIN_SOLUTION
+\{
+  DataTable(
+    [
+      [["\($opTable[0][0]\)", headerrow=>1], "\($opTable[1][0]\)", "\($opTable[2][0]\)", "\($opTable[3][0]\)", "\($opTable[4][0]\)", "\($opTable[5][0]\)", "\($opTable[6][0]\)", "\($opTable[7][0]\)"],
+      ["\($opTable[0][1]\)", "\($opTable[1][1]\)", "\($opTable[2][1]\)", "\($opTable[3][1]\)", "\($opTable[4][1]\)", "\($opTable[5][1]\)", "\($opTable[6][1]\)", "\($opTable[7][1]\)"],
+      ["\($opTable[0][2]\)", "\($opTable[1][2]\)", "\($opTable[2][2]\)", "\($opTable[3][2]\)", "\($opTable[4][2]\)", "\($opTable[5][2]\)", "\($opTable[6][2]\)", "\($opTable[7][2]\)"],
+      ["\($opTable[0][3]\)", "\($opTable[1][3]\)", "\($opTable[2][3]\)", "\($opTable[3][3]\)", "\($opTable[4][3]\)", "\($opTable[5][3]\)", "\($opTable[6][3]\)", "\($opTable[7][3]\)"],
+      ["\($opTable[0][4]\)", "\($opTable[1][4]\)", "\($opTable[2][4]\)", "\($opTable[3][4]\)", "\($opTable[4][4]\)", "\($opTable[5][4]\)", "\($opTable[6][4]\)", "\($opTable[7][4]\)"],
+      ["\($opTable[0][5]\)", "\($opTable[1][5]\)", "\($opTable[2][5]\)", "\($opTable[3][5]\)", "\($opTable[4][5]\)", "\($opTable[5][5]\)", "\($opTable[6][5]\)", "\($opTable[7][5]\)"],
+      ["\($opTable[0][6]\)", "\($opTable[1][6]\)", "\($opTable[2][6]\)", "\($opTable[3][6]\)", "\($opTable[4][6]\)", "\($opTable[5][6]\)", "\($opTable[6][6]\)", "\($opTable[7][6]\)"],
+      ["\($opTable[0][7]\)", "\($opTable[1][7]\)", "\($opTable[2][7]\)", "\($opTable[3][7]\)", "\($opTable[4][7]\)", "\($opTable[5][7]\)", "\($opTable[6][7]\)", "\($opTable[7][7]\)"],
+      ["\($opTable[0][8]\)", "\($opTable[1][8]\)", "\($opTable[2][8]\)", "\($opTable[3][8]\)", "\($opTable[4][8]\)", "\($opTable[5][8]\)", "\($opTable[6][8]\)", "\($opTable[7][8]\)"],
+    ],
+    caption=>"Truth Table for \($problemExpression\)",
+    midrules=>1,
+    # This makes it so each column has a bar on either side and the contents are centred.
+    align=>"|c|c|c|c|c|c|c|c|"
+  );
+\}
+END_SOLUTION
+#-ENDULETH-#
+
+# Marks the end of the problem document.
+ENDDOCUMENT();

@@ -1,0 +1,172 @@
+## DESCRIPTION
+## This question code is based on a sample problem from the WeBWorK wiki.
+## It has been modified to meet the ULeth Template standards.
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-06)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('domain and range using intervals')
+
+# How to add a new question:
+# Step 1. If you want to change the pool of values to select the integer
+#   values from, change the range for the random number selectors.
+# Step 2. Compute the Formula that the student will be finding the domain of.
+# Step 3. Compute the Interval that defines the domain for the function.
+# Step 4. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Step 5. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Step 6. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+
+
+#############################
+#   Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  "PGML.pl"
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+
+# The Numeric context is used while defining the formula, as it only
+# requires numeric values.
+Context("Numeric");
+
+#-ULETH-#
+# $a will be a random integer between 1 and 50 (step 1) for each student.
+# Step 1. If you want to change the pool of values to select the integer
+#   values from, change the range for the random number selectors.
+# Eg: $a = random(25,75,5);
+$a = random(1,50,1);
+
+# Step 2. Compute the Formula that the student will be finding the domain of.
+# Eg: $f = Compute("sqrt(x + $a)");
+# $f is the Formula used in the question.
+$f = Compute("sqrt(x-$a)");
+
+# Answers can only be entered as intervals.
+Context("Interval")->variables->are(x=>"Real");
+
+# This ensures that the student's answer is kept in the form it is entered.
+# E.g. If a fraction is entered, it will not be reduced to a decimal.
+Context()->flags->set(formatStudentAnswer=>'parsed');
+
+# The following flag can be uncommented to allow open and closed intervals.
+# E.g. 1 < x < 2, 1 <= x < 2, 1 < x <= 2, and 1 <= x <= 2 would all be marked correct.
+# Context()->flags->set(ignoreEndpointTypes=>1);
+# Step 3. Compute the Interval that defines the domain for the function.
+# Eg: $domain1 = Compute("[-$a,inf)");
+$domain1 = Compute("[$a, inf)");
+
+# $b will be a random integer between 1 and 50 (step 1) for each student.
+$b = random(1,50,1);
+$c = random(1,20,1);
+
+# $g is the formula used in the question.
+$g = Compute("$b / (x - $c)");
+
+# Answers can only be entered as intervals.
+Context("Interval")->variables->are(x=>"Real");
+
+# The following flag can be uncommented to allow open and closed intervals.
+# E.g. 1 < x < 2, 1 <= x < 2, 1 < x <= 2, and 1 <= x <= 2 would all be marked correct.
+# Context()->flags->set(ignoreEndpointTypes=>1);
+
+$domain2 = Compute("(-inf,$c)U($c,inf)");
+#-ENDULETH-#
+
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+# Don't forget to change the problem text if you change whether the answer is
+# an interval, inequality, or both!
+# Step 4. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Eg: 3.  Suppose  [`f(x) = [$f]`].  Enter an interval for the domain of [`f`].
+#
+#         Domain: [____________________][@ AnswerFormatHelp("intervals") @]*
+BEGIN_PGML
+1.  Suppose  [`f(x) = [$f]`].  Enter an interval for the domain of [`f`].
+
+    Domain: [____________________][@ AnswerFormatHelp("intervals") @]*
+
+2.  Suppose  [`g(x) = [$g]`].  Enter an interval for the domain of [`g`].
+
+    Domain: [____________________][@ AnswerFormatHelp("intervals") @]*
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#   Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# Step 5. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Eg: ANS($domain1->cmp());
+ANS( $domain1->cmp() );
+ANS( $domain2->cmp() );
+#-ENDULETH-#
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Step 6. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+BEGIN_PGML_SOLUTION
+a.  Since [`x - [$a]`] is under a square root, we must have [`x - [$a] \geq 0`],
+so [`x \geq [$a]`].
+
+    In interval format we have [`x \in [[$a],\infty)`].
+
+b.  Since [`x - [$c]`] is in the denominator of a fraction, we must have
+[`x - [$c] \neq 0`], so [`x \neq [$c]`].
+
+    In interval format we have [`x \in (-\infty,[$c])U([$c],\infty)`].
+END_PGML_SOLUTION
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

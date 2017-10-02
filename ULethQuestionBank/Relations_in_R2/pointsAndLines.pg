@@ -1,0 +1,226 @@
+## DESCRIPTION
+## This question code is based on a sample problem from the WeBWorK wiki.
+## It has been modified to meet the ULeth Template standards.
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-05)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('answer can contain any variable', 'variables')
+
+# How to add a new question:
+# Step 1. If you want to change the pool of values to select the y
+#   value from, change the range for the random number selector.
+# Step 2. If you want to ensure that both answers are not DNE, you can define
+#   a condition here.  This statement checks if the y value is 4, meaning there
+#   is a solution to the problem.  If there is, the z value can be randomly-generated.
+#   Otherwise, z is hardcoded to be -2, which guarantees an answer other than DNE
+#   for part b.
+# Step 3. Set up the answer using a conditional statement.  Check for all cases
+#   in which the answer does not exist, and in these cases, set the answer to be
+#   String("DNE").  Otherwise, use FormulaAnyVar("formula") to define the answer
+#   to the question, allowing the student to enter their answer using any variable.
+# Step 4. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Step 5. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Step 6. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+
+
+#############################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Allows any variable value to be entered in the code and by the student.
+  # E.g. If y = f(x), it could also be entered as y = f(g).
+  "parserFormulaAnyVar.pl"
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+Context("Numeric");
+
+#-ULETH-#
+# Question asks students to determine if there is a line that goes through the points
+# (0,0), (1,2), and (2,$y) where $y is randomly generated.  Then, part b asks if
+# there is a line that goes through the points (0,0), (-1,$z), and (-2,-4)
+# where $z is randomly generated. If the answer in part (a) is DNE, then the
+# answer for part (b) will not be DNE.
+# Step 1. If you want to change the pool of values to select the y
+#   value from, change the range for the random number selector.
+$y = random(0,4,1);
+
+# Step 2. If you want to ensure that both answers are not DNE, you can define
+#   a condition here.  This statement checks if the y value is 4, meaning there
+#   is a solution to the problem.  If there is, the z value can be randomly-generated.
+#   Otherwise, z is hardcoded to be -2, which guarantees an answer other than DNE
+#   for part b.
+# Eg: # This statement will only hardcode z if the y value is 4.
+# if ($y != 4)
+# {
+#   $z = non_zero_random(-2,2,1);
+# }
+# else
+# {
+#   $z = -2;
+# }
+if ($y == 4)
+{
+  $z = non_zero_random(-2,2,1);
+}
+else
+{
+  $z = -2;
+}
+
+# If $y < 4, then the answer is "DNE", but if not, the answer is 2*x.
+# This ensures that regardless of $y's value, the student's input will be
+# compared to the appropriate answer.
+# Step 3. Set up the answer using a conditional statement.  Check for all cases
+#   in which the answer does not exist, and in these cases, set the answer to be
+#   String("DNE").  Otherwise, use FormulaAnyVar("formula") to define the answer
+#   to the question, allowing the student to enter their answer using any variable.
+# Eg: if ($y == 4)
+# {
+#   $answerC = String("DNE");
+# }
+# else
+# {
+#   $answerC = FormulaAnyVar("some formula");
+# }
+if ($y < 4)
+{
+   $answerA = String("DNE");
+}
+else
+{
+  # Since FormulaAnyVar is used, the answer does not have to use 'x' as the
+  # variable name.
+  $answerA = FormulaAnyVar("2*x");
+}
+
+if ($z > -2)
+{
+  $answerB = String("DNE");
+}
+else
+{
+  # Since FormulaAnyVar is used, the answer does not have to use 'x' as the
+  # variable name.
+  $answerB = FormulaAnyVar("2*x");
+}
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# Step 4. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Eg: Is there a line through the points [` (a,b) `],
+# [` (c,[$y]) `], and [` ([$z],d) `]?  If there is,
+# enter the equation for this line.  If not, enter
+# _DNE_.
+#
+# [` y = `] [_______________][@ AnswerFormatHelp("formulas") @]*
+BEGIN_PGML
+Is there a line through the points [` (0,0) `],
+[` (1,2) `], and [` (2,[$y]) `]?  If there is,
+enter the equation for this line.  If not, enter
+_DNE_.
+
+[` y = `] [_______________][@ AnswerFormatHelp("formulas") @]*
+
+Is there a line through the points [` (0,0) `],
+[` (-1,[$z]) `], and [` (-2,-4) `]?  If there is,
+enter the equation for this line.  If not, enter
+_DNE_.
+
+[` y = `] [_______________][@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+# Step 5. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Eg: ANS($answerC->cmp());
+ANS($answerA->cmp());
+ANS($answerB->cmp());
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# Step 6. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+BEGIN_PGML_SOLUTION
+Given three points: [`(x_0, y_0)`], [`(x_1, y_1)`], and [`(x_2, y_2)`]
+
+    If [`x_0=x_1=x_2`] then the three points are on the vertical line [`x=x_0`].
+
+    If the points are not on a vertical line then
+    if the slope of the line segment from [`(x_0, y_0)`] to [`(x_1, y_1)`],
+    is the same as the slope of the line segment from [`(x_1, y_1)`] to [`(x_2, y_2)`],
+    then all three points are on the same line.
+    That is, if [`\frac{y_1-y_0}{x_1-x_0} = \frac{y_2-y_1}{x_2-x_1}`], then the three points
+    are collinear.
+    Further, the line can be written [`y=mx+b`]
+    where [`m=\frac{y_1-y_0}{x_1-x_0}`] and you can solve [`y_0=mx_0+b`] to find [`b`].
+
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

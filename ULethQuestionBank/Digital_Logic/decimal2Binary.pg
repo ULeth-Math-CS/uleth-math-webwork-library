@@ -1,0 +1,356 @@
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-28)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('conversions', 'decimal', 'digital logic')
+
+# How to add a new question:
+# Step 1. Set up the value of $numBits to match the number of bits you want for
+#   your new binary number.
+# Step 2. Call createBinaryNumber() with $numBits to generate the bits for the
+#   new question's binary number.
+# Step 3. Call solveBinary() with the new binary number to get the decimal form
+#   of the new number.  This will be used for the new question's answer value.
+# Step 4. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Step 5. Add an answer checker for the new question.  Use ANS(str_cmp($answer));
+#   to call the checker, which will ensure that the student's answer exactly matches
+#   the binary string.  Also, make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Step 6. Define two empty strings and the question value that will be
+#   subsequently used for parts of the solution.  Change the names so the
+#   solution number matches the question number.  These strings are only used
+#   for the solution.
+# Step 7: Add the computations to generate the solution binary expansion.
+#   Use the variables associated with the question this solution is for.
+# Step 8. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+
+
+###########################
+#  Initialization
+
+# The first line in the .pg file after any opening comments.
+# Defines the bounds of the document.
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+# Define a subroutine to generate a new random binary number.
+# Also, check for palindromes.
+sub createBinaryNumber
+{
+  # Initialize an empty array.
+  @newBinaryNumber = ();
+  # The number of bits in the binary number.
+  $numBits = $_[0];
+
+  # Generate the binary digits for the number.
+  for (my $i = 0; $i < $numBits; $i++)
+  {
+    push @newBinaryNumber, random(0,1,1);
+  }
+
+  # Initialize question's binary value as an empty string.
+  $binaryString = "";
+
+  for (my $i = 0; $i < scalar(@newBinaryNumber); $i++)
+  {
+    # Append the different binary digits to the string.
+    $binaryString = $binaryString.$newBinaryNumber[$i];
+  }
+
+  while (($binaryString == reverse($binaryString)) or (substr($binaryString, 0, 1) == '0'))
+  {
+    if ($binaryString == reverse($binaryString))
+    {
+      $index = random(0, length($binaryString) - 1, 1);
+
+      # If we get a palindrome, we randomly flip a bit.
+      if (substr($binaryString, $index, 1) == '0')
+      {
+        substr($binaryString, $index, 1, '1');
+      }
+      elsif (substr($binaryString, $index, 1) == '1')
+      {
+        substr($binaryString, $index, 1, '0');
+      }
+    }
+    elsif (substr($binaryString, 0, 1) == '0')
+    {
+      # Remove leading zeroes.
+      substr($binaryString, 0, 1, '');
+    }
+    else
+    {
+      break;
+    }
+  }
+
+  return $binaryString;
+}
+
+# "Solve" a binary number bit-by-bit into a decimal number.
+sub solveBinary
+{
+  # Get the binary string.
+  $bits = $_[0];
+  # Reverse the string to make the sum calculation easier.
+  $revBits = reverse($bits);
+  $sum = 0;
+
+  # Calculates the decimal value from the binary string.
+  for (my $i = 0; $i < length($revBits); $i++)
+  {
+    if (substr($revBits, $i, 1) == '1')
+    {
+      $sum += 2**$i;
+    }
+  }
+
+  return $sum;
+}
+
+
+#############################
+#   Setup
+
+#-ULETH-#
+# The number of bits you want in your binary number.
+$numBits = 8;
+#-ENDULETH-#
+
+# Initialize question 1's answer bit string.
+$question1Binary = createBinaryNumber($numBits);
+
+# Get question by summing binary digits.
+$question1 = solveBinary($question1Binary);
+
+#-ULETH-#
+# The number of bits you want in your binary number.
+$numBits = 8;
+#-ENDULETH-#
+
+# Initialize question 2's answer bit string.
+$question2Binary = createBinaryNumber($numBits);
+
+# Get question by summing binary digits.
+$question2 = solveBinary($question2Binary);
+
+#-ULETH-#
+# The number of bits you want in your binary number.
+$numBits = 8;
+#-ENDULETH-#
+
+# Initialize question 3's answer bit string.
+$question3Binary = createBinaryNumber($numBits);
+
+# Get question by summing binary digits.
+$question3 = solveBinary($question3Binary);
+
+#-ULETH-#
+# Step 1. Set up the value of $numBits to match the number of bits you want for
+#   your new binary number.
+# Eg. $numBits = 10;
+
+# Step 2. Call createBinaryNumber() with $numBits to generate the bits for the
+#   new question's binary number.
+# Eg. $question4Binary = createBinaryNumber($numBits);
+
+# Step 3. Call solveBinary() with the new binary number to get the decimal form
+#   of the new number.  This will be used for the new question's answer value.
+# $answer4 = solveBinary($question4Binary);
+#-ENDULETH-#
+
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# Step 4. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Eg: d. [`[$question4Binary]_10 = `][_______][`_{2}`] [@ AnswerFormatHelp("numbers") @]*
+BEGIN_PGML
+
+Convert each of the following binary numbers to decimal.
+a. [`[$question1]_{10} = `][______________][`_{2}`] [@ AnswerFormatHelp("numbers") @]*
+b. [`[$question2]_{10} = `][______________][`_{2}`] [@ AnswerFormatHelp("numbers") @]*
+c. [`[$question3]_{10} = `][______________][`_{2}`] [@ AnswerFormatHelp("numbers") @]*
+
+END_PGML
+
+
+#############################
+#   Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+# Step 5. Add an answer checker for the new question.  Use ANS(str_cmp($answer));
+#   to call the checker, which will ensure that the student's answer exactly matches
+#   the binary string.  Also, make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+ANS(str_cmp($question1Binary));
+ANS(str_cmp($question2Binary));
+ANS(str_cmp($question3Binary));
+#-ENDULETH-#
+
+
+#############################
+#   Solution
+
+$binVal1 = "";
+$solutionString1 = "";
+$currVal1 = $question1;
+
+while ($currVal1 > 0)
+{
+  $solutionString1 = $solutionString1."{$currVal1} \div 2 = ";
+  if ($currVal1 % 2 == 0)
+  {
+    $binVal1 = $binVal1.'0';
+  }
+  elsif ($currVal1 % 2 == 1)
+  {
+    $binVal1 = $binVal1.'1';
+    $currVal1 -= 1;
+  }
+
+  $currVal1 /= 2;
+  $solutionString1 = $solutionString1."{$currVal1} R ".substr($binVal1, length($binVal1) - 1, 1)."\\";
+}
+
+$binVal2 = "";
+$solutionString2 = "";
+$currVal2 = $question2;
+
+while ($currVal2 > 0)
+{
+  $solutionString2 = $solutionString2."{$currVal2} \div 2 = ";
+  if ($currVal2 % 2 == 0)
+  {
+    $binVal2 = $binVal2.'0';
+  }
+  elsif ($currVal2 % 2 == 1)
+  {
+    $binVal2 = $binVal2.'1';
+    $currVal2 -= 1;
+  }
+
+  $currVal2 /= 2;
+  $solutionString2 = $solutionString2."{$currVal2} R ".substr($binVal2, length($binVal2) - 1, 1)."\\";
+}
+
+$binVal3 = "";
+$solutionString3 = "";
+$currVal3 = $question3;
+
+while ($currVal3 > 0)
+{
+  $solutionString3 = $solutionString3."{$currVal3} \div 2 = ";
+  if ($currVal3 % 2 == 0)
+  {
+    $binVal3 = $binVal3.'0';
+  }
+  elsif ($currVal3 % 2 == 1)
+  {
+    $binVal3 = $binVal3.'1';
+    $currVal3 -= 1;
+  }
+
+  $currVal3 /= 2;
+  $solutionString3 = $solutionString3."{$currVal3} R ".substr($binVal3, length($binVal3) - 1, 1)."\\";
+}
+
+#-ULETH-#
+# Step 6. Define two empty strings and the question value that will be
+#   subsequently used for parts of the solution.  Change the names so the
+#   solution number matches the question number.  These strings are only used
+#   for the solution.
+# Eg: $binVal4 = "";
+# $solutionString4 = "";
+# $currVal4 = $question4;
+
+# Step 7: Add the computations to generate the solution binary expansion.
+#   Use the variables associated with the question this solution is for.
+# Eg: while ($currVal4 > 0)
+# {
+#   $solutionString4 = $solutionString4."{$currVal4} \div 2 = ";
+#   if ($currVal4 % 2 == 0)
+#   {
+#     $binVal4 = $binVal4.'0';
+#   }
+#   elsif ($currVal4 % 2 == 1)
+#   {
+#     $binVal4 = $binVal4.'1';
+#     $currVal4 -= 1;
+#   }
+#
+#   $currVal4 /= 2;
+#   $solutionString4 = $solutionString4."{$currVal4} R ".substr($binVal4, length($binVal4) - 1, 1)."\\";
+# }
+
+# Solution text to show after the due date.
+# Step 8. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+BEGIN_PGML_SOLUTION
+a. [`[$question1]_{10}`]
+
+    [`[$solutionString1]`]
+
+    Then, we read the remainders upward to get [`[$question1]_{10} = [$question1Binary]_{2}`]
+
+b. [`[$question2]_{10}`]
+
+    [`[$solutionString2]`]
+
+    Then, we read the remainders upward to get [`[$question2]_{10} = [$question2Binary]_{2}`]
+
+c. [`[$question3]_{10}`]
+
+    [`[$solutionString3]`]
+
+    Then, we read the remainders upward to get [`[$question3]_{10} = [$question3Binary]_{2}`]
+
+END_PGML_SOLUTION
+
+# Marks the end of the problem document.
+ENDDOCUMENT();

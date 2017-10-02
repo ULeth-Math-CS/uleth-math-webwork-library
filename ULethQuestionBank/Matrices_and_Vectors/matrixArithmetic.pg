@@ -1,0 +1,166 @@
+## DESCRIPTION
+## This question code is based on a sample problem from the WeBWorK wiki.
+## It has been modified to meet the ULeth Template standards.
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-04)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('matrix')
+
+# How to add a new question:
+# Step 1. Add a new Matrix object if necessary for the question.
+# Step 2. Compute the answer(s) for the new question.
+# Step 3. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+#   Use $answer3->ans_array(5) statement to take the matrix stored in $answer3 and
+#   place text boxes for answer entry on the page based on the matrix layout.
+#   Each box in this case has space for 5 characters.
+#   On the other hand, use ans_box(r,c) for a single text box with r rows and c columns.
+# Step 4. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Step 5. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+#   If you want to access individual Matrix elements, use [@ $matrix->element(row,col) @]*
+
+
+##################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+# Used for handling matrix problems.
+Context("Matrix");
+
+#-ULETH-#
+# $A and $B are the two 3x2 initial matrices for the question.
+# Each value in the matrices is a random number between -5 and 5.
+# None of the values in matrix B are equal to 0.
+# If a matrix only has one row, enter it as [row 1 entries], NOT [ [row 1 entries] ].
+$A = Matrix([
+[random(-5,5,1),random(-5,5,1),random(-5,5,1)],
+[random(-5,5,1),random(-5,5,1),random(-5,5,1)],
+]);
+
+$B = Matrix([
+[non_zero_random(-5,5,1),non_zero_random(-5,5,1),non_zero_random(-5,5,1)],
+[non_zero_random(-5,5,1),non_zero_random(-5,5,1),non_zero_random(-5,5,1)],
+]);
+
+# Step 1. Add a new Matrix object if necessary for the question.
+# Eg: $C = Matrix([
+#     [non_zero_random(-5,5,1),non_zero_random(-5,5,1),non_zero_random(-5,5,1)],
+#     [non_zero_random(-5,5,1),non_zero_random(-5,5,1),non_zero_random(-5,5,1)],
+#     ]);
+
+# If $B = Matrix([a, b, c]), then $B->transpose = Matrix([[a], [b], [c]]).
+# If $B = 3 columns, each with 1 element,
+# then $B->transpose = 3 rows, each with 1 element.
+# We define two separate answers so that one can be converted to an array of
+# answer blanks.
+$answerArray = $A * ($B->transpose);
+$answerOneBlank = $A * ($B->transpose);
+
+# Step 2. Compute the answer(s) for the new question.
+# Eg: $answer3 = $C^2;
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# Step 3. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+#   Use $answer3->ans_array(5) statement to take the matrix stored in $answer3 and
+#   place text boxes for answer entry on the page based on the matrix layout.
+#   Each box in this case has space for 5 characters.
+#   On the other hand, use ans_box(r,c) for a single text box with r rows and c columns.
+# Eg: Suppose [`A = [$A] \mbox{ and } B = [$B] \mbox{ and } C = [$C]`]
+# <Other questions are here>
+# [`C^2 = `] [@ $answer3->ans_array(3) @]* [@] [@ AnswerFormatHelp("matrices") @]*
+BEGIN_PGML
+Suppose
+[`A = [$A] \mbox{ and } B = [$B].`]
+Evaluate the following matrix product.
+
+[`A B^T = `] [@ $answerArray->ans_array(5) @]* [@ AnswerFormatHelp("matrices") @]*
+
+[`A B^T = `] [@ ans_box(3,20) @]* [@ AnswerFormatHelp("matrices") @]*
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add new questions, make sure to add new answer checkers here!
+# Step 4. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+ANS( $answerArray->cmp() );
+ANS( $answerOneBlank->cmp() );
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# Step 5. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+#   If you want to access individual Matrix elements, use [@ $matrix->element(row,col) @]*
+# Eg: [@ $answer3->element(1,1) @]*
+BEGIN_PGML_SOLUTION
+Recall:
+SOLUTION:
+Solution explanation goes here.
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+ENDDOCUMENT();

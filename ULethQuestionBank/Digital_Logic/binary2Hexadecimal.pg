@@ -1,0 +1,468 @@
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-08-02)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('conversions', 'binary to hexadecimal', 'digital logic')
+
+# How to add a new question:
+# Step 1. Set up the value of $numBits to match the number of bits you want for
+#   your new binary number.
+# Step 2. Call createBinaryNumber() with $numBits to generate the bits for the
+#   new question's binary number.  Do this within the while loop that ensures
+#   there are no repeated characters in the hex string.  Otherwise, just change
+#   the variable names to match the question number you are working on.  Also,
+#   solveBinary will get called in here to get the hexadecimal form of the new
+#   value.
+# Step 3. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Step 4. Add an answer checker for the new question.  Use ANS(str_cmp($answer));
+#   to call the checker, which will ensure that the student's answer exactly matches
+#   the hex string.  Also, make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Step 5. Define an empty string that will be subsequently used for part of the
+#   solution.  Change the name so the solution number matches the question number.
+#   This string is only used for the solution.
+# Step 6. Pad the binary value with 0s for easier hexadecimal conversions.
+#   Change the names so the solution number matches the question number.
+# Step 7. Convert the bits to a comma-separated list of 4-bit sets.
+#   Change the names so the solution number matches the question number.
+# Step 8. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+
+
+###########################
+#  Initialization
+
+# The first line in the .pg file after any opening comments.
+# Defines the bounds of the document.
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+# Define a subroutine to generate a new random binary number.
+sub createBinaryNumber
+{
+  # Initialize an empty array.
+  @newBinaryNumber = ();
+  # The number of bits in the binary number.
+  $numBits = $_[0];
+
+  # Generate the binary digits for the number.
+  for (my $i = 0; $i < $numBits; $i++)
+  {
+    push @newBinaryNumber, random(0,1,1);
+  }
+
+  # Initialize question's binary value as an empty string.
+  $binaryString = "";
+
+  for (my $i = 0; $i < scalar(@newBinaryNumber); $i++)
+  {
+    # Append the different binary digits to the string.
+    $binaryString = $binaryString.$newBinaryNumber[$i];
+  }
+
+  while ((substr($binaryString, 0, 1) == '0'))
+  {
+    # Remove leading zeroes.
+    substr($binaryString, 0, 1, '');
+  }
+
+  return $binaryString;
+}
+
+# "Solve" a binary number bit-by-bit into a hexadecimal number.
+sub solveBinary
+{
+  # Get the binary string.
+  $bits = $_[0];
+
+  # Pad binary value with 0s for easier hexadecimal conversions.
+  $padding = length($bits) % 4;
+  if ($padding != 0)
+  {
+    while ($padding < 4)
+    {
+      $bits = "0".$bits;
+      $padding += 1;
+    }
+  }
+
+  # Reverse the string to make the sum calculation easier.
+  $revBits = reverse($bits);
+  $hexString = "";
+
+  # Get the hexadecimal value from the binary string.
+  for (my $i = 0; $i < length($revBits); $i+=4)
+  {
+    $hexBits = 0;
+    $sum = 0;
+
+    do
+    {
+      if (substr($revBits, $i + $hexBits, 1) == '1')
+      {
+        $sum += 2**$hexBits;
+      }
+
+      $hexBits += 1;
+    } while ($hexBits % 4 != 0);
+
+    if ($sum >= 10)
+    {
+      if ($sum == 10)
+      {
+        $hexString = 'A'.$hexString;
+      }
+      elsif ($sum == 11)
+      {
+        $hexString = 'B'.$hexString;
+      }
+      elsif ($sum == 12)
+      {
+        $hexString = 'C'.$hexString;
+      }
+      elsif ($sum == 13)
+      {
+        $hexString = 'D'.$hexString;
+      }
+      elsif ($sum == 14)
+      {
+        $hexString = 'E'.$hexString;
+      }
+      elsif ($sum == 15)
+      {
+        $hexString = 'F'.$hexString;
+      }
+    }
+    else
+    {
+      $hexString = $sum.$hexString;
+    }
+  }
+
+  return $hexString;
+}
+
+
+#############################
+#   Setup
+
+#-ULETH-#
+# The number of bits you want in your binary number.
+$numBits = 12;
+#-ENDULETH-#
+
+$hasRepeatedChars = 1;
+
+while ($hasRepeatedChars == 1)
+{
+  $hasRepeatedChars = 0;
+  # Initialize question 1's bit string.
+  $question1Binary = createBinaryNumber($numBits);
+
+  # Get answer by summing binary digits.
+  $answer1 = solveBinary($question1Binary);
+
+  # Scans through the hexadecimal string for repeated characters.
+  for (my $i = 0; $i < length($answer1) - 1; $i++)
+  {
+    for (my $j = $i+1; $j < length($answer1); $j++)
+    {
+      if (substr($answer1, $i, 1) == substr($$answer1, $j, 1))
+      {
+        $hasRepeatedChars = 1;
+      }
+    }
+  }
+}
+
+#-ULETH-#
+# The number of bits you want in your binary number.
+$numBits = 12;
+#-ENDULETH-#
+
+$hasRepeatedChars = 1;
+
+while ($hasRepeatedChars == 1)
+{
+  $hasRepeatedChars = 0;
+  # Initialize question 2's bit string.
+  $question2Binary = createBinaryNumber($numBits);
+
+  # Get answer by summing binary digits.
+  $answer2 = solveBinary($question2Binary);
+
+  # Scans through the hexadecimal string for repeated characters.
+  for (my $i = 0; $i < length($answer2) - 1; $i++)
+  {
+    for (my $j = $i+1; $j < length($answer2); $j++)
+    {
+      if (substr($answer2, $i, 1) == substr($answer2, $j, 1))
+      {
+        $hasRepeatedChars = 1;
+      }
+    }
+  }
+}
+
+#-ULETH-#
+# The number of bits you want in your binary number.
+$numBits = 12;
+#-ENDULETH-#
+
+$hasRepeatedChars = 1;
+
+while ($hasRepeatedChars == 1)
+{
+  $hasRepeatedChars = 0;
+  # Initialize question 3's bit string.
+  $question3Binary = createBinaryNumber($numBits);
+
+  # Get answer by summing binary digits.
+  $answer3 = solveBinary($question3Binary);
+
+  # Scans through the hexadecimal string for repeated characters.
+  for (my $i = 0; $i < length($answer3) - 1; $i++)
+  {
+    for (my $j = $i+1; $j < length($answer3); $j++)
+    {
+      if (substr($answer3, $i, 1) == substr($answer3, $j, 1))
+      {
+        $hasRepeatedChars = 1;
+      }
+    }
+  }
+}
+
+#-ULETH-#
+# Step 1. Set up the value of $numBits to match the number of bits you want for
+#   your new binary number.
+# Eg. $numBits = 16;
+
+# Step 2. Call createBinaryNumber() with $numBits to generate the bits for the
+#   new question's binary number.  Do this within the while loop that ensures
+#   there are no repeated characters in the hex string.  Otherwise, just change
+#   the variable names to match the question number you are working on.  Also,
+#   solveBinary will get called in here to get the hexadecimal form of the new
+#   value.
+# Eg. $hasRepeatedChars = 1;
+# while ($hasRepeatedChars == 1)
+# {
+#   $hasRepeatedChars = 0;
+#   # Initialize question 4's bit string.
+#   $question4Binary = createBinaryNumber($numBits);
+#
+#   # Get answer by summing binary digits.
+#   $answer4 = solveBinary($question4Binary);
+#
+#   # Scans through the hexadecimal string for repeated characters.
+#   for (my $i = 0; $i < length($answer4) - 1; $i++)
+#   {
+#     for (my $j = $i+1; $j < length($answer4); $j++)
+#     {
+#       if (substr($answer4, $i, 1) == substr($answer4, $j, 1))
+#       {
+#         $hasRepeatedChars = 1;
+#       }
+#     }
+#   }
+# }
+#-ENDULETH-#
+
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# Step 3. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Eg: d. [`[$question4Binary]_{2} = `][_______][`_{16}`] [@ AnswerFormatHelp("numbers") @]*
+BEGIN_PGML
+
+Convert each of the following binary numbers to decimal.
+a. [`[$question1Binary]_{2} = `][_______][`_{16}`] [@ AnswerFormatHelp("numbers") @]*
+b. [`[$question2Binary]_{2} = `][_______][`_{16}`] [@ AnswerFormatHelp("numbers") @]*
+c. [`[$question3Binary]_{2} = `][_______][`_{16}`] [@ AnswerFormatHelp("numbers") @]*
+
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#   Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+# Step 4. Add an answer checker for the new question.  Use ANS(str_cmp($answer));
+#   to call the checker, which will ensure that the student's answer exactly matches
+#   the hex string.  Also, make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+ANS(str_cmp($answer1));
+ANS(str_cmp($answer2));
+ANS(str_cmp($answer3));
+#-ENDULETH-#
+
+
+#############################
+#   Solution
+
+# These strings are only used for the solution.
+$solution1BitSeparation = "";
+
+# Pad binary value with 0s for easier hexadecimal conversions.
+$padding = length($question1Binary) % 4;
+if ($padding != 0)
+{
+  while ($padding < 4)
+  {
+    $question1Binary = "0".$question1Binary;
+    $padding += 1;
+  }
+}
+
+# Convert the bits to a comma-separated list of 4-bit sets.
+for (my $i = 0; $i < length($question1Binary); $i+=4)
+{
+  $solution1BitSeparation = $solution1BitSeparation.substr($question1Binary, $i, 4).',';
+}
+# Remove trailing comma from string.
+substr($solution1BitSeparation, length($solution1BitSeparation) - 1, 1, '');
+
+# These strings are only used for the solution.
+$solution2BitSeparation = "";
+
+# Pad binary value with 0s for easier hexadecimal conversions.
+$padding = length($question2Binary) % 4;
+if ($padding != 0)
+{
+  while ($padding < 4)
+  {
+    $question2Binary = "0".$question2Binary;
+    $padding += 1;
+  }
+}
+
+# Convert the bits to a comma-separated list of 4-bit sets.
+for (my $i = 0; $i < length($question2Binary); $i+=4)
+{
+  $solution2BitSeparation = $solution2BitSeparation.substr($question2Binary, $i, 4).',';
+}
+# Remove trailing comma from string.
+substr($solution2BitSeparation, length($solution2BitSeparation) - 1, 1, '');
+
+# These strings are only used for the solution.
+$solution3BitSeparation = "";
+
+# Pad binary value with 0s for easier hexadecimal conversions.
+$padding = length($question3Binary) % 4;
+if ($padding != 0)
+{
+  while ($padding < 4)
+  {
+    $question3Binary = "0".$question3Binary;
+    $padding += 1;
+  }
+}
+
+# Convert the bits to a comma-separated list of 4-bit sets.
+for (my $i = 0; $i < length($question3Binary); $i+=4)
+{
+  $solution3BitSeparation = $solution3BitSeparation.substr($question3Binary, $i, 4).',';
+}
+# Remove trailing comma from string.
+substr($solution3BitSeparation, length($solution3BitSeparation) - 1, 1, '');
+
+#-ULETH-#
+# Step 5. Define an empty string that will be subsequently used for part of the
+#   solution.  Change the name so the solution number matches the question number.
+#   This string is only used for the solution.
+# Eg: $solution4BitSeparation = "";
+
+# Step 6. Pad the binary value with 0s for easier hexadecimal conversions.
+#   Change the names so the solution number matches the question number.
+# Eg: $padding = length($question4Binary) % 4;
+# if ($padding != 0)
+# {
+#   while ($padding < 4)
+#   {
+#     $question4Binary = "0".$question4Binary;
+#     $padding += 1;
+#   }
+# }
+
+# Step 7. Convert the bits to a comma-separated list of 4-bit sets.
+#   Change the names so the solution number matches the question number.
+# Eg: for (my $i = 0; $i < length($question4Binary); $i+=4)
+# {
+#   $solution4BitSeparation = $solution4BitSeparation.substr($question4Binary, $i, 4).',';
+# }
+# # Remove trailing comma from string.
+# substr($solution4BitSeparation, length($solution4BitSeparation) - 1, 1, '');
+
+# Solution text to show after the due date.
+# Step 8. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+BEGIN_PGML_SOLUTION
+a. [`[$question1Binary]_{2}`]
+
+    [`=[$solution1BitSeparation]_{2}`]
+
+    [`=[$answer1]_{16}`]
+
+b. [`[$question2Binary]_{2}`]
+
+    [`=[$solution2BitSeparation]_{2}`]
+
+    [`=[$answer2]_{16}`]
+
+c. [`[$question3Binary]_{2}`]
+
+    [`=[$solution3BitSeparation]_{2}`]
+
+    [`=[$answer3]_{16}`]
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+# Marks the end of the problem document.
+ENDDOCUMENT();

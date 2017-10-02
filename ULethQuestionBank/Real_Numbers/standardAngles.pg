@@ -1,0 +1,214 @@
+## DESCRIPTION
+## This question code is based on a sample problem from the WeBWorK wiki.
+## It has been modified to meet the ULeth Template standards.
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-05)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('exact answer', 'disable functions')
+
+# How to add a new question:
+# Step 1. If you want to change the pool of values to select the values from,
+#   change the values in the list_random brackets.  Alternatively, if you want
+#   to define a range to select the randoms from, use random() or non_zero_random().
+# Step 2. If you want to change the pool of values to select the values from,
+#   change the values in the list_random brackets.  Alternatively, if you want
+#   to define a range to select the randoms from, use random() or non_zero_random().
+# Step 3. Define the formulas that will be used in the question.
+# Step 4. If you want to allow students to enter certain operators or prevent
+#   them from using them, you can disable/enable or undefine/redefine them.
+# Step 5. Evaluate the function to get the answer.
+# Step 6. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Step 7. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Step 8. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the \( \) brackets.
+#   Note: PG is used here instead of PGML, because displaying the table properly in
+#   PGML is needlessly complicated and far too breakable.
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Implements a fraction object that works like a Real, but keeps the
+  # numerator and denominator separate.
+  "contextFraction.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Used to display solution tables.
+  "niceTables.pl"
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+# Fractions as answers are required; cannot use decimals.
+Context("Fraction-NoDecimals");
+
+# Prevent pi from becoming 3.1415... and cos(pi) from
+# becoming -1.
+Context()->constants->set(pi => {keepName => 1});
+
+#-ULETH-#
+# pi will not get reduced because it was set to keep its name above.
+# Step 1. If you want to change the pool of values to select the values from,
+#   change the values in the list_random brackets.  Alternatively, if you want
+#   to define a range to select the randoms from, use random() or non_zero_random().
+$val1 = list_random("-pi/6","-pi/4","-pi/3","pi/6","pi/4","pi/3");
+$val2 = list_random("-pi/6","-pi/4","-pi/3","pi/6","pi/4","pi/3");
+#-ENDULETH-#
+# Make sure that val3 doesn't equal val2.
+$val3 = $val2;
+while ($val3 eq $val2)
+{
+  #-ULETH-#
+  # Step 2. If you want to change the pool of values to select the values from,
+  #   change the values in the list_random brackets.  Alternatively, if you want
+  #   to define a range to select the randoms from, use random() or non_zero_random().
+  $val3 = list_random("-pi/6","-pi/4","-pi/3","pi/6","pi/4","pi/3");
+  #-ENDULETH-#
+}
+
+#-ULETH-#
+# Step 3. Define the formulas that will be used in the question.
+$f1 = Formula("cos($val1)");
+$f2 = Formula("sin($val2)");
+$f3 = Formula("sin($val3)");
+
+# Step 4. If you want to allow students to enter certain operators or prevent
+#   them from using them, you can disable/enable or undefine/redefine them.
+# Eg: Context()->operators->redefine('*');
+# Disables all functions, then just re-enables square roots,
+# since they are currently required for the answer.
+# See the bottom of the file for a breakdown
+# of the categories for the different functions.
+Context()->functions->disable("All");
+Context()->functions->enable("sqrt");
+# Also disables basic operators, save for division.  Division is needed
+# so Fractions can be used.
+Context()->operators->undefine('+','-','*');
+
+# Simplified equations.
+Context()->flags->set(reduceFractions=>0);
+# Step 5. Evaluate the function to get the answer.
+$answer1 = $f1->eval;
+$answer2 = $f2->eval;
+$answer3 = $f3->eval;
+#-ENDULETH-#
+
+
+###########################
+#  Main text
+
+#-ULETH-#
+# Initialize problem text and fraction input helpers.
+# Step 6. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+BEGIN_PGML
+Enter your answers as simplified fractions.
+
++ [` [$f1] = `] [_____________][@ AnswerFormatHelp("fractions") @]*
+
++ [` [$f2] = `] [_____________][@ AnswerFormatHelp("fractions") @]*
+
++ [` [$f3] = `] [_____________][@ AnswerFormatHelp("fractions") @]*
+END_PGML
+#-ENDULETH-#
+
+
+###########################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# studentsMustReduceFractions requires all answers to be entered as reduced fractions.
+# Step 7. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+ANS($answer1->cmp(studentsMustReduceFractions=>1));
+ANS($answer2->cmp());
+ANS($answer3->cmp());
+#-ENDULETH-#
+
+
+###########################
+#  Solution
+
+#-ULETH-#
+# Step 8. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the \( \) brackets.
+#   Note: PG is used here instead of PGML, because displaying the table properly in
+#   PGML is needlessly complicated and far too breakable.
+BEGIN_SOLUTION
+\{
+DataTable(
+  [
+    [["\(\theta\)", headerrow=>1], "\(sin(\theta)\)", "\(cos(\theta)\)", "\(tan(\theta)\)"],
+    ["\(-\frac{\pi}{3}\)", "\(-\frac{\sqrt{3}}{2}\)", "\(\frac{1}{2}\)", "\(-\sqrt{3}\)"],
+    ["\(-\frac{\pi}{4}\)", "\(-\frac{1}{\sqrt{2}}\)", "\(\frac{1}{\sqrt{2}}\)", "\(-1\)"],
+    ["\(-\frac{\pi}{6}\)", "\(-\frac{1}{2}\)", "\(\frac{\sqrt{3}}{2}\)", "\(-\frac{1}{\sqrt{3}}\)"],
+    ["\(\frac{\pi}{6}\)", "\(\frac{1}{2}\)", "\(\frac{\sqrt{3}}{2}\)", "\(\frac{1}{\sqrt{3}}\)"],
+    ["\(\frac{\pi}{4}\)", "\(\frac{1}{\sqrt{2}}\)", "\(\frac{1}{\sqrt{2}}\)", "\(1\)"],
+    ["\(\frac{\pi}{3}\)", "\(\frac{\sqrt{3}}{2}\)", "\(\frac{1}{2}\)", "\(\sqrt{3}\)"],
+  ],
+  caption=>"Trigonometry Values for \(\theta\)",
+  midrules=>1,
+  # This makes it so each column has a bar on either side and the contents are centred.
+  align=>"|c|c|"
+);
+\}
+END_SOLUTION
+
+COMMENT('MathObject version. Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();
+
+################################################################################################################################
+#   Category 	           #    Functions Included                                                                               #
+################################################################################################################################
+#   SimpleTrig           #    sin, cos, tan, sec, csc, cot                                                                     #
+#   InverseTrig 	       #    asin, acos, atan, asec, acsc, acot, arcsin, arccos, arctan, arcsec, arccsc, arccot, atan2        #
+#   SimpleHyperbolic 	   #    sinh, cosh, tanh, sech, csch, coth                                                               #
+#   InverseHyperbolic    #    asinh, acosh, atanh, asech, acsch, acoth, arcsinh, arccosh, arctanh, arcsech, arccsch, arccoth   #
+#   Numeric 	           #    log, log10, exp, sqrt, abs, int, sgn, ln, logten                                                 #
+#   Vector 	             #    norm, unit                                                                                       #
+#   Complex 	           #    arg, mod, Re, Im, conj                                                                           #
+#   Hyperbolic 	         #    all of SimpleHyperbolic and InverseHyperbolic                                                    #
+#   Trig 	               #    all of SimpleTrig, InverseTrig, and Hyperbolic                                                   #
+#   All 	               #    all of Trig, Numeric, Vector, and Complex                                                        #
+################################################################################################################################

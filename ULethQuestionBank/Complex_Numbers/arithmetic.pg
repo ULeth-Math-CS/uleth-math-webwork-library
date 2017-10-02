@@ -1,0 +1,271 @@
+## DESCRIPTION
+## Defines 3 random complex numbers r, s, and t, then asks students to perform
+## arithmetic operations with them.
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-08-10)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('arithmetic', 'complex numbers', 'complex operations')
+
+# How to add a new question:
+# Step 1. Change the value of $quantComplexNumbers to match the number of unique
+#   random Complex numbers you need for the question.
+# Step 2. If you want to change the pool of values to select the real or imaginary
+#   parts of the number from, change the range for the random number selector.
+# Step 3. Compute the answer for the new question.  Use $C[index] to pull specific
+#   Complex numbers from the array (@C) that stores the Complex numbers for the
+#   question.
+# Step 4. Add the text for the new question to the main text of the problem.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Step 5. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Step 6. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+#   To reference individual parts of a Complex number, first use "code brackets"
+#   [@ @]* , then use Re(ComplexNumber) or Im(ComplexNumber) to get the real and
+#   imaginary parts of the number, respectively.
+
+
+###########################
+#  Initialization
+
+# The first line in the .pg file after any opening comments.
+# Defines the bounds of the document.
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Required for proper text formatting.
+  "PGML.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+
+Context("Complex");
+
+#-ULETH-#
+# The number of random complex numbers you want to use in the question.
+# Step 1. Change the value of $quantComplexNumbers to match the number of unique
+#   random Complex numbers you need for the question.
+$quantComplexNumbers = 3;
+#-ENDULETH-#
+
+# This array will contain all of the complex numbers used in the question.
+@C = ();
+
+for (my $i = 0; $i < $quantComplexNumbers; $i++)
+{
+  #-ULETH-#
+  # Randomly generate the real and imaginary parts of the complex number.
+  # Step 2. If you want to change the pool of values to select the real or imaginary
+  #   parts of the number from, change the range for the random number selector.
+  # Eg: $real = non_zero_random(-50, 50, 2);
+  $real = non_zero_random(-10, 10, 1);
+  $imaginary = non_zero_random(-10, 10, 1);
+  #-ENDULETH-#
+  # Create the complex number and add to the array.
+  $C[$i] = Compute("$real + $imaginary * i");
+}
+
+#-ULETH-#
+# Defining the answers for the different questions.
+# Step 3. Compute the answer for the new question.  Use $C[index] to pull specific
+#   Complex numbers from the array (@C) that stores the Complex numbers for the
+#   question.
+# Eg: $answerI = Compute($C[0] / $C[1]);
+$answerA = Compute($C[0] + $C[1]);
+$answerB = Compute($C[0] + $C[1] + $C[2]);
+$answerC = Compute($C[2] - $C[0]);
+$answerD = Compute($C[1] * $C[2]);
+$answerE = Compute(($C[0] * $C[2]) - $C[1]);
+$answerF = Compute($C[2] / $C[1]);
+$answerG = Compute($C[1]**2);
+$answerH = Compute(($C[0] / $C[2]) - (($C[1] * $C[2]) / $C[0]**2));
+#-ENDULETH-#
+
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# Step 4. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Eg: i. [`\frac{r}{s} = `][______________]
+BEGIN_PGML
+
+Suppose [`r = [$C[0]]`], [`s = [$C[1]]`], and [`t = [$C[2]]`].  Solve the following:
+
+a. [`r + s = `][____________]
+
+b. [`r + s + t = `][____________]
+
+c. [`t - r = `][____________]
+
+d. [`st = `][____________]
+
+e. [`rt - s = `][____________]
+
+f. [`\frac{t}{s} = `][____________]
+
+g. [`s^2 = `][____________]
+
+h. [`\frac{r}{t} - \frac{st}{r^2} = `][____________]
+
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#   Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+# Step 5. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Eg: ANS($answerI->cmp());
+ANS($answerA->cmp());
+ANS($answerB->cmp());
+ANS($answerC->cmp());
+ANS($answerD->cmp());
+ANS($answerE->cmp());
+ANS($answerF->cmp());
+ANS($answerG->cmp());
+ANS($answerH->cmp());
+#-ENDULETH-#
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# Step 6. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+#   To reference individual parts of a Complex number, first use "code brackets"
+#   [@ @]* , then use Re(ComplexNumber) or Im(ComplexNumber) to get the real and
+#   imaginary parts of the number, respectively.
+BEGIN_PGML_SOLUTION
+
+The order of operations is the same as for real arithmetic, and the operations
+are defined as seen below.
+
+a.  [`([@ Re($C[0]) @]* + [@ Im($C[0]) @]*) + ([@ Re($C[1]) @]* + [@ Im($C[1]) @]*)`]
+
+    [`= ([@ Re($C[0]) @]* + [@ Re($C[1]) @]*) + ([@ Im($C[0]) @]* + [@ Im($C[1]) @]*)i`]
+
+
+b.  [`([@ Re($C[0]) @]* + [@ Im($C[0]) @]*) - ([@ Re($C[1]) @]* + [@ Im($C[1]) @]*)`]
+
+    [`= ([@ Re($C[0]) @]* - [@ Re($C[1]) @]*) + ([@ Im($C[0]) @]* - [@ Im($C[1]) @]*)i`]
+
+
+c.  [`([@ Re($C[0]) @]* + [@ Im($C[0]) @]*) * ([@ Re($C[1]) @]* + [@ Im($C[1]) @]*)`]
+
+    [`= ([@ Re($C[0]) @]* * [@ Re($C[1]) @]*) +
+        ([@ Re($C[0]) @]* * [@ Im($C[1]) @]*)i +
+        ([@ Im($C[0]) @]* * [@ Re($C[1]) @]*)i +
+        ([@ Im($C[0]) @]* * [@ Im($C[1]) @]*)i^2
+    `]
+
+    [`= ([@ Re($C[0]) @]* * [@ Re($C[1]) @]*) +
+        ([@ Re($C[0]) @]* * [@ Im($C[1]) @]* + [@ Im($C[0]) @]* * [@ Re($C[1]) @]*)i +
+        ([@ Im($C[0]) @]* * [@ Im($C[1]) @]*)(-1)
+    `]
+
+    [`= ([@ Re($C[0]) @]* * [@ Re($C[1]) @]* -
+        [@ Im($C[0]) @]* * [@ Im($C[1]) @]*) +
+        ([@ Re($C[0]) @]* * [@ Im($C[1]) @]* +
+        [@ Im($C[0]) @]* * [@ Re($C[1]) @]*)i
+    `]
+
+
+d.  [`([@ Re($C[0]) @]* + [@ Im($C[0]) @]*i)([@ Re($C[0]) @]* - [@ Im($C[0]) @]*i)`]
+
+    [`= [@ Re($C[0]) @]*^2 -
+        [@ Re($C[0]) @]* * [@ Im($C[0]) @]* +
+        [@ Re($C[0]) @]* * [@ Im($C[0]) @]* +
+        [@ Im($C[0]) @]*^2 i^2
+    `]
+
+    [`= [@ Re($C[0]) @]*^2 -
+        [@ Im($C[0]) @]*^2 (-1)
+    `]
+
+    [`= [@ Re($C[0]) @]*^2 +
+        [@ Im($C[0]) @]*^2
+    `]
+
+e.  [`([@ Re($C[0]) @]* + [@ Im($C[0]) @]*)^2`]
+
+    [`= [@ Re($C[0]) @]*^2 +
+        [@ Re($C[0]) @]* * [@ Im($C[0]) @]* +
+        [@ Re($C[0]) @]* * [@ Re($C[0]) @]* +
+        [@ Im($C[0]) @]*^2 i^2
+    `]
+
+    [`= [@ Re($C[0]) @]*^2 +
+        2([@ Re($C[0]) @]* * [@ Im($C[0]) @]*)i -
+        [@ Im($C[0]) @]*^2
+    `]
+
+    [`= ([@ Re($C[0]) @]*^2 -
+        [@ Im($C[0]) @]*^2) +
+        2([@ Re($C[0]) @]* * [@ Im($C[0]) @]*)i
+    `]
+
+f.  [`\frac{[@ Re($C[0]) @]* + [@ Im($C[0]) @]*}{[@ Re($C[1]) @]* + [@ Im($C[1]) @]*}`]
+
+    [`= \frac{[@ Re($C[0]) @]* + [@ Im($C[0]) @]*}{[@ Re($C[1]) @]* + [@ Im($C[1]) @]*} *
+        \frac{[@ Re($C[1]) @]* - [@ Im($C[1]) @]*}{[@ Re($C[1]) @]* - [@ Im($C[1]) @]*}
+    `]
+
+    [`= \frac{([@ Re($C[0]) @]* * [@ Re($C[1]) @]* + [@ Im($C[0]) @]* * [@ Im($C[1]) @]*) +
+        (-[@ Re($C[0]) @]* * [@ Im($C[1]) @]* + [@ Im($C[0]) @]* * [@ Re($C[1]) @]*)i}
+        {[@ Re($C[1]) @]*^2 + [@ Im($C[1]) @]*^2}
+    `]
+
+    [`= \frac{([@ Re($C[0]) @]* * [@ Re($C[1]) @]* + [@ Im($C[0]) @]* * [@ Im($C[1]) @]*)}
+        {[@ Re($C[1]) @]*^2 + [@ Im($C[1]) @]*^2} +
+        \frac{-([@ Re($C[0]) @]*) * [@ Im($C[1]) @]* + [@ Im($C[0]) @]* * [@ Re($C[1]) @]*}
+        {[@ Re($C[1]) @]*^2 + [@ Im($C[1]) @]*^2}i
+    `]
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+# Marks the end of the problem document.
+ENDDOCUMENT();

@@ -1,0 +1,210 @@
+## DESCRIPTION
+## This question code is based on a sample problem from the WeBWorK wiki.
+## It has been modified to meet the ULeth Template standards.
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-06-30)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## Static(1)
+## MO(1)
+## KEYWORDS('factored polynomial', 'factoring')
+
+# How to add a new question:
+# Step 1. Change the value of $numInts to match the number of random
+#   integers you need in the question.
+# Step 2. If you want to change the pool of values to select the integer
+#   values from, change the range for the random number selectors.
+# Step 3. Change the indexes so that you're pulling different values compared to
+#   the previous question.
+# Step 4. Compute the polynomial that will be displayed in the question.
+# Step 5. Compute the factored polynomial that is used for the answer.
+# Step 6. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Step 7. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Step 8. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Needed to use the strict context for factored polynomials.
+  "contextPolynomialFactors.pl",
+  # Provides restrictions on powers.  See below for details.
+  "contextLimitedPowers.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+Context("Numeric");
+
+#-ULETH-#
+# Defines the variables that make up the polynomial.
+# Step 1. Change the value of $numInts to match the number of random
+#   integers you need in the question.
+$numInts = 100;
+# Array to store the integers in.
+@randInts = ();
+
+for (my $i = 0; $i < $numInts; $i++)
+{
+  #-ULETH-#
+  # Step 2: If you want to change the pool of values to select the integer
+  #   values from, change the range for the random number selectors.
+  $randInt[$i] = non_zero_random(-5,5,1);
+  #-ENDULETH-#
+}
+
+# Used to easily index the array.
+$a = $randInt[0];
+$b = $randInt[1];
+$c = $randInt[2];
+$d = $randInt[3];
+$k = $randInt[4];
+
+# Disables some reduction rules so the polynomial keeps the form ax^2+bx+c.
+Context()->noreduce("(-x)-y", "x*(-y)");
+# Computes the polynomial in expanded form
+$poly1 = Formula("$k*$a*$c*x^2 + ($k*$a*$d + $b*$k*$c)x + $b*$k*$d")->reduce;
+
+# The strict context requires polynomials in answers to be completely simplified.
+Context("PolynomialFactors-Strict");
+# Makes it so that repeated, non-simplified factors do not generate errors.
+Context()->flags->set(singleFactors=>0);
+# Restricts the allowed powers to only 0 or 1.
+LimitedPowers::OnlyIntegers(minPower => 0, maxPower => 1,message => "either 0 or 1");
+# The factored polynomial (answer).
+$factored1 = Compute("$k($a*x + $b)($c*x + $d)");
+
+Context("Numeric");
+# Used to easily index the array.
+$a = $randInt[5];
+$b = $randInt[6];
+$c = $randInt[7];
+$d = $randInt[8];
+$k = $randInt[9];
+
+# Computes the polynomial in expanded form
+$poly2 = Formula("$k*$a*$c*x^2 + ($k*$a*$d + $b*$k*$c)x + $b*$k*$d")->reduce;
+
+# The strict context requires polynomials in answers to be completely simplified.
+Context("PolynomialFactors-Strict");
+# Makes it so that repeated, non-simplified factors do not generate errors.
+Context()->flags->set(singleFactors=>0);
+# Restricts the allowed powers to only 0 or 1.
+LimitedPowers::OnlyIntegers(minPower => 0, maxPower => 1,message => "either 0 or 1");
+# The factored polynomial (answer).
+$factored2 = Compute("$k($a*x + $b)($c*x + $d)");
+
+Context("Numeric");
+# Step 3. Change the indexes so that you're pulling different values compared to
+#   the previous question.
+# Eg: $a = $randInt[10];
+# $b = $randInt[11];
+# $c = $randInt[12];
+# $d = $randInt[13];
+# $k = $randInt[14];
+
+# Computes the polynomial in expanded form
+# Step 4. Compute the polynomial that will be displayed in the question.
+# Eg: $poly3 = Formula("$k*$a*$c*x^2 + ($k*$a*$d + $b*$k*$c)x + $b*$k*$d")->reduce;
+
+# The strict context requires polynomials in answers to be completely simplified.
+Context("PolynomialFactors-Strict");
+# Makes it so that repeated, non-simplified factors do not generate errors.
+Context()->flags->set(singleFactors=>0);
+# Restricts the allowed powers to only 0 or 1.
+LimitedPowers::OnlyIntegers(minPower => 0, maxPower => 1,message => "either 0 or 1");
+
+# The factored polynomial (answer).
+# Step 5. Compute the factored polynomial that is used for the answer.
+# Eg: $factored3 = Compute("$k($a*x + $b)($c*x + $d)");
+#-ENDULETH-#
+
+
+###########################
+#  Main text
+
+#-ULETH-#
+# Initialize the problem text and formula formatting help.
+# Step 6. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Eg: 3.  [`[$poly3] = `][____________________][@ AnswerFormatHelp("formulas") @]*
+BEGIN_PGML
+Write the following quadratic expressions in factored form [`k(ax+b)(cx+d)`].
+
+1.  [`[$poly1] = `][____________________][@ AnswerFormatHelp("formulas") @]*
+
+2.  [`[$poly2] = `][____________________][@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# Step 7. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Eg: ANS($factored3->cmp());
+ANS($factored1->cmp());
+ANS($factored2->cmp());
+#-ENDULETH-#
+
+
+############################
+#  Solution
+
+#-ULETH-#
+# Step 8. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

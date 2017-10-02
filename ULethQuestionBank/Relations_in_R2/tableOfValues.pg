@@ -1,0 +1,238 @@
+## DESCRIPTION
+## This question code is based on a sample problem from the WeBWorK wiki.
+## It has been modified to meet the ULeth Template standards.
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-05)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('table of values')
+
+# How to add a new question:
+# Step 1. If you need any random values for your question, define them first.
+#   If you want to change the pool of values to select the integer
+#   values from, change the range for the random number selectors.
+# Step 2. Compute the Formula that you will be using in the problem.  Make sure
+#   that it includes a variable that can be substituted for later.  If you want
+#   a variable other than x, add it to the Context.  Also, create a LaTeX version
+#   of the Formula so that it displays properly in the question.
+# Step 3. Define the answer as a new, empty list that can be populated with values.
+# Step 4. Calculate the different answers for the question by evaluating the
+#   Formula repeatedly in a loop.  If you want to use non-sequential values, it
+#   may be best to just do individual evaluations.
+# Step 5. Set up the answer table that will be used for the question.  You need
+#   to define each row separately, specifying the values that will go in each
+#   column.  Use ans_rule() instead of [________] for defining answer blanks.
+#   Also, specify the number of columns with begintable(numColumns).
+# Step 6. Add the text for the new question to the main text of the problem.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+#   To add a previously-defined table, use "code brackets" [@ @]*** (note the
+#   three asterisks at the end), and reference the table name within.
+# Step 7. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.  If you used non-sequential values
+#   for some parts of the question, evaluate them outside of a loop.
+# Step 8. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+
+
+#############################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+Context("Numeric");
+
+#-ULETH-#
+# The base for the formula.
+$base = random(2,5,1);
+
+$r = random(2,20,2);
+# Step 1. If you need any random values for your question, define them first.
+#   If you want to change the pool of values to select the integer
+#   values from, change the range for the random number selectors.
+# Eg: $y = random(1,10,1);
+
+# The formula that will be applied to each value.
+# If you want to modify the formula used in the question, change it here.
+$f = Formula("$base^-x");
+$fTeX = $f->TeX;
+$g = Formula("x^2/$r");
+$gTeX = $g->TeX;
+# Step 2. Compute the Formula that you will be using in the problem.  Make sure
+#   that it includes a variable that can be substituted for later.  If you want
+#   a variable other than x, add it to the Context.  Also, create a LaTeX version
+#   of the Formula so that it displays properly in the question.
+# Eg: Context()->variables->add(p=>"Real");
+# $h = Formula("$y*p + p^$y");
+# $hTeX = $h->TeX;
+#-ENDULETH-#
+
+# Defines the answer as a list of values.
+@answer1 = ();
+@answer2 = ();
+# Step 3. Define the answer as a new, empty list that can be populated with values.
+# Eg: @answer3 = ();
+
+
+#-ULETH-#
+# Evaluates f(x) for x = 0, x = 1, and x = 2, then stores each as
+# one of the answers to the problem.
+# Increase the number 2 if you want to evaluate f(x) at more values of x.
+foreach my $i (0..2) {
+  $answer1[$i] = $f->eval(x=>$i);
+}
+
+foreach my $i (0..2) {
+  $answer2[$i] = $g->eval(x=>$i);
+}
+# Step 4. Calculate the different answers for the question by evaluating the
+#   Formula repeatedly in a loop.  If you want to use non-sequential values, it
+#   may be best to just do individual evaluations.
+# Eg: $answer3[0] = $h->eval(p=>5);
+# $answer3[1] = $h->eval(p=>10);
+# $answer3[2] = $h->eval(p=>15);
+
+# Initializes table with 4 columns and two rows, plus the values in
+# each cell.
+# If you need more columns, change the number 4 to the number of columns you want.
+# Next, add new column headers to the row( "\(x\)", "0", "1", "2" ) . line by
+# adding the names in quotes to the comma-separated list.
+# Lastly, add more answer blanks to the last row by adding more ans_rule(5)
+# statements to the comma-separated list.
+$table1 = begintable(4) .
+row( "\(x\)", "0", "1", "2" ) .
+row( "\(f(x) = $fTeX\)", ans_rule(5), ans_rule(5), ans_rule(5) ) .
+endtable();
+
+$table2 = begintable(4) .
+row( "\(x\)", "0", "1", "2" ) .
+row( "\(g(x) = $gTeX\)", ans_rule(5), ans_rule(5), ans_rule(5) ) .
+endtable();
+# Step 5. Set up the answer table that will be used for the question.  You need
+#   to define each row separately, specifying the values that will go in each
+#   column.  Use ans_rule() instead of [________] for defining answer blanks.
+#   Also, specify the number of columns with begintable(numColumns).
+# Eg: $table3 = begintable(4) .
+# row( "\(p\)", "5", "10", "15" ) .
+# row( "\(h(x) = $hTeX \)", ans_rule(5), ans_rule(5), ans_rule(5) ) .
+# endtable();
+
+# Disable exponents in the answer.
+Context()->operators->undefine('^');
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# Step 6. Add the text for the new question to the main text of the problem.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+#   To add a previously-defined table, use "code brackets" [@ @]*** (note the
+#   three asterisks at the end), and reference the table name within.
+# Eg: 3. [@ $table3 @]***
+BEGIN_PGML
+For each function, fill in the table of values with numbers.
+[@ AnswerFormatHelp("numbers") @]*
+
+1. [@ $table1 @]***
+
+2. [@ $table2 @]***
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+
+# Checks each entered answer against its associated solution value.
+# If you've modified the number of values to evaluate the formula at (see the
+# foreach loop in the Setup section), you will have to change the 0..2 here to
+# match that loop.
+foreach my $i (0..2) {
+  ANS( $answer1[$i]->cmp() );
+}
+
+foreach my $i (0..2) {
+  ANS( $answer2[$i]->cmp() );
+}
+
+# Step 7. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.  If you used non-sequential values
+#   for some parts of the question, evaluate them outside of a loop.
+# Eg: ANS($answer3[0]->cmp());
+# ANS($answer3[1]->cmp());
+# ANS($answer3[2]->cmp());
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# Step 8. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+
+# For ease of evaluation, the f(x) solution is based on the formula being some constant
+# to a negative power.  However, if you've changed the formula, you may want to
+# create some intermediate values here to use in the solution text.
+BEGIN_PGML_SOLUTION
+[`f(0) = [$base]^{-0} = [@ $answer1[0] @]*`]
+
+[`f(1) = [$base]^{-1} = \frac{1}{[$base]}`]
+
+[`f(2) = [$base]^{-2} = \frac{1}{[$base]^2} = \frac{1}{[@ $base**2 @]*}`]
+
+[`g(0) = \frac{0^2}{[$r]} = [@ $answer2[0] @]*`]
+
+[`g(1) = \frac{1^2}{[$r]} = \frac{1}{[$r]}`]
+
+[`g(2) = \frac{2^2}{[$r]} = \frac{4}{[$r]}`]
+END_PGML_SOLUTION
+
+COMMENT('MathObject version. Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

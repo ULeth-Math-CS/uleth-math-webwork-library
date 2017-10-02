@@ -1,0 +1,187 @@
+## DESCRIPTION
+## This question code is based on a sample problem from the WeBWorK wiki.
+## It has been modified to meet the ULeth Template standards.
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-05)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('equivalent in f(x)', 'scaling and translating functions', 'transforming functions')
+
+# How to add a new question:
+# Step 1. Add any function letters that you want to use in the question as
+#   parserFunctions.  You can just copy/paste the lines that are here and
+#   change the variable names; the actual function doesn't matter.
+# Step 2. Set $numFunctions to be equal to the number of functions that you will
+#   be using across all your questions.
+# Step 3. If you want to change the pool of values to select the integer
+#   values from, change the range for the random number selectors.
+# Step 4. Define the Formula objects that will be used to check the student
+#   answers.  Use $a[index] and $b[index] to pull specific numbers from the
+#   arrays (@a, @b) that store the values for the question.
+# Step 5. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Step 6. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Step 7. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+
+
+#############################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Used to create the function that will be transformed.
+  "parserFunction.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+Context("Numeric");
+
+#-ULETH-#
+# Step 1. Add any function letters that you want to use in the question as
+#   parserFunctions.  You can just copy/paste the lines that are here and
+#   change the variable names; the actual function doesn't matter.
+# Eg: parserFunction(h => "sin(e*x)+5.5*pi*x^2");
+# Defines f and g as functions that can undergo transformations.
+# These will not be shown to the student.
+parserFunction(f => "sin(e*x)+5.5*pi*x^2");
+parserFunction(g => "sin(e*x)+5.5*pi*x^2");
+
+# Step 2. Set $numFunctions to be equal to the number of functions that you will
+#   be using across all your questions.
+$numFunctions = 3;
+# Array to store the variable values in.
+@a = ();
+@b = ();
+
+for (my $i = 0; $i < $numFunctions; $i++)
+{
+  # Step 3. If you want to change the pool of values to select the integer
+  #   values from, change the range for the random number selectors.
+  # Eg: $a = random(1,20,1);
+  $a[$i] = non_zero_random(-5,5,1);
+  $b[$i] = non_zero_random(-5,5,1);
+}
+
+# Makes sure that operations between constants won't be performed when we reduce
+# the function.
+Context()->flags->set(reduceConstants=>0);
+
+# Step 4. Define the Formula objects that will be used to check the student
+#   answers.  Use $a[index] and $b[index] to pull specific numbers from the
+#   arrays (@a, @b) that store the values for the question.
+# Eg: $answer3 = Formula("h(x-$a[2]) + $a[2]")->reduce;
+$answer1 = Formula("f(x-$a[0]) + $b[0]")->reduce;
+$answer2 = Formula("g(x-$b[1]) + $a[1]")->reduce;
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# Step 5. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Eg: 3.  Enter the formula [`h(x)`] after it has been shifted horizontally [$a[2]] units
+# and vertically [$a[2]] units.
+#
+#     [_______________][@ AnswerFormatHelp("formulas") @]*
+BEGIN_PGML
+1.  Enter the formula [`f(x)`] after it has been shifted horizontally [$a[0]] units
+and vertically [$b[0]] units.
+
+    [_______________][@ AnswerFormatHelp("formulas") @]*
+
+2.  Enter the formula [`g(x)`] after it has been shifted horizontally [$b[1]] units
+and vertically [$a[1]] units.
+
+    [_______________][@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+# Step 6. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Eg: ANS($answer3->cmp());
+ANS($answer1->cmp());
+ANS($answer2->cmp());
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# Step 7. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+BEGIN_PGML_SOLUTION
+1.  To shift a function horizontally by [`[$a[0]]`] units, subtract [`[$a[0]]`] from [`x`] to
+get [`f(x-[$a[0]])`].
+
+    To shift a function by [`[$b[0]]`] vertically, add [`[$b[0]]`] to the function to
+get [`f(x)+[$b[0]]`].
+
+    Thus, to do both, we write [`f(x-[$a[0]])+[$b[0]]`].
+
+1.  To shift a function horizontally by [`[$b[1]]`] units, subtract [`[$b[1]]`] from [`x`] to
+get [`f(x-[$b[1]])`].
+
+    To shift a function by [`[$a[1]]`] vertically, add [`[$a[1]]`] to the function to
+get [`f(x)+[$a[1]]`].
+
+    Thus, to do both, we write [`f(x-[$b[1]])+[$a[1]]`].
+END_PGML_SOLUTION
+
+COMMENT('MathObject version. Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

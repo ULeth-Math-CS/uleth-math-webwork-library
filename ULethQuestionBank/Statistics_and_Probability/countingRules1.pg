@@ -1,0 +1,164 @@
+## DESCRIPTION
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-08-31)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('counting', 'combinations', 'statistics and probability', 'Math Effect')
+
+
+#################################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#################################
+#  Setup
+
+#-ULETH-#
+$ttlOfficers = random(30,50,1);
+$numTurian = random(round(0.4*$ttlOfficers),round(0.6*$ttlOfficers),1);
+$numAsari = random(round(0.1*$ttlOfficers),round(0.2*$ttlOfficers),1);
+$numSalarian = random(round(0.05*$ttlOfficers),round(0.1*$ttlOfficers),1);
+$numHuman = $ttlOfficers - ($numTurian + $numAsari + $numSalarian);
+$numInTaskForce = random(5,8,1);
+
+$answerA = C($numTurian, 2) * C($ttlOfficers - $numTurian, $numInTaskForce - 2);
+$answerB = C($ttlOfficers - $numTurian, $numInTaskForce);
+$answerC = C($numTurian, 1) * C($numAsari, 1) * C($numSalarian, 1) * C($numHuman, 1) * C($ttlOfficers - 4, $numInTaskForce - 4);
+#-ENDULETH-#
+
+
+#####################################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+BEGIN_PGML
+Citadel Security Executor, Venari Pallin, must choose [$numInTaskForce] officers
+to serve on a task force from a group of [$ttlOfficers] eligible officers.  The
+[$ttlOfficers] are comprised of [$numTurian] Turian officers,
+[$numAsari] Asari officers, [$numSalarian] Salarian officers, and
+[$numHuman] Human officers.
+
+a. How many ways can a task force including exactly 2 Turians be formed? [_______][@ AnswerFormatHelp("numbers") @]*
+
+b. How many ways can a task force including no Turians be formed? [_______][@ AnswerFormatHelp("numbers") @]*
+
+c. How many ways can a task force including at least one officer of each species
+be formed? [_______][@ AnswerFormatHelp("numbers") @]*
+END_PGML
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS(Compute($answerA)->cmp());
+ANS(Compute($answerB)->cmp());
+ANS(Compute($answerC)->cmp());
+#-ENDULETH-#
+
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+BEGIN_PGML_SOLUTION
+a.  Choose 2 of the [$numTurian] Turians and [$numInTaskForce - 2]
+of the [$ttlOfficers - $numTurian] non-Turians.
+
+    [`\left(
+        \begin{array}{c}
+          [$numTurian]\\
+          2
+        \end{array}
+      \right)
+      *
+      \left(
+        \begin{array}{c}
+          [$ttlOfficers - $numTurian]\\
+          [$numInTaskForce - 2]
+        \end{array}
+      \right)
+    `]
+
+b.  Choose all [$numInTaskForce] officers from the [$ttlOfficers - $numTurian] non-Turians.
+
+    [`\left(
+        \begin{array}{c}
+          [$ttlOfficers - $numTurian]\\
+          [$numInTaskForce]
+        \end{array}
+      \right)
+    `]
+
+c.  Choose 1 officer from each species, and [$numInTaskForce - 4] from the
+remaining [$ttlOfficers - 4] officers.
+
+    [`\left(
+        \begin{array}{c}
+          [$numTurian]\\
+          1
+        \end{array}
+      \right)
+      *
+      \left(
+        \begin{array}{c}
+          [$numAsari]\\
+          1
+        \end{array}
+      \right)
+      *
+      \left(
+        \begin{array}{c}
+          [$numSalarian]\\
+          1
+        \end{array}
+      \right)
+      *
+      \left(
+        \begin{array}{c}
+          [$numHuman]\\
+          1
+        \end{array}
+      \right)
+      *
+      \left(
+        \begin{array}{c}
+          [$ttlOfficers - 4]\\
+          [$numInTaskForce - 4]
+        \end{array}
+      \right)
+    `]
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

@@ -1,0 +1,333 @@
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-08-14)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('relations in R2', 'formula of a parabola')
+
+# How to add a new question:
+# Step 1. Change the value of $numberOfPoints to match the number of random
+#   points you need in the question.
+# Step 2. If you want to change the pool of values to select the x coordinate
+#   values from, change the range for the random number selectors.
+# Step 3. Make this value the same as the one in step 2, as it will only
+#   be used if x needs to be re-generated due to there being a repeated
+#   value.
+# Step 4. If you want to change the pool of values to select the y coordinate
+#   values from, change the range for the random number selectors.
+# Step 5. Make this value the same as the one in step 2, as it will only
+#   be used if y needs to be re-generated due to there being a repeated
+#   value.
+# Step 6. Define the different values that make up the answer, and then Compute
+#   the answer itself.
+# Step 7. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Step 8. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Step 9. Set up intermediate solution values.  This provides partially-calculated
+#   versions of the answers so that the solution provides more information to
+#   students.
+# Step 10. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+
+
+###########################
+#  Initialization
+
+# The first line in the .pg file after any opening comments.
+# Defines the bounds of the document.
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+
+Context("Numeric");
+@x = ();
+@y = ();
+#-ULETH-#
+# Step 1. Change the value of $numberOfPoints to match the number of random
+#   points you need in the question.
+$numberOfPoints = 12;
+#-ENDULETH-#
+
+for (my $i = 0; $i < $numberOfPoints; $i++)
+{
+  #-ULETH-#
+  # The value to use for the different point x-values.
+  # Step 2. If you want to change the pool of values to select the x coordinate
+  #   values from, change the range for the random number selectors.
+  # Eg: $x[$i] = random(1,25,1);
+  $x[$i] = non_zero_random(-10,10,1);
+  #-ENDULETH-#
+  for (my $j = 0; $j < $i; $j++)
+  {
+    if ($x[$j] == $x[$i])
+    {
+      # Keep replacing the value with a new random value until it
+      # doesn't match any others in the array.
+      #-ULETH-#
+      # Step 3. Make this value the same as the one in step 2, as it will only
+      #   be used if x needs to be re-generated due to there being a repeated
+      #   value.
+      # Eg: $x[$i] = random(1,25,1);
+      $x[$i] = non_zero_random(-10,10,1);
+      #-ENDULETH-#
+      $j = 0;
+    }
+  }
+  #-ULETH-#
+  # The value to use for the different point y-values.
+  # Step 4. If you want to change the pool of values to select the y coordinate
+  #   values from, change the range for the random number selectors.
+  # Eg: $y[$i] = random(1,25,1);
+  $y[$i] = non_zero_random(-10,10,1);
+  #-ENDULETH-#
+  for (my $j = 0; $j < $i; $j++)
+  {
+    if ($y[$j] == $y[$i])
+    {
+      # Keep replacing the value with a new random value until it
+      # doesn't match any others in the array.
+      #-ULETH-#
+      # Step 5. Make this value the same as the one in step 2, as it will only
+      #   be used if y needs to be re-generated due to there being a repeated
+      #   value.
+      # Eg: $y[$i] = random(1,25,1);
+      $y[$i] = non_zero_random(-10,10,1);
+      #-ENDULETH-#
+      $j = 0;
+    }
+  }
+}
+
+# Break up the "answer pieces" so they display properly.
+$answerA_1 = Formula("($y[1] - $y[0])")->reduce;
+$answerA_2 = Formula("($x[1] - $x[0])^2")->reduce;
+$answerA_3 = Formula("(x - $x[0])^2")->reduce;
+$answerA = Compute("($answerA_1 / $answerA_2) * $answerA_3 + $y[0]");
+
+$answerB_1 = Formula("($x[4] - $x[2]) * ($x[4] - $x[3])")->reduce;
+$answerB_2 = Formula("x - $x[2]")->reduce;
+$answerB_3 = Formula("x - $x[3]")->reduce;
+$answerB = Compute("($y[4] / $answerB_1) * $answerB_2 * $answerB_3");
+
+$answerC = Compute("(x - abs($x[5]))^2 - abs($y[5])")->reduce;
+
+#-ULETH-#
+# Step 6. Define the different values that make up the answer, and then Compute
+#   the answer itself.
+# Eg: $answerD_1 = Formula("($y[7] - $y[6])")->reduce;
+# $answerD_2 = Formula("($x[7] - $x[6])^2")->reduce;
+# $answerD_3 = Formula("(x - $x[6])^2")->reduce;
+# $answerD = Compute("($answerD_1 / $answerD_2) * $answerD_3 + $y[6]");
+#
+# $answerE_1 = Formula("($x[10] - $x[8]) * ($x[10] - $x[9])")->reduce;
+# $answerE_2 = Formula("x - $x[8]")->reduce;
+# $answerE_3 = Formula("x - $x[9]")->reduce;
+# $answerE = Compute("($y[10] / $answerE_1) * $answerE_2 * $answerE_3");
+#
+# $answerF = Compute("(x - abs($x[11]))^2 - abs($y[11])")->reduce;
+#-ENDULETH-#
+
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# Step 7. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Eg: d.  The parabola with a vertex at [`([@ [$x[6]] @]*, [@ [$y[6]] @]*)`] and it passes through the point [`([@ [$x[7]] @]*, [@ [$y[7]] @]*)`].
+#
+#     [`y = `][______________________________][@ AnswerFormatHelp("formulas") @]*
+#
+# e.  The parabola passes through the points [`([@ [$x[8]] @]*,0)`],[`([@ [$x[9]] @]*,0)`], and [`([@ [$x[10]] @]*, [@ [$y[10]] @]*)`].
+#
+#     [`y = `][______________________________][@ AnswerFormatHelp("formulas") @]*
+#
+# f.  The parabola obtained by taking [`y = x^2`], shifting it right [`[@ abs([$x[11]]) @]*`] and down [`[@ abs([$y[11]]) @]*`].
+#
+#     [`y = `][______________________________][@ AnswerFormatHelp("formulas") @]*
+BEGIN_PGML
+
+State the formula of the parabola for each description, enter DNE if this
+information does not describe a parabola:
+
+a.  The parabola with a vertex at [`([@ [$x[0]] @]*, [@ [$y[0]] @]*)`] and it passes through the point [`([@ [$x[1]] @]*, [@ [$y[1]] @]*)`].
+
+    [`y = `][______________________________][@ AnswerFormatHelp("formulas") @]*
+
+b.  The parabola passes through the points [`([@ [$x[2]] @]*,0)`],[`([@ [$x[3]] @]*,0)`], and [`([@ [$x[4]] @]*, [@ [$y[4]] @]*)`].
+
+    [`y = `][______________________________][@ AnswerFormatHelp("formulas") @]*
+
+c.  The parabola obtained by taking [`y = x^2`], shifting it right [`[@ abs([$x[5]]) @]*`] and down [`[@ abs([$y[5]]) @]*`].
+
+    [`y = `][______________________________][@ AnswerFormatHelp("formulas") @]*
+
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#   Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+# Step 8. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Eg: ANS($answerD->cmp());
+# ANS($answerE->cmp());
+# ANS($answerF->cmp());
+ANS($answerA->cmp());
+ANS($answerB->cmp());
+ANS($answerC->cmp());
+#-ENDULETH-#
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Calculate intermediate solution values.
+# We switch the reduceConstants Context flag on and off to enable/disable
+# the automatic combination of constant terms in the displayed equations.
+# This allows us to display intermediate parts of the solution.
+Context()->variables->add(a=>"Real");
+Context()->flags->set(reduceConstants=>0);
+$solutionA_1 = Compute("a(x - ($x[0]))^2 + $y[1]")->reduce;
+$solutionA_2 = $solutionA_1->substitute(x=>$x[1]);
+Context()->flags->set(reduceConstants=>1);
+$solutionA_3 = Compute("$solutionA_2")->reduce;
+$solutionA_4 = Compute("($y[0] - $y[1]) / ($x[1] - ($x[0]))^2");
+Context()->flags->set(reduceConstants=>0);
+$solutionA_Final = $solutionA_1->substitute(a=>$solutionA_4);
+
+$solutionB_1 = Compute("a(x - $x[2])(x - $x[3])")->reduce;
+$solutionB_2 = $solutionB_1->substitute(x=>$x[4]);
+Context()->flags->set(reduceConstants=>1);
+# We temporarily evaluate the formula with a=1 so that we can
+# separate out the coefficient.
+$solutionB_3_Coeff = Compute("$solutionB_2")->eval(a=>1)->reduce;
+$solutionB_3 = Compute("$solutionB_3_Coeff a");
+Context()->flags->set(reduceConstants=>0);
+$solutionB_4 = Formula("$y[4] / $solutionB_3_Coeff");
+$solutionB_Final = $solutionB_1->substitute(a=>$solutionB_4);
+
+$solutionC = Compute($answerC);
+
+# Step 9. Set up intermediate solution values.  This provides partially-calculated
+#   versions of the answers so that the solution provides more information to
+#   students.
+# Eg: Context()->flags->set(reduceConstants=>0);
+# $solutionD_1 = Compute("a(x - ($x[6]))^2 + $y[7]")->reduce;
+# $solutionD_2 = $solutionD_1->substitute(x=>$x[7]);
+# Context()->flags->set(reduceConstants=>1);
+# $solutionD_3 = Compute("$solutionD_2")->reduce;
+# $solutionD_4 = Compute("($y[6] - $y[7]) / ($x[7] - ($x[6]))^2");
+# Context()->flags->set(reduceConstants=>0);
+# $solutionD_Final = $solutionD_1->substitute(a=>$solutionD_4);
+#
+# $solutionE_1 = Compute("a(x - $x[8])(x - $x[9])")->reduce;
+# $solutionE_2 = $solutionE_1->substitute(x=>$x[10]);
+# Context()->flags->set(reduceConstants=>1);
+# # We temporarily evaluate the formula with a=1 so that we can
+# # separate out the coefficient.
+# $solutionE_3_Coeff = Compute("$solutionE_2")->eval(a=>1)->reduce;
+# $solutionE_3 = Compute("$solutionE_3_Coeff a");
+# Context()->flags->set(reduceConstants=>0);
+# $solutionE_4 = Formula("$y[10] / $solutionE_3_Coeff");
+# $solutionE_Final = $solutionE_1->substitute(a=>$solutionE_4);
+#
+# $solutionF = Compute($answerF);
+
+#-ULETH-#
+# Solution text to show after the due date.
+# Step 10. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+BEGIN_PGML_SOLUTION
+
+Answers:
+
+a.  The vertex form of a parabola is [`y = a(x - h)^2 + k`] where [`(h,k)`] is the vertex.
+
+    So we have the function [`y = [$solutionA_1]`].
+
+    To find the value of [`a`], recall that since [`([@ [$x[1]] @]*, [@ [$y[1]] @]*)`]
+    is a point on the parabola, we must have [`[@ [$y[0]] @]* = [$solutionA_2]`]
+
+    so [`[@ [$y[0]] @]* = [$solutionA_3]`]
+
+    so [`a = [$solutionA_4]`]
+
+    Hence, [`y = [$solutionA_Final]`].
+
+b.  The points [`([@ [$x[2]] @]*,0)`] and [`([@ [$x[3]] @]*,0)`] indicate that this
+parabola has roots at [`[@ [$x[2]] @]*`] and [`[@ [$x[3]] @]*`].
+
+    Thus the factored formula for this parabola must be [`y = [$solutionB_1]`].
+    Again, we can plug the additional point into this equation to determine the value of [`a`].
+
+    So [`[@ [$y[4]] @]* = [$solutionB_2]`]
+
+    so [`[@ [$y[4]] @]* = [$solutionB_3]`]
+
+    so [`a = [$solutionB_4]`]
+
+    Hence, [`y = [$solutionB_Final]`].
+
+c.  For any curve [`y = f(x)`] and [`a \in (0,\infty)`]
+
+    [`y = f(x - a)`] shifts the curve [`a`] units to the right.
+
+    [`y = f(x) - a`] shifts the curve a units down.
+
+    So the parabola of interest is [`y = [$solutionC]`]
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+# Marks the end of the problem document.
+ENDDOCUMENT();

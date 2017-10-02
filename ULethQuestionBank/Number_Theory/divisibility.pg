@@ -1,0 +1,265 @@
+## DESCRIPTION
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-08-23)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('number divisibility')
+
+# How to add a new question:
+# Step 1. Set up a calculator to generate a number to be divided in the question.
+# Step 2. If you want to change the pool of values to select the numbers from,
+#   change the numbers in the list_random brackets.  Alternatively, if you want
+#   to define a range to select the randoms from, use random() or non_zero_random().
+# Step 3. Create the string of factors that will be used to compute the answer.
+# Step 4. Change the formula within the if statement to align with the
+#   question you are posing.  The example below will give us all n values for
+#   which a divides A-n.
+# Step 5: Compute the answer List using the string of factors we generated.
+# Step 6. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Step 7. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.  Use ordered=>1 if you want to
+#   require the students to enter the roots in the same order that you put them
+#   in when you defined the list.  Otherwise, use ordered=>0.
+# Step 8. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+
+
+#################################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#################################
+#  Setup
+
+$maxDivisors = 3;
+@aVals = ();
+$aVals[$maxDivisors] = 1;
+
+while ($aVals[$maxDivisors] == 1)
+{
+  for (my $i = 0; $i < $maxDivisors; $i++)
+  {
+    #-ULETH-#
+    # Randomly chooses a value from the list as one of the values
+    # for question A.
+    $aVals[$i] = list_random(1,2,3,5,7);
+    #-ENDULETH-#
+    $aVals[$maxDivisors] = $aVals[$maxDivisors]*$aVals[$i];
+  }
+}
+
+$answerAListString = "";
+# Calculate answer values for question a.
+for (my $n = 2; $n <= $aVals[$maxDivisors]; $n++)
+{
+  if ($aVals[$maxDivisors] % $n == 0)
+  {
+    $answerAListString = $answerAListString.$n.',';
+  }
+}
+
+# Remove the last character from the string, as it will be a trailing comma.
+chop($answerAListString);
+# Generate the answer list from the string.
+$answerA = Compute($answerAListString);
+
+@bVals = ();
+$bVals[$maxDivisors] = 1;
+
+while ($bVals[$maxDivisors] == 1)
+{
+  for (my $i = 0; $i < $maxDivisors; $i++)
+  {
+    #-ULETH-#
+    # Randomly chooses a value from the list as one of the values
+    # for question B.
+    $bVals[$i] = list_random(1,2,3,5,7);
+    #-ENDULETH-#
+    $bVals[$maxDivisors] = $bVals[$maxDivisors]*$bVals[$i];
+  }
+}
+
+$answerBListString = "";
+# Calculate answer values for question b.
+for (my $n = 2; $n <= $bVals[$maxDivisors] - 3; $n++)
+{
+  if ($bVals[$maxDivisors] % ($n + 3) == 0)
+  {
+    $answerBListString = $answerBListString.$n.',';
+  }
+}
+
+# Remove the last character from the string, as it will be a trailing comma.
+chop($answerBListString);
+# Generate the answer list from the string.
+$answerB = Compute($answerBListString);
+
+@cVals = ();
+$cVals[$maxDivisors] = 1;
+
+while ($cVals[$maxDivisors] == 1)
+{
+  for (my $i = 0; $i < $maxDivisors; $i++)
+  {
+    #-ULETH-#
+    # Randomly chooses a value from the list as one of the values
+    # for question C.
+    $cVals[$i] = list_random(2,3,5,7);
+    #-ENDULETH-#
+    $cVals[$maxDivisors] = $cVals[$maxDivisors]*$cVals[$i];
+  }
+}
+
+$answerCListString = "";
+# Calculate answer values for question c.
+for (my $n = 2; $n < $cVals[$maxDivisors]; $n++)
+{
+  if (($cVals[$maxDivisors] - $n) % $cVals[0] == 0)
+  {
+    $answerCListString = $answerCListString.$n.',';
+  }
+}
+
+# Remove the last character from the string, as it will be a trailing comma.
+chop($answerCListString);
+# Generate the answer list from the string.
+$answerC = Compute($answerCListString);
+
+#-ULETH-#
+# Step 1. Set up a calculator to generate a number to be divided in the question.
+# Eg: @dVals = ();
+# $dVals[$maxDivisors] = 1;
+#
+# while ($dVals[$maxDivisors] == 1)
+# {
+#   for (my $i = 0; $i < $maxDivisors; $i++)
+#   {
+#     #-ULETH-#
+#     # Randomly chooses a value from the list as one of the values
+#     # for question D.
+      # Step 2. If you want to change the pool of values to select the numbers from,
+      #   change the numbers in the list_random brackets.  Alternatively, if you want
+      #   to define a range to select the randoms from, use random() or non_zero_random().
+#     $dVals[$i] = list_random(1,2,3,5,7);
+#     #-ENDULETH-#
+#     $dVals[$maxDivisors] = $dVals[$maxDivisors]*$dVals[$i];
+#   }
+# }
+
+# Step 3. Create the string of factors that will be used to compute the answer.
+# Eg: $answerDListString = "";
+# # Calculate answer values for question d.
+# for (my $n = 2; $n < $dVals[$maxDivisors]; $n++)
+# {
+    # Step 4. Change the formula within the if statement to align with the
+    #   question you are posing.  The example below will give us all n values for
+    #   which a divides A-n.
+#   if (($dVals[$maxDivisors] - $n) % $dVals[0] == 0)
+#   {
+#     $answerDListString = $answerDListString.$n.',';
+#   }
+# }
+#
+# # Remove the last character from the string, as it will be a trailing comma.
+# chop($answerDListString);
+
+# Step 5: Compute the answer List using the string of factors we generated.
+$answerD = Compute($answerDListString);
+
+#-ENDULETH-#
+
+
+#####################################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# Step 6. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Eg: d. [`[@ $dVals[0] @]*|[@ dVals[[$maxDivisors]] @]* - n = `][___________________][@ AnswerFormatHelp("numbers") @]*
+BEGIN_PGML
+Let [`n > 1`] be an integer.  For which values of [`n`] are each of the following
+statements true?  List all values separated by commas.
+
+a. [`n|[@ $aVals[[$maxDivisors]] @]* = `][___________________][@ AnswerFormatHelp("numbers") @]*
+
+b. [`(n + 3)|[@ $bVals[[$maxDivisors]] @]* = `][___________________][@ AnswerFormatHelp("numbers") @]*
+
+c. [`[@ $cVals[0] @]*|[@ $cVals[[$maxDivisors]] @]* - n = `][___________________][@ AnswerFormatHelp("numbers") @]*
+END_PGML
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+# Step 7. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.  Use ordered=>1 if you want to
+#   require the students to enter the roots in the same order that you put them
+#   in when you defined the list.  Otherwise, use ordered=>0.
+# Eg: ANS($answerD->cmp(ordered=>0));
+ANS($answerA->cmp(ordered=>0));
+ANS($answerB->cmp(ordered=>0));
+ANS($answerC->cmp(ordered=>0));
+#-ENDULETH-#
+
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# Step 8. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+BEGIN_PGML_SOLUTION
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

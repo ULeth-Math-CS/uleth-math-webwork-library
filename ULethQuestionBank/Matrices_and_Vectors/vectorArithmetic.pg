@@ -1,0 +1,196 @@
+## DESCRIPTION
+## This question code is based on a sample problem from the WeBWorK wiki.
+## It has been modified to meet the ULeth Template standards.
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-06-30)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('vector operations', 'vectors')
+
+# How to add a new question:
+# Step 1. Change the value of $numVectors to match the number of random
+#   Vectors you need in the question.
+# Step 2: If you want to change the pool of values to select the coordinate
+#   values from, change the range for the random number selectors.
+# Step 3: Add the answer to the new question by indexing the array.
+#   Don't use an index higher than $numVectors - 1.
+# Step 4. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Step 5. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Step 6. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+#   The coordinate array indexes Vector coordinates with the format
+#   [vectorIndex][coordinateNumber].  Note that both are zero-based.
+
+
+##############################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Provides general utility routines for working with vectors.
+  "parserVectorUtils.pl",
+  # Allows the question to be formatted more cleanly, since there are so many parts.
+  "unionTables.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "AnswerFormatHelp.pl"
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+# Sets the context to support 3D vectors.
+Context("Vector");
+
+#-ULETH-#
+# Initialize an array of random 3-D Vectors.
+# Step 1. Change the value of $numVectors to match the number of random
+#   Vectors you need in the question.
+$numVectors = 6;
+@vectors = ();
+#-ENDULETH-#
+# Stores the coordinates that get added to the vectors.
+# Used in the solution.
+@coordinates = ();
+
+for (my $i = 0; $i < $numVectors; $i++)
+{
+  #-ULETH-#
+  # Step 2: If you want to change the pool of values to select the coordinate
+  #   values from, change the range for the random number selectors.
+  $x = random(-10,10,1);
+  $y = random(-10,10,1);
+  $z = random(-10,10,1);
+  #-ENDULETH-#
+  $coordinates[$i][0] = $x;
+  $coordinates[$i][1] = $y;
+  $coordinates[$i][2] = $z;
+
+  $vectors[$i] = Compute("<$x,$y,$z>");
+}
+
+#-ULETH-#
+# Defines the results of various operations between the Vectors.
+# Step 3: Add the answer to the new question by indexing the array.
+#   Don't use an index higher than $numVectors - 1.
+# Eg: $answerD = $vectors [3] + $vectors[5];
+$answerA = $vectors[0] + $vectors[1];
+$answerB = $vectors[2] - $vectors[3];
+$answerC = $vectors[4] . $vectors[5];
+
+# Prevent students from entering the dot product, addition, and subtraction
+# operators, and the vector functions norm and unit.
+# Add any other operators you want to prevent them from using after the '-'.
+# Use a comma-separated list and enclose each operator in quotes.
+Context()->operators->undefine('.','+','-');
+Context()->functions->disable("Vector");
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# Step 4. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Eg: d. [`[@ $vectors[3] @]* + [@ $vectors[5] @]*`] [__________________]
+BEGIN_PGML
+Determine:
+
+a. [`[@ $vectors[0] @]* + [@ $vectors[1] @]*`] [__________________]
+
+b. [`[@ $vectors[2] @]* - [@ $vectors[3] @]*`] [__________________]
+
+c. [`[@ $vectors[4] @]* \cdot [@ $vectors[5] @]*`] [__________________]
+
+[@ AnswerFormatHelp("vectors") @]* [@ AnswerFormatHelp("numbers") @]*
+END_PGML
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+# Step 5. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Eg: ANS($answerD->cmp());
+ANS($answerA->cmp());
+ANS($answerB->cmp());
+ANS($answerC->cmp());
+#-ENDULETH-#
+
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# Step 6. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+#   The coordinate array ($coordinates) indexes Vector coordinates with the format
+#   [vectorIndex][coordinateNumber].  Note that both are zero-based.
+# Eg: [@ $coordinates[3][2] @]*
+BEGIN_PGML_SOLUTION
+a. [`[@ $vectors[0] @]* + [@ $vectors[1] @]* = `]
+[`<[@ $coordinates[0][0] @]* + [@ $coordinates[1][0] @]*,`]
+[`[@ $coordinates[0][1] @]* + [@ $coordinates[1][1] @]*,`]
+[`[@ $coordinates[0][2] @]* + [@ $coordinates[1][2] @]*>`]
+[`= [$answerA]`]
+
+b. [`[@ $vectors[2] @]* - [@ $vectors[3] @]* = `]
+[`<[@ $coordinates[2][0] @]* - [@ $coordinates[3][0] @]*,`]
+[`[@ $coordinates[2][1] @]* - [@ $coordinates[3][1] @]*,`]
+[`[@ $coordinates[2][2] @]* - [@ $coordinates[3][2] @]*>`]
+[`= [$answerB]`]
+
+c. [`[@ $vectors[4] @]* \cdot [@ $vectors[5] @]* = `]
+[`([@ $coordinates[4][0] @]*)([@ $coordinates[5][0] @]*) +`]
+[`([@ $coordinates[4][1] @]*)([@ $coordinates[5][1] @]*)+`]
+[`([@ $coordinates[4][2] @]*)([@ $coordinates[5][2] @]*)`]
+[`= [$answerC]`]
+END_PGML_SOLUTION
+
+COMMENT("Uses PGML.");
+#-ENDULETH-#
+
+ENDDOCUMENT();

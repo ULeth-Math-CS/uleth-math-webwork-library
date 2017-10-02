@@ -1,0 +1,231 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+## DBsubject(WeBWorK)
+## DBchapter(WeBWorK tutorial)
+## DBsection(PGML tutorial 2017)
+## Date(2017-08-22)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## TitleText1('')
+## EditionText1('')
+## AuthorText1('')
+## Section1('')
+## Problem1('')
+
+## KEYWORDS('finding roots of polynomial', 'complex numbers')
+
+# How to add a new question:
+# Step 1. Change the value of $numVals to match the number of unique random
+#   numbers you need to define all the functions you are using in the question.
+# Step 2. If you want to change the pool of values to select the numbers from,
+#   change the numbers in the list_random brackets.  Alternatively, if you want
+#   to define a range to select the randoms from, use random() or non_zero_random().
+# Step 3. Define any new functions for the question here.  You don't have to
+#   calculate roots now, but it's best to define them as Formulas so they can easily
+#   be reduced.  Reference the different integers you want to use by using $randomIntegers[index].
+# Step 4. Compute the answer(s) for the new question.  Define each as a separate
+#   MathObject, then add all the MathObjects to a list; this list is what you'll
+#   use for the final answer.
+# Step 5. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Step 6. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Step 7. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+#   If you're referencing a particular array value, use "code brackets"
+#   [@ @]* to surround the value.
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "AnswerFormatHelp.pl"
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+# Array of integers randomly selected from a list.
+# These values are used to define the functions for the question.
+@randomIntegers = ();
+#-ULETH-#
+# Step 1. Change the value of $numVals to match the number of unique random
+#   numbers you need to define all the functions you are using in the question.
+$numVals = 4;
+#-ENDULETH-#
+for (my $i = 0; $i < $numVals; $i++)
+{
+  #-ULETH-#
+  # Values for the functions are randomly selected from this list.
+  # Step 2. If you want to change the pool of values to select the numbers from,
+  #   change the numbers in the list_random brackets.  Alternatively, if you want
+  #   to define a range to select the randoms from, use random() or non_zero_random().
+  # Eg: $randomIntegers[$i] = random(1,25,1);
+  $randomIntegers[$i] = list_random(-5,-3,-2,2,3,5);
+  #-ENDULETH-#
+}
+#-ULETH-#
+# Values for the question.
+# Defines the formulas that get displayed in the question.
+# Step 3. Define any new functions for the question here.  You don't have to
+#   calculate roots now, but it's best to define them as Formulas so they can easily
+#   be reduced.  Reference the different integers you want to use by using $randomIntegers[index].
+# Eg: $iX = Formula("x^2 + (2*$randomIntegers[3]) + $randomIntegers[3]^2")->reduce;
+$fX = Formula("$randomIntegers[0]^2 x^2 + $randomIntegers[1]^2")->reduce;
+$gX = Formula("x^4 + $randomIntegers[2]^2")->reduce;
+$hX = Formula("x^3 - $randomIntegers[3]^3")->reduce;
+#-ENDULETH-#
+
+# Context flags get set so that constant fractions don't get reduced.
+Context("Complex")->flags->set(reduceConstants=>0, reduceConstantFunctions=>0);
+#-ULETH-#
+# All the following statements define the different roots for their
+# respective functions and add those roots to a list that will be used
+# to check the student's answer.
+# Step 4. Compute the answer(s) for the new question.  Define each as a separate
+#   MathObject, then add all the MathObjects to a list; this list is what you'll
+#   use for the final answer.
+# Eg: $iXRoot1 = Formula("$randomIntegers[3]");
+#     $iXRoot2 = Formula("$randomIntegers[3]");
+#     $iXRoots = List($iXRoot1, $iXRoot2);
+$fXRoot1 = Formula("-$randomIntegers[1]i / $randomIntegers[0]");
+$fXRoot2 = Formula("$randomIntegers[1]i / $randomIntegers[0]");
+$fXRoots = List($fXRoot1, $fXRoot2);
+
+$gXRoot1 = Formula("-sqrt($randomIntegers[2])");
+$gXRoot2 = Formula("sqrt($randomIntegers[2])");
+$gXRoot3 = Formula("-i sqrt($randomIntegers[2])");
+$gXRoot4 = Formula("i sqrt($randomIntegers[2])");
+$gXRoots = List($gXRoot1, $gXRoot2, $gXRoot3, $gXRoot4);
+
+$hXRoot1 = Formula("$randomIntegers[3]");
+$hXRoot2 = Formula("(-$randomIntegers[3] / 2) + i(($randomIntegers[3]*sqrt(3)) / 2)");
+$hXRoot3 = Formula("(-$randomIntegers[3] / 2) - i(($randomIntegers[3]*sqrt(3)) / 2)");
+$hXRoots = List($hXRoot1, $hXRoot2, $hXRoot3);
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+# Step 5. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Eg: d. [`i(x) = [$iX]`], the roots of [`i`] are [___________________________]
+BEGIN_PGML
+Find all the roots of each function:
+
+a. [`f(x) = [$fX]`], the roots of [`f`] are [___________________________]
+
+b. [`g(x) = [$gX]`], the roots of [`g`] are [___________________________]
+
+c. [`h(x) = [$hX]`], the roots of [`h`] are [___________________________]
+END_PGML
+#-ENDULETH-#
+
+
+############################
+#  Answers
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+# Step 6. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.  Use ordered=>1 if you want to
+#   require the students to enter the roots in the same order that you put them
+#   in when you defined the list.  Otherwise, use ordered=>0.
+# Eg: ANS($iXRoots->cmp(ordered=>0));
+ANS($fXRoots->cmp(ordered=>0));
+ANS($gXRoots->cmp(ordered=>0));
+ANS($hXRoots->cmp(ordered=>0));
+#-ENDULETH-#
+
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# Step 7. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+#   If you're referencing a particular array value, use "code brackets"
+#   [@ @]* to surround the value.
+BEGIN_PGML_SOLUTION
+[`f(x) = [@ $randomIntegers[0]**2 @]*x^2 + [@ $randomIntegers[1]**2 @]*`]
+[`= [@ $randomIntegers[0]**2 @]*x^2 - (-[@ $randomIntegers[1]**2 @]*)`]
+[`= \left([@ $randomIntegers[0] @]*x - \sqrt{(-[@ $randomIntegers[1]**2 @]*)}\right)`]
+  [`\left([@ $randomIntegers[0] @]*x + \sqrt{(-[@ $randomIntegers[1]**2 @]*)}\right)`]
+[`= \left([@ $randomIntegers[0] @]*x - [@ $randomIntegers[1] @]*i\right)`]
+  [`\left([@ $randomIntegers[0] @]*x + [@ $randomIntegers[1] @]*i\right)`]
+
+So the roots of [`f`] are [`x = -\frac{[@ $randomIntegers[1] @]*i}{[@ $randomIntegers[0] @]*}`]
+and [`\frac{[@ $randomIntegers[1] @]*i}{[@ $randomIntegers[0] @]*}`].
+
+[`g(x) = x^4 - [@ $randomIntegers[2]**2 @]*`]
+[`= (x^2 - [@ $randomIntegers[2] @]*)(x^2 + [@ $randomIntegers[2] @]*)`]
+[`= \left(x - \sqrt{[@ $randomIntegers[2] @]*}\right)`]
+  [`\left(x + \sqrt{[@ $randomIntegers[2] @]*}\right)`]
+  [`\left(x - \sqrt{[@ $randomIntegers[2] @]*}i\right)`]
+  [`\left(x + \sqrt{[@ $randomIntegers[2] @]*}i\right)`]
+
+So the roots of [`g`] are
+[`= \left(-\sqrt{[@ $randomIntegers[2] @]*}\right)`],
+[`\left(\sqrt{[@ $randomIntegers[2] @]*}\right)`],
+[`\left(-\sqrt{[@ $randomIntegers[2] @]*}i\right)`], and
+[`\left(\sqrt{[@ $randomIntegers[2] @]*}i\right)`].
+
+[`h(x) = x^3 - [@ $randomIntegers[3] @]*^3`]
+[`= (x-[@ $randomIntegers[3] @]*)(x^2 + [@ $randomIntegers[3] @]*x + [@ $randomIntegers[3]**2 @]*)`]
+
+Then [`x = [@ $randomIntegers[3] @]*`] or [`x^2 + [@ $randomIntegers[3] @]*x + [@ $randomIntegers[3]**2 @]* = 0`].
+
+We can use the quadratic formula to determine when [`x^2 + [@ $randomIntegers[3] @]*x + [@ $randomIntegers[3]**2 @]* = 0`]
+[`x = \frac{-([@ $randomIntegers[3] @]*) \pm \sqrt{[@ $randomIntegers[3] @]*^2 - 4(1)([@ $randomIntegers[3] @]*^2)}}{2(1)}`]
+[`= \frac{-([@ $randomIntegers[3] @]*) \pm \sqrt{[@ $randomIntegers[3]**2 - 4*1*$randomIntegers[3]**2 @]*}}{2(1)}`]
+[`= \frac{[@ -$randomIntegers[3] @]*}{2} \pm i\frac{\sqrt{[@ -($randomIntegers[3]**2 - 4*1*$randomIntegers[3]**2) @]*}}{2}`]
+
+So the roots of [`h`] are [`[@ $randomIntegers[3] @]*`],
+[`\frac{[@ -$randomIntegers[3] @]*}{2} + i\frac{\sqrt{[@ -($randomIntegers[3]**2 - 4*1*$randomIntegers[3]**2) @]*}}{2}`], and
+[`\frac{[@ -$randomIntegers[3] @]*}{2} - i\frac{\sqrt{[@ -($randomIntegers[3]**2 - 4*1*$randomIntegers[3]**2) @]*}}{2}`]
+
+END_PGML_SOLUTION
+
+COMMENT("Uses PGML.");
+#-ENDULETH-#
+
+ENDDOCUMENT();

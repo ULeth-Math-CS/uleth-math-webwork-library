@@ -1,0 +1,482 @@
+## DESCRIPTION
+## A number of assumptions are made for this problem:
+## 1. One sided infinite limits are determined to be inf or -inf through a single
+## test value that differs from the limit by 0.0001. Double sided infinite limits are
+## determined by comparing the left and right limits.
+## 2. The limits at infinity are determined by entering an extreme value and rounding to the nearest integer.
+## 3. The piece-wise graph has ten pieces, funG to funM and repeated uses of the constant function funC(x)=0.
+## 4. To create a somewhat random piece-wise graph, each piece is shifted by a constant.
+## 5. To create an isolated point at (a,b), use $a<=x<=$a, $b+$funCx
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-08-24)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('GeoGebra applet','piece-wise graph','limits')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to support the GeoGebra applet.
+  "AppletObjects.pl",
+  # Formats problem data into two layout columns.
+  "unionTables.pl",
+  # Provides course-specific initializations.
+  "PGcourse.pl",
+  "PGML.pl"
+);
+
+TEXT(beginproblem());
+
+
+##########################################
+#  Setup
+
+# Stores the limit values that correspond to the values on the graph.
+@limits = ();
+$numLimits = 6;
+for (my $i = 0; $i < $numLimits; $i++)
+{
+  #-ULETH-#
+  # The set of limits are between -6 and 5, this formula
+  # guarentees that they will be sorted and distinct
+  $limits[$i] = random(2*$i-6,2*$i-5,1);
+  #-ENDULETH-#
+}
+
+
+# Stores the constant values used to shift sections of the graph.
+@constant = ();
+$numConst = 10;
+for (my $i = 0; $i < $numConst; $i++)
+{
+  #-ULETH-#
+  # Each constant can be any non zero integer between -5 and 5.
+  $constant[$i] = non_zero_random(-5,5,1);
+  #-ENDULETH-#
+}
+
+#-ULETH-#
+# The functions that will be used for the different pieces of the piece-wise function.
+# If you use a variable other than x, make sure to add it to the Context.
+# Context()->variables->add(y=>"Real");
+$funCx = "0";
+$funGx = "((x($limits[0]+1-x))/(x-$limits[0]))+2*$limits[0]";
+$funHx = "-1/(x-$limits[1])";
+$funIx = "1/((x-$limits[1])(x-$limits[2]))";
+$funJx = "1/((x-$limits[2])(x-$limits[3]))";
+$funKx = "-1/((x-$limits[3])(x-$limits[4]))";
+$funLx = "1/(x-$limits[4])";
+$funMx = "(x-1)/(x(x-$limits[5]))";
+
+# The points that will be drawn along the piece-wise function line.
+# Formula($funGx)->eval(x=>$limits[0]) is equivalent to (x+5)(x+3) where x=$limits[0].
+# Note that the style (filled/unfilled) of each point is set in GeoGebra.
+$pointA = "$limits[0], $constant[2]+".Formula($funHx)->eval(x=>$limits[0]);
+$pointB = "$limits[0], $constant[1]+".Formula($funCx)->eval(x=>$limits[0]);
+$pointC = "$limits[1], $constant[3]+".Formula($funCx)->eval(x=>$limits[1]);
+$pointD = "$limits[2], $constant[5]+".Formula($funCx)->eval(x=>$limits[2]);
+$pointE = "$limits[5], $constant[8]+".Formula($funLx)->eval(x=>$limits[5]);
+
+
+# This value will be placed on the line of f(x) where x = 0.
+$pointF = "f";
+
+# The vertical asymptotes will be drawn at each limit value
+$line0 = "x = $limits[0]";
+$line1 = "x = $limits[1]";
+$line2 = "x = $limits[2]";
+$line3 = "x = $limits[3]";
+$line4 = "x = $limits[4]";
+$line5 = "x = $limits[5]";
+
+# The command that will create piece-wise function in GeoGebra.
+# This will define the function that gets graphed.
+# If you split the string over multiple lines, you need to end the line with
+# double quotes and a period.  The double quotes terminate the string on that
+# line, and the period concatenates the string on the following line to the first
+# string.
+#
+# Each line after the If[ is a conditional for the function.
+# Make sure to include the comma after each function if another one follows.
+# This will tell GeoGebra that the next piece is another conditional, rather
+# than being part of the previous equation.
+# Also, the last argument doesn't need a condition. If it doesn't have a condition
+# then it will be the equation that will be used if
+# all the other conditions are false.
+$function ="f(x) =".
+"If[".
+  "x < $limits[0], $constant[0]+$funGx,".
+  "$limits[0] <= x <= $limits[0], $constant[1]+$funCx,".
+  "$limits[0] < x < $limits[1], $constant[2]+$funHx,".
+  "$limits[1] <= x <= $limits[1], $constant[3]+$funCx,".
+  "$limits[1] < x < $limits[2], $constant[4]+$funIx,".
+  "$limits[2] <= x <= $limits[2], $constant[5]+$funCx,".
+  "$limits[2] < x < $limits[3], $constant[6]+$funJx,".
+  "$limits[3] < x < $limits[4], $constant[7]+$funKx,".
+  "$limits[4] < x < $limits[5], $constant[8]+$funLx,".
+  "x > $limits[5], $constant[9]+$funMx".
+"]";
+
+# Set up the field of view for the graph.
+$minX = -13;
+$maxX = 12;
+$minY = -12;
+$maxY = 12;
+
+# Set up the answers: Function when approaching the limit from the left,
+#                     limit approaching from the right,
+#                     function evaluated at the limit,
+#                     function when approaching the limit.
+
+
+# Answers for the first limit.
+$answerA = Formula("$constant[0]+$funGx")->eval(x=>$limits[0]-0.0001);
+$answerB = Formula("$constant[2]+$funHx")->eval(x=>$limits[0]+0.0001);
+$answerC = Formula("$constant[1]+$funCx")->eval(x=>$limits[0]);
+
+# Compares the left and right limits.
+if ($answerA == $answerB)
+{
+  $answerD = $answerA;
+}
+else
+{
+  $answerD = "DNE";
+}
+
+# Answers for the second limit.
+$answerE = Formula("$constant[2]+$funHx")->eval(x=>$limits[1]-0.0001);
+$answerF = Formula("$constant[4]+$funIx")->eval(x=>$limits[1]+0.0001);
+$answerG = Formula("$constant[3]+$funCx")->eval(x=>$limits[1]);
+if ($answerE == $answerF)
+{
+  $answerH = $answerE;
+}
+else
+{
+  $answerH = "DNE";
+}
+
+# Answers for the third limit.
+$answerI = Formula("$constant[4]+$funIx")->eval(x=>$limits[2]-0.0001);
+$answerJ = Formula("$constant[6]+$funJx")->eval(x=>$limits[2]-0.0001);
+$answerK = Formula("$constant[5]*$funCx")->eval(x=>$limits[2]);
+if ($answerI == $answerJ)
+{
+  $answerL = $answerI;
+}
+else
+{
+  $answerL = "DNE";
+}
+
+# Answers for the fourth limit.
+$answerM = Formula("$constant[6]+$funJx")->eval(x=>$limits[3]-0.0001);
+$answerN = Formula("$constant[8]*$funKx")->eval(x=>$limits[3]+0.0001);
+$answerO = Formula("$constant[7]*$funCx")->eval(x=>$limits[3]);
+if ($answerM == $answerN)
+{
+  $answerP = $answerM;
+}
+else
+{
+  $answerP = "DNE";
+}
+#-ENDULETH-#
+
+
+######################################
+# Create  link to applet:
+###################################
+# You can name your applet (anything reasonable :-) )
+# Adjust the height and width as desired
+# Paste the geogebra parameters in at the bottom of the page just above the
+# command end command so that they don't get in the way.
+# See the note down there for more information.
+###################################
+
+#-ULETH-#
+# Choose an appropriate name for your applet.  Can also leave as ggbfoo.
+$appletName = "ggbfoo";
+#-ENDULETH-#
+
+$applet =  GeogebraWebApplet(
+   code       => "geogebra.GeoGebraApplet",
+   archive    => "geogebra.jar",
+   codebase                 => findAppletCodebase("geogebra.jar"),
+   appletName              => $appletName,
+   appletId                    => $appletName,
+   submitActionAlias     => 'getAppletValues',  # default actionAlias
+   initializeActionAlias   => 'configure',  # default actionAlias
+   setStateAlias             => 'setXML',
+   getStateAlias             => 'getXML',
+   setConfigAlias           => '',
+   getConfigAlias           => '',
+   returnFieldName       => '',
+   #-ULETH-#
+   width                 => 497,              # may want to modify width
+   height                => 361,              # may want to modify height
+   #-ENDULETH-#
+   # mayscript             => "true",
+   #-ULETH-#
+   debugMode             => 0,   # set debugMode to 0 for no debug
+                                              # to 1 to make xml representation visible
+                                              # to 2 to add alerts detailing progression
+                                              # through the applet
+   #-ENDULETH-#
+   onInit                => 'ggbOnInit',
+   type                  => 'geogebraweb',
+   #submitActionScript    => qq{ getQE('answerBox').value = getAppletValues() },
+   submitActionScript => '',
+   selfLoading           => 1,
+
+   # Defined as a separate subroutine so the parameters can go at the bottom of
+   # the page.
+   params     => GEOGEBRA_PARAMS(),# paste parameters in
+
+);
+
+
+##################################
+# Setup GeogebraWebApplet --
+###################################
+
+###############################################
+#
+#  For persistence of GeoGebra applet state
+#  when answers are submitted or page is refreshed.
+#  Uses JavaScript interface to GeoGebra.
+#  This fetches the GeoGebra applet with $appletname.
+#  Note that this variable gets set in the "Create link to applet" section.
+
+HEADER_TEXT(
+qq!
+<script language="javascript">
+   function ggbOnInit(param) {
+       if (param == "$appletName") {
+           applet_loaded(param,1);  // report that applet is ready.
+           ww_applet_list[param].safe_applet_initialize(2);
+       }
+   }
+</script>
+<noscript>For this question to work properly,
+you must enable JavaScript, or use another browser
+(or computer) on which JavaScript works.</noscript>
+!);
+
+
+#######################################################
+#
+#  For setting initial values in GeoGebra from WeBWorK
+#  Uses JavaScript interface to GeoGebra.
+#  Note the area right under all the ///////////////.
+#  This is where you match up your variables from WeBWorK
+#  with your variables in GeoGebra.
+
+TEXT( MODES(TeX=>'', HTML=><<END_SCRIPT ) );
+<script language="javascript">
+function setAppletCoefficients() {
+   var applet=getApplet("$appletName");   // alert("Updating coefficients");
+   if (typeof(applet)!="undefined") {
+     if (typeof(applet.setValue)!="undefined") {
+
+     ////////////////////////////////////////////////////////////////
+     //  List the values of the parameters to be set in the applet here
+
+          // Set variables in GeoGebra to values from WebWork
+
+          applet.evalCommand("$function");
+          applet.evalCommand("A = ($pointA)");
+          applet.evalCommand("B = ($pointB)");
+          applet.evalCommand("C = ($pointC)");
+          applet.evalCommand("D = ($pointD)");
+          applet.evalCommand("E = ($pointE)");
+          applet.evalCommand("F = Point[$pointF]");
+          applet.evalCommand("c0 = ($constant[0])");
+          applet.evalCommand("c1 = ($constant[1])");
+          applet.evalCommand("c2 = ($constant[2])");
+          applet.evalCommand("c3 = ($constant[3])");
+          applet.evalCommand("c4 = ($constant[4])");
+          applet.evalCommand("c5 = ($constant[5])");
+          applet.evalCommand("c6 = ($constant[6])");
+          applet.evalCommand("c7 = ($constant[7])");
+          applet.evalCommand("c8 = ($constant[8])");
+          applet.evalCommand("c9 = ($constant[9])");
+          applet.evalCommand("lim0 = ($limits[0])");
+          applet.evalCommand("lim1 = ($limits[1])");
+          applet.evalCommand("lim2 = ($limits[2])");
+          applet.evalCommand("lim3 = ($limits[3])");
+          applet.evalCommand("lim4 = ($limits[4])");
+          applet.evalCommand("lim5 = ($limits[5])");
+          applet.evalCommand("line0 : ($line0)");
+          applet.evalCommand("line1 : ($line1)");
+          applet.evalCommand("line2 : ($line2)");
+          applet.evalCommand("line3 : ($line3)");
+          applet.evalCommand("line4 : ($line4)");
+          applet.evalCommand("line5 : ($line5)");
+          applet.evalCommand("ZoomIn[$minX,$minY,$maxX,$maxY]");
+
+     } else {
+          setTimeout("setAppletCoefficients()", 1000);
+     }
+   } else {
+      setTimeout("setAppletCoefficients()",1000);
+   }
+}
+ww_applet_list["$appletName"].setConfig = function() {setAppletCoefficients()};
+</script>
+END_SCRIPT
+
+
+#######################################
+# TEXT
+#######################################
+
+#-ULETH-#
+# Initializes the problem text, answer boxes, and graph on the page.
+# Uses regular text instead of PGML so the LaTeX displays properly.
+BEGIN_TEXT
+\{
+ColumnTable("Find the following by observing the graph:
+$BR
+$BR
+$BR
+a. \( \displaystyle \lim_{x \to $limits[0]^{-}} f(x) = \)".ans_rule(10).
+"$BR
+$BR
+b. \( \displaystyle \lim_{x \to $limits[0]^{+}} f(x) = \)".ans_rule(10).
+"$BR
+$BR
+c. \( f($limits[0]) = \)".ans_rule(10).
+"$BR
+$BR
+d. \( \displaystyle \lim_{x \to $limits[0]} f(x) = \)".ans_rule(10).
+"$BR
+$BR
+e. \( \displaystyle \lim_{x \to $limits[1]^{-}} f(x) = \)".ans_rule(10).
+"$BR
+$BR
+f. \( \displaystyle \lim_{x \to $limits[1]^{+}} f(x) = \)".ans_rule(10).
+"$BR
+$BR
+g. \( f($limits[1]) = \)".ans_rule(10).
+"$BR
+$BR
+h. \( \displaystyle \lim_{x \to $limits[1]} f(x) = \)".ans_rule(10).
+"$BR
+$BR
+i. \( \displaystyle \lim_{x \to $limits[2]^{-}} f(x) = \)".ans_rule(10).
+"$BR
+$BR
+j. \( \displaystyle \lim_{x \to $limits[2]^{+}} f(x) = \)".ans_rule(10).
+"$BR
+$BR
+k. \( f($limits[2]) = \)".ans_rule(10).
+"$BR
+$BR
+l. \( \displaystyle \lim_{x \to $limits[2]} f(x) = \)".ans_rule(10).
+"$BR
+$BR
+m. \( \displaystyle \lim_{x \to $limits[3]^{-}} f(x) = \)".ans_rule(10).
+"$BR
+$BR
+n. \( \displaystyle \lim_{x \to $limits[3]^{+}} f(x) = \)".ans_rule(10).
+"$BR
+$BR
+o. \( f($limits[3]) = \)".ans_rule(10).
+"$BR
+$BR
+p. \( \displaystyle \lim_{x \to $limits[3]} f(x) = \)".ans_rule(10)
+,
+$BCENTER.
+$BBOLD."Piece-wise Function Graph".$EBOLD.$PAR.
+MODES(HTML=>$applet->insertAll(debug=>0, reinitialize_button=>1, includeAnswerBox=>0,), TeX=>$im).
+$BBOLD."Graphic Interface: You can use your mouse to zoom or move the view area
+of this graphic.".$EBOLD.
+$ECENTER
+,
+indent => 0, separation => 30, valign => "TOP"
+);
+\}
+END_TEXT
+
+
+#########################################
+# ANSWER section
+#########################################
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS(Compute("$answerA")->cmp());
+ANS(Compute("$answerB")->cmp());
+ANS(Compute("$answerC")->cmp());
+ANS(Compute("$answerD")->cmp());
+ANS(Compute("$answerE")->cmp());
+ANS(Compute("$answerF")->cmp());
+ANS(Compute("$answerG")->cmp());
+ANS(Compute("$answerH")->cmp());
+ANS(Compute("$answerI")->cmp());
+ANS(Compute("$answerJ")->cmp());
+ANS(Compute("$answerK")->cmp());
+ANS(Compute("$answerL")->cmp());
+ANS(Compute("$answerM")->cmp());
+ANS(Compute("$answerN")->cmp());
+ANS(Compute("$answerO")->cmp());
+ANS(Compute("$answerP")->cmp());
+#-ENDULETH-#
+
+
+#########################################
+# The applet as a base64 string
+#########################################
+
+sub GEOGEBRA_PARAMS {
+    my $result = {
+showResetIcon=>"false" ,
+enableRightClick=>"false" ,
+enableLabelDrags=>"false",
+showMenuBar=>"false" ,
+showToolBar=>"false",
+showAlgebraInput=>"false",
+useBrowserForJS=>"true",
+#-ULETH-#
+# In the GeoGebra desktop application, create your applet.  Once you are done,
+# press Ctrl + Shift + B.  This will copy the base64 string (like the one below)
+# to your clipboard.  Paste this string between the double quotes below.  Make
+# sure not to paste over the }; or $result lines that follow this section.
+# You should end up with (e.g. ggbbase64=>"skj8981519+!KJ!MSD!.....") as the
+# parameter below.
+ggbbase64=>"UEsDBBQACAgIACQ7H0sAAAAAAAAAAAAAAAAWAAAAZ2VvZ2VicmFfamF2YXNjcmlwdC5qc0srzUsuyczPU0hPT/LP88zLLNHQVKiu5QIAUEsHCEXM3l0aAAAAGAAAAFBLAwQUAAgICAAkOx9LAAAAAAAAAAAAAAAAFwAAAGdlb2dlYnJhX2RlZmF1bHRzMmQueG1s7VpLb+M2ED7v/gqBp/YQW5It2wniLLILFA2QzRZ1sOiVlsYyG4pURSqW8+tLkXrZsdJEzrvJIeJQ5Ij85uNwhvTxlyyi1jUkgnA2RU7PRhYwnweEhVOUysXBBH05+XwcAg9hnmBrwZMIyyny8pZVPyX1BhM3r7MyQY4Yv8ARiBj7MPOXEOFz7mOpmy6ljI/6/dVq1SuV9ngS9sNQ9jIRIEsNiIkpKgpHSt1Gp9VAN3dt2+n/9f3cqD8gTEjMfECWGmwAC5xSKVQRKETApCXXMUxRzOk65AxZFM+BTtEfpVz0mKKxjU4+fzqmhMFMrilYckn8KwZCjWiACjW2KfxOggBy0FA/7yOWfGXx+d/gKz0ySaH6jBZ0G/X6G6c8sRLVzVMKFcieg6y5VoppvMSq1HNs8+cMD23HGTmu6U3xGhLrGtO8ta7BqeS+VqhrF5gKKNuqT3/nAZg3w6I9I5G2gyVigCAfez2nWOnXZm+oIWK2xDFsqT/uF7juRDgHbwNiU1Fj7DwbxrZG2L4FsP1CgLYDt0iZn+u5+ImTalIspbQB3MhDXUBw7WELDGPvDRGLMNlglZKsXxYJwK8NgBy7E0BNlrie97w8cR6Cz6djn/MkEFY2RRf4Alnr4nljnrqJhmpGbjZHYGr1eqsn8kC8A4iBqfUoN0B3OoE+mmjU88fcPD5QR5SIGvRzLdQ4D3aw24zxPvRWe8rW+j9wXswPtiPdZVe4H/QHzoMZ/6MZGqhduNM273oG//z54WDugvuM/Qkh2YjHnMEH6E8L+ibHhx8baNHEgCry/1Pk8yimkD2iJQSEuVQBOyvlyhZut331tYW8e1miy27AU0nzMZwxqdJT0FG1uPXxK4D4UnX+wS4TzESe1po2Jap3bdKN/OZ8M7dx949A/5dGg3/YxoIjar0Rn8j/sAT3U1GbwkiVLSbv3RY4zQglOFk/QhS1X2bqdtum2/cN9+1kpgle3+XFu+Xsb4eEb9WLl7RupfT+odDrNtxj+ohrBQ+vvcPPQqzA3JW6viswn2gV7IhEcSJBEMzuNoiErI4tL7XQOCV7ldZon4yyUVgP7sxIjfMnM50FUSgxHKkOha3YV+xfhQlPWXBrBI8z+dd3gtKOos8Z8atZfjNSheLwVXLihQ+WgITAjG8TlpXZxQXZ2jZTtG7KmswpatZOUXPjNNihZpCQzDot+52WzU/dsjAoC8Oy4DVw7BYea4vHymE04pMtxzzslmS+4burd8yEZ4iaWBpB0nAjF6VcMcozjkTpS8uTkHLs93EcLfRpJ4ugJFDMiogy1oFKISKsNuE8lZgLTlMJMz8BYPX9s2H3igRymafrGuEFyXJCmVdLnpAbzmQFiJWvjlOqr6qbC2Inj9y7edQgsYRYTxjte3WIWUjrBXtqpNoe5thaN9o+ntptpiaidgHoqOdOBs7EG9hjZ3zoTUb3BNiZ7AHwo910PKFXepAzKcmc+PXx4cBuY4Y9Gbuj0XDkeoeHY2c0HO/NlFs5z29VRX3J/DKBQGNZ7cRZM2i76XOkNnPOKeAasq+l3LgYuuXy2gLN+5P4CUMqfwn+1ZxnG6tyC4N+4zc0/fJ3Oif/AlBLBwjwMC9crgQAAC4kAABQSwMEFAAICAgAJDsfSwAAAAAAAAAAAAAAABcAAABnZW9nZWJyYV9kZWZhdWx0czNkLnhtbO1XS27bMBBdN6cguI8l6uPEgZXASBctkAQtsumWlsYyW4lUSPqXq/UOPVMpSnTkuDZS10GAIl5Iw+HMkHrvcSQPr5ZlgeYgFRM8waTnYwQ8FRnjeYJnenJ6jq8uT4Y5iBzGkqKJkCXVCY7ryHWeGfXC86D2oaViF1zc0RJURVO4T6dQ0huRUm1Dp1pXF563WCx6rmhPyNzLc91bqgwjsyGuEtwaF6bcRtIitOGB7xPv2+1NU/6UcaUpTwEjs9kMJnRWaGVMKKAErpFeVZBgumQqNEsUdAxFgkf18CNGbXyCQ+KH+PLkw1BNxQKJ8XdIjVfLGaxz7MCrY8z0tSiERDLB5rlzex3bKy2qKTWWwcOGFnQFEs1pUc9aD51pkdps653QQoGLNevcigyamaiN56y0ACJVAWSGKdw+k1muMvUtX50yTN1PaQXb5RmHe70qAOkpS39wUAbrsFOsNj6xLINaDk0OPPAmRdXXBFdUGna1ZKlZu7HBgPDrZx0+9FrMt9A32+TQgf+LHW/gb1g9CP/BwBIQkIGlwN7XJMTHImEXpqkQMlNo2TCOVu39sb0vOkqY0PpktbvokT2c+Ps42Q1yKjhLOyB/5oYbZXCstZPO5Bw29B4fhncQxxZwEpxtaZ74zY9EA5+QPgn+jzPAcuBzg4+QyvQ4v+2VK9+R7TxL4mRAWs9ja9g65gkkW6KRyxu58FHgjNAZkTPijoKeH0ZWVgVLmd4vi4cZzex5bWn96sZPWgh9cpgW/GhH9zt79ZP3Wkz6u5lsphxZK2c8BkciGY36zjhzxrkzBmsh7GmzolhNIZOCP3XajqtLeHP4DwHxb0VC4tCKJCZbKonafhEP+n7Uj46mmSO1iz2ttu6mKZUaFKO803Ov64nnHxb99w+LF7/EOOg1Lne13RVt/C7afxCtmsmJ+Sr/k2zbqU20o7d6JzwVfgvhkpcK1+v82fDcH5rL31BLBwiBOJtC1gIAAFcNAABQSwMEFAAICAgAJDsfSwAAAAAAAAAAAAAAAAwAAABnZW9nZWJyYS54bWztnOFy27gRgH/nngLDHx27tSQABEgqlXOT5HKJE+cmU7edTjv9QZGQxJoidSRlyzf3An2PPlmfpLsAKFKS40hW0lSNHNMkwOUS+2GJXUBUBt8vpim5UUWZ5Nm5w7rUISqL8jjJxufOvBp1Auf7Z98Nxiofq2ERklFeTMPq3JEoubwOSl034FiXxOdOFLGIDqNRZ6iE7AjqiU4oRrzjy34wEjwIQz9yCFmUydMs/ymcqnIWRuoqmqhpeJlHYaWVTqpq9rTXu7297da37+bFuDceD7uLMnYIND0rzx178BTUrVx062pxTinr/eX9pVHfSbKyCrNIOQTNmifPvnsyuE2yOL8lt0lcTQCCxwKHTFQynoChgQeFHkrNwNqZiqrkRpVwbauoja6mM0eLhRmef2KOSLq0xyFxcpPEqjh3gBaXPqO+FJT5LpWuQ/IiUVllZZm9Z6/WNrhJ1K1Ri0f6joL2feiEpEyGqTp3RmFagllJNioAKTSomEOxrO5SNQyLuty0h53pfyCS/KJQG/SeIQEFSc8YbD6lZ1JS05rWrSXjDqnyPNWaKfmVMCIpbIT1yRnxfKjhhEkioCaAGp+4WCeZIC5BEeYSIWAvsJp5eE7C9ZISxqCacEo4J5wR7kJRSiI9In28kIOs19fKKGwoDc2BzcU614VN17kCNo5HoEgaNdAI6Xr6SKI06Jccm68r3YCIPtwIK6B7iAttgLJPCWh0UT3TRghK8JcRgeq5T3hAQB/YjZopf6BTbLnpFVux1i11p8h2pzDoDNw82HRvrXWKWO0S6AEKtp3hjpkdNtfzzClq6qhrdtzshNlJIyPM5cKIGmupMDLC3dfM2kh3FyODlpEMjYBOwdbrnUuw3Uy3H3fCFj1T1K5GGbW1Af7pYwGYeIE+2NMm91E2sdZdzVP68ZtuPMX1HZkM+tvfcj8fXZopub+DmXvSbSxtsYVBSv/qbeOW7k52PsB26zt6K0/hPsPzI27u03uHALNndv8Qks/WqEGvDlgD2yBSTlDW+nelpiU20e0T3yUeX0YQD8d4G0Z8TnxJfK8VTM4wnHiyiSgYT4KViCKDVliBmOJhpa9jFNwPg4IJMVzUUebMxplfN+IMhAXRRAZoIKpihEAY0yNGHSKgFXwZJLjEOMFhTIH4xImHY9RH4oVDZnmZLNlOVDpbdorGmGSzebWCLprG9WGVg3SY6tTIysd5dP1iDbYKy6o+BiFIKprUxSQZK5nNk0EaDlUKGeAV+gEhN2GKrqz1j/KsIrUPeI5Wp7OogZpHaRInYfZn6Pg6Y/lpPh2qgujDHE3USvBysky39LhVp1tewI1MlOdFfHVXgqOQxV9VkeO5oBv43HcD5kEiISAU3Jkzkrpd3xOCch/UUQleGoXo30J0+5Be9RnvY4wTPpy6u/+c55sbq5srVVVgfUnChSprcOMCHzDbNVi4KF/kaVM1y5OsehnOqnmhc2d4Dgo06Xk2TpUGqXsYktDoepgvrjRB7hldf7ybYcwwDRiOX+ZpXhB4/LiE9o7tfmj2WgZbtpSiWoZqCdtNqHR5nvW5ltD7odlrKehj0zRrKavNpPVdkpKY8opDaf/AhHaeJdVlXaiS6LoxFOVN79cIV1Wyz6Ry0FtzvMG1KjKVGh/KoCPn+bw0Pmy6SrdjXqoPYTV5nsV/UGN4/D6EOABWoNqINi2OVZRM4UJTb8mF2Kt/gqaa2liNC1VbaJ5Hw9U+OqScFSqMy4lS1ZKu8fC2mDanbv6gjIpkho5IhjAAX6vG1+KkDGH4jlsWoa0lNDrCsQS4VcjMIeG8muSFnnuEFdbgg7qAxpQ4cTPUybmTJlOc+C1gOOloDxuoVE1hOkIq7ZnZfKqKJFp2k5bXz3iYzm3zOzglNI/33XSYp0nUImkGJ+xAkg//AUNNE9+NxoY3nP+IZ5MwnU1CnD1BlqF/mOhTBvO12p/DOxxsWsOV1v4+j20bWd170KMaFAwvM+NbM6WMVxqL4W4zUKcf5QZyz2L5KEVWU3S3o8g2KLpHilNeU2TbUeQbFNmR4tS1FLeE6K5DPDJMpsIy3PJxFusMj09zMpWW4ZaBRa4z/ObjymievbQM8fBkcUrOCb2HJpzV8X9pvb5yG0JE3eD60QYohiuTY1zvW+afDS26JZ166pAsVLyeXSXl1SScqY38rElNqwkkgRkg0csOS4p48CaJY5XVI9wDEDWJNw3DN4Zhh5EeOVmQDsFQfGpmR59G+mYvpG3fO2ierxuerw3PE2D5W3KC2SH5HcznO2RxenraYkxPof6Eg5AubAv89X4+TO30h9rpD+4PFfpFA/3CQNc+fNJ4MfaALXCgvy3jiyPjGsXbhvHb+xjzNmN3B8ZvP8PAwehm2Dowvu8avu/aA/FJw7QFWOwA+N1egDkVH8kLDgzwZQP4suXAS6Db4rw8BjrE8L7B+d4GOkTJdGQzIc+ilTv46vv9fNWuDAbygJ0VctuI7jBLjTYWnb75OWrEdlkriTbXm44E69Umvg3AjaUm/s3zq9eZOlsB3Fhm6hwJ7rLKFB3XmDb4yV1W3aONBabjmnvkWYJiG4DeOkDxzfPzaw/cCqC/4YFHgsEOq8QgfFwjXuPX3+XzW5Be98BvmyCI1ZM8M8O7GP1tQX6TVr/XK5VnJMIVTbvSeabryL//+S+y0H+tCDMiLxsRraDRw0CIG6E3tRBb1YMi7poetq6Hg5AwQhe1EF/VgyJyTQ9f1+OCkGeE3tZC7rqQACHfCL2rhcS6kAShwAhdaiE4NW5O9c0pnD3/fbv58ebkeOU9ka3mxvrDi4OdHJ879Yc+J8YvRnqPCwxGoX7j6D6a9sRSy8Mo7ZP8P8ZSvxxTkoXNzsidnSiQX1qTfm0ovkll05B27cZ7NQ+R/qFFmlvSfGfSPxw6aVaTdr8Y6Vct0iuDhlk925H4qwMnLi1w2ZWP4c0/zRvHpHqJbQFxzbzpZVjiufsYm/oVBftgvu/1w0eD/jTT2omp9eFlYvPw8MzkPePzk4H6OTPXlOY1xGQ6g9woqbYjz1bJs53Js0Mm735F8nyVPN+ZPD9k8uwrkndXybs7k3cPmXzna6KXq+jlzujlQaP/miO9WEUvdkYv9pnxfG3y/52RPsqn0zCLSaa/qvRBZ4K6wfo7MiHFaaNBM6/qmh+NEnvpJ9LJH/fqg/oVGJtNPu4j7+X3C5ZrHGtLG+y+pY2tsnuv6wW+SwPG+0HgU+q+6gjdjbzb1z9Scr+PX8b5Ipn/81bmT9sLIfpVsF0z/+cHnvl36tSff7HU/8Uq8NHjQL/4fwFtZrefwbV77a/a6O+/2f+d4Nl/AFBLBwgHFtBSuQkAAE5BAABQSwECFAAUAAgICAAkOx9LRczeXRoAAAAYAAAAFgAAAAAAAAAAAAAAAAAAAAAAZ2VvZ2VicmFfamF2YXNjcmlwdC5qc1BLAQIUABQACAgIACQ7H0vwMC9crgQAAC4kAAAXAAAAAAAAAAAAAAAAAF4AAABnZW9nZWJyYV9kZWZhdWx0czJkLnhtbFBLAQIUABQACAgIACQ7H0uBOJtC1gIAAFcNAAAXAAAAAAAAAAAAAAAAAFEFAABnZW9nZWJyYV9kZWZhdWx0czNkLnhtbFBLAQIUABQACAgIACQ7H0sHFtBSuQkAAE5BAAAMAAAAAAAAAAAAAAAAAGwIAABnZW9nZWJyYS54bWxQSwUGAAAAAAQABAAIAQAAXxIAAAAA"
+#-ENDULETH-#
+};
+
+$result;
+}
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT('Uses GeoGebraWeb (JavaScript), so it should work on computers and tablets.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

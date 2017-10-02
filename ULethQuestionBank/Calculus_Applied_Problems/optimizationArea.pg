@@ -1,0 +1,219 @@
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-08-10)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('optimization', 'calculus', 'applied calculus')
+
+
+###########################
+#  Initialization
+
+# The first line in the .pg file after any opening comments.
+# Defines the bounds of the document.
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  "contextInequalities.pl",
+  "parserNumberWithUnits.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+
+#-ULETH-#
+# Setting up the values to calculate parts of the question.
+$fencingLength = Compute(random(20, 40, 1));
+$w = Compute($fencingLength / 4);
+$l = Compute($fencingLength - 2 * $w);
+$barnLength = Compute($l + random(0, 10, 1));
+
+# Switching to the Interval context to define a range of values for the fence width.
+Context("Interval");
+# Define min and max values for the fence width so we don't have to do
+# calculations within the actual Interval computation (see $wRange).
+$wRangeMin = max(($fencingLength - $barnLength) / 2, 0);
+$wRangeMax = $fencingLength / 2;
+$wRange = Compute("[$wRangeMin, $wRangeMax]");
+# Since the length range is fairly straightforward, we don't bother defining
+# the min and max values separately.  However, you could use the same formatting
+# as with the width if you needed to do some intermediate calculations.
+$lRange = Compute("[0, $barnLength]");
+
+# Switch back to the Numeric context to calculate values for the questions
+# involving the shorter barn.
+Context("Numeric");
+$A = Compute($l * $w);
+# Used for question f.
+$shorterBarn = Compute(round($l - 1.5));
+$shorterL = Compute($shorterBarn);
+$shorterW = Compute(($fencingLength - $shorterL) / 2);
+$shorterArea = Compute($shorterL * $shorterW);
+
+# Calculate answers.
+# Need to add the variable w to the Context so it can be used in answers to
+# represent the width.  If you wanted questions using a variable for the length,
+# you would have to add l to the Context using the same syntax.  See below for a
+# line that you can uncomment to do this.
+#Context()->variables->add(w=>"Real", l=>"Real");
+Context()->variables->add(w=>"Real");
+$answerA = Compute("$fencingLength - 2w");
+$answerBW = $wRange;
+$answerBL = $lRange;
+$answerC = Compute("($answerA)w");
+$answerDW = Compute($fencingLength / 4);
+$answerDL = Compute($fencingLength - 2*$answerDW);
+# Convert the length and width answers to numbers with units.
+# Since the values used to calculate these do not have units attached to them,
+# we have to first calculate $answerDW and $answerDL (see above), and then use
+# the below lines to convert them.  You will also have to do this if you want
+# to add other numbers with units that rely on computations between numbers
+# without units.
+$answerDW = NumberWithUnits($answerDW, 'm');
+$answerDL = NumberWithUnits($answerDL, 'm');
+$answerEDer = $answerC->D('w');
+$answerEMax = Compute($answerDW * $answerDL);
+$answerFW = NumberWithUnits($shorterW, 'm');
+$answerFL = NumberWithUnits($shorterL, 'm');
+$answerFA = NumberWithUnits($shorterArea, "m^2");
+#-ENDULETH-#
+
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+
+Allysa's bosses want her to build a rectangular pen against the old barn.
+The barn is [$barnLength]m long and the pen may not extend past the ends of the barn.
+There is [$fencingLength]m of fencing material available.
+What is the largest area pen that can be built?
+
+a. Let [`l`] and [`w`] represent the dimensions of the pen.
+   Assume the side of the pen against the barn has a length of [`l`].
+   Express the length, [`l`], in terms of [`w`].
+
+    [`l = `][____________][@ AnswerFormatHelp("equations") @]*
+
+b. Based on the length of the barn and the amount of fencing,
+   what are the range of value that are possible for [`l`] and [`w`]?
+
+    [`l \in `][____________] and [`w \in `][____________][@ AnswerFormatHelp("intervals") @]*
+
+c. Express the area of the pen in terms of [`w`].
+
+    [`A(w) = `][____________][@ AnswerFormatHelp("equations") @]*
+
+d. What are the dimensions of the largest area pen that can be built?
+
+    [`l \times w = `][____________]x[____________][@ AnswerFormatHelp("units") @]*
+
+e. What is the derivative of the area function, [`A(w)`] and
+   what is the area of the largest pen that can be built?
+
+    [`A'(w)=`][____________][@ AnswerFormatHelp("equations") @]*
+
+    [`A_{max} = `][____________][@ AnswerFormatHelp("units") @]*
+
+f. If the barn was only [$shorterBarn]m long, what would be the largest pen's dimensions and area?
+
+    [`l \times w = `][____________]x[____________][@ AnswerFormatHelp("units") @]*
+
+    [`A_{max*} = `][____________][@ AnswerFormatHelp("units") @]*
+
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#   Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($answerA->cmp());
+ANS($answerBL->cmp());
+ANS($answerBW->cmp());
+ANS($answerC->cmp());
+ANS($answerDW->cmp());
+ANS($answerDL->cmp());
+ANS($answerEDer->cmp());
+ANS($answerEMax->cmp());
+ANS($answerFL->cmp());
+ANS($answerFW->cmp());
+ANS($answerFA->cmp());
+#-ENDULETH-#
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Intermediate values for the solution.
+$widthLowerBoundStepOne = Compute("0 - $fencingLength");
+$widthUpperBoundStepOne = Compute("$barnLength - $fencingLength");
+$widthLowerBoundStepTwo = Compute("(0 - $fencingLength) / -2");
+$widthUpperBoundStepTwo = Compute("($barnLength - $fencingLength) / -2");
+$areaReduced = Compute("$fencingLength * w - 2w^2");
+
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+Since the pen is to be [`l \times w`] and only three sides are bound by fencing,
+we know
+
+[`2w + l = [$fencingLength]`], hence [`l = [$fencingLength] - 2w`].
+
+Since the barn is [$barnLength]m long and the pen can't extend past the ends of
+the barn we know
+
+[`l \in (0,[$barnLength]]`]
+
+so [`0 < [$answerA] \leq [$barnLength]`]
+so [`[$widthLowerBoundStepOne] < -2w \leq [$widthUpperBoundStepOne]`]
+so [`[$widthLowerBoundStepTwo] > w \geq [$widthUpperBoundStepTwo]`]
+or [`[$widthUpperBoundStepTwo] \leq w < [$widthLowerBoundStepTwo]`]
+
+thus [`w \in [[$widthUpperBoundStepTwo], [$widthLowerBoundStepTwo])`]
+
+The area of a rectangle is [`A(l,w) = lw`] so [`A(w) = ([$answerC]) = [$areaReduced]`]
+
+To find the maximum area, look for the critical values and values at the endpoints
+of the values for [`w`].
+
+[`A'(w) = [$answerEDer]`] so when [`A'(w) = 0, [$answerEDer] = 0`] so
+[`4w = [$fencingLength]`] so [`w = \frac{[$fencingLength]}{4} = [$answerDW]`]
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+# Marks the end of the problem document.
+ENDDOCUMENT();

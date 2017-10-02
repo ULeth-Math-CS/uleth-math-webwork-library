@@ -1,0 +1,136 @@
+## DESCRIPTION
+## This question code is based on a sample problem from the WeBWorK wiki.
+## It has been modified to meet the ULeth Template standards.
+## ENDDESCRIPTION
+
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-06-30)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## Static(1)
+## MO(1)
+## KEYWORDS('units', 'number with units', 'formula with units')
+
+
+##############################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Parser can interpret answers that include units of measure.
+  "parserNumberWithUnits.pl",
+  # Formulas can also include units of measure.
+  "parserFormulaWithUnits.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Allows hints to be added.
+  "answerHints.pl"
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+#-ULETH-#
+# Defines the variable t as being a real number within the context.
+# Thus, when 't' is included in the question or answer, it will be recognized
+# as a real number variable instead of a letter.
+Context("Numeric")->variables->are(t=>"Real");
+
+# Initial variable assignments for starting height and velocity
+$y = random(10,15,1);
+$z = non_zero_random(1,5,0.5);
+
+$h = Compute("$y +$z*t - 16 t^2")->reduce; # Formula for the height of the object.
+$v = $h->D('t'); # Derivative of $h
+$tGround = ($z + sqrt($z^2 + 65*$y))/32;
+$v1 = $v->eval(t=>$tGround); # $v evaluated when the ball hits the ground
+$a = $v->D('t'); # Derivative of $v
+
+# Answer values.  Note that $answer2 is a number, while the others are formulas.
+# This is because $v1 is an evaluated formula, and thus returns a number.
+$answer1 = FormulaWithUnits("$v","ft/s");
+$answer2 = NumberWithUnits("$v1","ft/s");
+$answer3 = FormulaWithUnits("$a","ft/s^2");
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+Suppose the height of a falling object, in feet above the ground, is given by [`h(t) = [$h]`] for [`t \geq 0`], where time is measured in seconds.
+
+a. What is the velocity of the object?  Include units in your answer.
+
+    + [`v(t) = `][______________][@ AnswerFormatHelp("units") @]*
+
+b. What is the velocity of the object when it hits the ground?  Include units in your answer.
+
+    + [______________][@ AnswerFormatHelp("units") @]*
+
+c. What is the acceleration of the object?  Include units in your answer.
+
+    + [`a(t) = `][______________][@ AnswerFormatHelp("units") @]*
+END_PGML
+# The number of incorrect answers you have to give before this hint can be shown.
+$showHint = 1;
+BEGIN_PGML_HINT
+Recall: [`v(t) = h'(t)`] and [`a(t) = v'(t) = h''(t)`]
+END_PGML_HINT
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($answer1->cmp());
+ANS($answer2->cmp());
+ANS($answer3->cmp());
+#-ENDULETH-#
+
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+a. [`v(t) = h'(t) = [$answer1]`]
+
+b. When the object hits the ground [`h(t) = 0`] and [`[$h] = 0`] and [`[$h] = 0`] when [`t = [$tGround]`].
+Thus, to find the velocity at that point, we calculate [`v([$tGround]) = [$answer2]`].
+
+c. [`a(t) = v(t) = [$answer3]`]
+END_PGML_SOLUTION
+
+COMMENT("Uses PGML.");
+#-ENDULETH-#
+
+ENDDOCUMENT();

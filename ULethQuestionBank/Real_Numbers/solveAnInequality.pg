@@ -1,0 +1,177 @@
+## DESCRIPTION
+## This question code is based on a sample problem from the WeBWorK wiki.
+## It has been modified to meet the ULeth Template standards.
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-06-30)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('answer is an inequality', 'inequality')
+
+# How to add a new question:
+# Step 1. If you want to change the pool of values to select the integer
+#   values from, change the range for the random number selectors.
+# Step 2. Enter the LaTeX string that you would like to display in your
+#   question.
+# Step 3. Compute the answer, based on the LaTeX string for the initial inequality.
+# Step 4. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Step 5. Add new hint text if necessary for the new question.
+# Step 6. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Step 7. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+
+
+##################################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used in this problem to check that the student's answer is actually an inequality.
+  "contextInequalities.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "answerHints.pl"
+);
+
+TEXT(beginproblem());
+
+
+###################################
+# Setup
+
+# Only allows the entry of inequalities.
+Context("Inequalities-Only");
+# Student answers don't get reduced.
+Context()->flags->set(formatStudentAnswer=>'parsed');
+
+#-ULETH-#
+# Initial random coefficient.
+$a1 = random(3,9,1);
+$b1 = random(2,7,1);
+# LaTeX inequality formula.
+$ineq1 = "-$a1 x \leq $b1";  # TeX
+# Defines answer based on LaTeX formula.
+$answer1 = Compute("x >= -$b1 / $a1");
+
+# Initial random coefficient.
+$a2 = random(10,17,1);
+$b2 = random(8,13,1);
+# LaTeX inequality formula.
+$ineq2 = "-$a2 x \geq $b2";  # TeX
+# Defines answer based on LaTeX formula.
+$answer2 = Compute("x <= -$b2 / $a2");
+
+# Step 1. If you want to change the pool of values to select the integer
+#   values from, change the range for the random number selectors.
+# Eg: $a3 = random(2,15,1);
+# $b3 = random(4,10,1);
+
+# Step 2. Enter the LaTeX string that you would like to display in your
+#   question.
+# Eg: $ineq3 = "$a3 x < $b3";
+
+# Step 3. Compute the answer, based on the LaTeX string for the initial inequality.
+# Eg: $answer3 = Compute("x < $b3 / $a3");
+#-ENDULETH-#
+
+
+###################################
+# Main text
+
+#-ULETH-#
+# Initialize problem text and formatting help for inequalities.
+# Step 4. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+BEGIN_PGML
+Solve the following inequalities.
+Enter your answers using inequality notation.
+
+1. [`[$ineq1]`][_________________][@ AnswerFormatHelp("inequalities") @]*
+
+2. [`[$ineq2]`][_________________][@ AnswerFormatHelp("inequalities") @]*
+END_PGML
+
+# The number of incorrect answers you have to give before this hint can be shown.
+$showHint = 2;
+BEGIN_PGML_HINT
+What happens to an inequality when you multiply both sides by a negative value?
+END_PGML_HINT
+# Step 5. Add new hint text if necessary for the new question.
+# Eg: $showHint = 3;
+# BEGIN_PGML_HINT
+# Use x as the variable.
+# END_PGML_HINT
+#-ENDULETH-#
+
+
+#####################################
+#  Answer Evalution
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# Step 6. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Eg: ANS($answer3->cmp());
+ANS($answer1->cmp());
+ANS($answer2->cmp());
+#-ENDULETH-#
+
+
+#####################################
+#  Solution
+
+#-ULETH-#
+# Step 7. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+BEGIN_PGML_SOLUTION
+1.  [`[$ineq1]`]
+
+    so [`[$a1]x \geq -[$b1]`]
+
+    so [`x \geq -\frac{[$b1]}{[$a1]}`]
+
+2.  [`[$ineq2]`]
+
+    so [`[$a2]x \leq -[$b2]`]
+
+    so [`x \leq -\frac{[$b2]}{[$a2]}`]
+END_PGML_SOLUTION
+
+COMMENT("Uses PGML.");
+#-ENDULETH-#
+
+ENDDOCUMENT();

@@ -1,0 +1,252 @@
+## DESCRIPTION
+## This question code is based on a sample problem from the WeBWorK wiki.
+## It has been modified to meet the ULeth Template standards.
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-06-30)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## Static(1)
+## MO(1)
+## KEYWORDS('expanded polynomial', 'general form polynomial')
+
+# How to add a new question:
+# Step 1. Change the value of $numQuestions to match the number of questions you
+#   would like.
+# Step 2. If you want to change the pool of values to select the integer
+#   values from, change the range for the random number selectors.
+# Step 3. If you would like to change the vertex form expression used for each
+#   question, change the string that gets computed.  Make sure to use $h[$i]
+#   and $k[$i] to reference the h and k values that have been generated for it.
+#   If you want to use a specific formula for one question, use an if statement,
+#   along with the desired question number.  If you have more than one specific
+#   formula, use elsif statements for subsequent ones.
+#   Also, move the equation that you want to use for all the other
+#   questions into an else statement.
+# Step 4. If you want to change the methods of calculating the b and c values,
+#   you can change the equations here.  Use ** for exponents.
+# Step 5. If you would like to change the expanded form expression used for each
+#   question, change the string that gets computed.  Make sure to use $b[$i]
+#   and $c[$i] to reference the b and c values that have been generated for it.
+#   If you want to use a specific formula for one question, use an if statement,
+#   along with the desired question number.  If you have more than one specific
+#   formula, use elsif statements for subsequent ones.
+#   Also, move the equation that you want to use for all the other
+#   questions into an else statement.
+# Step 6. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Step 7. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Step 8. Compute and reduce the intermediate Formulas to use in the solution.
+#   Note that we don't do this in a loop, so you need to pull values from the
+#   arrays using 0-based indices.  In other words, values associated with
+#   question 1 will be at index 0 in each array, values for question 2 will be
+#   at index 1, etc.
+#   Make sure to use Formulas based on the ones you used for each question (if
+#   you decided to use different Formulas for certain questions).
+# Step 9. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Students can only enter expanded polynomials.
+  "contextLimitedPolynomial.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+#-ULETH-#
+# Step 1. Change the value of $numQuestions to match the number of questions you
+#   would like.
+$numQuestions = 2;
+#-ENDULETH-#
+
+# Arrays to store the different values for question.
+@h = ();
+@k = ();
+@vertexForms = ();
+@b = ();
+@c = ();
+@expandedForms = ();
+
+for (my $i = 0; $i < $numQuestions; $i++)
+{
+  Context("Numeric");
+  #-ULETH-#
+  # Step 2. If you want to change the pool of values to select the integer
+  #   values from, change the range for the random number selectors.
+  $h[$i] = random(1,10,1) / ($i+1);
+  $k[$i] = non_zero_random(-5,5,0.5) / ($i+1);
+  # Defines the vertex form of the quadratic equation with two pre-defined
+  # MathObjects ($h[$i] and $k[$i]) and an unknown variable (x).
+  # Step 3. If you would like to change the vertex form expression used for each
+  #   question, change the string that gets computed.  Make sure to use $h[$i]
+  #   and $k[$i] to reference the h and k values that have been generated for it.
+  #   If you want to use a specific formula for one question, use an if statement,
+  #   along with the desired question number.  If you have more than one specific
+  #   formula, use elsif statements for subsequent ones.
+  #   Also, move the equation that you want to use for all the other
+  #   questions into an else statement.
+  # Eg: if ($i + 1 == 4)
+  # {
+  #   # Used for question 4.
+  #   $vertexForms[$i] = Compute("(x-$h[$i]^2)^2-$k[$i]")->reduce;
+  # }
+  # elsif ($i + 1 == 2)
+  # {
+  #   # Used for question 2.
+  #   $vertexForms[$i] = Compute("x^4 - $k[$i]^4")->reduce;
+  # }
+  # else
+  # {
+  #   # Used for all other questions.
+  #   $vertexForms[$i] = Compute("(x-$h[$i])^2-$k[$i]")->reduce;
+  # }
+  $vertexForms[$i] = Compute("(x-$h[$i])^2-$k[$i]")->reduce;
+  #-ENDULETH-#
+  Context("LimitedPolynomial-Strict");
+  #-ULETH-#
+  # Defines the expanded form of the quadratic equation (used for the answer)
+  # using the $h[$i] and $k[$i] values defined above and the x variable.
+  # Step 4. If you want to change the methods of calculating the b and c values,
+  #   you can change the equations here.  Use ** for exponents.
+  $b[$i] = -2 * $h[$i];
+  $c[$i] = $h[$i]**2 - $k[$i];
+  # Reduces the answer to deal with variables with 0 and 1 coefficients and such.
+  # Step 5. If you would like to change the expanded form expression used for each
+  #   question, change the string that gets computed.  Make sure to use $b[$i]
+  #   and $c[$i] to reference the b and c values that have been generated for it.
+  #   If you want to use a specific formula for one question, use an if statement,
+  #   along with the desired question number.  If you have more than one specific
+  #   formula, use elsif statements for subsequent ones.
+  #   Also, move the equation that you want to use for all the other
+  #   questions into an else statement.
+  # Eg: if ($i + 1 == 4)
+  # {
+  #   # Used for question 4.  This answer is incorrect.
+  #   $expandedForms[$i] = Compute("x")->reduce;
+  # }
+  # elsif ($i + 1 == 2)
+  # {
+  #   # Used for question 2.  This answer is incorrect.
+  #   $vertexForms[$i] = Compute("x")->reduce;
+  # }
+  # else
+  # {
+  #   # Used for all other questions.
+  #   $vertexForms[$i] = Compute("(x-$h[$i])^2-$k[$i]")->reduce;
+  # }
+  $expandedForms[$i] = Compute("x^2 + $b[$i] x + $c[$i]")->reduce();
+  #-ENDULETH
+}
+
+
+###########################
+#  Main text
+
+#-ULETH-#
+# Initialize problem text and formatting help for formulas.
+# Step 6. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+BEGIN_PGML
+Write the following vertex form quadratic expressions in expanded form [`ax^2 + bx + c`].
+
+a. [`[$vertexForms[0]] = `][_____________________][@ AnswerFormatHelp("formulas") @]*
+
+b. [`[$vertexForms[1]] = `][_____________________][@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# Step 7. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+ANS($expandedForms[0]->cmp());
+ANS($expandedForms[1]->cmp());
+#-ENDULETH-#
+
+############################
+#  Solution
+
+Context("Numeric");
+
+#-ULETH-#
+# Step 8. Compute and reduce the intermediate Formulas to use in the solution.
+#   Note that we don't do this in a loop, so you need to pull values from the
+#   arrays using 0-based indices.  In other words, values associated with
+#   question 1 will be at index 0 in each array, values for question 2 will be
+#   at index 1, etc.
+#   Make sure to use Formulas based on the ones you used for each question (if
+#   you decided to use different Formulas for certain questions).
+$solFormulaA = Compute("x^2 + $b[0]*x + $h[0]^2")->reduce;
+$solFormulaB = Compute("x^2 + $b[1]*x + $h[1]^2")->reduce;
+
+# Step 9. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+BEGIN_PGML_SOLUTION
+a.  Expand the squared factor, then gather like terms to get
+
+    [`[$vertexForms[0]]`]
+
+    [`=[$solFormulaA-$k[0]]`]
+
+    [`=[$expandedForms[0]]`]
+
+b.  Expand the squared factor, then gather like terms to get
+
+    [`[$vertexForms[1]]`]
+
+    [`=[$solFormulaB-$k[1]]`]
+
+    [`=[$expandedForms[1]]`]
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

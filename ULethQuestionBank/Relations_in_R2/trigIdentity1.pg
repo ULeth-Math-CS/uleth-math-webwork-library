@@ -1,0 +1,139 @@
+## DESCRIPTION
+## This question code is based on a sample problem from the WeBWorK wiki.
+## It has been modified to meet the ULeth Template standards.
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-05)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## Static(1)
+## MO(1)
+## KEYWORDS('trigonometry', 'proving trig identities')
+
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Allows a single problem to contain multiple parts, where later
+  # parts aren't visible until the earlier ones are completed.
+  "scaffold.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+###################################
+#  Setup
+
+#-ULETH-#
+# Defines the variable t as being a real number within the context.
+# Thus, when students include 't' in their answer, it will be recognized as a
+# real number variable instead of a letter.
+Context("Numeric")->variables->are(t=>"Real");
+#-ENDULETH-#
+
+# Redefine the sin(x) to be e^(pi x)
+# Thus, when students enter sin(t), it is interpreted and evaluated internally
+# as exp(pi*t), but displayed as sin(t).
+Context()->functions->remove("sin");
+package NewFunc;
+# this next line makes the function a
+# function from reals to reals
+our @ISA = qw(Parser::Function::numeric);
+sub sin {
+  shift; my $x = shift;
+  return CORE::exp($x*3.1415926535);
+}
+package main;
+# Make it work on formulas as well as numbers
+#sub cos {Parser::Function->call('cos',@_)} # if uncommented, this line will generate error messages
+#  Add the new functions to the Context
+Context()->functions->add( sin => {class => 'NewFunc', TeX => '\sin'}, );
+
+###################################
+#  Main Text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+This problem has three parts.  Students may only open the next part after correctly
+completing the previous part.
+END_PGML
+#-ENDULETH-#
+
+Scaffold::Begin(is_open  => "correct_or_first_incorrect");
+
+Section::Begin("Part 1");
+#-ULETH-#
+# Part 1 problem text.
+BEGIN_PGML
+In this multi-part problem, we will use algebra to verify
+the identity
+>> [` \displaystyle \frac{ \sin(t) }{ 1-\cos(t) } = \frac{ 1+\cos(t) }{ \sin(t) }. `] <<
+
+First, using algebra we may rewrite the equation above as
+[` \displaystyle \sin(t) = \left( \frac{1+\cos(t)}{\sin(t)} \right) \cdot \Big( `] [_____________]{"1-cos(t)"} [` \Big) `].
+END_PGML
+Section::End();
+
+Section::Begin("Part 2");
+# Part 2 problem text.
+BEGIN_PGML
+Using algebra we may rewrite the equation as
+[` \sin(t) \cdot \big( `] [______________]{"sin(t)"} [` \big) = \big(1+\cos(t)\big) \cdot \big(1-\cos(t)\big) `].
+END_PGML
+Section::End();
+
+Section::Begin("Part 3");
+# Part 3 problem text.
+BEGIN_PGML
+Finally, using algebra we may rewrite the equation as
+[` \sin^2(t) = `] [_______________]{"1-(cos(t))^2"}, which is true since
+[` \cos^2(t) + \sin^2(t) = 1 .`] Thus, the original identity can be derived by reversing these steps.
+END_PGML
+Section::End();
+#-ENDULETH-#
+
+Scaffold::End();
+
+
+###################################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+
+
+###################################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+END_PGML_SOLUTION
+COMMENT("This is a multi-part problem
+in which the next part is revealed only after the previous
+part is correct.  Prevents students from entering trivial
+identities (entering what they were given).  Uses PGML.");
+#-ENDULETH-#
+
+ENDDOCUMENT();

@@ -1,0 +1,136 @@
+## DESCRIPTION
+## This question code is based on a sample problem from the WeBWorK wiki.
+## It has been modified to meet the ULeth Template standards.
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-06-30)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ordered answer', 'ordered list')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Makes it easier to add a named function to the context.
+  "parserFunction.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Used to display solution tables.
+  "niceTables.pl"
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+Context("Numeric");
+#-ULETH-#
+# Defines the variable t as being a real number within the context.
+# Thus, when t is included in the question or answer, it will be
+# recognized as a real number variable instead of a letter.
+Context()->variables->are(t=>"Real");
+#-ENDULETH-#
+
+# Defines four random variables for this problem
+$a = random(2,4,1);
+$b = non_zero_random(-4,4,2);
+$c = non_zero_random(-3,3,1);
+$d = non_zero_random(-5,5,1);
+
+# Define the function u
+$u = Formula("(t-$c)(t-$d)")->reduce;
+
+
+# Calls the function u on t - a, then multiplies by b.
+$f = $b*($u->substitute(t => "t-$a"));
+$fLaTeX = "$b \cdot u(t - $a)";
+
+# List of results of the function being evaluated with different t values.
+$answer1 = List( $f->eval(t=>2), $f->eval(t=>3), $f->eval(t=>4) );
+
+
+###########################
+#  Main Text
+
+#-ULETH-#
+# Main problem text.  Includes help for inputting numbers, and answer checkers
+# that check against each of the answers.  Note that for the first part, the
+# order of values in the list matters.
+BEGIN_PGML
+Let [` u(t) = [$u] `]
+
+Evaluate the function [` [$fLaTeX] `] when [` t `] is [` 2 `], [` 3 `], and [` 4 `] and enter your answers as a comma separated list.
+
+[________________][@ AnswerFormatHelp("numbers") @]*
+END_PGML
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# The ordered parameter makes it so that the order of the different
+# pieces of the answer list matters.  E.g. 1, 0, 1 is not equivalent
+# to 0, 1, 1.
+ANS($answer1->cmp(ordered=>1));
+#-ENDULETH-#
+
+
+############################
+#  Solution
+
+#-ULETH-#
+# Defining intermediate values for the solution.
+$tMinusAt2 = 2-$a;
+$tMinusAt3 = 3-$a;
+$tMinusAt4 = 4-$a;
+$uOfTAt2 = $u->eval(t=>$tMinusAt2);
+$uOfTAt3 = $u->eval(t=>$tMinusAt3);
+$uOfTAt4 = $u->eval(t=>$tMinusAt4);
+$bDotUOfTAt2 = $b*$u->eval(t=>$tMinusAt2);
+$bDotUOfTAt3 = $b*$u->eval(t=>$tMinusAt3);
+$bDotUOfTAt4 = $b*$u->eval(t=>$tMinusAt4);
+# Note: PG is used here instead of PGML, because displaying the table properly in
+# PGML is needlessly complicated and far too breakable.
+BEGIN_SOLUTION
+\{
+DataTable(
+  [
+    [["\(t\)", headerrow=>1], "\(t-$a\)", "\(u(t-$a)\)", "\($b\cdot u(t-$a)\)"],
+    ["\(2\)", "\($tMinusAt2\)", "\($uOfTAt2\)", "\($bDotUOfTAt2\)"],
+    ["\(3\)", "\($tMinusAt3\)", "\($uOfTAt3\)", "\($bDotUOfTAt3\)"],
+    ["\(4\)", "\($tMinusAt4\)", "\($uOfTAt4\)", "\($bDotUOfTAt4\)"],
+  ],
+  caption=>"Truth Table for \(cos(\theta)\)",
+  midrules=>1,
+  # This makes it so each column has a bar on either side and the contents are centred.
+  align=>"|c|c|c|c|"
+);
+\}
+END_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

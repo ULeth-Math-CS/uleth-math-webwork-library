@@ -1,0 +1,195 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-05)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'contigency table')
+
+# To change the positioning of the answer blanks for the question:
+# Step 1. For each space in the table where you would like an answer blank,
+#   replace the $tableValue[row][col] with ans_rule(size), where size is a
+#   positive integer to represent the size of the answer blank.  Also, copy the
+#   $tableValue[row][col] part below step 3, as you'll need it later.
+# Step 2. For each space where you no longer want an answer blank, change ans_rule(size)
+#   to $tableValue[row][col], where [row][col] are zero-based indices referencing
+#   the positions in the array containing the table values.
+#   E.g. $tableValue[0][0] would give you the table value for fire-breathing hydras
+#   with 7 heads.
+# Step 3. Compute the proper answers for the questions based on where you
+#   placed the answer blanks.  Then, add answer checkers for each.
+#   Use ANS($tableValue[row][col]->cmp()); to call the checker,
+#   and make sure that the answers are in the same order as their associated
+#   blanks in the problem.  Note that rows take precedence over columns.
+#   In other words, a blank in row 1, col 1 will be checked before a blank
+#   at row 1, col 2, but after a blank at row 0, col 1.
+
+
+#############################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "contextLimitedNumeric.pl"
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+#-ULETH-#
+# Can switch to the LimitedNumeric Context if you don't want to
+# allow operations to be entered into the answer.
+Context("Numeric");
+# Context("LimitedNumeric");
+
+# Indicate the number of columns (attributes) and rows (qualities) to be
+# randomly generated, each number will be between the minVal and maxVal
+# If you change the number of rows or columns you must change the table print command below
+$numRowQualities = 3;
+$numColAttributes = 4;
+$minVal = 0;
+$maxVal = 250;
+#-ENDULETH-#
+
+@tableValue = ();
+
+
+# Generate the random table values
+for (my $row=0;$row<$numRowQualities;$row++) {
+  for (my $col=0;$col<$numColAttributes;$col++) {
+#-ULETH-#
+     $tableValue[$row][$col] = random($minVal,$maxVal,1);
+#-ENDULETH-#
+  }
+}
+
+#Calculate the sum of each column
+$sum = 0;
+for (my $col=0;$col<$numColAttributes;$col++) {
+  for (my $row=0;$row<$numRowQualities;$row++) {
+     $sum = $sum + $tableValue[$row][$col];
+  }
+  $tableValue[$numRowQualities][$col] = $sum;
+  $sum = 0;
+}
+
+#Calculate the sum of each row
+for (my $row=0;$row<=$numRowQualities;$row++) {
+  for (my $col=0;$col<$numColAttributes;$col++) {
+     $sum = $sum + $tableValue[$row][$col];
+  }
+  $tableValue[$row][$numColAttributes] = $sum;
+  $sum = 0;
+}
+
+# Print the table with titles.
+# Step 1. For each space in the table where you would like an answer blank,
+#   replace the $tableValue[row][col] with ans_rule(size), where size is a
+#   positive integer to represent the size of the answer blank.  Also, copy the
+#   $tableValue[row][col] part below step 3, as you'll need it later.
+# Step 2. For each space where you no longer want an answer blank, change ans_rule(size)
+#   to $tableValue[row][col], where [row][col] are zero-based indices referencing
+#   the positions in the array containing the table values.
+#   E.g. $tableValue[0][0] would give you the table value for fire-breathing hydras
+#   with 7 heads.
+$table = $BCENTER.begintable(5) .
+row( "","7 heads","8 heads","9 heads","10 heads","Total" ) .
+row( "Fire breathing",     ans_rule(5),      $tableValue[0][1],ans_rule(5),      $tableValue[0][3],ans_rule(5)) .
+row( "Lightning breathing",$tableValue[1][0],ans_rule(5),      $tableValue[1][2],$tableValue[1][3],ans_rule(5)) .
+row( "Acid breathing",     $tableValue[2][0],$tableValue[2][1],$tableValue[2][2],ans_rule(5),      ans_rule(5)) .
+row( "Total",              $tableValue[3][0],$tableValue[3][1],ans_rule(5),      $tableValue[3][3],$tableValue[3][4]) .
+endtable().$ECENTER;
+
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+# Adds the problem text, number entry answer formatting help,
+# and the table of values.
+BEGIN_PGML
+Domas Volargen and the Silverhawks specialize in the hydra hunting. Over their long and storied history they have defeated many of the beasts.
+The partially completed contigency table below shows a breakdown of the types of hydras they have faced over the years.
+Complete the contigency table.
+[@ AnswerFormatHelp("numbers") @]*
+
+
+[@ $table @]***
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# Checks each entered answer against its associated solution value.
+# Step 3. Compute the proper answers for the questions based on where you
+#   placed the answer blanks.  Then, add answer checkers for each.
+#   Use ANS($tableValue[row][col]->cmp()); to call the checker,
+#   and make sure that the answers are in the same order as their associated
+#   blanks in the problem.  Note that rows take precedence over columns.
+#   In other words, a blank in row 1, col 1 will be checked before a blank
+#   at row 1, col 2, but after a blank at row 0, col 1.
+$tableValue[0][0]=Compute($tableValue[0][0]);
+ANS($tableValue[0][0]->cmp());
+
+$tableValue[0][2]=Compute($tableValue[0][2]);
+ANS($tableValue[0][2]->cmp());
+
+$tableValue[0][4]=Compute($tableValue[0][4]);
+ANS($tableValue[0][4]->cmp());
+
+$tableValue[1][1]=Compute($tableValue[1][1]);
+ANS($tableValue[1][1]->cmp());
+
+$tableValue[1][4]=Compute($tableValue[1][4]);
+ANS($tableValue[1][4]->cmp());
+
+$tableValue[2][3]=Compute($tableValue[2][3]);
+ANS($tableValue[2][3]->cmp());
+
+$tableValue[2][4]=Compute($tableValue[2][4]);
+ANS($tableValue[2][4]->cmp());
+
+$tableValue[3][2]=Compute($tableValue[3][2]);
+ANS($tableValue[3][2]->cmp());
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT('MathObject version. Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

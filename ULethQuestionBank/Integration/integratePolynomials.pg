@@ -1,0 +1,187 @@
+## DESCRIPTION
+## This question code is based on a sample problem from the WeBWorK wiki.
+## It has been modified to meet the ULeth Template standards.
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-04)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('integration', 'polynomial integration')
+
+# How to add a new question:
+# Step 1. Change the value of $numVals to match the number of unique random
+#   numbers you need to define all the functions you are using in the question.
+# Step 2. If you want to change the pool of values to select the numbers from,
+#   change the range for the random number selector.
+# Step 3. Define any new functions for the question here.  Reference the
+#   different integers you want to use from the array by using
+#   $randomIntegers[index].
+# Step 4. Compute the answer(s) for the new question.
+#   Make sure that you use the same indices to access @randomIntegers
+#   that you used in the question creation.
+# Step 5. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+# Step 6. Change the hint text if necessary for the new question.
+# Step 7. Add new hint text if necessary for the new question.
+# Step 8. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Step 9. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+
+
+#################################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "contextFraction.pl"
+);
+
+TEXT(beginproblem());
+
+
+#################################
+#  Setup
+
+@randomIntegers = ();
+#-ULETH-#
+# Step 1. Change the value of $numVals to match the number of unique random
+#   numbers you need to define all the functions you are using in the question.
+$numVals = 100;
+#-ENDULETH-#
+
+for (my $i = 0; $i < $numVals; $i++)
+{
+  #-ULETH-#
+  # Values for the functions are randomly selected from this list.
+  # Step 2. If you want to change the pool of values to select the numbers from,
+  #   change the range for the random number selector.
+  # Eg: $randomIntegers[$i] = non_zero_random(-24,2,2);
+  $randomIntegers[$i] = non_zero_random(-12, 12, 1);
+  #-ENDULETH-#
+}
+
+# Adds the dx and C variables to the context.
+# Also switches to Fraction-NoDecimals so that the coefficients only reduce down
+# to integers and not decimals.
+Context("Fraction-NoDecimals")->variables->add(dx=>Real, C=>Real);
+
+#-ULETH-#
+# Step 3. Define any new functions for the question here.  Reference the
+#   different integers you want to use from the array by using
+#   $randomIntegers[index].  Calling reduce after the Formula is created will
+#   remove double negatives, '1'/'-1' coefficients, etc.
+# Eg: $questionC = Formula("($randomIntegers[8]x + $randomIntegers[9])dx")->reduce;
+$questionA = Formula("($randomIntegers[0]x^4 + $randomIntegers[1]x^3 + $randomIntegers[2]x^2 + $randomIntegers[3]x + $randomIntegers[4])dx")->reduce;
+$questionB = Formula("($randomIntegers[5]x^2 + $randomIntegers[6])($randomIntegers[7]x + e^2)dx")->reduce;
+
+# Step 4. Compute the answer(s) for the new question.
+#   Make sure that you use the same indices to access @randomIntegers
+#   that you used in the question creation.
+# Eg: $answerC = Formula("($randomIntegers[8]/2)x^2 + $randomIntegers[9]x + C")->reduce;
+$answerA = Formula("($randomIntegers[0]/5)x^5 + ($randomIntegers[1]/4)x^4 + ($randomIntegers[2]/3)x^3 + ($randomIntegers[3]/2)x^2 + $randomIntegers[4]x + C")->reduce;
+$answerB = Formula("(($randomIntegers[5]$randomIntegers[7])/4)x^4 + ((e^2 $randomIntegers[5])/3)x^3 + (($randomIntegers[6]$randomIntegers[7])/2)x^2 + $randomIntegers[6]e^2 x + C")->reduce;
+#-ENDULETH-#
+
+
+#####################################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# Step 5. Add the text for the new question to the main text of the problem.
+#   Also add an answer blank for the student to fill in their answer.
+#   If necessary, also add the AnswerFormatHelp after the blank so that
+#   students can get some help with inputting their answer.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+BEGIN_PGML
+Integrate each of the following:
+
+a. [`\displaystyle\int[$questionA]`] [_______________________________________________][@ AnswerFormatHelp("formulas") @]*
+
+b. [`\displaystyle\int[$questionB]`] [_______________________________________________][@ AnswerFormatHelp("formulas") @]*
+END_PGML
+
+# Step 6. Change the hint text if necessary for the new question.
+# The number of times the student needs to get the problem incorrect before
+# they can see a hint.
+$showHint = 1;
+BEGIN_PGML_HINT
+Try expanding the expression before you integrate.
+END_PGML_HINT
+
+# Step 7. Add new hint text if necessary for the new question.
+# Eg: $showHint = 3;
+# BEGIN_PGML_HINT
+# Use x for the integration.
+# END_PGML_HINT
+
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add new questions, make sure to add new answer checkers here!
+# Step 8. Add an answer checker for the new question.  Use ANS($answer->cmp());
+#   to call the checker, and make sure that the answers are in the same order
+#   as their associated blanks in the problem.
+# Eg: ANS($answerC->cmp());
+ANS($answerA->cmp());
+ANS($answerB->cmp());
+#-ENDULETH-#
+
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# Step 9. Add solution text for the question, assuming that you have some special
+#   solution text you want students to be able to see after the assignment due date.
+#   If you have LaTeX code you want to display, enter it in the [``] brackets.
+#   If you want previously-defined values to display in LaTeX, include the
+#   MathObject name in your LaTeX brackets, enclosed in square brackets.
+BEGIN_PGML_SOLUTION
+Recall:
+
+Power Rule: [`\displaystyle\int x^n dx = \frac{1}{n+1}x^{n+1} + C`]
+
+Scalar Multiple Rule: [`\displaystyle\int nf(x)dx = n\displaystyle\int f(x)dx`]
+
+Constant Rule: [`\displaystyle\int ndx = nx + C`]
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

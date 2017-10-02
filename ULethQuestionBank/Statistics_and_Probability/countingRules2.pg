@@ -1,0 +1,113 @@
+## DESCRIPTION
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-08-31)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('counting', 'permutations', 'statistics and probability')
+
+
+#################################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#################################
+#  Setup
+
+#-ULETH-#
+$numRacers = random(8,15,1);
+$numRibbons = random(3,5,1);
+
+$answerA = P($numRacers, $numRibbons);
+$answerB = P($numRacers+1, $numRibbons);
+$answerC = $numRibbons*P($numRacers, $numRibbons - 1);
+$answerD = P($numRacers, $numRibbons - 1);
+#-ENDULETH-#
+
+
+#####################################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+BEGIN_PGML
+There are [$numRacers] snails participating in the annual _Thundersnail_ competition.
+
+a. How many ways can the first [$numRibbons] places end up being awarded? [__________][@ AnswerFormatHelp("numbers") @]*
+
+b. Papyrus the skeleton has added Drawmij the Destroyer to the roster of racers!
+Now, how many ways can the first [$numRibbons] places end up being awarded? [__________][@ AnswerFormatHelp("numbers") @]*
+
+c. How many outcomes have Drawmij winning Papyrus a ribbon? [__________][@ AnswerFormatHelp("numbers") @]*
+
+d. In how many outcomes does Drawmij win a first place ribbon? [__________][@ AnswerFormatHelp("numbers") @]*
+END_PGML
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS(Compute($answerA)->cmp());
+ANS(Compute($answerB)->cmp());
+ANS(Compute($answerC)->cmp());
+ANS(Compute($answerD)->cmp());
+#-ENDULETH-#
+
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+BEGIN_PGML_SOLUTION
+a.  Use permutations to determine the ordered number of ways we can choose
+[$numRibbons] ribbons from [$numRacers] snails.
+
+    [`P([$numRacers],[$numRibbons])`]
+
+b.  Now there are [$numRacers+1] snails in the race, so the number of ways the
+ribbons can be awarded is
+
+    [`P([$numRacers+1],[$numRibbons])`]
+
+c.  There are [$numRibbons] ways in which Drawmij could win a ribbon, and [$numRibbons - 1]
+other places, so the number of ways Drawmij can win a ribbon is
+
+    [`[$numRibbons] * P([$numRacers],[$numRibbons - 1])`]
+
+d.  There is one way in which Drawmij could win a first place ribbon, and [$numRibbons - 1]
+other places, so the number of ways Drawmij can win a first place ribbon is
+
+    [`1*P([$numRacers],[$numRibbons - 1])`]
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();
