@@ -1,0 +1,343 @@
+## Date(2017-07-13)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+
+=pod Basic Information:
+  A constructor for a MathObject is what is used to create the object for later
+  use in the problem.  The basic constructor is Compute("").  Whatever is between
+  the quotes will be automatically parsed into the proper type of object (be it
+  a Number, and Interval, or something else) depending on the currently-set Context.
+
+  The Context is what determines the types and restrictions on MathObjects.  The
+  default Context is "Numeric", though this can be changed by calling Context("")
+  and entering the new Context between the quotes.  Note that certain Contexts may
+  require you to load new macro files.  This can be done in the loadMacros() call
+  near the top of the program.
+
+  The -> sign is an operator that is used by MathObjects to "call" different pieces
+  of functionality.  Think of it as a "specifier".  If you have a Vector MathObject,
+  it can have different properties, e.g. Opening bracket type, closing bracket type, etc.
+  You can also do different things to it, like getting its length, taking the negation
+  of it, or determining the dot product of it and another Vector.  However, if you just
+  reference the Vector, you are simply referencing an object that can be manipulated by
+  this information.  What the -> operator does is allow you to specify which specific
+  functionality you want to use.  For instance, if you have a Vector MathObject $v, then
+  calling $v->neg will give you the negation of $v.  If you just enter neg, there's no
+  way of knowing which specific Vector you want to negate.
+
+  An important thing to note with the -> operator is that there is no error-checking when
+  calling methods and properties.  Thus, if you attempt to call a method or property from
+  a MathObject that does not support it, the question will not render, you will get error
+  messages, and in all likelihood, screaming and crying will ensue.  You have been warned.
+
+  To prevent long expansions of decimals from appearing, set the default number of decimal
+  places to display (in the course configuration menu), or round numeric values before
+  displaying them.
+
+  Answer checker options that are set in one question will apply to every subsequent question
+  until a new value for the option is specified.
+=cut
+
+
+##############################
+#  Initialization
+
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  "contextLimitedVector.pl",
+  "parserRadioButtons.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+
+#-ULETH-#
+Context("Vector");
+
+$vCoord = Compute("<-2,4,0>");
+$vIJK = Compute("-2i + 4j -6k");
+# Can't perform operations in the LimitedVector context,
+# so they have to be done here.
+Context("LimitedVector-coordinate")->flags->set(ijk=>0);
+# Vector addition must be done with Vectors with the same dimensions.
+$vAdd = Compute($vCoord) + Compute("<3,1,-1>");
+Context("LimitedVector-ijk")->flags->set(ijk=>1);
+# Can only multiply a Vector by a scalar.
+$vMult = Compute($vIJK) * 3;
+Context("LimitedVector");
+# Dot product must be done between two Vectors.
+$vDot = Compute($vCoord) . Compute($vIJK);
+#
+$vCross = Compute($vCoord) x Compute($vIJK);
+$vNeg = $vCoord->neg;
+$vUnit = $vCoord->unit;
+
+# If the two vectors have different lengths, the smaller one is the
+# one with fewer entries.  Otherwise, comparison is done in lexicographic
+# order.
+if ($vCoord->compare($vIJK) == -1)
+{
+  $vComp = RadioButtons(["less than", "equal", "greater than"], "less than");
+}
+elsif ($vCoord->compare($vIJK) == 0)
+{
+  $vComp = RadioButtons(["less than", "equal", "greater than"], "equal");
+}
+elsif ($vCoord->compare($vIJK) == 1)
+{
+  $vComp = RadioButtons(["less than", "equal", "greater than"], "greater than");
+}
+
+# Samples with 2D Vectors (No k variable defined).
+Context("Vector2D");
+
+$v2DCoord = Compute("<2,5>");
+$v2DIJK = Compute("-4i + 7j");
+# Vector subtraction must be done with Vectors with the same dimensions.
+$v2DSub = Compute($v2DCoord) - Compute("<3,1>");
+# Can only divide a Vector by a scalar.
+$v2DDiv = Compute($v2DIJK) / Compute("2");
+$v2DNorm = $v2DCoord->norm;
+
+if ($v2DCoord->isParallel($v2DIJK))
+{
+  $v2DParallel = RadioButtons(["True", "False"], "True");
+}
+else
+{
+  $v2DParallel = RadioButtons(["True", "False"], "False");
+}
+
+# Have to switch context to numeric, as length is not a vector value.
+Context("Numeric");
+# Length refers to the number of entries in the vector.
+$v2DLength = Compute($v2DCoord->length);
+#-ENDULETH-#
+
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+*Vectors*
+
+Vectors are generally delimited using angle brackets, which is what will be used in
+this and other examples.
+
+2D Vectors are created in the 2DVector Context, while all other Vectors should be
+created in the Vector Context.  The main difference between the two is that 'k' is
+not defined in the 2DVector Context, ensuring that it cannot be entered when writing
+in ijk notation.
+
+There is a special constructor, ColumnVector() which will produce a Vector object
+that displays vertically in TeX output. This is useful for matrix-vector multiplication,
+or systems of equations, for example. A ColumnVector acts just like a regular vector
+in terms of the operations and functions described above; its only difference is
+that it displays vertically.
+
+3D Coordinate Vector: [`[$vCoord]`]
+
+3D IJK Vector: [`[$vIJK]`]
+
+2D Coordinate Vector: [`[$v2DCoord]`]
+
+2D IJK Vector: [`[$v2DIJK]`]
+
+    i. Addition
+
+        [`([$vCoord]) + (<3,1,-1>) = `] [____________________][@ AnswerFormatHelp("vector") @]*
+
+        *Correct Answer(s):* <1,5,-1>
+
+        *Displayed Answer (after the due date):* [`[$vAdd]`]
+
+        *Special Answer Checker Options for this Question:* Doesn't show how many coordinates are wrong.
+
+    ii. Subtraction
+
+        [`([$v2DCoord]) - (<3,1,-1>) = `] [____________________][@ AnswerFormatHelp("vector") @]*
+
+        *Correct Answer(s):* <-1,4> *or* -i + 4j
+
+        *Displayed Answer (after the due date):* [`[$v2DSub]`]
+
+        *Special Answer Checker Options for this Question:* Does show how many coordinates are wrong.
+
+    iii. Multiplication
+
+        [`([$vIJK]) * 3 = `] [____________________][@ AnswerFormatHelp("vector") @]*
+
+        *Correct Answer(s):* -6i + 12j - 18k
+
+        *Displayed Answer (after the due date):* [`[$vMult]`]
+
+        *Special Answer Checker Options for this Question:* Doesn't show which coordinates are right.
+
+    iv. Division
+
+        [`\frac{[$v2DIJK]}{2} = `] [____________________][@ AnswerFormatHelp("vector") @]*
+
+        *Correct Answer(s):* <-2,3.5> *or* <-2,7/2> *or* -2i + 3.5j *or* -2i + 7/2j
+
+        *Displayed Answer (after the due date):* [`[$v2DDiv]`]
+
+        *Special Answer Checker Options for this Question:* Does show which coordinates are right.
+
+    v. Dot Product
+
+        [`([$vCoord]) \cdot ([$vIJK]) = `] [____________________][@ AnswerFormatHelp("vector") @]*
+
+        *Correct Answer(s):* 20
+
+        *Displayed Answer (after the due date):* [`[$vDot]`]
+
+        *Special Answer Checker Options for this Question:* Doesn't allow points to be entered instead of vectors.
+
+    vi. Cross Product
+
+        [`([$vCoord]) X ([$vIJK]) = `] [____________________][@ AnswerFormatHelp("numbers") @]*
+
+        *Correct Answer(s):* <-24,-12> *or* -24i-12j
+
+        *Displayed Answer (after the due date):* [`[$vCross]`]
+
+        *Special Answer Checker Options for this Question:* Does allow points to be entered instead of vectors.
+
+    vii. Length
+
+        What is the length of [`[$v2DCoord]`]? [____________________][@ AnswerFormatHelp("numbers") @]*
+
+        *Correct Answer(s):* 2
+
+        *Displayed Answer (after the due date):* [`[$v2DLength]`]
+
+        *Special Answer Checker Options for this Question:* Doesn't mark the answer as correct if it is parallel to the prof's answer.
+
+    viii. Negation
+
+        What is the negation of [`[$vCoord]`]? [____________________][@ AnswerFormatHelp("vector") @]*
+
+        *Correct Answer(s):* <2,-4,0> *or* 2i - 4j + 0k *or* 2i - 4j
+
+        *Displayed Answer (after the due date):* [`[$vNeg]`]
+
+        *Special Answer Checker Options for this Question:* Does mark the answer as correct if it is parallel to the prof's answer.
+
+    ix. Magnitude
+
+        What is the magnitude of [`[$v2DCoord]`]? [____________________][@ AnswerFormatHelp("numbers") @]*
+
+        *Correct Answer(s):* 5.38516
+
+        *Displayed Answer (after the due date):* [`[$v2DNorm]`]
+
+        *Special Answer Checker Options for this Question:* Marks the answer as correct even if it's in the opposite direction.
+
+    x. Unit Vector
+
+        What is the unit vector of [`[$vCoord]`]? [____________________][@ AnswerFormatHelp("vector") @]*
+
+        *Correct Answer(s):* <-0.447214,0.894427,0> or -0.447214i + 0.894427j + 0k or -0.447214i + 0.894427j
+
+        *Displayed Answer (after the due date):* [`[$vUnit]`]
+
+        *Special Answer Checker Options for this Question:* Marks the answer as correct only if it is in the same direction.
+
+    x. Parallel True/False
+
+        True or False: [`[$v2DCoord]`] and [`[$v2DIJK]`] are parallel.
+
+        [@ $v2DParallel->buttons() @]*
+
+        *Correct Answer(s):* [$v2DParallel]
+
+        *Displayed Answer (after the due date):* _[$v2DParallel]_
+
+    xi. Compare Lexicographically
+
+        How does [`[$vCoord]`] compare to [`[$vIJK]`]?
+
+        [`[$vCoord]`] is
+
+        [@ $vComp->buttons() @]*
+
+        [`[$vIJK]`]
+
+        *Correct Answer(s):* [$vComp]
+
+        *Displayed Answer (after the due date):* _[$vComp]_
+END_PGML
+#-ENDULETH-#
+
+#############################
+#   Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# Doesn't show how many coordinates are wrong.
+ANS($vAdd->cmp(showDimensionHints=>0));
+# Does show how many coordinates are wrong.
+ANS($v2DSub->cmp(showDimensionHints=>1));
+
+# Doesn't show which coordinates are right.
+ANS($vMult->cmp(showCoordinateHints=>0));
+# Does show which coordinates are right.
+ANS($v2DDiv->cmp(showCoordinateHints=>1));
+
+# Doesn't allow points to be entered instead of vectors.
+ANS($vDot->cmp(promotePoints=>0));
+# Does allow points to be entered instead of vectors.
+ANS($vCross->cmp(promotePoints=>1));
+
+# Doesn't mark the answer as correct if it is parallel to the prof's answer.
+ANS($v2DLength->cmp(parallel=>0));
+# Does mark the answer as correct if it is parallel to the prof's answer.
+ANS($vNeg->cmp(parallel=>1));
+
+# Marks the answer as correct even if it's in the opposite direction.
+ANS($v2DNorm->cmp(sameDirection=>0));
+# Marks the answer as correct only if it is in the same direction.
+ANS($vUnit->cmp(sameDirection=>1));
+
+ANS($v2DParallel->cmp());
+ANS($vComp->cmp());
+#-ENDULETH-#
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Can be used to show the student the solution to the problem.
+
+# Similar to BEGIN_PGML, marks the start of the solution text.
+BEGIN_PGML_SOLUTION
+
+# Solution explanation goes here.  Layout as you would with the problem text.
+
+# Marks the end of the solution text.
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+# Marks the end of the problem document.
+ENDDOCUMENT();

@@ -1,0 +1,564 @@
+## Date(2017-07-13)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+
+=pod Basic Information:
+  A constructor for a MathObject is what is used to create the object for later
+  use in the problem.  The basic constructor is Compute("").  Whatever is between
+  the quotes will be automatically parsed into the proper type of object (be it
+  a Number, and Interval, or something else) depending on the currently-set Context.
+
+  The Context is what determines the types and restrictions on MathObjects.  The
+  default Context is "Numeric", though this can be changed by calling Context("")
+  and entering the new Context between the quotes.  Note that certain Contexts may
+  require you to load new macro files.  This can be done in the loadMacros() call
+  near the top of the program.
+
+  The -> sign is an operator that is used by MathObjects to "call" different pieces
+  of functionality.  Think of it as a "specifier".  If you have a Vector MathObject,
+  it can have different properties, e.g. Opening bracket type, closing bracket type, etc.
+  You can also do different things to it, like getting its length, taking the negation
+  of it, or determining the dot product of it and another Vector.  However, if you just
+  reference the Vector, you are simply referencing an object that can be manipulated by
+  this information.  What the -> operator does is allow you to specify which specific
+  functionality you want to use.  For instance, if you have a Vector MathObject $v, then
+  calling $v->neg will give you the negation of $v.  If you just enter neg, there's no
+  way of knowing which specific Vector you want to negate.
+
+  An important thing to note with the -> operator is that there is no error-checking when
+  calling methods and properties.  Thus, if you attempt to call a method or property from
+  a MathObject that does not support it, the question will not render, you will get error
+  messages, and in all likelihood, screaming and crying will ensue.  You have been warned.
+
+  To prevent long expansions of decimals from appearing, set the default number of decimal
+  places to display (in the course configuration menu), or round numeric values before
+  displaying them.
+
+  Answer checker options that are set in one question will apply to every subsequent question
+  until a new value for the option is specified.
+=cut
+
+
+##############################
+#  Initialization
+
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  "parserRadioButtons.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+
+#-ULETH-#
+# Show messages about if the student has entered the wrong
+# number of rows and/or columns.
+$showDimensionHints => 1;
+
+Context("Vector");
+# Column vectors that will be used for vector-matrix operations.
+$v3D = ColumnVector(0,3,-2);
+$v2D = ColumnVector(4,1);
+
+Context("Matrix")->variables->are(t=>"Real");
+
+# Matrix setup.  $A is statically defined 2x3,
+#                        $B is 3x3 with randomly determined entries,
+#                        $C is 2x3 with 5 randomly determined entries),
+#                        and $I is the 3x3 identity matrix
+
+$A = Matrix([[1,2,3],[4,5,6]]);
+$B = Matrix([
+[random(-5,5,1),random(-5,5,1),random(-5,5,1)],
+[random(-5,5,1),random(-5,5,1),random(-5,5,1)],
+[random(-5,5,1),random(-5,5,1),random(-5,5,1)]
+]);
+
+$C = Matrix([
+[random(-5,5,1),3,random(-5,5,1)],
+[random(-5,5,1),non_zero_random(-5,5),random(-5,5,1)]
+]);
+
+$D = Matrix([[3,5],[1,2]]);
+
+$E = Matrix([[5],[7],[3]]);
+
+# Generates an identity matrix.
+$I = Value::Matrix->I(3);
+
+# When subtracting matrices, both operands must have the same dimensions.
+$answerA = Matrix($A - $C);
+
+# We hardcode "DNE" here instead of evaluating $A + $B, because of the earlier
+# restriction on matrices requiring the same dimensions if being added.
+$answerB = Compute("DNE");
+# Can multiply a Matrix by another Matrix, a Vector, or a Number.
+$answerC = Matrix($A * $B);
+# When adding matrices, both operands must have the same dimensions.
+$answerD = Matrix($I + $B);
+# Have to use the ** operator instead of ^ to represent a Matrix to a power.
+$answerE = Matrix($B**2);
+# Can multiply a Matrix by another Matrix, a Vector, or a Number.
+$answerF = $B * $I;
+# Must be called by a Matrix MathObject.
+$answerG = $A->transpose;
+# Must be called by a square Matrix MathObject.
+$answerH = $D->inverse;
+# Must be called by a Matrix MathObject.
+$answerI = $B->det;
+# Must be called by a Matrix MathObject.
+$answerJ = $A->row(2);
+# Must be called by a Matrix MathObject.
+$answerK = $A->column(1);
+# Must be called by a Matrix MathObject.
+$answerL = $A->element(1,3);
+# Must be called by a Matrix MathObject.
+$answerM = List($C->dimensions);
+# You don't have to multiply by a ColumnVector, but it makes it easier to view
+# when displaying the question instead of a regular Vector.
+$answerN = $A * ColumnVector($v3D);
+# Returns the row from the Matrix as a Vector
+$answerO = Vector($B->row(1));
+# Returns the column from the Matrix as a Vector.
+$answerP = Vector($B->column(1));
+# Must be called by a Matrix MathObject.  The MathObject to project onto
+# the column space of $B ($E in this example) has to be a Matrix with one column.
+$answerQ = $B->proj($E);
+
+# Must be called by a Matrix MathObject.
+if ($B->isZero)
+{
+  $answerR = RadioButtons(["True", "False"], "True");
+}
+else
+{
+  $answerR = RadioButtons(["True", "False"], "False");
+}
+
+# Must be called by a Matrix MathObject.
+if ($B->isOne)
+{
+  $answerS = RadioButtons(["True", "False"], "True");
+}
+else
+{
+  $answerS = RadioButtons(["True", "False"], "False");
+}
+
+# Must be called by a Matrix MathObject.
+if ($D->isSquare)
+{
+  $answerT = RadioButtons(["True", "False"], "True");
+}
+else
+{
+  $answerT = RadioButtons(["True", "False"], "False");
+}
+
+# Must be called by a Matrix MathObject.
+if ($D->isRow)
+{
+  $answerU = RadioButtons(["True", "False"], "True");
+}
+else
+{
+  $answerU = RadioButtons(["True", "False"], "False");
+}
+
+# Must be called by a Matrix MathObject.
+if ($B->is_symmetric)
+{
+  $answerV = RadioButtons(["True", "False"], "True");
+}
+else
+{
+  $answerV = RadioButtons(["True", "False"], "False");
+}
+
+# Must be called by a square Matrix MathObject ($B in this example).
+$answerW = $B->normalize(Matrix($v3D)->transpose);
+# Must be called by a square Matrix MathObject.
+$answerX = $D->decompose_LR;
+# Must be called by a Matrix MathObject.
+$answerY = $A->L;
+# Must be called by a Matrix MathObject.
+$answerZ = $A->R;
+# Must be called by a Matrix MathObject ($B in this example)
+# where the columns are linearly independent.
+$answerAi = $B->proj_coeff($E);
+# Must be called by a Matrix MathObject.
+$answerBi = ($D->solve_LR(Matrix($v2D)->transpose))[1];
+$answerBi = Compute($answerBi);
+#-ENDULETH-#
+
+
+#############################
+#   Problem Text
+
+BEGIN_PGML
+*Matrices*
+
+The size of a matrix is static and determined by the number of entries at construction time.
+You cannot define an empty matrix.
+
+There is a constructor for making identity matrices.
+
+There are two ways to have students enter matrices: have an input field for each matrix entry;
+or have one input field and students must enter the matrix with correct bracketing (explained in the AnswerFormatHelp file).
+In the first method, to enter the matrix, A, students literally click in the
+location of each value and type.  In the second method, to enter the same matrix
+the student would need to type A = [|[[1,2,3],[4,5,6]]|].
+
+When displaying matrices in regular text (as opposed to LaTeX),
+it is good practice to enclose the value in "verbatim" brackets in your code, i.e. [||[| |]||].
+An example is [||[| [[1,2],[3,4]] |]||].  What these do is ensure that the brackets enclosing
+the value are interpreted as being part of that value, rather than being special
+characters for PGML to process.  This has been done for all the values in this
+problem so that they display properly and remain consistent.
+
+If you want to prevent students from entering operators in their answers (and
+cheating the question by entering the question as their answer), you can undefine
+operators after implementing them in your answer values.  The same goes for functions
+like sqrt, log, and sin, though these have to be disabled in the Context instead
+of being undefined.
+
+Given:
+
+[``A = [$A]``]
+
+[``B = [$B]``]
+
+[``C = [$C]``]
+
+[``D = [$D]``]
+
+[``E = [$E]``]
+
+[``I = [$I]``]
+
+[``\vec{u} = [$v3D]``]
+
+[``\vec{v} = [$v2D]``]
+
+Determine each of the following (enter DNE, if the operation cannot be performed).
+
+a. ans_array Style Matrix
+
+    [`A-C`] = [@ $answerA->ans_array @]*  [@ AnswerFormatHelp("matrix") @]*
+
+    *Correct Answer(s):*
+
+    First blank: [$answerA->element(1,1)], Second blank: [$answerA->element(1,2)], Third blank: [$answerA->element(1,3)]
+
+    Fourth blank: [$answerA->element(2,1)], Fifth blank: [$answerA->element(2,2)], Sixth blank: [$answerA->element(2,3)]
+
+    *Displayed Answer (after the due date):* [`[$answerA]`]
+
+    *Special Answer Checker Options for this Question:* Don't show messages about the wrong number of rows or columns.
+
+b. Addition
+
+    [`A+B`] = [@ ans_box(4,30) @]* [@ AnswerFormatHelp("matrix") @]*
+
+    *Correct Answer(s):* DNE
+
+    *Displayed Answer (after the due date):* [`[$answerB]`]
+
+    *Special Answer Checker Options for this Question:* Show messages about the wrong number of rows or columns.
+
+c. Multiplication
+
+    [`A * B`] = [@ ans_box(4,30) @]* [@ AnswerFormatHelp("matrix") @]*
+
+    *Correct Answer(s):* [$answerC]
+
+    *Displayed Answer (after the due date):* [`[$answerC]`]
+
+d. Identity Matrix Addition
+
+    [`I + B`] = [@ ans_box(4,30) @]* [@ AnswerFormatHelp("matrix") @]*
+
+    *Correct Answer(s):* [$answerD]
+
+    *Displayed Answer (after the due date):* [`[$answerD]`]
+
+e. Matrix to a Power
+
+    [`(B)^2`] = [@ ans_box(4,30) @]* [@ AnswerFormatHelp("matrix") @]*
+
+    *Correct Answer(s):* [$answerE]
+
+    *Displayed Answer (after the due date):* [`[$answerE]`]
+
+f. Identity Matrix Multiplication
+
+    [`B * I`] = [@ ans_box(4,30) @]* [@ AnswerFormatHelp("matrix") @]*
+
+    *Correct Answer(s):* [$answerF]
+
+    *Displayed Answer (after the due date):* [`[$answerF]`]
+
+g. Transposition
+
+    [`A^T`] = [@ ans_box(4,30) @]*  [@ AnswerFormatHelp("matrix") @]*
+
+    *Correct Answer(s):* [$answerG]
+
+    *Displayed Answer (after the due date):* [`[$answerG]`]
+
+h. Inverse
+
+    [`(D)^{-1}`] = [@ ans_box(4,30) @]*  [@ AnswerFormatHelp("matrix") @]*
+
+    *Correct Answer(s):* [$answerH]
+
+    *Displayed Answer (after the due date):* [`[$answerH]`]
+
+i. Determinant
+
+    [`det (B)`] = [@ ans_box(4,30) @]*  [@ AnswerFormatHelp("matrix") @]*
+
+    *Correct Answer(s):* [$answerI]
+
+    *Displayed Answer (after the due date):* [`[$answerI]`]
+
+j. Row Extraction
+
+    The second row of [`A`] expressed as a matrix is [@ ans_box(4,30) @]*  [@ AnswerFormatHelp("matrix") @]*
+
+    *Correct Answer(s):* [$answerJ]
+
+    *Displayed Answer (after the due date):* [`[$answerJ]`]
+
+k. Column Extraction
+
+    The first column of [`A`] expressed as a matrix is [@ ans_box(4,30) @]*  [@ AnswerFormatHelp("matrix") @]*
+
+    *Correct Answer(s):* [$answerK]
+
+    *Displayed Answer (after the due date):* [`[$answerK]`]
+
+l. Element Extraction
+
+    The element of [`A`] designated [`a_{13}`] = [@ ans_box(4,30) @]*  [@ AnswerFormatHelp("matrix") @]*
+
+    *Correct Answer(s):* [$answerL]
+
+    *Displayed Answer (after the due date):* [`[$answerL]`]
+
+m. Dimensions
+
+    List the dimensions of matrix [`C`]: [@ ans_box(1,10) @]*  [@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* [$answerM]
+
+    *Displayed Answer (after the due date):* [`[$answerM]`]
+
+    *Special Answer Checker Options for this Question:* Require that the elements in the answer list are in the proper order.
+
+n. Vector Multiplication
+
+    [`A * \vec{u}`] = [@ ans_box(4,30) @]*  [@ AnswerFormatHelp("matrix") @]*
+
+    *Correct Answer(s):* [$answerN]
+
+    *Displayed Answer (after the due date):* [`[$answerN]`]
+
+o. Row Extraction as Vector
+
+    The first row of [`B`] expressed as a vector is [__________]  [@ AnswerFormatHelp("vector") @]*
+
+    *Correct Answer(s):* [$answerO]
+
+    *Displayed Answer (after the due date):* [`[$answerO]`]
+
+p. Column Extraction as Vector
+
+    The first column of [`B`] expressed as a vector is [__________]  [@ AnswerFormatHelp("vector") @]*
+
+    *Correct Answer(s):* [$answerP]
+
+    *Displayed Answer (after the due date):* [`[$answerP]`]
+
+q. Projection
+
+    The projection of [`E`] onto [`B`] is [@ ans_box(4,30) @]*  [@ AnswerFormatHelp("vector") @]*
+
+    *Correct Answer(s):* [$answerQ]
+
+    *Displayed Answer (after the due date):* [`[$answerQ]`]
+
+r. Zero Matrix True/False
+
+    Is [`B`] a zero matrix?
+
+    [@ $answerR->buttons() @]*
+
+    *Correct Answer(s):* [$answerR]
+
+    *Displayed Answer (after the due date):* _[$answerR]_
+
+s. Identity Matrix True/False
+
+    Is [`B`] an identity matrix?
+
+    [@ $answerS->buttons() @]*
+
+    *Correct Answer(s):* [$answerS]
+
+    *Displayed Answer (after the due date):* _[$answerS]_
+
+t. Square Matrix True/False
+
+    Is [`D`] a square matrix?
+
+    [@ $answerT->buttons() @]*
+
+    *Correct Answer(s):* [$answerT]
+
+    *Displayed Answer (after the due date):* _[$answerT]_
+
+u. One-Dimensional Matrix True/False
+
+    Is [`D`] a one-dimensional matrix?
+
+    [@ $answerU->buttons() @]*
+
+    *Correct Answer(s):* [$answerU]
+
+    *Displayed Answer (after the due date):* _[$answerU]_
+
+v. Symmetric Matrix True/False
+
+    Is [`B`] a symmetric matrix?
+
+    [@ $answerV->buttons() @]*
+
+    *Correct Answer(s):* [$answerV]
+
+    *Displayed Answer (after the due date):* _[$answerV]_
+
+w. Normalization
+
+    Normalize [`D`] with the vector [`\vec{u}`]. [@ ans_box(4,30) @]* [@ AnswerFormatHelp("matrix") @]*
+
+    *Correct Answer(s):* [$answerW]
+
+    *Displayed Answer (after the due date):* [`[$answerW]`]
+
+x. LR Decomposition
+
+    What is the L-R decomposition of [`D`]? [@ ans_box(4,30) @]* [@ AnswerFormatHelp("matrix") @]*
+
+    *Correct Answer(s):* [$answerX]
+
+    *Displayed Answer (after the due date):* [`[$answerX]`]
+
+y. L Matrix
+
+    What is the L matrix from the L-R decomposition of [`A`]? [@ ans_box(4,30) @]* [@ AnswerFormatHelp("matrix") @]*
+
+    *Correct Answer(s):* [$answerY]
+
+    *Displayed Answer (after the due date):* [`[$answerY]`]
+
+z. R Matrix
+
+    What is the R matrix from the L-R decomposition of [`A`]? [@ ans_box(4,30) @]* [@ AnswerFormatHelp("matrix") @]*
+
+    *Correct Answer(s):* [$answerZ]
+
+    *Displayed Answer (after the due date):* [`[$answerZ]`]
+
+ai. Projection Coefficient
+
+    What are the coordinates of the projection of [`\vec{u}`] onto [`A`]? [_________________________________]
+
+    *Correct Answer(s):* [$answerAi]
+
+    *Displayed Answer (after the due date):* [`[$answerAi]`]
+
+bi. Solve LR
+
+    What is the solution to the system [`Dx = \vec{v}`]? [@ ans_box(4,30) @]* [@ AnswerFormatHelp("matrix") @]*
+
+    *Correct Answer(s):* [$answerBi]
+
+    *Displayed Answer (after the due date):* [`[$answerBi]`]
+END_PGML
+
+#############################
+#   Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# Don't show messages about the wrong number of rows or columns.
+ANS($answerA->cmp(showDimensionHints=>0));
+# Show messages about the wrong number of rows or columns.
+ANS($answerB->cmp(showDimensionHints=>1));
+ANS($answerC->cmp());
+ANS($answerD->cmp());
+ANS($answerE->cmp());
+ANS($answerF->cmp());
+ANS($answerG->cmp());
+ANS($answerH->cmp());
+ANS($answerI->cmp());
+ANS($answerJ->cmp());
+ANS($answerK->cmp());
+ANS($answerL->cmp());
+# Requires that the list elements be entered in the correct order.
+ANS($answerM->cmp(ordered=>1));
+ANS($answerN->cmp());
+ANS($answerO->cmp());
+ANS($answerP->cmp());
+ANS($answerQ->cmp());
+ANS($answerR->cmp());
+ANS($answerS->cmp());
+ANS($answerT->cmp());
+ANS($answerU->cmp());
+ANS($answerV->cmp());
+ANS($answerW->cmp());
+ANS($answerX->cmp());
+ANS($answerY->cmp());
+ANS($answerZ->cmp());
+ANS($answerAi->cmp());
+ANS($answerBi->cmp());
+#-ENDULETH-#
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Can be used to show the student the solution to the problem.
+
+# Similar to BEGIN_PGML, marks the start of the solution text.
+BEGIN_PGML_SOLUTION
+
+# Solution explanation goes here.  Layout as you would with the problem text.
+
+# Marks the end of the solution text.
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+# Marks the end of the problem document.
+ENDDOCUMENT();

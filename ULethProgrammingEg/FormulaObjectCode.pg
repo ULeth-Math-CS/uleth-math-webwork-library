@@ -1,0 +1,384 @@
+## Date(2017-07-14)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+
+=pod Basic Information:
+  A constructor for a MathObject is what is used to create the object for later
+  use in the problem.  The basic constructor is Compute("").  Whatever is between
+  the quotes will be automatically parsed into the proper type of object (be it
+  a Number, and Interval, or something else) depending on the currently-set Context.
+
+  The Context is what determines the types and restrictions on MathObjects.  The
+  default Context is "Numeric", though this can be changed by calling Context("")
+  and entering the new Context between the quotes.  Note that certain Contexts may
+  require you to load new macro files.  This can be done in the loadMacros() call
+  near the top of the program.
+
+  The -> sign is an operator that is used by MathObjects to "call" different pieces
+  of functionality.  Think of it as a "specifier".  If you have a Vector MathObject,
+  it can have different properties, e.g. Opening bracket type, closing bracket type, etc.
+  You can also do different things to it, like getting its length, taking the negation
+  of it, or determining the dot product of it and another Vector.  However, if you just
+  reference the Vector, you are simply referencing an object that can be manipulated by
+  this information.  What the -> operator does is allow you to specify which specific
+  functionality you want to use.  For instance, if you have a Vector MathObject $v, then
+  calling $v->neg will give you the negation of $v.  If you just enter neg, there's no
+  way of knowing which specific Vector you want to negate.
+
+  An important thing to note with the -> operator is that there is no error-checking when
+  calling methods and properties.  Thus, if you attempt to call a method or property from
+  a MathObject that does not support it, the question will not render, you will get error
+  messages, and in all likelihood, screaming and crying will ensue.  You have been warned.
+
+  To prevent long expansions of decimals from appearing, set the default number of decimal
+  places to display (in the course configuration menu), or round numeric values before
+  displaying them.
+
+  Answer checker options that are set in one question will apply to every subsequent question
+  until a new value for the option is specified.
+=cut
+
+
+##############################
+#  Initialization
+
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  "parserRadioButtons.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+
+#-ULETH-#
+Context("Numeric")->variables->are(x=>"Real",y=>"Real");
+Context()->flags->set(formatStudentAnswer=>"parsed");
+$f = Formula("x^2 + 2xy + y^2");
+$fX = Formula("3x^3 + 4x^2 - x + 9");
+$fForSecondDerivative = Formula("4/x^3");
+
+$answerA = $f + Compute("x^2 + 2y^2");
+$answerB = $f - Compute("x^2 + 2y^2");
+$answerC = Compute("5 * $f");
+$answerD = Compute("$f / x");
+$answerE = sin($f);
+
+Context("Vector")->variables->are(x=>"Real",y=>"Real");
+
+$answerF = Compute("<2x, 4y, x>") + Compute("<3, 5, 9>");
+
+Context("Interval")->variables->are(x=>"Real",y=>"Real");
+
+$answerG = Compute("(x,2x+1]");
+
+Context("Numeric");
+
+$answerH = Compute("1x^2 + -3x + 0")->reduce;
+$answerI = $answerH->eval(x=>5);
+$answerJ1 = $fX->D('x');
+$answerJ2 = $f->D('x');
+$answerK = $fForSecondDerivative->D('x');
+
+if ($answerH->isConstant)
+{
+  $answerL = RadioButtons(["True", "False"], "True");
+}
+else
+{
+  $answerL = RadioButtons(["True", "False"], "False");
+}
+
+if ($answerH->substitute(x=>2)->isConstant)
+{
+  $answerM = RadioButtons(["True", "False"], "True");
+}
+else
+{
+  $answerM = RadioButtons(["True", "False"], "False");
+}
+
+if ($f->usesOneOf('x'))
+{
+  $answerN = RadioButtons(["True", "False"], "True");
+}
+else
+{
+  $answerN = RadioButtons(["True", "False"], "False");
+}
+
+$answerO = $f->perlFunction;
+$answerP = Compute("sqrt(x-10)")->with(limits=>[10,Inf]);
+$answerQ = Formula("ln(|x|)")->with(test_points=>[[-3],[-2],[-1],[1],[2],[3]]);
+$answerR = Formula("ln(|x|)")->with(test_at=>[[-1],[1]]);
+$answerS = $f->{string};
+#-ENDULETH-#
+
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+*Formulas*
+
+A Formula object can be constructed to return any other MathObject type.
+It is defined as you would any other MathObject; you need only define the
+variables within the Context by using (E.g. Context()->variables->are(z=>"Real");).
+Note that you don't need to worry about this if you're using x and/or y.  These
+variables are defined by default, as well as certain constants like pi.
+
+While LaTeX will reduce certain aspects of Formulas automatically, it's good practice
+to still use the reduce function in WeBWorK if you want a Formula reduced properly.
+You can see an example of this in question j.
+
+If you want to prevent students from entering operators in their answers
+(and cheating the question by entering the question as their answer),
+you can "undefine" operators after implementing them in your answer values.
+The same goes for functions like sqrt, log, and sin, though these have to be
+"disable(list, of, operators)" in the Context instead of being
+"undefine(list, of, operators)".
+
+a. Addition
+
+    What is [`[$f] + (x^2 + 2y^2)`]? [____________________][@ AnswerFormatHelp("formulas") @]*
+
+    *Correct Answer(s):* x^2 + 2xy + y^2 + x^2 + 2y^2 *or* 2x^2 + 2xy + 3y^2 *or* 2x^2 + 2xy + 3y^2 + 25
+
+    *Displayed Answer (after the due date):* [`[$answerA]`]
+
+    Special Answer Checker Options for this Question: The student's answer only needs to match the correct
+    answer up to the addition of a constant.
+
+b. Subtraction
+
+    What is [`[$f] + (x^2 + 2y^2)`]? [____________________][@ AnswerFormatHelp("formulas") @]*
+
+    *Correct Answer(s):* x^2 + 2xy + y^2 - (x^2 + 2y^2) *or* x^2 + 2xy + y^2 - x^2 - 2y^2 *or* 2xy - y^2
+
+    *Displayed Answer (after the due date):* [`[$answerB]`]
+
+    Special Answer Checker Options for this Question: The student's answer has to exactly match the answer.
+
+c. Multiplication
+
+    What is [`5 * ([$f])`]? [____________________][@ AnswerFormatHelp("formulas") @]*
+
+    *Correct Answer(s):* 5x^2 + 10xy + 5y^2
+
+    *Displayed Answer (after the due date):* [`[$answerC]`]
+
+    Special Answer Checker Options for this Question: The student is not notified if their answer is on the wrong domain.
+
+d. Division
+
+    What is [`\frac{[$f]}{x}`]? [____________________][@ AnswerFormatHelp("formulas") @]*
+
+    *Correct Answer(s):* (x^2 + 2xy + y^2)/x *or* x + 2y + (y^2)/x
+
+    *Displayed Answer (after the due date):* [`[$answerD]`]
+
+    Special Answer Checker Options for this Question: The student is notified if their answer is on the wrong domain.
+
+e. Trigonometry
+
+    What is [`sin([$f])`]? [____________________][@ AnswerFormatHelp("formulas") @]*
+
+    *Correct Answer(s):* sin(x^2 + 2xy + y^2)
+
+    *Displayed Answer (after the due date):* [`[$answerE]`]
+
+    Special Answer Checker Options for this Question: If an insufficient number of test points can be found,
+    do not show any warnings that may occur.
+
+f. Vector-Valued Formula
+
+    What is [`<2x,4y,x> + <3,5,9>`]? [____________________][@ AnswerFormatHelp("vectors") @]*
+
+    *Correct Answer(s):* <2x+3,4y+5,x+9>
+
+    *Displayed Answer (after the due date):* [`[$answerF]`]
+
+    Special Answer Checker Options for this Question: If an insufficient number of test points can be found,
+    show any warnings that may occur.
+
+g. Interval-Valued Formula
+
+    [`x < y \leq 2x+1`] is equivalent to [`y \in`] [____________________][@ AnswerFormatHelp("intervals") @]*
+
+    *Correct Answer(s):* (x,2x+1]
+
+    *Displayed Answer (after the due date):* [`[$answerG]`]
+
+h. Reduction
+
+    Reduce the formula [`1x^2 + (-3x) + 0`]. [____________________][@ AnswerFormatHelp("formulas") @]*
+
+    *Correct Answer(s):* x^2 - 3x
+
+    *Displayed Answer (after the due date):* [`[$answerH]`]
+
+i. Evaluation
+
+    Evaluate the formula [`[$answerH]`] with [`x=5`]. [____________________][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 10
+
+    *Displayed Answer (after the due date):* [`[$answerI]`]
+
+j. First/Partial Derivative
+
+    What is the first derivative of [`y = [$fX]`] with respect to [`x`]? [____________________][@ AnswerFormatHelp("formulas") @]*
+
+    *Correct Answer(s):* 3*3x^2 + 4*2x - 1 *or* 9x^2 + 8x - 1
+
+    *Displayed Answer (after the due date):* [`[$answerJ1]`]
+
+    Note this method can be used to find partial derivatives as well:
+
+    What is the partial derivative of [`[$f]`] with respect to [`x`]? [____________________][@ AnswerFormatHelp("formulas") @]*
+
+    *Correct Answer(s):* 2(x+y)
+
+    *Displayed Answer (after the due date):* [`[$answerJ2]`]
+
+k. Second Derivative
+
+    What is the second derivative of [`f(x) = [$fForSecondDerivative]`] with respect to [`x`]? [____________________][@ AnswerFormatHelp("formulas") @]*
+
+    *Correct Answer(s):* -4*3x^2 / (x^3)^2 *or* -12x^2 / x^6 *or* 12x^2 / -x^6
+
+    *Displayed Answer (after the due date):* [`[$answerK]`]
+
+l. Is a Formula Constant?
+
+    The formula [`[$answerH]`] is constant.
+
+    [@ $answerL->buttons() @]*
+
+    *Correct Answer(s):* [$answerL]
+
+    *Displayed Answer (after the due date):* _[$answerL]_
+
+m. Is an Evaluated Formula Constant?
+
+    The formula [`[$answerH]`] is constant when [`x=2`].
+
+    [@ $answerM->buttons() @]*
+
+    *Correct Answer(s):* [$answerM]
+
+    *Displayed Answer (after the due date):* _[$answerM]_
+
+n. Checking for Variables
+
+    The formula [`[$f]`] uses the variable [`x`].
+
+    [@ $answerN->buttons() @]*
+
+    *Correct Answer(s):* [$answerN]
+
+    *Displayed Answer (after the due date):* _[$answerN]_
+
+o. Perl Function From Formula
+
+    The formula [`[$f]`] can be converted to a Perl function, which, when printed, shows up as [$answerO].
+
+p. Limits for the randomly determined test values for the particular formula
+
+    So automatically chosen test values for [`f(x)=\sqrt{x-10}`] will be between [`[@ $answerP->{limits}[0] @]*`] and [`[@ $answerP->{limits}[1] @]*`].
+
+q. Custom Test Points
+
+    The test points for [`ln(|x|)`] are set as
+    [`[@ $answerQ->{test_points}[0][0] @]*`],
+    [`[@ $answerQ->{test_points}[1][0] @]*`],
+    [`[@ $answerQ->{test_points}[2][0] @]*`],
+    [`[@ $answerQ->{test_points}[3][0] @]*`],
+    [`[@ $answerQ->{test_points}[4][0] @]*`],
+    [`[@ $answerQ->{test_points}[5][0] @]*`], and
+    [`[@ $answerQ->{test_points}[6][0] @]*`].
+
+r. Additional Test Points
+
+    This question uses the following code: [|Formula("ln(|x|)")->with(test_at=>[[-1],[1]]);|]
+
+    This means that, in addition to the randomly-selected test points, [`ln(|x|)`] will also be tested
+    at [`x = -1`] and [`x = 1`].
+
+s. String Retrieval
+
+    The string that was used to create [`[$f]`] is [____________________].
+
+    *Correct Answer(s):* x^2 + 2xy + y^2
+
+    *Displayed Answer (after the due date):* _[$answerS]_
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#   Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# Student's answer only needs to match up to the addition of a constant.
+ANS($answerA->cmp(upToConstant=>1));
+# Student's answer has to exactly match the answer.
+ANS($answerB->cmp(upToConstant=>0));
+# Student is not notified if their answer is on the wrong domain.
+ANS($answerC->cmp(showDomainErrors=>0));
+# Student is notified if their answer is on the wrong domain.
+ANS($answerD->cmp(showDomainErrors=>1));
+# Doesn't show warnings if not enough test points can be found.
+ANS($answerE->cmp(showTestPointErrors=>0));
+# Shows warnings if not enough test points can be found.
+ANS($answerF->cmp(showTestPointErrors=>1));
+ANS($answerG->cmp());
+ANS($answerH->cmp());
+ANS($answerI->cmp());
+ANS($answerJ1->cmp());
+ANS($answerJ2->cmp());
+ANS($answerK->cmp());
+ANS($answerL->cmp());
+ANS($answerM->cmp());
+ANS($answerN->cmp());
+# Uses str_cmp so the answer string is properly processed.
+ANS(str_cmp($answerS));
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Can be used to show the student the solution to the problem.
+
+# Similar to BEGIN_TEXT, marks the start of the solution text.
+BEGIN_PGML_SOLUTION
+
+# Solution explanation goes here.  Layout as you would with the problem text.
+
+# Marks the end of the solution text.
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+# Marks the end of the problem document.
+ENDDOCUMENT();

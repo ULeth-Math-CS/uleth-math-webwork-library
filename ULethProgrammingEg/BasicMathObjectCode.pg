@@ -1,0 +1,878 @@
+## Date(2017-07-21)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+
+=pod Basic Information:
+  A constructor for a MathObject is what is used to create the object for later
+  use in the problem.  The basic constructor is Compute("").  Whatever is between
+  the quotes will be automatically parsed into the proper type of object (be it
+  a Number, and Interval, or something else) depending on the currently-set Context.
+
+  The Context is what determines the types and restrictions on MathObjects.  The
+  default Context is "Numeric", though this can be changed by calling Context("")
+  and entering the new Context between the quotes.  Note that certain Contexts may
+  require you to load new macro files.  This can be done in the loadMacros() call
+  near the top of the program.
+
+  The -> sign is an operator that is used by MathObjects to "call" different pieces
+  of functionality.  Think of it as a "specifier".  If you have a Vector MathObject,
+  it can have different properties, e.g. Opening bracket type, closing bracket type, etc.
+  You can also do different things to it, like getting its length, taking the negation
+  of it, or determining the dot product of it and another Vector.  However, if you just
+  reference the Vector, you are simply referencing an object that can be manipulated by
+  this information.  What the -> operator does is allow you to specify which specific
+  functionality you want to use.  For instance, if you have a Vector MathObject $v, then
+  calling $v->neg will give you the negation of $v.  If you just enter neg, there's no
+  way of knowing which specific Vector you want to negate.
+
+  An important thing to note with the -> operator is that there is no error-checking when
+  calling methods and properties.  Thus, if you attempt to call a method or property from
+  a MathObject that does not support it, the question will not render, you will get error
+  messages, and in all likelihood, screaming and crying will ensue.  You have been warned.
+=cut
+
+###########################
+#  Initialization
+
+# The first line in the .pg file after any opening comments.
+# Defines the bounds of the document.
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+
+#-ULETH-#
+Context("Numeric");
+$num = Compute("10");
+Context()->variables->are(x=>"Real");
+$for = Compute("sqrt(x-10)");
+Context("Interval");
+$int = Compute("[2,5]");
+Context("Vector");
+$vec = Compute("<4,8,12>");
+
+# Must be called by a MathObject.
+@answer1 = $int->value;
+# Must be called by a MathObject.
+$answer2 = $num->data;
+# Must be called by a MathObject.
+$answer3 = $vec->length;
+# Must be called by a MathObject.
+$answer4 = $vec->extract(1);
+# Equivalent to calling Real(5) or Compute(5).
+$answer5 = Value::Real->new(5);
+# The parameter for make MUST be valid for the type being used.
+# There is no error-checking for type conversion in this method,
+# as opposed to with new().
+$answer6 = Value::Real->make(10);
+# Must be called by a MathObject.
+# Have to specify at least one property/value pair between the brackets.
+# Multiple property/value pairs can be set by listing them between
+# the parentheses and separating the list with commas.
+$answer7 = $for->with(limits=>[10, Inf]);
+# Must be called by a MathObject.
+# Have to specify at least one property between the brackets.
+# Properties have to be entered as strings.
+# Multiple properties can be specified by listing them between
+# the parentheses and separating the list with commas.
+$answer8 = $for->without("limits");
+# Must be called by a MathObject.
+$answer9 = $num->copy;
+# Must be called by a MathObject.
+$answer10 = $int->context;
+# Must be called by a MathObject.
+# Requires a context to be specified between the parentheses.
+$answer11 = $num->context($for->context);
+# Must be called by a MathObject.
+# Requires a context to be specified between the parentheses.
+$answer12 = $num->inContext($for->context);
+# Must be called by a MathObject.
+# Have to specify at least one flag between the brackets.
+# Flags have to be entered as strings.
+$answer13 = $num->getFlag("tolerance");
+# Must be called by a MathObject.
+# Have to enter a MathObject between the parentheses
+# so there's something to compare to.
+$answer14 = $num->typeMatch($for);
+# Must be called by a MathObject.
+$answer15 = $for->class;
+# Must be called by a MathObject.
+# Will sometimes differ from the class of the object.
+# E.g. Formulas are of the Formula class, but return a Numeric type.
+$answer16 = $for->type;
+# Must be called by a MathObject.
+$answer17 = $for->TeX;
+# Must be called by a MathObject.
+$answer18 = $vec->string;
+# Must be called by a MathObject.
+$answer19 = $num->perl;
+# Must be called on a MathObject.
+# Variables in the Formula should be included in the brackets
+# along with values to evaluate them with in the Formula.
+# Doesn't actually do anything to MathObjects other than Formulas.
+$answer20 = $for->eval(x=>10);
+# Must be called on a MathObject.  Cannot be called on a Number.
+# Note that "zero" means different things for different classes.
+# I.e. A Vector that equals 0 will look different from a Number that equals 0.
+$answer21 = $int->isZero;
+# Must be called on a MathObject.  Cannot be called on a Number.
+# Note that "one" means different things for different classes.
+# I.e. A Matrix that equals 1 will look different from a Number that equals 1.
+$answer22 = $vec->isOne;
+# Must be called on a MathObject.
+$answer23 = $int->isSetOfReals;
+# Must be called on a MathObject.
+$answer24 = $vec->canBeInUnion;
+# Must be called on a MathObject.
+$answer25 = $num->showClass;
+# Must be called by a MathObject.
+# Will sometimes differ from the class of the object.
+# E.g. Formulas are of the Formula class, but return a Numeric type.
+$answer26 = $vec->showType;
+# Must be called by a MathObject.
+# Have to enter a MathObject between the parentheses
+# so there's something to inherit from.
+$answer27 = $int->inherit($vec);
+# Must be called by a MathObject.
+$answer28 = $int->noinherit;
+# Must provide a number between the parentheses.
+$answer29 = Value->NameForNumber(10);
+# Must provide a context to modify and any flags to modify within
+# that context.
+# Have to assign to a perl variable using = ($answerEi in this case)
+# if you want to retrieve the original flag settings later.
+$answer30 = Value::contextSet($for->context, reduceConstants=>1, reduceConstantFunctions=>0);
+# Must provide a string that you want to convert to HTML.
+# The string does not require special characters, but there's
+# no reason to use this method if you don't need to handle special
+# characters in HTML.
+$answer31 = Value::protectHTML("Let\'s type some weird characters <>&%");
+# Must provide a string that you want to convert to HTML.
+# The string does not require special characters, but there's
+# no reason to use this method if you don't need to handle special
+# characters in HTML.  Also, there's no reason to use this method
+# instead of protectHTML unless you want line breaks in the HTML string.
+$answer32 = Value::preformat("><%$\n");
+# Mostly good for making sure that the information you are
+# providing to construct a particular MathObject is correct.
+$answer33 = Value::makeValue(25);
+# Make sure you are using the right form of infinity for the context
+# you are currently in.
+$answer34 = Value::matchInfinite("Inf");
+# Must be called with a MathObject followed by one or more strings
+# referencing different classes.
+$answer35 = Value::classMatch($num, "Vector", "Formula", "Interval");
+# Must be called with something in the parentheses that can be
+# checked to see if it's a Context object.
+$answer36 = Value::isContext($int);
+# Must be called with something in the parentheses that can be
+# checked to see if it's a Parser object.
+$answer37 = Value::isParser($int);
+# Must be called with something in the parentheses that can be
+# checked to see if it's a MathObject.
+$answer38 = Value::isValue($int);
+# Must be called with something in the parentheses that can be
+# checked to see if it's a Formula object.
+# Shorthand for Value::classMatch($for, "Formula");
+$answer39 = Value::isFormula($for);
+# Must be called with something in the parentheses that can be
+# checked to see if it's a Real object.
+# Shorthand for Value::classMatch($num, "Real").
+$answer40 = Value::isReal($num);
+# Must be called with something in the parentheses that can be
+# checked to see if it's a Complex object.
+# Shorthand for Value::classMatch($num, "Complex").
+$answer41 = Value::isComplex($num);
+# Must be called with something in the parentheses that can be
+# checked to see if it's a number.
+# True for a Formula if its return value is a number.
+$answer42 = Value::isNumber($num);
+# Must be called with something in the parentheses that can be
+# checked to see if it's a real number.
+# True for a Formula if its return value is a real number.
+$answer43 = Value::isRealNumber($for);
+# Must be called by a MathObject.
+# Even if the Context is changed the MathObject this is called on
+# will continue to operate within its original Context.
+$answer44 = $for->{context};
+# Must be called by a MathObject, but doesn't have to be a Formula
+# or evaluated Formula.
+$answer45 = ($for->eval(x=>15))->{equation};
+# Must be called by a MathObject.
+$answer46 = $vec->{correct_ans};
+# Must be called by a MathObject.
+# Returns an array of the data making up the object.
+@answer47 = $vec->{data};
+# Must be called by a MathObject.
+# If the format ends in #, then trailing zeroes get removed
+# after the number is formatted.
+$num->{format} = "%.4f";
+$answer48 = $num->{format};
+# Must be called by a MathObject.
+# Only returns useful values when called by list-type objects.
+$answer49 = $int->{open};
+# Must be called by a MathObject.
+# Only returns useful values when called by list-type objects.
+$answer50 = $vec->{close};
+#-ENDULETH-#
+
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+*Basic MathObject Code*
+
+The following are examples of the variety of methods and properties that are common
+to every MathObject, be it a Number, Interval, Vector, or something else.  Because
+of the nature of some of the examples, not all of them have "fill-in-the blanks"
+style answers.  Also, some of them are not really practical for display in a
+problem; they're more focused on the backend.  Regardless, they can all be useful
+in the right circumstances, so they are demonstrated here.  You can use the
+following links to get more information on them:
+
+[@ htmlLink("http://webwork.maa.org/wiki/Common_MathObject_Methods#.WXdxxq1z2Ch", "Common MathObject Methods") @]*
+
+[@ htmlLink("http://webwork.maa.org/wiki/Common_MathObject_Properties#.WXd32q1z2Cg", "Common MathObject Properties") @]*
+
+$num = [$num]
+
+$for = [$for]
+
+$int = [$int]
+
+$vec = [$vec]
+
+1. value
+
+    Returns an array containing the data representing a MathObject.
+    For an interval, this includes the two endpoints, followed by the
+    opening and closing brackets for the interval.
+
+    $int->value = First endpoint: [___], Second endpoint: [___], Opening bracket: [`[$answer1[2]]`], Closing bracket: [`[$answer1[3]]`] [@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* First blank: 2, Second blank: 5
+
+    *Displayed Answer (after the due date):* First blank: [`[$answer1[0]]`], Second blank: [`[$answer1[1]]`]
+
+2. data
+
+    Returns a reference (in hexadecimal) to the array that represents a MathObject.
+    Not really practical for use in displayed problems.
+
+    $num->data = [`[$answer2]`]
+
+3. length
+
+    The number of elements in the MathObject.  Note: This does not
+    include the parentheses surrounding a vector/interval/etc.
+
+    $vec->length = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 3
+
+    *Displayed Answer (after the due date):* [`[$answer3]`]
+
+4. extract(i)
+
+    Returns the i-th element from the data of a MathObject.  Including multiple
+    numbers (e.g. extract(i,j)) will extract the j-th element from the i-th list
+    in the object.  E.g. This could be used to extract the 3rd element from the
+    2nd row of a matrix.
+
+    $vec->extract(1) = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 4
+
+    *Displayed Answer (after the due date):* [`[$answer4]`]
+
+5. new()
+
+    Creates a new instance of the class that is specified (Real in this case).
+
+    Value::Real->new(5) = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 5
+
+    *Displayed Answer (after the due date):* [`[$answer5]`]
+
+6. make()
+
+    Creates a new instance of the class that is specified (Real in this case),
+    but doesn't use error checking for type conversion.
+
+    Value::Real->make(10) = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 10
+
+    *Displayed Answer (after the due date):* [`[$answer6]`]
+
+7. with()
+
+    Copies the MathObject and sets the specified properties to the specified values.
+    In this example, a Formula object is created with a lower limit of 10 and upper
+    of infinity.
+
+    $for->with(limits=>\[10, Inf]) = [`[$answer7]`]
+
+    Note: This answer cannot be entered, as the limits that are set make WeBWorK
+    complain that it "can't generate enough valid points for comparison".
+    This is a problem that can crop up with formulas at times, and can be resolved
+    by adjusting the limits or adding new test points (see Formula documentation
+    for more info).
+
+8. without()
+
+    Gives a copy of the MathObject with the specified properties removed.
+
+    $for->without("limits") = [$answer8]
+
+    Note: This answer cannot be entered, as the limits that are set make WeBWorK
+    complain that it "can't generate enough valid points for comparison".
+    This is a problem that can crop up with formulas at times, and can be resolved
+    by adjusting the limits or adding new test points (see Formula documentation
+    for more info).
+
+9. copy
+
+    Copies all the data of the MathObject so you actually get a separate new
+    version of the object instead of a new version that points to the same object.
+
+    $num->copy = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 10
+
+    *Displayed Answer (after the due date):* [`[$answer9]`]
+
+10. context
+
+    Returns the Context object in which the MathObject was created.
+    Will not be a string, as it's the Context *object*, not the Context name.
+
+    $int->context = Interval Context object
+
+11. context()
+
+    Sets the context of $num to be the same as $for's context, then returns $num's
+    new context.  In this case, it means setting $num's context to Formula
+    instead of Numeric.  Will not return a string, as it returns the Context
+    *object*, not the Context name.
+
+    $num->context($for->context) = Formula Context object
+
+12. inContext()
+
+    Sets $num's context to $for's, then returns $num.
+    In this example, sets $num to be a Formula object, then returns 10, as its
+    value doesn't actually change.
+
+    $num->inContext($for->context) = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 10
+
+    *Displayed Answer (after the due date):* [`[$answer12]`]
+
+13. getFlag()
+
+    Returns the object's value for a specific flag.
+    Can be useful in custom answer checkers.
+
+    $num->getFlag("tolerance") = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 0.001
+
+    *Displayed Answer (after the due date):* [`[$answer13]`]
+
+14. typeMatch()
+
+    Returns true if $num and $for are compatible for equality comparisons.
+    E.g. A Real number can be compared to a Complex number, but not to a Formula.
+
+    $num->typeMatch($for) = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 0
+
+    *Displayed Answer (after the due date):* [`[$answer14]`]
+
+15. class
+
+    Tells what class the object is.
+
+    $for->class = [__________]
+
+    *Correct Answer(s):* Formula
+
+    *Displayed Answer (after the due date):* [`[$answer15]`]
+
+16. type
+
+    Tells what return type the object has.
+
+    $for->type = [___________]
+
+    *Correct Answer(s):* Number
+
+    *Displayed Answer (after the due date):* [`[$answer16]`]
+
+17. TeX
+
+    Returns a string representing the object in TeX format.
+
+    $for->TeX = [_________]
+
+    *Correct Answer(s):* \\sqrt{x-10}
+
+    *Displayed Answer (after the due date):* [$answer17]
+
+18. string
+
+    Returns a string similar to the one used to create the object.
+    This is how the object would be created using the Compute function as well
+    as how the student would type the object in an answer blank.
+
+    $vec->string = [__________][@ AnswerFormatHelp("vectors") @]*
+
+    *Correct Answer(s):* <4,8,12> or <2,4,6> + <2,4,6>
+
+    *Displayed Answer (after the due date):* [`[$answer18]`]
+
+19. perl
+
+    Returns a string that represents the object as Perl source code.
+
+    $num->perl = [_________________]
+
+    *Correct Answer(s):* Value::Real->new(10)
+
+    *Displayed Answer (after the due date):* [$answer19]
+
+20. eval()
+
+    Evaluates the object with the variables replaced by the specified values.
+    Generally only useful for Formula objects (can specify multiple variable/value
+    pairs in a comma-separated list), but is available on all objects so that
+    type-checking is not needed.
+
+    $for->eval(x=>10) = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 0
+
+    *Displayed Answer (after the due date):* [`[$answer20]`]
+
+21. isZero
+
+    Returns 1 if the object corresponds to whatever zero means for its class.
+    E.g. "0" for Reals, zero vector for vectors, etc.  Else, returns 0.
+
+    $int->isZero = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 0
+
+    *Displayed Answer (after the due date):* [`[$answer21]`]
+
+22. isOne
+
+    Returns 1 if the object corresponds to whatever one means for its class.
+    E.g. Identity matrix for matrices, etc.  Else, returns 0.
+
+    $vec->isOne = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 0
+
+    *Displayed Answer (after the due date):* [`[$answer22]`]
+
+23. isSetOfReals
+
+    Returns 1 if the MathObject is an interval, set, or union (or a subclass of them),
+    and 0 otherwise.  As its name suggests, checks to see if the object is a set
+    of real numbers.
+
+    $int->isSetOfReals = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 1
+
+    *Displayed Answer (after the due date):* [`[$answer23]`]
+
+24. canBeInUnion
+
+    Returns 1 if the MathObject is one that could be used in a union (e.g. interval, set)
+    or whose string representation could look like an interval
+    a Point with two coordinates where the first is less than the right).
+
+    $vec->canBeInUnion = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 0
+
+    *Displayed Answer (after the due date):* [`[$answer24]`]
+
+25. showClass
+
+    Returns a string representing the MathObject's class in a format suitable
+    for error messages.
+
+    $num->showClass = [__________________]
+
+    *Correct Answer(s):* a Real Number
+
+    *Displayed Answer (after the due date):* [`[$answer25]`]
+
+26. showType
+
+    Returns a string representing the MathObject's type in a format suitable
+    for error messages.  Note that this is not always the same as its class,
+    particularly in the case of Formulas.  It corresponds to the MathObject's
+    return type.
+
+    $vec->showType = [__________________]
+
+    *Correct Answer(s):* a Vector
+
+    *Displayed Answer (after the due date):* [`[$answer26]`]
+
+27. inherit()
+
+    Copies the properties from the argument MathObject that are not already present
+    in the target MathObject.
+
+    $int->inherit($vec) = [_____][@ AnswerFormatHelp("intervals") @]*
+
+    *Correct Answer(s):* [|[2,5]|]
+
+    *Displayed Answer (after the due date):* [`[$answer27]`]
+
+28. noinherit
+
+    Returns the list of properties that should not be copied by inherit().
+
+    $int->noinherit = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 0
+
+    *Displayed Answer (after the due date):* [`[$answer28]`]
+
+29. NameForNumber
+
+    Returns a string version of the number that is useful for error messages,
+    e.g. "first", "second", etc.
+
+    Value->NameForNumber(10) = [_________]
+
+    *Correct Answer(s):* tenth
+
+    *Displayed Answer (after the due date):* [`[$answer29]`]
+
+30. contextSet()
+
+    Sets the given flags to the given values in the given context, then returns a
+    hash representing the flags and their original settings.  Good for temporarily
+    changing flags for an object while making it easy to restore them later by simply
+    referencing the hash object.  Not really practical for display, though.
+    Note that this hash object has to be stored in a perl variable to be referenced later.
+
+    Value::contextSet($for->context, reduceConstants=>1, reduceConstantFunctions=>0) = [`[$answer30]`]
+
+31. protectHTML()
+
+    Gives a string in HTML where special characters have been properly escaped.
+
+    Value::protectHTML("Let\'s type some weird characters <>&%") = [_________________________________________]
+
+    *Correct Answer(s):* Let\'s type some weird characters &lt;&gt;&amp;%
+
+    *Displayed Answer (after the due date):* _[$answer31]_
+
+32. preformat()
+
+    Same as protectHTML, except that newline characters get replaced by <br />.
+
+    Value::preformat("><%$\\n") = [______________________________________]
+
+    *Correct Answer(s):* &gt;&lt;%<br />
+
+    *Displayed Answer (after the due date):* _[$answer32]_
+
+33. makeValue()
+
+    Attempts to convert the data to an appropriate MathObject and returns that.
+
+    Value::makeValue(25) = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 25
+
+    *Displayed Answer (after the due date):* [`[$answer33]`]
+
+34. matchInfinite()
+
+    Returns 1 if the provided string would be interpreted as an infinity in the
+    current context, and undef otherwise.
+
+    Value::matchInfinite("Inf") = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 1
+
+    *Displayed Answer (after the due date):* [`[$answer34]`]
+
+35. classMatch()
+
+    Returns 1 if $num belongs to any of the provided classes, and 0 otherwise.
+
+    Value::classMatch($num, "Vector", "Formula", "Interval") = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 0
+
+    *Displayed Answer (after the due date):* [`[$answer35]`]
+
+36. isContext()
+
+    Returns 1 if $int references a Context object, and undef otherwise.
+    However, "undef" just displays as a blank answer, hence why the answer
+    is hardcoded here with no answer blank.  As a result, generally only for internal use.
+
+    Value::isContext($int) = undef
+
+37. isParser()
+
+    Returns 1 if $int is part of a parse tree for a Formula object, and undef
+    otherwise.  However, "undef" just displays as a blank answer, hence why the answer
+    is hardcoded here with no answer blank.  As a result, generally only for internal use.
+    Basically, if the MathObject can be used for parsing answers, a 1 will be returned.
+
+    Value::isParser($int) = undef
+
+38. isValue()
+
+    Returns 1 if $int is a MathObject, and undef otherwise.
+
+    Value::isValue($int) = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 1
+
+    *Displayed Answer (after the due date):* [`[$answer38]`]
+
+39. isFormula()
+
+    Returns 1 if $for is a Formula, and 0 otherwise.
+
+    Value::isFormula($for) = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 1
+
+    *Displayed Answer (after the due date):* [`[$answer39]`]
+
+40. isReal()
+
+    Returns 1 if $num is a Real, and 0 otherwise.
+
+    Value::isReal($num) = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 1
+
+    *Displayed Answer (after the due date):* [`[$answer40]`]
+
+41. isComplex
+
+    Returns 1 if $num is a Complex, and 0 otherwise.
+    Shorthand for Value::classMatch($num, "Complex").
+
+    Value::isComplex($num) = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 0
+
+    *Displayed Answer (after the due date):* [`[$answer41]`]
+
+42. isNumber
+
+    Returns 1 if $num is a number, and undef otherwise.
+    True for a Formula if its return value is a number.
+
+    Value::isNumber($num) = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 1
+
+    *Displayed Answer (after the due date):* [`[$answer42]`]
+
+43. isRealNumber()
+
+    Returns 1 if $for is a real number, and undef otherwise.
+    True for a Formula if its return value is a number.
+
+    Value::isRealNumber($for) = [_____][@ AnswerFormatHelp("numbers") @]*
+
+    *Correct Answer(s):* 1
+
+    *Displayed Answer (after the due date):* [`[$answer43]`]
+
+44. {context}
+
+    Returns the Context object under which the MathObject was created.
+    Only useful internally in the event that you want to fetch the Context
+    for a particular MathObject.
+
+    $for->{context} = [`[$answer44]`]
+
+45. {equation}
+
+    Returns the Formula object from which a MathObject was created.
+    This is the actual string that the Formula was created from, and entering it
+    causes the parser to attempt to read it as a Formula to evaluate.  As such,
+    there is no answer blank for the answer.
+
+    ($for->eval(x=>15))->{equation} = _[$answer45]_
+
+46. {correct_ans}
+
+    The string that will be shown as the correct answer to students
+    after the due date.
+
+    $vec->{correct_ans} = [__________]
+
+    *Correct Answer(s):* <4,8,12>
+
+    *Displayed Answer (after the due date):* [`[$answer46]`]
+
+47. {data}
+
+    Returns an array containing the information defining the MathObject.
+    Only necessary for internal use if you need to extract information from a particular
+    MathObject.  Even then, only use it if you know what you're doing.
+
+    $vec->{data} = [`[$answer47[0]]`]
+
+48. {format}
+
+    Lets you get/set the number formatting used when displaying the MathObject.
+
+    $num->{format} = [_____]
+
+    *Correct Answer(s):* %.4f
+
+    *Displayed Answer (after the due date):* [`[$answer48]`]
+
+49. {open}
+
+    Shows the symbol used at the left of a list object when it's displayed.
+
+    $int->{open} = [`[$answer49]`]
+
+50. {close}
+
+    Shows the symbol used at the right of a list object when it's displayed.
+
+    $vec->{close} = [`[$answer50]`]
+
+51. {noinherit}
+
+    Gives a list of property names that will not be copied over if the
+    MathObject is copied.
+
+    $num->{noinherit} = There are no properties that will not be copied over.
+
+52. {isValue}
+
+    Sets whether the MathObject is a member of the Value package,
+    which determines whether it has access to the common MathObject methods.
+
+    Example syntax: $for->{isValue} = 1;
+
+53. {isVector}
+
+    Sets whether the MathObject is a member of a particular class.
+
+    Example syntax: $vec->{isVector} = 1;
+END_PGML
+#-ENDULETH-#
+
+#############################
+#   Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+ANS(Compute($answer1[0])->cmp());
+ANS(Compute($answer1[1])->cmp());
+ANS(Compute($answer3)->cmp());
+ANS(Compute($answer4)->cmp());
+ANS(Compute($answer5)->cmp());
+ANS(Compute($answer6)->cmp());
+ANS(Compute($answer9)->cmp());
+ANS(Compute($answer12)->cmp());
+ANS(Compute($answer13)->cmp());
+ANS(Compute($answer14)->cmp());
+# Uses str_cmp so the answer string is properly processed.
+ANS(str_cmp($answer15));
+# Uses str_cmp so the answer string is properly processed.
+ANS(str_cmp($answer16));
+# Uses str_cmp so the answer string is properly processed.
+ANS(str_cmp($answer17));
+ANS(Compute($answer18)->cmp());
+# Uses str_cmp so the answer string is properly processed.
+ANS(str_cmp($answer19));
+ANS(Compute($answer20)->cmp());
+ANS(Compute($answer21)->cmp());
+ANS(Compute($answer22)->cmp());
+ANS(Compute($answer23)->cmp());
+ANS(Compute($answer24)->cmp());
+# Uses str_cmp so the answer string is properly processed.
+ANS(str_cmp($answer25));
+# Uses str_cmp so the answer string is properly processed.
+ANS(str_cmp($answer26));
+ANS(Compute($answer27)->cmp());
+ANS(Compute($answer28)->cmp());
+# Uses str_cmp so the answer string is properly processed.
+ANS(str_cmp($answer29));
+# Uses str_cmp so the answer string is properly processed.
+ANS(str_cmp($answer31));
+# Uses str_cmp so the answer string is properly processed.
+ANS(str_cmp($answer32));
+ANS(Compute($answer33)->cmp());
+ANS(Compute($answer34)->cmp());
+ANS(Compute($answer35)->cmp());
+ANS(Compute($answer38)->cmp());
+ANS(Compute($answer39)->cmp());
+ANS(Compute($answer40)->cmp());
+ANS(Compute($answer41)->cmp());
+ANS(Compute($answer42)->cmp());
+ANS(Compute($answer43)->cmp());
+ANS(Compute($answer46)->cmp());
+# Uses str_cmp so the answer string is properly processed.
+ANS(str_cmp($answer48));
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Can be used to show the student the solution to the problem.
+
+# Similar to BEGIN_PGML, marks the start of the solution text.
+BEGIN_PGML_SOLUTION
+
+# Solution explanation goes here.  Layout as you would with the problem text.
+
+# Marks the end of the solution text.
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+# Marks the end of the problem document.
+ENDDOCUMENT();

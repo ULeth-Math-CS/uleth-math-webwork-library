@@ -1,0 +1,200 @@
+## Date(2017-07-13)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+
+=pod Basic Information:
+  A constructor for a MathObject is what is used to create the object for later
+  use in the problem.  The basic constructor is Compute("").  Whatever is between
+  the quotes will be automatically parsed into the proper type of object (be it
+  a Number, and Interval, or something else) depending on the currently-set Context.
+
+  The Context is what determines the types and restrictions on MathObjects.  The
+  default Context is "Numeric", though this can be changed by calling Context("")
+  and entering the new Context between the quotes.  Note that certain Contexts may
+  require you to load new macro files.  This can be done in the loadMacros() call
+  near the top of the program.
+
+  The -> sign is an operator that is used by MathObjects to "call" different pieces
+  of functionality.  Think of it as a "specifier".  If you have a Vector MathObject,
+  it can have different properties, e.g. Opening bracket type, closing bracket type, etc.
+  You can also do different things to it, like getting its length, taking the negation
+  of it, or determining the dot product of it and another Vector.  However, if you just
+  reference the Vector, you are simply referencing an object that can be manipulated by
+  this information.  What the -> operator does is allow you to specify which specific
+  functionality you want to use.  For instance, if you have a Vector MathObject $v, then
+  calling $v->neg will give you the negation of $v.  If you just enter neg, there's no
+  way of knowing which specific Vector you want to negate.
+
+  An important thing to note with the -> operator is that there is no error-checking when
+  calling methods and properties.  Thus, if you attempt to call a method or property from
+  a MathObject that does not support it, the question will not render, you will get error
+  messages, and in all likelihood, screaming and crying will ensue.  You have been warned.
+
+  To prevent long expansions of decimals from appearing, set the default number of decimal
+  places to display (in the course configuration menu), or round numeric values before
+  displaying them.
+
+  Answer checker options that are set in one question will apply to every subsequent question
+  until a new value for the option is specified.
+=cut
+
+
+##############################
+#  Initialization
+
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+
+#-ULETH-#
+# Includes variables x, y, and z by default.
+Context("Point");
+
+$answerA = Compute("(3,1)");
+$answerB = Compute("(x,y)");
+# Can only add Points with the same dimensions.
+$answerC = Compute($answerA + $answerA);
+# Can only subtract Points with the same dimensions.
+$answerD = Compute($answerA - $answerA);
+# Can only multiply a Point by a scalar.
+$answerE = Compute($answerA * 3);
+# Can only divide a Point by a scalar.
+$answerF = Compute($answerA / 2);
+#-ENDULETH-#
+
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+*Points*
+
+Points are generally delimited using parentheses, which is what will be used in
+this and other examples.
+
+When displaying points in regular text (as opposed to LaTeX),
+it is good practice to enclose the value in "verbatim" brackets in your code, i.e. [||[| |]||].
+An example is [||[| (1,2) |]||].  What these do is ensure that the brackets enclosing
+the value are interpreted as being part of that value, rather than being special
+characters for PGML to process.  This has been done for all the values in this
+problem so that they display properly and remain consistent.
+
+If you want to prevent students from entering operators in their answers (and
+cheating the question by entering the question as their answer), you can undefine
+operators after implementing them in your answer values.  The same goes for functions
+like sqrt, log, and sin, though these have to be disabled in the Context instead
+of being undefined.
+
+Answer the following.
+
+a. Numeric Point
+
+    Enter the point [`[$answerA]`].  [__________][@ AnswerFormatHelp("points") @]*
+
+    *Correct Answer(s):* [|(3,1)|]
+
+    *Displayed Answer (after the due date):* [`[$answerA]`]
+
+    *Special Answer Checker Options for this Question:* Doesn't show how many coordinates are wrong.
+
+b. Variable Point
+
+    Enter the point [`[$answerB]`].  [__________][@ AnswerFormatHelp("points") @]*
+
+    *Correct Answer(s):* [|(x,y)|]
+
+    *Displayed Answer (after the due date):* [`[$answerB]`]
+
+c. Addition
+
+    What is [`[$answerA] + [$answerA]`]?  [__________][@ AnswerFormatHelp("points") @]*
+
+    *Correct Answer(s):* [|(6,2)|]
+
+    *Displayed Answer (after the due date):* [`[$answerC]`]
+
+d. Subtraction
+
+    What is [`[$answerA] - [$answerA]`]?  [__________][@ AnswerFormatHelp("points") @]*
+
+    *Correct Answer(s):* [|(0,0)|]
+
+    *Displayed Answer (after the due date):* [`[$answerD]`]
+
+e. Multiplication
+
+    What is [`[$answerA] * 3`]?  [__________][@ AnswerFormatHelp("points") @]*
+
+    *Correct Answer(s):* [|(9,3)|]
+
+    *Displayed Answer (after the due date):* [`[$answerE]`]
+
+    *Special Answer Checker Options for this Question:* Doesn't show which answers are right.
+
+f. Division
+
+    What is [`[$answerA] / 2`]?  [__________][@ AnswerFormatHelp("points") @]*
+
+    *Correct Answer(s):* [|(1.5,0.5)|] *or* [|(3/2,1/2)|]
+
+    *Displayed Answer (after the due date):* [`[$answerF]`]
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#   Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# Doesn't show how many coordinates are wrong.
+ANS($answerA->cmp(showDimensionHints=>0));
+ANS($answerB->cmp());
+ANS($answerC->cmp());
+ANS($answerD->cmp());
+# Doesn't show which answers are right.
+ANS($answerE->cmp(showCoordinateHints=>0));
+ANS($answerF->cmp());
+#-ENDULETH-#
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Can be used to show the student the solution to the problem.
+
+# Similar to BEGIN_PGML, marks the start of the solution text.
+BEGIN_PGML_SOLUTION
+
+# Solution explanation goes here.  Layout as you would with the problem text.
+
+# Marks the end of the solution text.
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+# Marks the end of the problem document.
+ENDDOCUMENT();

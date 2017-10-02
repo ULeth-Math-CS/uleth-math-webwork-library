@@ -1,0 +1,601 @@
+## Date(2017-07-13)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson)
+
+=pod Basic Information:
+  A constructor for a MathObject is what is used to create the object for later
+  use in the problem.  The basic constructor is Compute("").  Whatever is between
+  the quotes will be automatically parsed into the proper type of object (be it
+  a Number, and Interval, or something else) depending on the currently-set Context.
+
+  The Context is what determines the types and restrictions on MathObjects.  The
+  default Context is "Numeric", though this can be changed by calling Context("")
+  and entering the new Context between the quotes.  Note that certain Contexts may
+  require you to load new macro files.  This can be done in the loadMacros() call
+  near the top of the program.
+
+  The -> sign is an operator that is used by MathObjects to "call" different pieces
+  of functionality.  Think of it as a "specifier".  If you have a Vector MathObject,
+  it can have different properties, e.g. Opening bracket type, closing bracket type, etc.
+  You can also do different things to it, like getting its length, taking the negation
+  of it, or determining the dot product of it and another Vector.  However, if you just
+  reference the Vector, you are simply referencing an object that can be manipulated by
+  this information.  What the -> operator does is allow you to specify which specific
+  functionality you want to use.  For instance, if you have a Vector MathObject $v, then
+  calling $v->neg will give you the negation of $v.  If you just enter neg, there's no
+  way of knowing which specific Vector you want to negate.
+
+  An important thing to note with the -> operator is that there is no error-checking when
+  calling methods and properties.  Thus, if you attempt to call a method or property from
+  a MathObject that does not support it, the question will not render, you will get error
+  messages, and in all likelihood, screaming and crying will ensue.  You have been warned.
+
+  To prevent long expansions of decimals from appearing, set the default number of decimal
+  places to display (in the course configuration menu), or round numeric values before
+  displaying them.
+
+  Answer checker options that are set in one question will apply to every subsequent question
+  until a new value for the option is specified.
+=cut
+
+
+##############################
+#  Initialization
+
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  "contextInequalities.pl",
+  "parserRadioButtons.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+
+#-ULETH-#
+Context("Interval");
+# Intervals can be defined with open or closed endpoints on either side.
+$answerAi = Compute("[2,5]");
+$answerAii = Compute("(2,5)");
+$answerAiii = Compute("(-Inf,5]");
+$answerAiv = Compute("[2,Inf)");
+# Unions require an operand on either side, but each operand can be an
+# Interval or Set.
+$answerAv = Compute("(-Inf,7/2) U (7/2,Inf)");
+$answerAvi = Compute("[-3,3]");
+# The argument to intersect() ($answerAi in this example) can be an Interval,
+# Set, or inequality.
+$answerAvii = $answerAv->intersect($answerAi);
+
+# The argument to intersects() ($answerAii in this example) can be an Interval,
+# Set, or inequality.
+if ($answerAi->intersects($answerAii))
+{
+  $answerAviii = RadioButtons(["True", "False"], "True");
+}
+else
+{
+  $answerAviii = RadioButtons(["True", "False"], "False");
+}
+
+# The argument to isSubsetOf() ($answerAv in this example) can be an Interval,
+# Set, or inequality.
+if ($answerAi->isSubsetOf($answerAv))
+{
+  $answerAix = RadioButtons(["True", "False"], "True");
+}
+else
+{
+  $answerAix = RadioButtons(["True", "False"], "False");
+}
+
+Context("Inequalities-Only")->variables->are(x=>"Real");
+$answerBi = Compute("2 <= x <= 5");
+$answerBii = Compute("2 < x < 5");
+$answerBiii = Compute("x <= 5");
+$answerBiv = Compute("x != 7/2");
+# U cannot be used to get the union of two intervals; you have to use "or".
+$answerBv = Compute("(x <= -3) or (x >= 3)");
+$answerBvi = $answerBi->intersect($answerBiv);
+
+if ($answerBi->intersects($answerBii))
+{
+  $answerBvii = RadioButtons(["True", "False"], "True");
+}
+else
+{
+  $answerBvii = RadioButtons(["True", "False"], "False");
+}
+
+if ($answerBi->isSubsetOf($answerBv))
+{
+  $answerBviii = RadioButtons(["True", "False"], "True");
+}
+else
+{
+  $answerBviii = RadioButtons(["True", "False"], "False");
+}
+
+# Sets
+Context("Interval");
+# Automatically removes duplicate elements in the set.
+Context()->flags->set(reduceSets=>1);
+$answerCi = Compute("{sqrt(2),pi,-7,0}");
+$simpleSet = Compute("{1,2,3,4}");
+$answerCii = Compute("$answerCi U $simpleSet");
+$answerCiii = $answerCii - $answerCi;
+$answerCiv = $answerAi - Compute("{2}");
+$answerCv = $answerCi->intersect($answerCii);
+
+if ($answerCi->intersects($answerCii))
+{
+  $answerCvi = RadioButtons(["True", "False"], "True");
+}
+else
+{
+  $answerCvi = RadioButtons(["True", "False"], "False");
+}
+
+if ($answerCi->isSubsetOf($answerCv))
+{
+  $answerCvii = RadioButtons(["True", "False"], "True");
+}
+else
+{
+  $answerCvii = RadioButtons(["True", "False"], "False");
+}
+
+if ($answerCi->isEmpty)
+{
+  $answerCviii = RadioButtons(["True", "False"], "True");
+}
+else
+{
+  $answerCviii = RadioButtons(["True", "False"], "False");
+}
+
+if ($answerCi->isReduced)
+{
+  $answerCix = RadioButtons(["True", "False"], "True");
+}
+else
+{
+  $answerCix = RadioButtons(["True", "False"], "False");
+}
+
+$answerCx = $answerCi->reduce;
+$answerCxi = $answerCi->sort;
+
+# Undefine operators so students can't answer questions by entering the question.
+Context()->operators->undefine('-');
+#-ENDULETH-#
+
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+*Intervals, Inequalities, and Sets*
+
+WeBWorK supports the use of intervals, inequalities, and sets in problems, and
+they can be used either in conjunction with one another or independently.
+However, if you want to limit their usage, you will have to modify the Context of
+the problem.  Otherwise, you can run into situations where students are entering
+intervals when you want inequalities or inequalities when you want sets.
+
+When displaying intervals and sets in regular text (as opposed to LaTeX),
+it is good practice to enclose the value in "verbatim" brackets in your code, i.e. [||[| |]||].
+An example is [||[| {1,2,3,4} |]||].  What these do is ensure that the brackets enclosing
+the value are interpreted as being part of that value, rather than being special
+characters for PGML to process.  For consistency's sake, you can also enclose
+inequalities in these brackets.  This has been done for all the values in this
+problem so that they display properly and remain consistent.
+
+If you want to prevent students from entering operators in their answers (and
+cheating the question by entering the question as their answer), you can undefine
+operators after implementing them in your answer values or (in the case of Inequalities),
+change the Context to only support the particular value type you want in the answer.
+The same goes for functions like sqrt, log, and sin, though these have to be
+disabled in the Context instead of being undefined.
+
+*a. Intervals*
+
+    Write the following inequalities in interval or set notation:
+
+    i. Closed Interval
+
+        [`2 \leq x \leq 5`] is equivalent to [`x\in `][__________][@ AnswerFormatHelp("intervals") @]*
+
+        *Correct Answer(s):* [|[2,5]|]
+
+        *Displayed Answer (after the due date):* [`[$answerAi]`]
+
+        *Special Answer Checker Options for this Question:* Don't show messages about which endpoints are correct.
+
+    ii. Open Interval
+
+        [`2 < x < 5`] is equivalent to [`x\in `][__________][@ AnswerFormatHelp("intervals") @]*
+
+        *Correct Answer(s):* [|(2,5)|]
+
+        *Displayed Answer (after the due date):* [`[$answerAii]`]
+
+        *Special Answer Checker Options for this Question:* Show messages about which endpoints are correct.
+
+    iii. Negative Infinity
+
+        [`x \leq 5`] is equivalent to [`x\in `][__________][@ AnswerFormatHelp("intervals") @]*
+
+        *Correct Answer(s):* [|(-Inf,5]|]
+
+        *Displayed Answer (after the due date):* [`[$answerAiii]`]
+
+        *Special Answer Checker Options for this Question:* Don't show messages about whether the open/closed status of endpoints are correct.
+
+    iv. Positive Infinity
+
+        [`x \geq 2`] is equivalent to [`x\in `][__________][@ AnswerFormatHelp("intervals") @]*
+
+        *Correct Answer(s):* [|[2,Inf)|]
+
+        *Displayed Answer (after the due date):* [`[$answerAiv]`]
+
+        *Special Answer Checker Options for this Question:* Show messages about whether the open/closed status of endpoints are correct.
+
+    v. Not Equal
+
+        [`x \neq \frac{7}{2}`] is equivalent to [`x\in `][____________________][@ AnswerFormatHelp("intervals") @]*
+
+        *Correct Answer(s):* [|(-Inf,3.5)U(3.5,Inf)|]
+
+        *Displayed Answer (after the due date):* [`[$answerAv]`]
+
+        *Special Answer Checker Options for this Question:* Don't require the open/closed status of endpoints to be correct.
+
+    vi. Absolute Value
+
+        [`|x| \leq 3`] is equivalent to [`x\in `][__________][@ AnswerFormatHelp("intervals") @]*
+
+        *Correct Answer(s):* [|[-3,3]|]
+
+        *Displayed Answer (after the due date):* [`[$answerAvi]`]
+
+        *Special Answer Checker Options for this Question:* Require the open/closed status of endpoints to be correct.
+
+    vii. Intersection
+
+        What is [`[$answerAi] \cap ([$answerAv])`]? [____________________][@ AnswerFormatHelp("intervals") @]*
+
+        *Correct Answer(s):* [|[2,3.5)U(3.5,5]|]
+
+        *Displayed Answer (after the due date):* [`[$answerAvii]`]
+
+    viii. Intersects True/False
+
+        [`[$answerAi]`] intersects [`[$answerAii]`].
+
+        [@ $answerAviii->buttons() @]*
+
+        *Correct Answer(s):* [$answerAviii]
+
+        *Displayed Answer (after the due date):* _[$answerAviii]_
+
+    ix. Subset True/False
+
+        [`[$answerAi]`] is a subset of [`[$answerAv]`].
+
+        [@ $answerAix->buttons() @]*
+
+        *Correct Answer(s):* [$answerAix]
+
+        *Displayed Answer (after the due date):* _[$answerAix]_
+
+*b. Inequalities*
+
+    Write the following intervals as inequalities:
+
+    i. Less Than or Equal To
+
+        [`x\in [2,5]`] is equivalent to [__________][@ AnswerFormatHelp("inequalities") @]*
+
+        *Correct Answer(s):* [|2 <= x <= 5|] *or* [|5 >= x >= 2|]
+
+        *Displayed Answer (after the due date):* [`[$answerBi]`]
+
+        *Special Answer Checker Options for this Question:* Don't show messages about which endpoints are correct.
+
+    ii. Less Than
+
+        [`x\in (2,5)`] is equivalent to [__________][@ AnswerFormatHelp("inequalities") @]*
+
+        *Correct Answer(s):* [|2 < x < 5|] *or* [|5 > x > 2|]
+
+        *Displayed Answer (after the due date):* [`[$answerBii]`]
+
+        *Special Answer Checker Options for this Question:* Show messages about which endpoints are correct.
+
+    iii. No Minimum Value
+
+        [`x\in (-\infty,5]`] is equivalent to [__________][@ AnswerFormatHelp("inequalities") @]*
+
+        *Correct Answer(s):* [|x <= 5|] *or* [|5 >= x|]
+
+        *Displayed Answer (after the due date):* [`[$answerBiii]`]
+
+        *Special Answer Checker Options for this Question:* Don't show messages about whether the open/closed status of endpoints are correct.
+
+    iv. Not Equal
+
+        [`x\in (-\infty,7/2)\cup(7/2,\infty)`] is equivalent to [__________][@ AnswerFormatHelp("inequalities") @]*
+
+        *Correct Answer(s):* [|x != 3.5|] *or* [|3.5 != x|] *or* [|x<3.5 or x>3.5|]
+
+        *Displayed Answer (after the due date):* [`[$answerBiv]`]
+
+        *Special Answer Checker Options for this Question:* Show messages about whether the open/closed status of endpoints are correct.
+
+    v. Union
+
+        [`x\in (-\infty,-3]\cup[3,\infty)`] is equivalent to [__________][@ AnswerFormatHelp("inequalities") @]*
+
+        *Correct Answer(s):* [|x <= -3 or x >= 3|] *or* [|-3 >= x or 3 <= x|]
+
+        *Displayed Answer (after the due date):* [`[$answerBv]`]
+
+        *Special Answer Checker Options for this Question:* Don't require the open/closed status of endpoints to be correct.
+
+    vi. Intersection
+
+        What is [`[$answerBi] \cap [$answerBiv]`]? [____________________][@ AnswerFormatHelp("inequalities") @]*
+
+        *Correct Answer(s):* [|2 <= x <= 5 and x != 3.5|] *or* [|5 >= x >= 2 and 3.5 != x|]
+
+        [$answerBi]
+
+        [$answerBiv]
+
+        [$answerBvi]
+
+        *Displayed Answer (after the due date):* [`[$answerBvi]`]
+
+        *Special Answer Checker Options for this Question:* Require the open/closed status of endpoints to be correct.
+
+    vii. Intersects True/False
+
+        [`[$answerBi]`] intersects [`[$answerBii]`].
+
+        [@ $answerBvii->buttons() @]*
+
+        *Correct Answer(s):* [$answerBvii]
+
+        *Displayed Answer (after the due date):* _[$answerBvii]_
+
+    viii. Subset True/False
+
+        [`[$answerBi]`] is a subset of [`[$answerBv]`].
+
+        [@ $answerBviii->buttons() @]*
+
+        *Correct Answer(s):* [$answerBviii]
+
+        *Displayed Answer (after the due date):* _[$answerBviii]_
+
+*c. Sets*
+
+    i. Basic Set
+
+        Enter a set containing [`\pi, 0, \sqrt{2}, -7`]: [____________________]
+
+        *Correct Answer(s):* [|{sqrt(2),pi,-7,0}|]
+
+        *Displayed Answer (after the due date):* [`[$answerCi]`]
+
+        *Special Answer Checker Options for this Question:* Don't show messages about which entries are incorrect.
+
+    ii. Set Union
+
+        What is [`[$answerCi] U \{1,2,3,4\}`]? [____________________]
+
+        *Correct Answer(s):* [|{-7,0,1,sqrt(2),2,3,pi,4}|]
+
+        *Displayed Answer (after the due date):* [`[$answerCii]`]
+
+        *Special Answer Checker Options for this Question:* Show messages about which entries are incorrect.
+
+    iii. Set Difference
+
+        What is [`[$answerCii] - [$answerCi]`]? [____________________]
+
+        *Correct Answer(s):* [|{1,2,3,4}|]
+
+        *Displayed Answer (after the due date):* [`[$answerCiii]`]
+
+        *Special Answer Checker Options for this Question:* Don't show messages about having the incorrect number of answers.
+
+    iv. Interval Minus Set
+
+        What is [`[$answerAi] - \{2\}`]? [____________________]
+
+        *Correct Answer(s):* [|(2,5]|]
+
+        *Displayed Answer (after the due date):* [`[$answerCiv]`]
+
+        *Special Answer Checker Options for this Question:* Show messages about having the incorrect number of answers.
+        Only do so if all student answers are correct, but they don't have enough,
+        or if all correct answers are present along with some extras.
+
+    v. Set Intersection
+
+        What is [`[$answerCi] \cap [$answerCii]`]? [____________________]
+
+        *Correct Answer(s):* [|{-7,0,0,sqrt(2),pi}|]
+
+        *Displayed Answer (after the due date):* [`[$answerCv]`]
+
+        *Special Answer Checker Options for this Question:* Don't give partial credit when some, but not all answers are right.
+
+    vi. Intersects True/False
+
+        [`[$answerCi]`] intersects [`[$answerCii]`].
+
+        [@ $answerCvi->buttons() @]*
+
+        *Correct Answer(s):* [$answerCvi]
+
+        *Displayed Answer (after the due date):* _[$answerCvi]_
+
+        *Special Answer Checker Options for this Question:* Give partial credit when some, but not all answers are right..
+
+    vii. Subset True/False
+
+        [`[$answerCi]`] is a subset of [`[$answerCv]`].
+
+        [@ $answerCvii->buttons() @]*
+
+        *Correct Answer(s):* [$answerCvii]
+
+        *Displayed Answer (after the due date):* _[$answerCvii]_
+
+        *Special Answer Checker Options for this Question:* Don't show messages about which endpoints are correct.
+
+    viii. Empty Set True/False
+
+        [`[$answerCi]`] is empty.
+
+        [@ $answerCviii->buttons() @]*
+
+        *Correct Answer(s):* [$answerCviii]
+
+        *Displayed Answer (after the due date):* _[$answerCviii]_
+
+        *Special Answer Checker Options for this Question:* Show messages about having the correct type of delimiters.
+        Also, require the parentheses in the student's answer to match the prof's.
+
+    ix. Set Reduction True/False
+
+        [`[$answerCi]`] is reduced.
+
+        [@ $answerCix->buttons() @]*
+
+        *Correct Answer(s):* [$answerCix]
+
+        *Displayed Answer (after the due date):* _[$answerCix]_
+
+    x. Set Reduction
+
+        Reduce [`[$answerCi]`]. [____________________]
+
+        *Correct Answer(s):* [|{-7,0,sqrt(2),pi}|]
+
+        *Displayed Answer (after the due date):* [`[$answerCx]`]
+
+    xi. Set Sorting
+
+        Sort [`[$answerCi]`] in ascending order. [____________________]
+
+        *Correct Answer(s):* [|{-7,0,0,sqrt(2),pi} |]
+
+        *Displayed Answer (after the due date):* [`[$answerCxi]`]
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#   Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# Don't show messages about which endpoints are correct.
+ANS($answerAi->cmp(showEndpointHints=>0));
+# Show messages about which endpoints are correct.
+ANS($answerAii->cmp(showEndpointHints=>1));
+# Don't show messages about whether the open/closed status of endpoints are correct.
+ANS($answerAiii->cmp(showEndTypeHints=>0));
+# Show messages about whether the open/closed status of endpoints are correct.
+ANS($answerAiv->cmp(showEndTypeHints=>1));
+# Don't require the open/closed status of endpoints to be correct.
+ANS($answerAv->cmp(requireParenMatch=>0));
+# Require the open/closed status of endpoints to be correct.
+ANS($answerAvi->cmp(requireParenMatch=>1));
+ANS($answerAvii->cmp());
+ANS($answerAviii->cmp());
+ANS($answerAix->cmp());
+
+# Don't show messages about which endpoints are correct.
+ANS($answerBi->cmp(showEndpointHints=>0));
+# Show messages about which endpoints are correct.
+ANS($answerBii->cmp(showEndpointHints=>1));
+# Don't show messages about whether the open/closed status of endpoints are correct.
+ANS($answerBiii->cmp(showEndTypeHints=>0));
+# Show messages about whether the open/closed status of endpoints are correct.
+ANS($answerBiv->cmp(showEndTypeHints=>1));
+# Don't require the open/closed status of endpoints to be correct.
+ANS($answerBv->cmp());
+# Require the open/closed status of endpoints to be correct.
+ANS($answerBvi->cmp());
+ANS($answerBvii->cmp());
+ANS($answerBviii->cmp());
+
+# Don't show messages about which entries are incorrect.
+ANS($answerCi->cmp(showHints=>0));
+# Undefine union so it can't be entered into the answer box.
+Context()->operators->undefine('U');
+# Show messages about which entries are incorrect.
+ANS($answerCii->cmp(showHints=>1));
+# Don't show messages about having the incorrect number of answers.
+ANS($answerCiii->cmp(showLengthHints=>0));
+# Show messages about having the incorrect number of answers.
+# Only do so if all student answers are correct, but they don't have enough,
+# or if all correct answers are present along with some extras.
+ANS($answerCiv->cmp(showLengthHints=>1));
+# Don't give partial credit when some, but not all answers are right.
+ANS($answerCv->cmp(partialCredit=>0));
+# Give partial credit when some, but not all answers are right.
+ANS($answerCvi->cmp(partialCredit=>1));
+# Don't show messages about having the correct type of delimiters.
+# Also, don't require the parentheses in the student's answer to match the prof's.
+ANS($answerCvii->cmp(showParenHints=>0, requireParenMatch=>0));
+# Show messages about having the correct type of delimiters.
+# Also, require the parentheses in the student's answer to match the prof's.
+ANS($answerCviii->cmp(showParenHints=>1, requireParenMatch=>1));
+ANS($answerCix->cmp());
+ANS($answerCx->cmp());
+ANS($answerCxi->cmp());
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Can be used to show the student the solution to the problem.
+
+# Similar to BEGIN_PGML, marks the start of the solution text.
+BEGIN_PGML_SOLUTION
+
+# Solution explanation goes here.  Layout as you would with the problem text.
+
+# Marks the end of the solution text.
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+# Marks the end of the problem document.
+ENDDOCUMENT();
