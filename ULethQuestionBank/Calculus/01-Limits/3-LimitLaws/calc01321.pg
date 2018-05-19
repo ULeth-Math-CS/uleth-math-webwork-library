@@ -1,0 +1,101 @@
+## DESCRIPTION
+## This is Problem 1.3.21 from the APEX Calculus text. It covers limits of rational functions.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Limits and continuity)
+## DBsection(Rules of limits - basic)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('1.3')
+## Problem1('21')
+## MO(1)
+## Keywords('limit', 'limits', 'limit laws', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+$a=random(2,21,1);
+
+$ans = "DNE";
+
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+Evaluate the limit.
+
+[``
+   \lim_{x \to 0} \, ([$a] \ln x) =
+``]
+ [___________] [@ AnswerFormatHelp("numbers") @]*
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+#Using 1.3, Theorem 2
+BEGIN_PGML_SOLUTION
+
+The limit does not exist.  As [`x`] approaches 0 from the right,
+[` [$a] \ln x `] becomes unbounded in the negative sense.
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+ANS(num_cmp($ans, strings=>["DNE"]));
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 20 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Note that this limit will never exist.  <BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    

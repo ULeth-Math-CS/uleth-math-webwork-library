@@ -1,0 +1,105 @@
+## DESCRIPTION
+## This is Problem 1.3.22 from the APEX Calculus text. It covers limits of exponentials.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Limits and continuity)
+## DBsection(Rules of limits - basic)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('1.3')
+## Problem1('22')
+## MO(1)
+## Keywords('limit', 'limits', 'limit laws', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+do {$absa = random(1, 4, 1); } until ($absa != 2);
+$a = $absa*random(-1,1,2);
+$b=random(2,8,1);
+do { $c=random(2,10,1)*random(-1,1,2); } until (($b**($a**2 - $c*$a) < 20000) and ($b**($a**2 - $c*$a) >= 1/10) and ($a != $c));
+
+$ans = $b**($a**2 - $c*$a);
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+Evaluate the limit.
+
+[``\lim_{x \to [$a]} [$b]^{x^2 -[$c] x} =``] [___________] [@ AnswerFormatHelp("numbers") @]*
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+#Using 1.3, Theorem 3
+BEGIN_PGML_SOLUTION
+
+Since [`[$b] > 0`], we may evaluate the function inside the limit at [$a] to determine: 
+
+[``  \lim_{x \to [$a]} [$b]^{x^2 - [$c] x}
+  = [$b]^{([$a])^2 - [$c]([$a])}
+  = [$ans].
+``]
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+ANS(num_cmp($ans));
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 120 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    This limit will always exist and falls between 1/10 and 20000  <BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    
+
+
