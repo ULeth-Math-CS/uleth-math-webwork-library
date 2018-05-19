@@ -1,0 +1,130 @@
+## DESCRIPTION
+## This is Problem 1.2.5 from the APEX Calculus text. It covers the varepsilon-delta definition of a limit.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Definition of the derivative)
+## Level(6)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('1.2')
+## Problem1('5')
+## MO(1)
+## Keywords('limit', 'limits', 'proof', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  # Used for dropdown menus
+  "parserRadioButtons.pl"
+);
+
+#############################
+#   Setup
+#-ULETH-#
+$solutionexits=1;
+$a=random(1,10);
+
+$c=random(-10,10);
+$L = $a - $c;
+
+$eps = RadioButtons(["\(\varepsilon\)", "\(\delta\)"], "\(\varepsilon\)", separator => " ", labels => ["~~N{U+03b5}", "~~N{U+1D6FF}"], displayLabels => 0);
+$del = RadioButtons(["\(\varepsilon\)", "\(\delta\)"], "\(\delta\)", separator => " ", labels => ["~~N{U+03b5}", "~~N{U+1D6FF}"], displayLabels => 0);
+
+$m = 1;
+
+TEXT(beginproblem());
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+BEGIN_PGML
+
+Prove the limit statement below using the formal [`\varepsilon, \delta`] definition of the limit. 
+
+[``
+  \lim_{x \to [$c]} ([$a] - x) = [$L].
+``]
+
+(Fill in all the blanks to complete the proof).
+
+Let [@ $eps->buttons() @]* [`\, > 0`] be given. Then with [`\delta = `]
+[____][`\varepsilon`], and with [`x`] satisfying
+[`\lvert x - `]([____])[`\rvert <  \,`] [@ $del->buttons() @]*, (after some algebra), we arrive at:
+
+[`\lvert f(x) - `]([____])[`\rvert <  \,`] [@ $eps->buttons() @]*,
+which is what we wanted to prove.
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+First, we do some rough work to set up our proof. 
+With [`f(x) = [$a] - x`], and limiting value [`L=[$L]`], we must solve the
+inequality:
+
+[`` |f(x) - L| < \varepsilon. ``]
+
+Plugging in our function and limit, we get [` |([$a] - x) - [$L]| < \varepsilon `], or
+[` |[$c] - x| = |x - [$c]| < \varepsilon `]. (Recall that [`|-a| = |a|`] for any real number [`a`].)
+But [`|x - [$c]|`] is exactly what we have control over, so we can simply take [`\delta = \varepsilon`]. There is not much more work needed to put this into a proof.
+
+
+*Proof of the limit*:
+
+Let [`f(x) = [$a]-x`] and let [`L=[$L]`].
+
+Let [`\varepsilon > 0`] be given, and let [`\delta = \varepsilon`]. Then, for any [`x`] satisfying [`0<|x - ([$c])|< \delta`], we have
+
+[``|f(x)-L| = |[$a]-x-[$L]| = |[$c]-x|=|x-[$c]|=\delta<\varepsilon,``]
+
+as required.
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+#-ENDULETH#
+ANS( $eps->cmp() );
+ANS( num_cmp( $m ) );
+ANS( num_cmp( $c ) );
+ANS( $del->cmp()  );
+ANS( num_cmp( $L ) );
+ANS( $eps->cmp()  );
+
+#############################
+#  Comments
+COMMENT('
+    Randomization provides 210 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+
+ENDDOCUMENT();
+
