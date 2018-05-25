@@ -1,0 +1,132 @@
+## DESCRIPTION
+## This is Problem 1.4.20 from the APEX Calculus text. It covers one-sided limits for an abstract piecewise function.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Limits and continuity)
+## DBsection(One-sided limits - concept of)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('1.4')
+## Problem1('20')
+## MO(1)
+## Keywords('limit', 'limits', 'left,right,one-sided', 'piecewise function', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for Piecewise Functions
+  "contextPiecewiseFunction.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+$p = random(2,1001,1);
+
+$ans1 = "c";
+$ans2 = "c";
+$ans3 = "c";
+$ans4 = "DNE";
+
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+Let
+[`` q(x) = \begin{cases}
+	a(x - b)^{[$p]} + c  & x < b \\
+	a(x - b) + c  & x > b.
+	\end{cases}
+``]
+
+Evaluate the following:
+
+[``\lim_{x \to b^-} q(x) =``] [___________] [@ AnswerFormatHelp("numbers") @]*
+
+[``\lim_{x \to b^+} q(x) = ``] [___________]
+
+[``\lim_{x \to b} q(x) = ``] [___________] 
+
+[`` q(b) =``] [___________] 
+
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+The left-hand limit of [`q(x)`] at [`b`] is
+
+[``
+ \lim_{x \to b^-} q(x) = \lim_{x \to b} \, (a(x - b)^{[$p]} + c) = 
+  a(b - b)^{[$p]} + c = 0 + c = [$ans1].
+``]
+
+The right-hand limit of [`q(x)`] at [`b`] is
+
+[``
+ \lim_{x \to b^+} f(x) = \lim_{x \to b} \, (a(x - b) + c) = a(b - b) + c = 0 + c =[$ans2].
+``]
+
+Since the left and right hand limits are equal, [`\displaystyle \lim_{x \to b} q(x) `] exists and is equal to [`[$ans3]`].
+
+However, [`q(x)`] is not defined at [`b`], so [`q(b)`] does not exist.
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+ANS(fun_cmp($ans1, vars=>["c", "DNE"]));
+ANS(fun_cmp($ans2, vars=>["c", "DNE"]));
+ANS(fun_cmp($ans3, vars=>["c", "DNE"]));
+ANS(fun_cmp($ans4, vars=>["c", "DNE"]));
+
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization gives 1000 possible exponents in q(x), but there is fundamentally only 1 version of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    

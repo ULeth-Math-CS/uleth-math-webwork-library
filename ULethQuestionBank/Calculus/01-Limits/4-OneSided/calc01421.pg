@@ -1,0 +1,130 @@
+## DESCRIPTION
+## This is Problem 1.4.21 from the APEX Calculus text. It covers one-sided limits for a piecewise function.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Limits and continuity)
+## DBsection(One-sided limits - concept of)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('1.4')
+## Problem1('18')
+## MO(1)
+## Keywords('limit', 'limits', 'left,right,one-sided', 'piecewise function', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for Piecewise Functions
+  "contextPiecewiseFunction.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("PiecewiseFunction");
+
+$a = random(1,10,1);
+
+$f = Compute("abs($a*x)/x if x != 0 else 0 if x = 0")->reduce();
+
+$ans1 = -$a;
+$ans2 = $a;
+$ans3 = "DNE";
+$ans4 = 0;
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+Let
+
+[`` f(x) = [$f->with(final_period=>1)] ``]
+
+Evaluate the following:
+
+[``\lim_{x \to 0^-} \, f(x) =``] [___________] [@ AnswerFormatHelp("numbers") @]*
+
+[``\lim_{x \to 0^+} \, f(x) = ``] [___________]
+
+[``\lim_{x \to 0} \, f(x) = ``] [___________] 
+
+[`` f(0) =``] [___________]
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+The left-hand limit of [`f(x)`] at [`0`] is
+
+[``
+ \lim_{x \to 0^-} f(x) = \lim_{x \to 0} \, \frac{\lvert [$a]x \rvert}{x} = \lim_{x \to 0} \frac{-[$a]x}{x} = \lim_{x \to 0} (-[$a]) = [$ans1].
+``]
+
+The right-hand limit of [`f(x)`] at [`0`] is
+
+[``
+ \lim_{x \to 0^+} f(x) = \lim_{x \to 0} \, \frac{\lvert [$a]x \rvert}{x} = \lim_{x \to 0} \frac{[$a]x}{x} = \lim_{x \to 0} ([$a]) = [$ans2].
+``]
+
+Since the left and right hand limits are not equal, [`\displaystyle \lim_{x \to -1} f(x) `] does not exist.
+
+However, [`f(x)`] is defined at [`0`] by [`0`], so 
+[``f(0) = [$ans4].``]
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+ANS(num_cmp($ans1, strings=>["DNE"]));
+ANS(num_cmp($ans2, strings=>["DNE"]));
+ANS(num_cmp($ans3, strings=>["DNE"]));
+ANS(num_cmp($ans4, strings=>["DNE"]));
+
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 10 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    
+
