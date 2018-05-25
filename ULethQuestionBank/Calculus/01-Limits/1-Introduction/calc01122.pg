@@ -1,0 +1,143 @@
+## DESCRIPTION
+## This is Problem 1.1.22 from the APEX Calculus text. It covers numerical evaluation of difference quotients.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Limits and continuity)
+## DBsection(Estimating limits numerically)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('1.1')
+## Problem1('22')
+## MO(1)
+## Keywords('limit', 'limits', 'difference quotient', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Used to format the table in the solution
+  "niceTables.pl",
+ );
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+#############################
+#   Setup
+#-ULETH-#
+#Randomize the question parameters. 
+Context("Numeric");
+Context()->flags->set(
+  tolerance => 0.001,
+  tolType => "absolute",
+);
+Context()->noreduce('(-x)-y');
+
+$a = random(2,11,1);
+$b = non_zero_random(-10, 10,1);
+
+
+$f = Compute("$b*sin(x)")->reduce();
+
+$diff = ($f->substitute(x=>"$a*pi + x") - $f->eval(x=>$a*pi))/x;
+
+#Values used in the table of approximations
+$a1=0.1;
+$a01=0.01;
+
+$ax1=-0.1;
+$ax01=-.01;
+
+#Values used in the table
+$aa1=$diff->eval(x=>$a1);
+$aa01=$diff->eval(x=>$a01);
+$aax1=$diff->eval(x=>$ax1);
+$aax01=$diff->eval(x=>$ax01);
+
+#Initialize the table 
+$approximationTable = $BCENTER.begintable(2) .
+row( "\(h\)","\( \frac{f(a+h) - f(a)}{h} \)") .
+row( $a1, $aa1).
+row( $a01, $aa01).
+row( $ax1, $aax1).
+row( $ax01, $aax01).
+endtable().$ECENTER;
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+Context()->texStrings;
+Context()->variables->add(h => 'Real');
+
+BEGIN_PGML
+
+Suppose [`f(x) = [$f]`] and [`a = [$a]\pi`].
+
+Using [`h = \pm 0.1, \pm 0.01`], approximate the limit of the difference quotient [` \displaystyle \lim_{h \to 0} \frac{f(a+h) - f(a)}{h} `].
+
+When [` h = [$a1] `], [`\frac{f(a+h) - f(a)}{h} =`] [______] [@ AnswerFormatHelp("numbers") @]*
+
+When [` h = [$ax1] `], [`\frac{f(a+h) - f(a)}{h} =`] [______] 
+
+When [` h = [$a01] `], [`\frac{f(a+h) - f(a)}{h} =`] [______] 
+
+When [` h = [$ax01] `], [`\frac{f(a+h) - f(a)}{h} =`] [______] 
+
+END_PGML
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+The difference quotient [`\frac{f(a+h) - f(a)}{h}`] becomes [` [$diff->substitute(x=>h)->reduce()]`].
+
+Evaluations of the difference quotient for each [`h`] are given in the following table.
+
+[@ $approximationTable @]***
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+$solutionexits=1;
+#-ENDULETH#
+
+ANS($aa1->cmp);
+ANS($aa01->cmp);
+ANS($aax1->cmp);
+ANS($aax01->cmp);
+
+COMMENT('
+    Randomization provides 210 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+

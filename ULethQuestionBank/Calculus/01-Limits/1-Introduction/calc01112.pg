@@ -1,0 +1,291 @@
+## DESCRIPTION
+## This is Problem 1.1.12 from the APEX Calculus text. It covers graphical approximation of limits.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Limits and continuity)
+## DBsection(Finding limits using graphs)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('1.1')
+## Problem1('12')
+## MO(1)
+## Keywords('limit', 'limits', 'piecewise function ', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used to support the GeoGebra applet.
+  "AppletObjects.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Used to format the table in the solution
+  "niceTables.pl",
+  # Used for Piecewise Functions
+  "contextPiecewiseFunction.pl",
+  # Used to format the question nicely
+  "unionTables.pl"
+);
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+#############################
+#   Setup
+#-ULETH-#
+Context("PiecewiseFunction");
+#Randomize the question parameters. 
+$solutionexits=1;
+$a=random(-4,4);
+
+$b=random(2,10);
+$c=$b - 2*$a - 2;
+
+$f = Compute("x+$b if x <= $a else 3*x+$c if x>$a")->reduce();
+
+#Values used in the table of approximations
+$a002=$a+0.002;
+$a001=$a+.001;
+$a0005=$a+.0005;
+$a0001=$a+.0001;
+$ax002=$a-0.002;
+$ax001=$a-.001;
+$ax0005=$a-.0005;
+$ax0001=$a-.0001;
+
+$aa002=$f->eval(x=>$a002);
+$aa001=$f->eval(x=>$a001);
+$aa0005=$f->eval(x=>$a0005);
+$aa0001=$f->eval(x=>$a0001);
+$aax002=$f->eval(x=>$ax002);
+$aax001=$f->eval(x=>$ax001);
+$aax0005=$f->eval(x=>$ax0005);
+$aax0001=$f->eval(x=>$ax0001);
+
+#Evaluate the limit
+$limi= "DNE";
+
+#Initialize the table of numerical approximations
+$approximationTable = $BCENTER.begintable(4) .
+row( "x","f(x)","x","f(x)") .
+row( $a002, $aa002, $ax002, $aax002).
+row( $a001, $aa001, $ax001, $aax001).
+row( $a0005, $aa0005, $ax0005, $aax0005).
+row( $a0001, $aa0001, $ax0001, $aax0001) .
+endtable().$ECENTER;
+#-ENDULETH-#
+
+
+
+######################################
+# Create  link to applet:
+###################################
+# You can name your applet (anything reasonable :-) )
+# Adjust the height and width as desired
+# Paste the geogebra parameters in at the bottom of the page just above the
+# command end command
+# so that they don't get in the way
+###################################
+
+
+$appletName = "ggbfoo";
+
+$applet =  GeogebraWebApplet(
+   code       => "geogebra.GeoGebraApplet",
+   archive    => "geogebra.jar",
+   codebase                 => findAppletCodebase("geogebra.jar"),
+   appletName              => $appletName,
+   appletId                    => $appletName,
+   submitActionAlias     => 'getAppletValues',  # default actionAlias
+   initializeActionAlias   => 'configure',  # default actionAlias
+   setStateAlias             => 'setXML',
+   getStateAlias             => 'getXML',
+   setConfigAlias           => '',
+   getConfigAlias           => '',
+   returnFieldName       => '',
+   width                 => 360,              # may want to modify width
+   height                => 300,              # may want to modify height
+  # mayscript             => "true",
+   debugMode             => 0,   # set debugMode to 0 for no debug
+                                              # to 1 to make xml representation visible
+                                              # to 2 to add alerts detailing progression
+                                              # through the applet
+   onInit                => 'ggbOnInit',
+   type                  => 'geogebraweb',
+   #submitActionScript    => qq{ getQE('answerBox').value = getAppletValues() },
+   submitActionScript => '',
+   selfLoading           => 1,
+   params     => GEOGEBRA_PARAMS(),# paste parameters in
+
+);
+
+
+
+##################################
+# Setup GeogebraWebApplet --
+###################################
+
+###############################################
+#
+#  For persistence of GeoGebra applet state 
+#  when answers are submitted or page is refreshed.
+#  Uses JavaScript interface to GeoGebra.
+
+HEADER_TEXT(
+qq! 
+<script language="javascript">
+   function ggbOnInit(param) {
+       if (param == "$appletName") {
+           applet_loaded(param,1);  // report that applet is ready. 
+           ww_applet_list[param].safe_applet_initialize(2);
+       }
+   } 
+</script>
+<noscript>For this question to work properly, 
+you must enable JavaScript, or use another browser 
+(or computer) on which JavaScript works.</noscript>
+!);
+
+
+#######################################################
+#
+#  For setting initial values in GeoGebra from WeBWorK
+#  Uses JavaScript interface to GeoGebra.
+
+TEXT( MODES(TeX=>'', HTML=><<END_SCRIPT ) );
+<script language="javascript">
+function setAppletCoefficients() {
+   var applet=getApplet("$appletName");   // alert("Updating coefficients");
+   if (typeof(applet)!="undefined") {
+     if (typeof(applet.setValue)!="undefined") {
+     
+     ////////////////////////////////////////////////////////////////
+     //  List the values of the parameters to be set in the applet here
+     
+          // Set variables 
+          applet.setValue("a", $a); 
+          applet.setValue("b", $b);
+          applet.setValue("c", $c);
+        
+     } else {
+          setTimeout("setAppletCoefficients()", 1000);
+     }
+   } else {
+      setTimeout("setAppletCoefficients()",1000);
+   }
+}
+ww_applet_list["$appletName"].setConfig = function() {setAppletCoefficients()}; 
+</script>
+END_SCRIPT
+
+###################################
+#insert applet into body  -- this does not need to be changed
+# except to adjust the insertion of the reinitialize_button or
+# a hidden AnswerBox
+###################################
+# TEXT($PAR,  MODES(TeX=>'geogebraweb code',
+#                      HTML=>$applet->insertAll(
+#                                debug =>0,
+#                                reinitialize_button => 1,
+#                                #includeAnswerBox=>1,
+# )));
+
+#############################
+#   Problem Text
+#-ULETH-#
+Context()->texStrings;
+
+$column1 = PGML::Format(<<END_PGML);
+
+Suppose [``f(x) = $f``] 
+
+and approximate the given limit using the provided graph.
+
+[``\lim_{x \to $a} \, f(x) = ``] [______] [@ AnswerFormatHelp("numbers") @]*
+
+END_PGML
+
+#-ENDULETH-#
+
+BEGIN_TEXT
+\{
+ColumnTable(
+$column1,
+$BCENTER.
+$BBOLD."Graph of \( f(x) = $f\)".$EBOLD.$PAR.
+MODES(HTML=>$applet->insertAll(debug=>0, reinitialize_button=>1, includeAnswerBox=>0,), TeX=>$im).
+$ECENTER
+,
+indent => 0, separation => 30, valign => "TOP"
+);
+\}
+END_TEXT
+
+
+Context()->normalStrings;
+
+#############################
+#  Solution
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+Approximations toward the limit from the left and the right are given in the following table.
+
+[@ $approximationTable @]***
+
+The limit of [`[$f]`] as [`x \to [$a] `] does not exist because the values of the function do not approach a single finite value.
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+#-ENDULETH#
+
+ANS( num_cmp( $limi , strings => ["DNE","dne"] ) );
+
+#########################################
+# The applet as a base64 string
+#########################################
+
+sub GEOGEBRA_PARAMS {
+    my $result = {
+showResetIcon=>"false" ,
+enableRightClick=>"false" ,
+enableLabelDrags=>"false",
+showMenuBar=>"false" ,
+showToolBar=>"false",
+showAlgebraInput=>"false",
+useBrowserForJS=>"true",
+ggbbase64=>"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"
+
+};
+
+$result;
+}
+
+COMMENT('
+    Randomization provides 81 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Uses GeoGebraWeb (JavaScript), so it should work on computers and tablets.  <BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
