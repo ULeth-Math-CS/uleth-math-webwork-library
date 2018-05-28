@@ -1,0 +1,233 @@
+## DESCRIPTION
+## This problem presents a hypothetical study that is interested in differences in lung health outcomes between twins in the city versus the country. The problem will randomly choose between 5 and 11 twins and will randomly choose all but 1 or 2 to be healthier in the country. The problem asks the student to decide if the test is one or two tailed (it is one tailed). The problem generates a table that contains the (null hypothesis) coin-flipping model for the twin problem with the associated probabilities of getting 0 to number-of-twins heads out of number-of-twins flips. The student is given another multiple choice question which asks the student to select the correct p-value (some anwsers, including the correct answer, are broken down into the summation of the probabilities from the table). 
+## ENDDESCRIPTION
+
+## DBsubject('Statistics')
+## DBchapter('Sampling Distributions')
+## DBsection('Sample Mean')
+## Date(2017-07-05)
+## Institution(University of Lethbridge)
+## Author(Kyler Fisher)
+## MO(1)
+## KEYWORDS('p-value', 'p-values', 'one-sided', 'one proportion', 'one proportion test')
+
+
+#############################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Following two macros for multiple choice.
+  "parserRadioButtons.pl",
+  "PGchoicemacros.pl",
+  # Used for drop down responses.
+  "parserPopUp.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+#-ULETH-#
+
+
+do { #inside a do-while-loop so that the problem set up loops until p-values are sufficiently far away from cutoff points
+
+$numTwins = random(5, 11); #randomly select between 5 and 11 twins
+$numHealthier = random($numTwins - 2, $numTwins - 1); #randomly select all but 1 or 2 to be healthy
+#following if-elseif assigns words to the numerical values for presentation in the question
+if    ( $numTwins == 5 ) { $numTwinsWord = "five" }
+elsif ( $numTwins == 6 ) { $numTwinsWord = "six" }
+elsif ( $numTwins == 7 ) { $numTwinsWord = "seven" }
+elsif ( $numTwins == 8 ) { $numTwinsWord = "eight" }
+elsif ( $numTwins == 9 ) { $numTwinsWord = "nine" }
+elsif ( $numTwins == 10 ){ $numTwinsWord = "ten" }
+elsif ( $numTwins == 11 ){ $numTwinsWord = "eleven" }
+
+#following if-elseif assigns words to the numerical values for presentation in the question
+if    ( $numHealthier == 3 ) { $numHealthierWord = "three" }
+elsif ( $numHealthier == 4 ) { $numHealthierWord = "four" }
+elsif ( $numHealthier == 5 ) { $numHealthierWord = "five" }
+elsif ( $numHealthier == 6 ) { $numHealthierWord = "six" }
+elsif ( $numHealthier == 7 ) { $numHealthierWord = "seven" }
+elsif ( $numHealthier == 8 ) { $numHealthierWord = "eight" }
+elsif ( $numHealthier == 9 ) { $numHealthierWord = "nine" }
+elsif ( $numHealthier == 10 ){ $numHealthierWord = "ten" }
+
+@headsRow; #this array will store the top table row that goes " #heads | 1 | 2 | 3 ... "
+@probabilityRow; #this array will store bottom row that goes " probability | 0.0053 | 0.034 ... "
+
+$headsRow[0] = "# Heads";
+$probabilityRow[0] = "Probability";
+for ($i = 1; $i <= $numTwins + 1; $i++){ #loop from index 1 to numTwins+1 and write number of heads and the associated probabilities
+    $headsRow[$i] = ($i - 1);
+    
+    #next three lines fill in the probabilities (rounded) by calling the combinations subroutine and using a formula
+    $r = $i-1;
+    $n = $numTwins;
+    $probabilityRow[$i] = floor(combinations() * (0.5 ** $r) * (0.5 ** ($n - $r)) * 100000) / 100000;
+}
+
+##############
+# this section produces the answers for the p-value mutliple choice question and also assigns the p-value for use next section
+# anwsers are different depending on whether all but 1 or all but 2 twins are healthy
+if ( $numTwins - $numHealthier == 1 ) { #first case - all but one twin is healthy
+
+    $invalidPValueAnwserA = $probabilityRow[$numTwins + 1]; #just the last probability
+    
+    $invalidPValueAnwserB = $probabilityRow[$numTwins]; #just the second last probability
+    
+    $invalidPValueAnwserC = $probabilityRow[$numTwins]." - ".$probabilityRow[$numTwins + 1]." = ".($probabilityRow[$numTwins] - $probabilityRow[$numTwins + 1]); # last subtracted from second last
+    
+    $validPValueAnwser = $probabilityRow[$numTwins]." + ".$probabilityRow[$numTwins + 1]." = ".($probabilityRow[$numTwins] + $probabilityRow[$numTwins + 1]); # correct - the last two probabilities summed
+    
+    $pValue = $probabilityRow[$numTwins] + $probabilityRow[$numTwins + 1]; #store this correct answer
+}
+
+elsif ( $numTwins - $numHealthier == 2 ) { #second case, all but but two twins are healthy
+
+    $invalidPValueAnwserA = $probabilityRow[$numTwins + 1]; #just the last probability
+    
+    $invalidPValueAnwserB = $probabilityRow[$numTwins]." + ".$probabilityRow[$numTwins + 1]." = ".($probabilityRow[$numTwins] + $probabilityRow[$numTwins + 1]); #just the last two probabilities summed
+    
+    $invalidPValueAnwserC = $probabilityRow[$numTwins - 1]; #just the third last
+    
+    $validPValueAnwser = $probabilityRow[$numTwins - 1]." + ".$probabilityRow[$numTwins]." + ".$probabilityRow[$numTwins + 1]." = ".($probabilityRow[$numTwins - 1] + $probabilityRow[$numTwins] + $probabilityRow[$numTwins + 1]); # correct - the last three probabilities summed
+    
+    $pValue = $probabilityRow[$numTwins - 1] + $probabilityRow[$numTwins] + $probabilityRow[$numTwins + 1]; #store this correct answer
+}
+##############
+
+}
+while ( abs($pValue - 0.1) < 0.02 or abs($pValue - 0.05) < 0.01 or abs($pValue - 0.01) < 0.002 ); #keep looping until p-values are sufficiently far away from the cutoff points
+
+#from the p-value, determine the strength of the evidence:
+if ( $pValue < 0.01 ) { $strength = "very strong" }
+elsif ( $pValue < 0.05 ) { $strength = "strong" }
+elsif ( $pValue < 0.1 ) { $strength = "moderate" }
+else { $strength = "little" }
+
+
+# Initializes table
+$table = begintable($numTwins + 1) .
+row(@headsRow) .
+row(@probabilityRow) .
+endtable();
+
+# first multiple choice question, asks whether it is a one or two tailed test
+$radioButtonsA = RadioButtons(
+  ["one-sided",
+   "one-sided or two-sided",
+   "two-sided",
+   "none of these answers"],
+   "one-sided", #answer
+  last=>""); #randomize but put "none of the above" at the bottom
+  
+# second multiple choice question about the p-value
+$radioButtonsB = RadioButtons(
+  ["p-value = $validPValueAnwser and we have $strength evidence that individuals living in the country have healthier lungs than those individuals living in cities.",
+   "p-value = $invalidPValueAnwserA and we have $strength evidence that individuals living in the country have healthier lungs than those individuals living in cities." ,
+   "p-value = $invalidPValueAnwserB and we have $strength evidence that individuals living in the country have healthier lungs than those individuals living in cities.",
+   "p-value = $invalidPValueAnwserC and we have $strength evidence that individuals living in the country have healthier lungs than those individuals living in cities.",],
+   "p-value = $validPValueAnwser and we have $strength evidence that individuals living in the country have healthier lungs than those individuals living in cities.", #answer
+  last=>""); #empty (randomize)
+  
+  
+sub combinations { #this subroutine returns the number of combinations. ($n and $r are provided outside of the function)
+    $nFact = 1; #this loop calculates N! in the combinations formula
+    for ($loop = 0; $loop < $n; $loop++) { 
+        $curNum = $n - $loop;
+        $nFact = $nFact * $curNum;
+    }
+    $rFact = 1; #this loop calculates r! in the combinations formula
+    for ($loop = 0; $loop < $r; $loop++) {
+        $curNum = $r - $loop;
+        $rFact = $rFact * $curNum;
+    }
+    $nMinusRFact = 1; #this loop calculates (N-r)! in the combinations formula
+    for ($loop = 0; $loop < ($n - $r); $loop++) {
+        $curNum = ($n - $r) - $loop;
+        $nMinusRFact = $nMinusRFact * $curNum;
+    }
+return $nFact / ($rFact * $nMinusRFact); #number of combinations
+}
+
+
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_PGML
+
+Suppose some researchers wanted to test the hypothesis that living in the country is better for your lungs than living in a city. To eliminate the possible variation due to genetic differences, suppose they located [$numTwinsWord] pairs of identical twins with one member of each twin living in the country, the other in a city. For each person, suppose they measured the percentage of inhaled tracer particles remaining in the lungs after one hour: the higher the percentage, the less healthy the lungs. Suppose they found that for [$numHealthierWord] of the [$numTwinsWord] twin pairs the one living in the country had healthier lungs.
+
+Is the alternative hypothesis one-sided or two-sided?
+
+[@ $radioButtonsA->buttons() @]*
+
+Here are the probabilities for the number of heads in [$numTwinsWord] tosses of a fair coin:
+[@ $table @]***
+Compute the p-value and state your conclusion.
+
+[@ $radioButtonsB->buttons() @]*
+
+END_PGML
+
+
+
+#-ENDULETH-#
+
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+
+ANS($radioButtonsA->cmp());
+ANS($radioButtonsB->cmp());
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+In the hypthetical study, we are told that the researchers want to test the hypothesis that living in the country is better for the lungs than living in a city. This means that going into the study, the researchers had a clear prior suspicion about the direction of the parameter value relative to the hypothesized value. In this case, a one-sided test is appropriate.
+
+Imagine instead that the researchers wanted to know about potential differences in some other health factor, let's say migraines, and had no previous reason to suspect that individuals from the city or the country would have better or worse outcomes with respect to that health condition. In this case, a two-sided test would be more appropriate.
+
+The second part of this problem involves making use of the table of probabilities for the coin flip scenario to calculate the p-value for the twin study. The key is to recognize that if there were no differences in the probability of someone living in the city or someone living in the country to have healthier lungs, that for any pair of identical twins, the probability that country living twin would have healthier lungs than the city twin is 50%. Because of this, we can think of an outcome of getting heads on a coin flip as having a twin from the country with healthy lungs (under the null hypothesis). So then the probabilities of getting [$numHealthierWord] heads out of [$numTwinsWord] flips is the same as observing [$numHealthierWord] pairs of twins with healthier lungs for the country twin out of [$numTwinsWord] pairs of twins under the null hypothesis.
+
+The p-value is estimated by estimating the probability of having observed an outcome _at least_ as unusual or extreme as the outcome that was observed. In this case, having observed an outcome _at least_ as unusual as observing  [$numHealthierWord] healither country twins out of [$numTwinsWord] pairs of twins corresponds, under the null hypothesis, to [$validPValueAnwser]. It is not just the probability of observing [$numHealthierWord] healither country twins.
+
+END_PGML_SOLUTION
+
+COMMENT('MathObject version. Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

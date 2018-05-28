@@ -1,0 +1,195 @@
+## DESCRIPTION
+## This problem mentions a study that claims to have found differences in the ability of participants to distinguish two faces on the basis of the names Tim and Bob. The problem says that although this study claims to have found support that people can distinguish the faces, they did not provide numerical evidence. The student is asked to imagine repeating the experiment with a (random [25-35]) students and must select the appropriate null and alternative hypotheses, then they are told the (random) results of the imaginary study and they must report the p-value (from normal approximation), then they must anwser a true/false about whether the p-value provides "Strong" evidence for the alternative hypothesis, and then finally they must answer a multiple choice question in which they must select the option with the correct the z-statistic and explanation of what it means. This program uses the R server to compute the normal approximation.
+## ENDDESCRIPTION
+
+## DBsubject('Statistics')
+## DBchapter('Sampling Distributions')
+## DBsection('Sample Mean')
+## Date(2017-07-25)
+## Institution(University of Lethbridge)
+## Author(Kyler Fisher)
+## MO(1)
+## KEYWORDS('p-value', 'p-values', 'one-sided', 'one proportion', 'one proportion test', 'z-statistic', 'normal approximation')
+
+
+#############################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Following two macros for multiple choice.
+  "parserRadioButtons.pl",
+  "PGchoicemacros.pl",
+  # Used for drop down responses.
+  "parserPopUp.pl",
+  # used for R
+  "RserveClient.pl",
+);
+
+TEXT(beginproblem());
+
+#############################
+#  Setup
+
+#-ULETH-#
+
+do { #inside a do-while-loop so that the problem set up loops until p-values are sufficiently far away from cutoff points
+
+$numFaces = random(25,35); #randomly select between 25 and 35 students for study
+$numAssignedTim = random(floor($numFaces*.58), floor($numFaces*.75)); #randomly determine a number of them from 58% of the whole to 75% of the whole (ints) to represent number that correctly assigned Tim.
+
+#converting to symbols n, x for ease of reading
+$n = $numFaces; 
+$x = $numAssignedTim;
+
+#calculating mean and standard deviation (and a correct and incorrect z-stat for multiple choice)
+$mean = $n * 0.5;
+$sd = sqrt($n * 0.5 * 0.5);
+$zStat = floor(($x - $mean) / $sd * 1000) / 1000; #rounded, used in multiple choice
+$incorrectZStat = $zStat / 10;
+
+#this is a call to the R server to compute the normal approximated p-value
+@outputArray = rserve_eval("1 - pnorm($x, mean=$mean, sd=$sd)");
+$normalPVal = $outputArray[0];
+
+}
+while ( abs($normalPVal - 0.1) < 0.02 or abs($normalPVal - 0.05) < 0.01 or abs($normalPVal - 0.01) < 0.002 ); #keep looping until p-values are sufficiently far away from the cutoff points
+
+
+#from the p-value, determine the strength of the evidence:
+if ( $normalPVal < 0.01 ) { $strength = "very strong" ; $trueFalseAnswer = "yes"}
+elsif ( $normalPVal < 0.05 ) { $strength = "strong" ; $trueFalseAnswer = "yes"}
+elsif ( $normalPVal < 0.1 ) { $strength = "moderate" ; $trueFalseAnswer = "no" }
+else { $strength = "little" ; $trueFalseAnswer = "no"}
+
+
+
+# first multiple choice question, asks to select corrct null and alternative hypotheses
+$radioButtonsA = RadioButtons(
+  ["Null: The long-run proportion of times that people assign the name Tim to the face on the left is 50%.
+Alt: The long-run proportion of times that people assign the name Tim to the face on the left is different from 50%.",
+   "Null: The long-run proportion of times that people assign the name Tim to the face on the left is 50%.
+Alt: The long-run proportion of times that people assign the name Tim to the face on the left is less than 50%.",
+   "Null: The long-run proportion of times that people assign the name Tim to the face on the left is 50%.
+Alt: The long-run proportion of times that people assign the name Tim to the face on the left is more than 50%.", ],
+   "Null: The long-run proportion of times that people assign the name Tim to the face on the left is 50%.
+Alt: The long-run proportion of times that people assign the name Tim to the face on the left is more than 50%.", #answer
+  last=>""); #left empty to randomize 
+
+
+# true / false question, asks if we have sufficient evidence for alternative hypothesis
+$radioButtonsB = RadioButtons(
+  ["yes",
+   "no",
+  ],
+$trueFalseAnswer, #answer
+  last=>"no"); #show 'yes' before 'no'
+
+
+# question that asks what the z-statistic is and what it means
+$radioButtonsC = RadioButtons(
+  ["Z = $zStat This number means that the proportion of the sample that chose Bob is $zStat standard deviations above the mean of
+the null distribution.",
+   "Z = $zStat This number means that the proportion of the sample that chose Tim is $zStat standard deviations above the mean of
+the null distribution.",
+    "Z = $incorrectZStat This number means that the proportion of the sample that chose Bob is $incorrectZStat standard deviations above the mean of
+the null distribution.",
+    "Z = $incorrectZStat This number means that the proportion of the sample that chose Tim is $incorrectZStat standard deviations above the mean of
+the null distribution.",
+  ],
+"Z = $zStat This number means that the proportion of the sample that chose Tim is $zStat standard deviations above the mean of
+the null distribution.", #answer
+  last=>""); #left empty to randomize positions
+
+
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_PGML
+
+A study in _Psychonomic Bulletin and Review_ presented evidence that "people use facial prototypes when they encounter different names." Participants were given two faces and asked to identify which one was Tim and which one was Bob. The researchers wrote that their participants "overwhelmingly agreed" on which face belonged to Tim and which face belonged to Bob but did not provide the exact results of their study.
+
+Skeptical about the study, because the numerical results were absent, suppose you decided to repeat this study with some statistical rigor. Suppose you have secured premission to use the same photos from the original study and that you have permission to enroll the other [$numFaces] students in your class room for the study. You are interested to see _if students will correctly assign the name Tim to the person on the left_ (whose name is Tim) more than half of the time, in the long run.
+
+Which of the following states the appropriate null and alternative hypotheses in the context of your study?
+
+[@ $radioButtonsA->buttons() @]*
+
+You conduct the study and report that [$numAssignedTim] out of the [$numFaces] other students correctly identified that the face on the left belonged to Tim. Using an appropriate applet, find the p-value using a one-proportion _z-test_ (theory based / normal approximation). (*Round your answer to 4 decimal places; eg. 0.2751*)  
+p-value: [_______]
+
+Do we have strong (or very strong) evidence that more than 50% of the people will correctly assign the name of Tim to the person on the left?
+
+[@ $radioButtonsB->buttons() @]*
+
+What is the z-statistic for the test? What does this number represent in the context of this study?
+
+[@ $radioButtonsC->buttons() @]*
+
+END_PGML
+
+
+
+#-ENDULETH-#
+
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+
+ANS($radioButtonsA->cmp());
+
+ANS(Compute($normalPVal)->cmp(tolType=>"relative", tolerance=>0.001));
+
+ANS($radioButtonsB->cmp());
+
+ANS($radioButtonsC->cmp());
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+The problem says that you will investigate whether or not students assign the name Tim to the face on the left (whose name is Tim) more than half of the time, in the long run. The null hypothesis is that students are not able to correctly assign the name Tim and so they will be guessing and because there are two photos to assign the name to, the probability that any student assigns the name correctly is 1/2 = 50%. So the null hypothesis is that the long-run proportion of times that people assign the name Tim to the face on the left is 50%.
+
+Because you are told that you will investigate whether or not students assign the name Tim to the face on the left (whose name is Tim) *more than half* of the time, we know that the alternative hypothesis is that the long-run proportion of times that students assign the name Tim to the face on the left is *more than* 50%. 
+
+In the next section you are asked to report the p-value to four decimal places for a *one-proportion z-test*. A one-proportion z-test uses the normal approximation (not by running a simulation like in earlier problems) and by consulting an appropriate applet, the precise approximation can be found. 
+
+According to _Statistical Investigations_, we conclude that the results provide strong evidence if the probability of observing _results at least as unusual_ as the ones observed would occur under the null hypothesis (by random variation alone) fewer than 1 in 20 times. In other words, we may start to conclude that the evidence in favor of the alternative hypothesis is strong with a p-value of less than 0.05. (p-values less than 0.01 are considered "very strong" according to _Statistical Investigations_).
+
+The z-statistic is used to approximate the p-value from the normal distribtution. The z-statistic (sometimes called the z-score) is how many standard deviations away from the expected value (the mean of the null distribution) the observed proportion was found to be.  
+The formula is (observed proportion - expected proportion from null dist.) / standard deviation of null dist..
+
+END_PGML_SOLUTION
+
+COMMENT('MathObject version. Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();
