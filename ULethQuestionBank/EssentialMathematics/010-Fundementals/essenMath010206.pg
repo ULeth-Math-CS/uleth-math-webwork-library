@@ -1,0 +1,103 @@
+###################################################################
+## Description:
+##      Integer Arithmetic Subtraction Problems with two terms where   
+##      both terms are negative. 
+####################################################################
+
+####################################################################
+## Problem Classification:
+##      DBsubject('Arithmetic')
+##      DBchapter('Integers')
+##      DBsection('Addition/Subtraction')
+##      KEYWORDS('Integers', 'Subtraction', 'ULETH-0500')
+##      Level(1)
+###################################################################
+
+##################################################################
+## Date(2018-05-17)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+##################################################################
+
+#####################################################################
+#  Initialization
+#####################################################################
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "PGML.pl",
+  "AnswerFormatHelp.pl",
+  "contextLimitedNumeric.pl",
+);
+TEXT(beginproblem());
+
+###############################################################################
+#   Setup
+##################################################################################
+
+$a = random(6,12,1);
+$b = random ($a+1,25);
+
+$ans1 = $a - $b;
+$ans2 = -$b - $a; 
+$ans3 = $a - (-$b);
+$ans4 = -$a - (-$b);
+$ans5 = -$a - $b;
+$ans6 = $b - (-$a);
+$ans7 = $b - $a;
+
+###################################################################
+#   Problem Text
+###################################################################
+BEGIN_PGML
+
+Express each of the following expressions as a single integer:
+
+`[$a] - [$b] =` [_____]     
+
+`(-[$b]) - [$a] =` [_____]     
+
+`[$a] - (-[$b]) =` [_____]
+
+`(-[$a]) - (-[$b])=` [_____]
+
+`(-[$a]) - [$b] =` [_____]
+
+`[$b] - (-[$a])  =` [_____]
+
+`[$b] - [$a] =` [_____]
+
+END_PGML
+
+
+
+#############################
+#   Answer Evaluation
+
+ANS(strict_num_cmp($ans1));
+ANS(strict_num_cmp($ans2));
+ANS(strict_num_cmp($ans3));
+ANS(strict_num_cmp($ans4));
+ANS(strict_num_cmp($ans5));
+ANS(strict_num_cmp($ans6));
+ANS(strict_num_cmp($ans7));
+
+
+
+#############################
+#   Solution
+
+# NO SOLUTION 
+
+#######################################################################
+COMMENT('
+    Randomization provides 112 different possible versions of this question.<BR>
+    Does not include a solution set.<BR>
+    The values in summations are randomly determined and fall between -25 and 25 inclusive and do not include 0.  <BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();

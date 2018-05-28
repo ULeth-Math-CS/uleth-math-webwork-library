@@ -1,0 +1,99 @@
+###################################################################### 
+## Description:
+##      This is a word problem whose solution requires integer division.
+######################################################################
+
+######################################################################
+## Problem Classification:
+##      DBsubject('Arithmetic')
+##      DBchapter('Integers')
+##      DBsection('Integer Division')
+##      KEYWORDS('Integers', 'Division', 'ULETH-0500')
+##      Level(5)
+#####################################################################
+
+##################################################################
+## Date(2018-05-10)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+##################################################################
+
+#####################################################################
+#  Initialization
+#####################################################################
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "PGML.pl",
+  "AnswerFormatHelp.pl",
+  "contextLimitedNumeric.pl",
+);
+TEXT(beginproblem());
+
+####################################################################
+#   Setup
+###################################################################
+
+#-ULETH-#
+
+Context("Numeric");
+$a = 4*random(2,20,1);
+do{$b = 4*random(2,20,1);} until($b!=$a);
+$ans1 = $a/4;
+$ans2 = $b/4;
+
+#-END_ULETH-#
+  
+##################################################################
+#   Problem Text
+#################################################################
+
+#-ULETH-#
+
+BEGIN_PGML
+
+A giraffe, a monkey, an octopus, and a coyote walk into a bar. Each of these animals agrees to equally share [$a] drinks and [$b] pizzas.
+
+How many drinks will each animal get? [______]
+
+How many pizzas will each animal get? [______]
+
+END_PGML
+
+#-END_ULETH-#
+
+###################################################################
+#   Answer Evaluation
+###################################################################
+
+#-ULETH-#
+
+ANS(num_cmp($ans1));
+ANS(num_cmp($ans2));
+
+#-END_ULETH-#
+
+#################################################################
+#   Solution
+##################################################################
+
+BEGIN_PGML_SOLUTION
+
+Our first observation is that there are four animals. Thus, sharing the [$a] drinks and [$b] pizza equally means that we must divide these among 4 animals. Therefore, there each animal will recieve [`\frac{[$a]}{4} = [$a/4]`] drinks [`\frac{[$b]}{4} = [$a/4]`] pizzas.
+
+END_PGML_SOLUTION
+
+##################################################################
+# Instructor Comments 
+##################################################################
+
+COMMENT('
+    Randomization provides 342 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    This word problem involves integer division. Specifically, the solution requires the student to divide random multiples of 4 (between 8 and 80) by 4. <BR>  
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();

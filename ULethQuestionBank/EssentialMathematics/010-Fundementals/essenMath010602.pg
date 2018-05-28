@@ -1,0 +1,91 @@
+###################################################################### 
+## Description:
+##      Integer Arithmetic Addition Practice
+######################################################################
+
+####################################################################
+## Problem Classification:
+##      DBsubject('Arithmetic')
+##      DBchapter('Integers')
+##      DBsection('Addition/Subtraction')
+##      KEYWORDS('Integers', 'Multiplication', 'ULETH-0500')
+##      Level(5)
+###################################################################
+
+##################################################################
+## Date(2018-05-10)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+##################################################################
+
+
+
+#####################################################################
+#  Initialization
+#####################################################################
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "PGML.pl",
+  "AnswerFormatHelp.pl",
+  "contextLimitedNumeric.pl",
+);
+TEXT(beginproblem());
+####################################################################
+#   Setup
+###################################################################
+
+#-ULETH-#
+Context("LimitedNumeric");
+$a = random(20,35,1);
+$b = random(45,100,1);
+
+$ans = $b - $a;
+
+#-END_ULETH-#
+  
+##################################################################
+#   Problem Text
+#################################################################
+
+#-ULETH-#
+BEGIN_PGML
+
+Your friend Maria is a liar and a theif. She promised she would take $[$a] to the bank for you; however, she decided instead to keep it for herself. If you only had $[$b] to begin with, how much money do you have now? $ [______]
+
+
+END_PGML
+# END_ULETH-#
+
+
+###################################################################
+#   Answer Evaluation
+###################################################################
+
+
+ANS(strict_num_cmp($ans));
+
+
+
+
+#################################################################
+#   Solution
+##################################################################
+
+BEGIN_PGML_SOLUTION
+
+To know how much money you have currently you take the $[$b] you began with and subtract the $[$a] which your so-called-friend Maria stole. The result is that you have $[$b] - $[$a] = $[$b-$a] remaining.
+
+END_PGML_SOLUTION
+##################################################################
+# Instrucotor Comments 
+#################################################################
+COMMENT('
+    Randomization provides 840 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Word Problem that requires subtraction of integers.
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();

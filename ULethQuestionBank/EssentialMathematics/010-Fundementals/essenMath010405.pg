@@ -1,0 +1,99 @@
+###################################################################### 
+## Description:
+##      Integer Arithmetic Addition Practice
+######################################################################
+
+####################################################################
+## Problem Classification:
+##      DBsubject('Arithmetic')
+##      DBchapter('Integers')
+##      DBsection('Integer Division')
+##      KEYWORDS('Integers', 'Division', 'ULETH-0500')
+##      Level(1)
+###################################################################
+
+##################################################################
+## Date(2018-05-10)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+##################################################################
+
+
+
+#####################################################################
+#  Initialization
+#####################################################################
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "PGML.pl",
+  "AnswerFormatHelp.pl",
+  "contextLimitedNumeric.pl",
+);
+TEXT(beginproblem());
+####################################################################
+#   Setup
+###################################################################
+
+#-ULETH-#
+Context("LimitedNumeric");
+$a = random(2,12,1);
+$b = random(2*$a,12*$a,$a);
+
+$ans1 = $a;
+$ans2 = -$a;
+
+#-END_ULETH-#
+  
+##################################################################
+#   Problem Text
+#################################################################
+
+#-ULETH-#
+BEGIN_PGML
+
+Express each of the following quotients as a single integer:
+
+`[$b] \div [$a] =` [_____]     
+
+`(-[$b]) \div [$a] =` [_____]     
+
+`(-[$b]) \div (-[$a]) =` [_____]
+
+`([$b]) \div (-[$a]) =` [_____]
+
+
+END_PGML
+# END_ULETH-#
+
+
+###################################################################
+#   Answer Evaluation
+###################################################################
+
+
+ANS(strict_num_cmp($ans1));
+ANS(strict_num_cmp($ans2));
+ANS(strict_num_cmp($ans1));
+ANS(strict_num_cmp($ans2));
+
+
+
+#################################################################
+#   Solution
+##################################################################
+
+#No Solution Included
+
+##################################################################
+# Instrucotor Comments 
+#################################################################
+COMMENT('
+    Randomization provides 121 different possible versions of this question.<BR>
+    Does not include a solution set.<BR>
+    Expressions are randomly determined. Values in products fall between -12 and 12 and do not include 0, 1, or -1.  <BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();

@@ -1,0 +1,93 @@
+###################################################################### 
+## Description:
+##      Integer Arithmetic Addition Practice
+######################################################################
+
+####################################################################
+## Problem Classification:
+##      DBsubject('Arithmetic')
+##      DBchapter('Integers')
+##      DBsection('Addition/Subtraction')
+##      KEYWORDS('Integers', 'Multiplication', 'ULETH-0500')
+##      Level(5)
+###################################################################
+
+##################################################################
+## Date(2018-05-10)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+##################################################################
+
+
+
+#####################################################################
+#  Initialization
+#####################################################################
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "PGML.pl",
+  "AnswerFormatHelp.pl",
+  "contextLimitedNumeric.pl",
+);
+TEXT(beginproblem());
+####################################################################
+#   Setup
+###################################################################
+
+#-ULETH-#
+Context("LimitedNumeric");
+$a = - random(5,25,1);
+$b = random(1,25,1);
+
+$ans = $a - $b;
+
+#-END_ULETH-#
+  
+##################################################################
+#   Problem Text
+#################################################################
+
+#-ULETH-#
+BEGIN_PGML
+
+Forrest wanted to climb a mountain, but was concerned it might be too cold at the summit. It is currently  [`[$a]^\circ`]C at the bottom of the mountain and Forrest knows that the temperature  will drop by [`[$b]^\circ`]C over his journey to the top.
+
+What will be the temperature at the Mountain's summit when Forrest arrives there?  [______] [`^\circ`]C
+
+
+END_PGML
+# END_ULETH-#
+
+
+###################################################################
+#   Answer Evaluation
+###################################################################
+
+
+ANS(strict_num_cmp($ans));
+
+
+
+
+#################################################################
+#   Solution
+##################################################################
+
+BEGIN_PGML_SOLUTION
+
+Since the temperature is going to drop by [`[$b]^\circ`]C on the journey up the mountain finding the temperature at the summit requires subtracting this decrease in temperature from the current temperature [`[$a]^\circ`]C. Thus, at the summit the temperature will be [`[$a]^\circ C - [$b]^\circ C = [$a-$b]^\circ C`].
+
+END_PGML_SOLUTION
+##################################################################
+# Instrucotor Comments 
+#################################################################
+COMMENT('
+    Randomization provides 840 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Word problem that requires subtraction of integers.
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();

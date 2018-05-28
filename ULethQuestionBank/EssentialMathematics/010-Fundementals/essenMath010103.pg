@@ -1,0 +1,103 @@
+###################################################################### 
+## Description:
+##      Integer Arithmetic Addition Practice where one term is postive
+##      and the second is negative but smaller in absolute value
+######################################################################
+
+####################################################################
+## Problem Classification:
+##      DBsubject('Arithmetic')
+##      DBchapter('Integers')
+##      DBsection('Addition/Subtraction')
+##      KEYWORDS('Integers', 'Addition', 'ULETH-0500')
+##      Level(1)
+###################################################################
+
+##################################################################
+## Date(2018-05-10)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+##################################################################
+
+#####################################################################
+#  Initialization
+#####################################################################
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "PGML.pl",
+  "AnswerFormatHelp.pl",
+  "contextLimitedNumeric.pl",
+);
+TEXT(beginproblem());
+####################################################################
+#   Setup
+###################################################################
+
+#-ULETH-#
+Context("LimitedNumeric");
+
+$a = random(6,22,1);
+$b = random(-25, -$a-1);
+
+do{ $c= random(6,22,1);} until ($c!=$a and $c!=-$b);
+do{ $d= random(-25, -$c-1);} until ($d!=-$a and $d!=$b and $d!=-$c);
+
+do{ $e= random(6,22,1);} until ($e!=$a and $e!=-$b and $e!=$c and $e!=-$d);
+do{ $f= random(-25, -$e-1);} until ($f!=-$a and $f!=$b and $f!=-$c and $f!=$d and $f!=-$e);
+
+$ans1 = $a + $b;
+$ans2 = $c + $d;
+$ans3 = $e + $f;
+
+#-END_ULETH-#
+  
+##################################################################
+#   Problem Text
+#################################################################
+
+#-ULETH-#
+BEGIN_PGML
+
+Evaluate:
+
+`([$b]) + [$a] =` [_____]     
+
+`[$c] + ([$d]) =` [_____]     
+
+`([$f]) + [$e] =` [_____]
+
+
+
+END_PGML
+# END_ULETH-#
+
+
+###################################################################
+#   Answer Evaluation
+###################################################################
+
+
+ANS(strict_num_cmp($ans1));
+ANS(strict_num_cmp($ans2));
+ANS(strict_num_cmp($ans3));
+
+
+#################################################################
+#   Solution
+##################################################################
+
+# No Solution Included 
+
+##################################################################
+# Instrucotor Comments 
+#################################################################
+COMMENT('
+   Randomization provides 6,367,350 different possible versions of this question.<BR>
+    Does not include a solution set.<BR>
+   Three random summations are generated. The summations contain a positive integer in [5, 25] and a negative interger, greater in absolute value, in [-25,-6].<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
