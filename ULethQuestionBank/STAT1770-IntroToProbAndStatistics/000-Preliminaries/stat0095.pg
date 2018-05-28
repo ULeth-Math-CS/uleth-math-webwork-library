@@ -1,0 +1,186 @@
+## DESCRIPTION
+## This is a simple mutltiple choice question about probability (student is asked to select which choice is a correct interpretation about the probability of a random process).
+## ENDDESCRIPTION
+
+
+## DBsubject('Statistics')
+## DBchapter('Experimental design')
+## DBsection('Concepts')
+## Date(2018-05-08)
+## Institution(University of Lethbridge)
+## Author(Kyler Fisher)
+## MO(1)
+## KEYWORDS('true/false', 'multiple choice', 'ULETH-STAT1770', 'probability')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Following two macros used for multiple choice 
+  "parserRadioButtons.pl",
+  "PGchoicemacros.pl"
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+#-ULETH-#
+
+$proportionA = random(0.10,0.90,0.10);
+$percentA = int($proportionA * 100);
+if ( $percentA == 10 ) { $wordA = "one" }
+elsif ( $percentA == 20 ) { $wordA = "two" }
+elsif ( $percentA == 30 ) { $wordA = "three" }
+elsif ( $percentA == 40 ) { $wordA = "four" }
+elsif ( $percentA == 50 ) { $wordA = "five" }
+elsif ( $percentA == 60 ) { $wordA = "six" }
+elsif ( $percentA == 70 ) { $wordA = "seven" }
+elsif ( $percentA == 80 ) { $wordA = "eight" }
+elsif ( $percentA == 90 ) { $wordA = "nine" }
+
+$proportionC = random(0.10,0.90,0.10);
+$percentC = int($proportionC * 100);
+if ( $percentC == 10 ) { $wordC = "ten" }
+elsif ( $percentC == 20 ) { $wordC = "twenty" }
+elsif ( $percentC == 30 ) { $wordC = "thirty" }
+elsif ( $percentC == 40 ) { $wordC = "fourty" }
+elsif ( $percentC == 50 ) { $wordC = "fifty" }
+elsif ( $percentC == 60 ) { $wordC = "sixty" }
+elsif ( $percentC == 70 ) { $wordC = "seventy" }
+elsif ( $percentC == 80 ) { $wordC = "eighty" }
+elsif ( $percentC == 90 ) { $wordC = "ninety" }
+$hoursC = floor($proportionC * 24 * 10)/10;
+
+$proportionD = random(0.10,0.90,0.10);
+$percentD = $proportionD * 100;
+$numberD = int($percentD/ 10);
+
+# The options in the square brackets are the different radio button options
+# that will be available.
+# The next argument is the correct answer.
+# The arguments in the square brackets after last=> dictate which options
+# come last in the radio button list (left empty randomizes the order).
+$radioButtonsA = RadioButtons(
+  ["If you repeatedly draw M&Ms at random a very large number of times, in the long-run, $percentA% of those M&Ms will be red.", 
+  "Each time you draw ten M&Ms, $wordA of the M&Ms should be red.",
+  "For every 100 M&Ms, there should be $percentA M&Ms in the bag of candies.",
+  "All of these are correct interpretations of probability.",],
+  "If you repeatedly draw M&Ms at random a very large number of times, in the long-run, $percentA% of those M&Ms will be red.", #answer.
+  last=>["All of these are correct interpretations of probability."]);
+  
+$radioButtonsB = RadioButtons(
+  ["If 1000 people play the lottery, exactly one of those playing will win the lottery.", 
+  "Each time the lottery is played, one of 1000 people playing will win.",
+  "If you repeatedly play the lottery a very large number of times, in the long run, you will win 0.1% of the times you play.",
+  "All of these are correct interpretations of probability.",],
+  "If you repeatedly play the lottery a very large number of times, in the long run, you will win 0.1% of the times you play.", #answer.
+  last=>["All of these are correct interpretations of probability."]);
+  
+$radioButtonsC = RadioButtons(
+  ["$wordC percent of the region will receive rain tomorrow.", 
+  "None of these are correct.",
+  "If you repeatedly record whether or not it rains for a large number of days with the same weather conditions as tomorrow, in the long run you will see rain on $percentC% of such days.",
+  "Residents of the city should prepare for about $hoursC hours ($percentC% of 24 hours) of rain on the next day",],
+  "If you repeatedly record whether or not it rains for a large number of days with the same weather conditions as tomorrow, in the long run you will see rain on $percentC% of such days.", #answer.
+  last=>["None of these are correct."]);
+  
+$radioButtonsD = RadioButtons(
+  ["If you repeatedly select an adult American at random a large number of times, in the long run, roughly $percentD% of the time
+the selected adult will vote to get rid of the penny.",
+  "If you ask 10 people if they are in favor of getting rid of the penny, $numberD of them will say yes.",
+  "There are $percentD out of every 100 people who would agree that they would vote to get rid of the penny.",
+  "All of these are correct.",
+  ],
+  "If you repeatedly select an adult American at random a large number of times, in the long run, roughly $percentD% of the time
+the selected adult will vote to get rid of the penny.", #answer.
+  last=>["All of these are correct."]);
+  
+#-ENDULETH-#
+
+
+###########################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_PGML
+
+Answer this question for each of the following statements: Which of the following explains what it means to say "the probability
+of ..." while describing the random process that is repeated over and over again?
+
+The probability of getting a red M&M candy is [$proportionA].
+
+[@ $radioButtonsA->buttons() @]*
+
+The probability of winning at a daily number lottery game is 1/1000.
+
+[@ $radioButtonsB->buttons() @]*
+
+The probability of rain tomorrow is [$proportionC].
+
+[@ $radioButtonsC->buttons() @]*
+
+Pennies can be a nuisance. Suppose [$percentD]% of the population of adult Americans want to get rid of the penny. If I randomly select
+one person from this population, the probability this person wants to get rid of the penny is [$proportionD].
+
+[@ $radioButtonsD->buttons() @]*
+
+END_PGML
+
+
+###########################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+
+# Anwser for the multiple choice question.
+ANS($radioButtonsA->cmp());
+ANS($radioButtonsB->cmp());
+ANS($radioButtonsC->cmp());
+ANS($radioButtonsD->cmp());
+
+#-ENDULETH-#
+
+
+###########################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+
+
+END_PGML_SOLUTION
+
+COMMENT('
+    Simple multiple choice format.<BR>
+    Includes a solution set.<BR>
+    Only one version.<BR>
+    Multiple choice anwser positions are shuffled randomly.
+    
+    Uses PGML.
+    '); 
+#-ENDULETH-#
+
+ENDDOCUMENT();

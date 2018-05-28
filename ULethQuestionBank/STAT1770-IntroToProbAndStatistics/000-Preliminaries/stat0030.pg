@@ -1,0 +1,181 @@
+## DESCRIPTION
+## This is a multiple choice question that tests a student's ability to discern relative differences in standard deviation between a few lists of raw scores. Specifically, this question asks the student to determine which list of numbers has the largest standard deviation. The lists are intended to be quite clear-cut in terms of differences between their standard deviations and no calculations are needed. This question incorporates random generation for two of the lists of numbers. The list of numbers that is all the same value may use any integer from 1-10 inclusive. The list of numbers that vary around a mean and provide a intermediate standard deviation may be in one of 6 configurations. The last list does not vary and has half its values at 0 and half at 10 (the answer to the question). The order of the answers shown and their order in the question part are randomized.
+## ENDDESCRIPTION
+
+
+## DBsubject('Statistics')
+## DBchapter('Experimental Design')
+## DBsection('Concepts')
+## Date(2018-05-08)
+## Institution(University of Lethbridge)
+## Author(Kyler Fisher)
+## MO(1)
+## KEYWORDS('pop-up menu', 'radio buttons', 'multiple choice', 'ULETH-STAT1770', 'standard deviation', 'spread', 'variability')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Following two macros used to enable the multiple choice.
+  "parserRadioButtons.pl",
+  "PGchoicemacros.pl",
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+#-ULETH-#
+
+# these are all the possible names to be associated with the three sets of data. The list is large to minimize the chance of the same name appearing on seperate question instances and associated with different data (which could confuse a student).
+@possibleNames = ("Leon", "John", "Robert", "Michael", "William", "David", "Richard", "Joseph", "Hank", "Tyler", "Christopher", " Daniel", " 	Matthew", "Anthony", "Donald", "Mark", "Paul", "Steven", "Andrew", "Kenneth", "Sandra", "Ashley", "Kimberly", "Donna", "Carol", "Mary", "Patricia", "Jennifer", "Elizabeth", "Linda", "Barbara", "Susan", "Jessica", "Margaret", "Sarah", "Karen", "Nancy", "Betty", "Lisa", "Dorothy",);
+
+#Selecting three names from the possibleNames array and ensuring they are all different names ("eq" is the perl string equivalence operator).
+@usingNames;
+do {
+   $usingNames[0] = list_random(@possibleNames);
+   $usingNames[1] = list_random(@possibleNames);
+   $usingNames[2] = list_random(@possibleNames);
+}while(($usingNames[0] eq $usingNames[1]) or ($usingNames[0] eq $usingNames[2])
+or ($usingNames[1] eq $usingNames[2]) );
+
+$numberOfValues = 24; #this value cannot be freely altered without also having to adjust subsequent code; it is created just to increase subsequent code readability. It represents the number of values associated with each name.
+
+#Assinging the same (random 1-10) value to every element of a 24 element array and then using this array to produce a string of the values with comma seperation to display later. These numbers are for the case of the most consistent set of numbers with smallest std in which all the numbers are identical.
+@valuesAllEquiv;
+$value = random(1,10);
+for ($i=0; $i < $numberOfValues; $i++) {
+    $valuesAllEquiv[$i] = $value; 
+    }
+$valuesAllEquivtString = join(", ", @valuesAllEquiv);
+
+#Assinging 0s to the first half and 10s to the second half of a 24 element array and then using this array to produce a string of the values with comma seperation to display later. These numbers are for the case of the most extreme set of numbers with largest std in which the first half of the numbers are 0 and the second half are 10.
+@halfSmallHalfLarge;
+$small = 0;
+$large = 10;
+for ($i=0; $i < $numberOfValues; $i++) {
+    if ($i < (12)){ $halfSmallHalfLarge[$i] = $small; }
+    else{ $halfSmallHalfLarge[$i] = $large; }
+    }
+$halfSmallHalfLargeString = join(", ", @halfSmallHalfLarge);
+
+#Assigning the following series of numbers to an array and then shifting up by a random integer between 0 and 5 inclusive: 0,1,1,1,1,2,2,2,2,2,2,2,3,3,3,3,3,3,3,4,4,4,4,5. These numbers are for the case of the midle range of values with an intermediate std. 
+@variedWithMidSTD = (0,1,1,1,1,2,2,2,2,2,2,2,3,3,3,3,3,3,3,4,4,4,4,5);
+$amountShift = random(0,5);
+if ($amountShift > 0){
+for ($i=0; $i < $numberOfValues; $i++) {
+    $variedWithMidSTD[$i] = $variedWithMidSTD[$i] + $amountShift;
+    }
+}
+$variedWithMidSTDString = join(", ", @variedWithMidSTD);
+
+#collecting the three strings for the sets of numbers into an array for ease of access
+@setsOfNumbers = ($valuesAllEquivtString, $halfSmallHalfLargeString, $variedWithMidSTDString);
+
+#creating an array with the integers 0,1, and 2 randomly assigned to the first 3 elements. This array is used to display the number sets in random order to the student in the question part.
+@order;
+do{ 
+for ($i=0; $i < 3; $i++){
+$rand = random(0,2);
+$order[$i] = $rand; } 
+}
+while ($order[0] eq $order[1] or $order[0] eq $order[2] or $order[1] eq $order[2]);
+
+
+# The options in the square brackets are the different radio button options
+# that will be available.
+# The next argument is the correct answer.
+# The arguments in the square brackets after last=> dictate which options
+# come last in the radio button list (left empty randomizes the order).
+$radioButtons = RadioButtons(
+  [$usingNames[0]." - more consistency in values", 
+   $usingNames[1]." - most extreme range of values", 
+   $usingNames[2]." - middle range of values",
+   "You cannot decide without performing the calculations for comparison",],
+   $usingNames[1]." - most extreme range of values",#anwser (this is the list with half 0s and half 10s, large STD)
+  last=>["You cannot decide without performing the calculations for comparison"]); #show the anwsers in random order
+  
+#-ENDULETH-#
+
+
+###########################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+BEGIN_PGML
+
+Consider three students with the following distributions of 24 quiz scores:
+
+
+[``[$usingNames[$order[0]]]: [$setsOfNumbers[$order[0]]]``]
+
+[``[$usingNames[$order[1]]]: [$setsOfNumbers[$order[1]]]``]
+
+[``[$usingNames[$order[2]]]: [$setsOfNumbers[$order[2]]]``]
+
+
+Without bothering to do any calculations, which student has the _largest_ standard deviation of quiz scores?
+
+[@ $radioButtons->buttons() @]*
+END_PGML
+
+
+###########################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($radioButtons->cmp());
+#-ENDULETH-#
+
+
+###########################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+The standard deviation is a measure of spread or _variability_. It is greater in magnitude when more values tend to be dispersed away from their mean. It is approximately a measure of the average (positive) distance between each value and the mean of the set of values.
+
+[$usingNames[1]]'s set of scores ([$setsOfNumbers[1]]) are dispersed with half of the scores at 0 and half of the scores at 10 and has the largest standard deviation. That [$usingNames[1]]'s scores have the greatest standard deviation may have been surprising because the data do not look as varied. Compared to [$usingNames[2]], [$usingNames[1]] has many instances of the same scores. What matters is not how many seperate values the data take on but how much the data tend to be dispersed away from their mean.  [$usingNames[1]] has the largest standard deviation of quiz scores because overall, [$usingNames[1]]'s scores are signficantly further away from their mean than is the case for [$usingNames[2]] or [$usingNames[0]].
+
+
+END_PGML_SOLUTION
+
+COMMENT('
+    Randomization provides 54 different possible versions of this question      (considering number values only and not names).<BR>
+    Includes a solution set.<BR>
+    List of scores with all the same value uses random int value [1-10]<BR>
+    List of scores with intermediate standard deviation uses a random int shift [0-5] for 6 possible configurations <BR>
+    
+    Uses PGML.
+    '); 
+#-ENDULETH-#
+
+ENDDOCUMENT();

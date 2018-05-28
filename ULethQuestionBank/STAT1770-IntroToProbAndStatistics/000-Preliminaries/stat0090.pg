@@ -1,0 +1,108 @@
+## DESCRIPTION
+## This is a simple true or false question about probability (about whether or not a statement is a correct interpretation of a probability statement [it is]).
+## ENDDESCRIPTION
+
+
+## DBsubject('Statistics')
+## DBchapter('Experimental design')
+## DBsection('Concepts')
+## Date(2018-05-08)
+## Institution(University of Lethbridge)
+## Author(Kyler Fisher)
+## MO(1)
+## KEYWORDS('true/false', 'multiple choice', 'ULETH-STAT1770', 'probability')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Following two macros used for multiple choice 
+  "parserRadioButtons.pl",
+  "PGchoicemacros.pl"
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+#-ULETH-#
+
+# The options in the square brackets are the different radio button options
+# that will be available.
+# The next argument is the correct answer.
+# The arguments in the square brackets after last=> dictate which options
+# come last in the radio button list (left empty randomizes the order).
+$radioButtons = RadioButtons(
+  ["true", 
+  "false",],
+  "true", #answer.
+  last=>["false"]); #left blank to randomize answer positions
+  
+#-ENDULETH-#
+
+
+###########################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_PGML
+
+It has been reported that the probability that a new business closes or changes owners within its first 3 years is about 0.6. Saying, "About 60% of all new businesses close or change owners within the first three years," would be a correct interpretation of the probability in this case.
+
+[@ $radioButtons->buttons() @]*
+END_PGML
+
+
+###########################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+
+# Anwser for the multiple choice question.
+ANS($radioButtons->cmp());
+
+#-ENDULETH-#
+
+
+###########################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+
+
+END_PGML_SOLUTION
+
+COMMENT('
+    Simple multiple choice format.<BR>
+    Includes a solution set.<BR>
+    Only one version.<BR>
+    Multiple choice anwser positions are shuffled randomly.
+    
+    Uses PGML.
+    '); 
+#-ENDULETH-#
+
+ENDDOCUMENT();

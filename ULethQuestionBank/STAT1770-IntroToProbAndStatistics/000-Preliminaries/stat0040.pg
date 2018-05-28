@@ -1,0 +1,131 @@
+## DESCRIPTION
+## This is a multiple choice (checkbox) question in which the student must select multiple anwsers and is not told how many anwsers to select. This question tests a student's ability to recognize invalid representations of probability -- in both decimal and percentage form. All anwsers are randomly generated within appropriate ranges so that three of the anwsers will be invalid representations for probabilities: a negative decimal, a percentage over 100%, and a decimal over 1.0
+## ENDDESCRIPTION
+
+
+## DBsubject('Statistics')
+## DBchapter('Experimental Design')
+## DBsection('Concepts')
+## Date(2018-05-09)
+## Institution(University of Lethbridge)
+## Author(Kyler Fisher)
+## MO(1)
+## KEYWORDS('pop-up menu', 'radio buttons', 'multiple choice', 'ULETH-STAT1770', 'random', 'randomness', 'probability', 'percentage', 'decimal')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Following two used for multiple choice 
+  "PGchoicemacros.pl"
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+#-ULETH-#
+
+#Here the possible anwsers are generated, percentages are generated with integer steps and decimals use step size 0.01. First two are valid percentages between 5 and 95% (one an integer and one not), then a valid decimal betweem 0.05 and 0.95, then an invalid percentage between 101 and 115%, and finally two invalid decimals, one over 1 between 1.01 and 1.15 the other negative between -0.15 and -0.01.
+$validPercentA = random(5,95);
+do
+{$validPercentB = random(5,95);} while($validPercentB eq $validPercentA);#keep assigning new value to $validPercentB until different from $validPercentA
+$validPercentB = $validPercentB + random(0.1, 0.9, 0.1); #add a decimal to B
+$validDecimal = random(0.05,0.95,0.01);
+$invalidPercent = random(101,115);
+$invalidDecimalPositive = random(1.01,1.15,0.01);
+$invalidDecimalNegative = random(-0.15,-0.01,0.01);
+
+
+#-ULETH-#
+
+#this question uses checkboxes so that the student may select all that apply. 
+$checkBoxes = new_checkbox_multiple_choice();
+# The following parts each get assigned to a checkbox, and together
+# they make up the answer.
+$checkBoxes->qa(
+  "",
+  $invalidPercent."%",
+  $invalidDecimalPositive,
+  $invalidDecimalNegative,
+);
+$checkBoxes->extra(  $validPercentA."%",
+                     $validPercentB."%",
+                     $validDecimal,);#these are the incorrect anwsers, they are the valid representations of probability (the student needs to select the invalid representations).
+  
+#-ENDULETH-#
+
+
+###########################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+
+Which of the following numbers _cannot_ represent a probability? Select all that apply.
+[@ $checkBoxes->print_a() @]*
+
+END_PGML
+
+
+###########################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+
+
+ANS(checkbox_cmp($checkBoxes->correct_ans()));
+
+#-ENDULETH-#
+
+
+###########################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+
+BEGIN_PGML_SOLUTION
+
+Probabilities may be appropriately represented as percentages between 0%-100% inclusive and in decimal representation between 0.0-1.0 inclusive. 
+
+A probability of 0%, or 0.0 in decimal, means that an event has no chance of occuring (under some set of conditions), it is not possible to have less than no chance of occuring so negative numbers, whether as a percentage or in decimal form such as the above value [$invalidDecimalNegative] cannot represent probabilties.
+
+A probabilty of 100%, or 1.0 in decimal, means that an event will always happen (under some set of conditions). An event cannot possibly have a greater probability of happening than always happening so the values [$invalidPercent]% and [$invalidDecimalPositive] from above do not make sense as probabilties.
+
+END_PGML_SOLUTION
+
+COMMENT('
+    Strictly speaking, there are 90x90x9x90x14x14x14 = 18003384000 different            combinations of values but this may exaggerate the variability of the questions  as there will always be three incorrect probabilty representations depicted (a negative decimal form between -.15 and -.1, a decimal form over 1 from 1.01 and 1.15, and a percentage over 100% that is between 101% and 115%.)
+    Simple multiple choice format.<BR>
+    Includes a solution set.<BR>
+
+    Uses PGML.
+    '); 
+#-ENDULETH-#
+
+ENDDOCUMENT();

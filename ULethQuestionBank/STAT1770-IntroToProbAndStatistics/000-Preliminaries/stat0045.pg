@@ -1,0 +1,198 @@
+## DESCRIPTION
+## This is a multiple choice question intended to test student's ability to 
+## ENDDESCRIPTION
+
+
+## DBsubject('Statistics')
+## DBchapter('Experimental Design')
+## DBsection('Concepts')
+## Date(2018-05-09)
+## Institution(University of Lethbridge)
+## Author(Kyler Fisher)
+## MO(1)
+## KEYWORDS('pop-up menu', 'radio buttons', 'multiple choice', 'ULETH-STAT1770', 'variable', 'variables', 'categorical variables', 'quantitative variables')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Following two used for multiple choice 
+  "parserRadioButtons.pl",
+  "PGchoicemacros.pl",
+  # Used for drop down selection items
+  "parserPopUp.pl",
+  "answerHints.pl",
+  # Scaffold for dividing question into parts.
+  "scaffold.pl"
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+#-ULETH-#
+
+# The options in the square brackets are the different radio button options
+# that will be available.
+# The next argument is the correct answer.
+# The arguments in the square brackets after last=> dictate which options
+# come last in the radio button list (left empty randomizes the order).
+$radioButtons = RadioButtons(
+  ["the amount of bonus", 
+   '$50',  
+   "the 47 students",
+   "the one week",
+   "there are no observational units"],
+  
+  "the 47 students",#anwser
+  last=>["there are no observational units"]);#randomize except this last one
+  
+  
+#this question uses checkboxes so that the student may select all that apply.
+#Here the checkboxes are initialized.
+$checkBoxes = new_checkbox_multiple_choice();
+# The following parts each get assigned to a checkbox, and together
+# they make up the answer.
+$checkBoxes->qa(
+  "",
+  "how much money each student spent",
+  "what the student was told",
+);
+$checkBoxes->extra(  "what the students spent the money on",
+                     "how long it took the student to spend the bonus",
+                     "the number of students participating",);#these are the incorrect anwsers).
+  
+#The arguments for PopUp are the options then and then the answer. "?" answer is just for the box display before a student makes a selection.
+#Popup A and B are for the sub-question about the quantitative variable.
+$popupA = PopUp(["?", "the amount students spent", "what the students were told"], "the amount students spent");
+
+$popupB = PopUp(["?", "two", "more than two"], "more than two");
+  
+#Popup C and D are for the sub-question about the categorical variable.
+$popupC = PopUp(["?", "the amount students spent", "what the students were told"], "what the students were told");
+
+$popupD = PopUp(["?", "two", "more than two"], "two"); 
+  
+  
+#-ENDULETH-#
+
+
+###########################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+
+BEGIN_PGML
+This problem has two parts.  Students may only open the second part after correctly completing the first part.
+END_PGML
+
+
+Scaffold::Begin(
+      #can_open => "when_previous_correct",
+      #is_open  => "correct_or_first_incorrect"
+    );
+
+Section::Begin("Part 1");
+# Part 1 problem text.
+BEGIN_PGML
+
+An article in a 2006 issue of the Journal of Behavioral Decision Making reports on a study involving 47 undergraduate students at
+Harvard. All of the participants were given $50, but some (chosen at random) were told that this was a "tuition rebate," while the
+others were told that this was 'bonus income.' After one week, the students were contacted again and asked how much of the
+$50 they had spent and how much they had saved. Researchers wanted to know whether those receiving the "rebate" would tend
+to save more money than those receiving the "bonus."
+
+What are the *observational units* in this scenario?
+
+[@ $radioButtons->buttons() @]*
+
+
+
+What are the *variables* in this scenario?  (select all that apply)
+[@ $checkBoxes->print_a() @]*
+
+END_PGML
+Section::End();
+
+Section::Begin("Part 2");
+# Part 2 problem text.
+BEGIN_PGML
+
+A *quantitative variable* from this scenario is  [@ $popupA->menu() @]*  for which there are  [@ $popupB->menu() @]*  possible outcomes.
+
+A *categorical variable* from this scenario is [@ $popupC->menu() @]*  for which there are  [@ $popupD->menu() @]*  possible outcomes.
+
+END_PGML
+Section::End();
+
+Scaffold::End();
+
+
+###########################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($radioButtons->cmp());
+ANS(checkbox_cmp($checkBoxes->correct_ans()));
+ANS($popupA->cmp()->withPostFilter(AnswerHints(["what the students were told"] => ["What makes a variable categorical vs quantitative?", replaceMessage=>1])));
+ANS($popupB->cmp()->withPostFilter(AnswerHints(["two"] => ["What makes a variable categorical vs quantitative?", replaceMessage=>1])));
+ANS($popupC->cmp()->withPostFilter(AnswerHints(["the amount students spent"] => ["What makes a variable categorical vs quantitative?", replaceMessage=>1])));
+ANS($popupD->cmp()->withPostFilter(AnswerHints(["more than two"] => ["What makes a variable categorical vs quantitative?", replaceMessage=>1])));
+#-ENDULETH-#
+
+###########################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+In this scenario, it is the 47 students whose characteristics are being measured so the 47 students are the observational units. 
+
+The characeristics that are being measured is how much of the 50$ each of the 47 students spent and also whether the student was told that the 50$ was "tuition rebate" or "bonus income". So the scenario has two variables: amount of the 50$ spent and whether student was told it was "tuition rebate" or "bonus income".
+
+The options "how long it took the student to spend the bonus" and "what the students spent the money on" do make sense as potential variables but are not the characteristics that this scenario describes as being measured so we do not call them the variables for this scenario. 
+
+The amount of the 50$ that the students spent is considered a quantitative variable because it is a numerical measurement. For each student, the value of this variable could vary numerically between 0 and 50$ and so there are more than two possible outcomes. 
+
+For each student, whether that student was told that the money was "tuition rebate" or whether they were told it was "bonus income" instead is a categorical variable. For each observational unit, that is, for each student, this variable falls into one of the two categories. This categorical variable had two categories but categorical variables can also have many categories. 
+
+
+
+END_PGML_SOLUTION
+
+COMMENT('
+    Simple multiple choice, checkboxes, and drop down menu questions.<BR>
+    Includes a solution set.<BR>
+
+    Uses PGML.
+    '); 
+#-ENDULETH-#
+
+ENDDOCUMENT();

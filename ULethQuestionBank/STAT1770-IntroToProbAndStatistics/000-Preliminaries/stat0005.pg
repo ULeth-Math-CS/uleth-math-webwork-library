@@ -1,0 +1,116 @@
+## DESCRIPTION
+## This is a multiple choice question intended to test student's ability to recognize the relevant statistical variales from a specific context. The order the answers are displayed in randomized but the question and the answers themselves do not vary. This question is similar to another question in the same DBsection (that asks instead for the observational units).
+## ENDDESCRIPTION
+
+
+## DBsubject('Statistics')
+## DBchapter('Experimental design')
+## DBsection('Concepts')
+## Date(2018-05-08)
+## Institution(University of Lethbridge)
+## Author(Kyler Fisher)
+## MO(1)
+## KEYWORDS('pop-up menu', 'radio buttons', 'multiple choice', 'ULETH-STAT1770', 'observational units')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Following two macros used for multiple choice 
+  "parserRadioButtons.pl",
+  "PGchoicemacros.pl"
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+#-ULETH-#
+
+# The options in the square brackets are the different radio button options
+# that will be available.
+# The next argument is the correct answer.
+# The arguments in the square brackets after last=> dictate which options
+# come last in the radio button list (left empty randomizes the order).
+$radioButtons = RadioButtons(
+  ["number of weeks each consumer spent shopping", 
+  "the amount each consumer spent", 
+  "price of each present", 
+  "number of expected purchases",],
+  "the amount each consumer spent", #answer.
+  last=>[""]); #left blank to randomize answer positions
+  
+#-ENDULETH-#
+
+
+###########################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_PGML
+
+Identify the _variable_ in this question: How much did a typical Canadian consumer spend on Christmas presents in 2017?
+
+[@ $radioButtons->buttons() @]*
+END_PGML
+
+
+###########################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# Anwser for the multiple choice question.
+ANS($radioButtons->cmp());
+
+#-ENDULETH-#
+
+
+###########################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+
+In statistics, variables are characteristics that can be measured. They may be quantiative, like height in centimeters, or categorical, like color of eyes. We expect that variables will vary between the different observational units under investigation.  
+
+The hypothetical study question provided is interested in how much a typical Canadian consumer (the observational units) spent. How much consumers spent then, is the characteristic we are interested in measuring to address our question. This means amount spent by consumers is the variable for this question. 
+
+The number of weeks each consumer spent shopping and the price of each present are also characteristics that could be measured. However these possible variables are not as well suited to anwsering the study question. 
+
+
+END_PGML_SOLUTION
+
+COMMENT('
+    Simple multiple choice format.<BR>
+    Includes a solution set.<BR>
+    Only one version.<BR>
+    Multiple choice anwser positions are shuffled randomly.
+    
+    Uses PGML.
+    '); 
+#-ENDULETH-#
+
+ENDDOCUMENT();

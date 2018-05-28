@@ -1,0 +1,140 @@
+## DESCRIPTION
+## This is a multiple choice question intended to test student's ability to 
+## ENDDESCRIPTION
+
+
+## DBsubject('Statistics')
+## DBchapter('Introduction to Statistical Investigations')
+## DBsection('6 step method')
+## Date(2018-05-09)
+## Institution(University of Lethbridge)
+## Author(Kyler Fisher)
+## MO(1)
+## KEYWORDS('pop-up menu', 'radio buttons', 'multiple choice', 'ULETH-STAT1770', 'variable', 'observational unit', 'categorical variable', 'quantitative variable')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Following two used for multiple choice 
+  "parserRadioButtons.pl",
+  "PGchoicemacros.pl",
+  # Used for drop down responses.
+  "parserPopUp.pl",
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+#-ULETH-#
+
+# The options in the square brackets are the different radio button options
+# that will be available.
+# The next argument is the correct answer.
+# The arguments in the square brackets after last=> dictate which options
+# come last in the radio button list (left empty randomizes the order).
+$radioButtonsA = RadioButtons(
+  ["true", 
+   "false",],
+  
+  "true",#anwser
+  last=>["false"]);#randomize
+  
+$radioButtonsB = RadioButtons(
+  ["true", 
+   "false",],
+  
+  "true",#anwser
+  last=>["false"]);#randomize
+  
+$popup = PopUp(["?", "quantitative variable.", "categorical variable."], "quantitative variable.");
+  
+#-ENDULETH-#
+
+
+###########################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+BEGIN_PGML
+
+Consider the following scenario: "Subjects listened to 10 seconds of the Jackson 5's song "ABC" and then were asked how long they thought the song snippet lasted. Do people tend to overestimate the length of a song snippet?"
+
+In this scenario, the subjects are the *observational units*.
+
+[@ $radioButtonsA->buttons() @]*
+
+In this scenario, how long the subjects thought the song snippet lasted is the *variable*.
+
+[@ $radioButtonsB->buttons() @]*
+
+The length of the song represents a [@ $popup->menu() @]*
+
+END_PGML
+
+###########################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($radioButtonsA->cmp());
+ANS($radioButtonsB->cmp());
+ANS($popup->cmp());
+
+#-ENDULETH-#
+
+###########################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+The subjects are the _observational units_ of the study described. This is because it is the subjects whose charactersitcs are being measured. In this case, only one characteristic is explicitly being measured and this is the length of time that the subjects thought the song snippet lasted. 
+
+Because this is the characteristic being measured, 'how long the subjects thought the song snippet lasted' is the _variable_ for this study. This variable is considered a quantitative variable because it is a measurement or quantity with numerical meaning and is not a category or group. 
+
+Remember, just because a variable is expressed with numbers does not make it a  _numerical variable_. Area codes, for example, are expressed with numbers but it does not make sense to treat them as quantitative variables, they are treated as categorical variables because they relate to different categorical regions.
+
+END_PGML_SOLUTION
+
+COMMENT('
+    Simple multiple choice, checkboxes, and drop down menu questions.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 1<BR>
+    - Max attempts: 3<BR>
+    - Show me another: 1<BR>
+    - Rerandomize after: Default<BR>
+
+    Uses PGML.
+    '); 
+#-ENDULETH-#
+
+ENDDOCUMENT();
