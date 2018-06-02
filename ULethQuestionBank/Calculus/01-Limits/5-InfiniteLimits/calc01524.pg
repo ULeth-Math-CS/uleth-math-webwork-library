@@ -1,0 +1,128 @@
+## DESCRIPTION
+## This is Problem 1.5.24 from the ULETH APEX Calculus (1.6.24 in the APEX text). It covers vertical and horizontal asymptotes.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Limits and continuity)
+## DBsection(Limits at infinity, horizontal and oblique asymptotes)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('1.6')
+## Problem1('24')
+## MO(1)
+## Keywords('limit', 'limits', 'infinity', 'horizontal asymptote', 'vertical asymptote', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Used to format the table in the solution
+  "niceTables.pl",
+  # Used for answers which may be lists
+  "contextLimitedNumeric.pl"
+);
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+#Randomize the question parameters. 
+$a = random(1,9,1);
+$a2 = $a**2;
+
+$ans1 = List(-1);
+$ans2 = List("DNE");
+
+
+$f = Formula("{x^2 - $a2}/{-x^2 - $a2}")->reduce();
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+BEGIN_PGML
+
+Identify the horizontal and vertical asymptotes, if any,
+of the given function.
+
+>>[``
+  f(x) = [$f]
+``]<<
+
+Separate multiple answers by commas.
+Enter *DNE* if an asymptote does not exist.
+
+a) Horizontal asymptote(s): [`y =`] [___________] [@ AnswerFormatHelp("numbers") @]*
+b) Vertical asymptote(s): [`y =`] [___________] 
+
+
+END_PGML
+
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+To find the horizontal asymptotes, find the limits as 
+[`x \to \pm\infty `]:
+
+[``
+  \lim_{x \to -\infty} f(x) = \lim_{x \to \infty} f(x) = 
+  -1.
+``]
+
+In this case, both limits are the same. Therefore, [`y = -1`]  is the only horizontal asymptote.
+
+To find vertical asymptotes, look for infinite-valued limits.
+These can be found after factoring and simplifying:
+
+[``
+  f(x) = -\frac{(x - [$a])(x + [$a])}{(x^2 + [$a2])}.
+``]
+
+The denominator does not factor further.  Since there are no
+[`x`]-values where the denominator is 0, there are no 
+vertical asymptotes.
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+#-ENDULETH#
+ANS( Compute($ans1)->cmp() );
+ANS( Compute($ans2)->cmp() );
+
+############################
+COMMENT('
+    Randomization provides 6561 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();

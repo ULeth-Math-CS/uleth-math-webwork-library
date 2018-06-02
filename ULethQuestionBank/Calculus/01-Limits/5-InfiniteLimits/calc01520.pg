@@ -1,0 +1,134 @@
+## DESCRIPTION
+## This is Problem 1.5.20 from the ULETH APEX Calculus (1.6.20 in the APEX text). It covers vertical and horizontal asymptotes.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Limits and continuity)
+## DBsection(Limits at infinity, horizontal and oblique asymptotes)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('1.6')
+## Problem1('20')
+## MO(1)
+## Keywords('limit', 'limits', 'infinity', 'horizontal asymptote', 'vertical asymptote', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Used to format the table in the solution
+  "niceTables.pl",
+  # Used for answers which may be lists
+  "contextLimitedNumeric.pl"
+);
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+#Randomize the question parameters. 
+$a = random(2,9,1);
+$b = random(1,5,1);
+$c = random(1,5,1);
+$d = random(2,9,1);
+$e = random(1,5,1);
+
+$p1 = $a*($b+$c);
+$p0 = $a*$b*$c;
+$q1 = $d*($b-$e);
+$q0 = $d*$b*$e;
+
+$ans1 = List($a/$d);
+$ans2 = List($e);
+
+$f = Formula("($a*x^2+$p1*x+$p0)/($d*x^2+$q1*x-$q0)")->reduce();
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+BEGIN_PGML
+
+Identify the horizontal and vertical asymptotes, if any,
+of the given function.
+
+>>[``
+  f(x) = [$f]
+``]<<
+
+Separate multiple answers by commas.
+Enter *DNE* if an asymptote does not exist.
+
+a) Horizontal asymptote(s): [`y =`] [___________] [@ AnswerFormatHelp("numbers") @]*
+b) Vertical asymptote(s): [`y =`] [___________] 
+
+
+END_PGML
+
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+To find the horizontal asymptotes, find the limits as 
+[` x \to \pm\infty `]: 
+
+[``
+  \lim_{x \to -\infty} f(x) = \lim_{x \to \infty} f(x) = 
+  \frac{[$a]}{[$d]}.
+``]  
+
+ In this case, both limits are the same.Therefore, [`y = \frac{[$a]}{[$d]}`] is the only horizontal asymptote.
+
+To find vertical asymptotes, look for infinite-valued limits.
+These can be found after factoring and simplifying:
+
+[``
+  f(x) = \frac{[$a](x + [$b])(x + [$c])}{[$d](x+[$b])(x-[$e])}
+  = \frac{[$a](x+[$c])}{[$d](x-[$e])}.
+``]
+
+Only [` x = [$e] `] is a vertical asymptote.  Note that a _hole_ in the graph exists at [` x = -[$b] `], but no asymptote.
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+#-ENDULETH#
+ANS( Compute($ans1)->cmp() );
+ANS( Compute($ans2)->cmp() );
+
+############################
+COMMENT('
+    Randomization provides 8000 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
