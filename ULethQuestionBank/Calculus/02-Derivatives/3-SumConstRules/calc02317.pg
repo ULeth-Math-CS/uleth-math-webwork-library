@@ -1,0 +1,117 @@
+## DESCRIPTION
+## This is Problem 2.3.17 from the APEX Calculus text. It covers differentiation using basic rules.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Derivatives involving multiple rules (no product, quotient, or chain rule))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.3')
+## Problem1('17')
+## MO(1)
+## Keywords('derivative', 'definition of derivative', 'logarithm', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+
+$a = random(2,20,1)*random(-1,1,2);
+$b = random(2,20,1)*random(-1,1,2);
+$c = random(2,20,1)*random(-1,1,2);
+
+
+$d2 = 2*$d;
+
+$f = Formula("$a*ln(x)")->reduce();
+$df = $f->D('x');
+
+$g = Formula("$b*ln(x) + $c*x")->reduce();
+$dg = $g->D('x');
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Compute the derivatives of the given functions.
+
+* [``f(x) = [$f].``]
+
+[`f'(x) = `] [_______________] [@ AnswerFormatHelp("formulas") @]*
+
+* [``g(x) = [$g].``]
+
+[`g'(x) = `] [_______________]
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Using the fact that [`(e^x)^\prime = e^x`], we have
+
+[``
+  f'(x)  = [$df] =  \frac{[$a]}{x}.
+``]
+
+Additionally, using the Constant rule and Sum/Difference rule,
+
+[``
+  g'(x) = [$dg] =  \frac{[$b]}{x} + [$c].
+``]
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+#-ENDULETH#
+ANS( $df->cmp() );
+ANS( $dg->cmp() );
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 54,872 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();

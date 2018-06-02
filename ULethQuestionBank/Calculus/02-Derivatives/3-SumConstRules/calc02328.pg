@@ -1,0 +1,124 @@
+## DESCRIPTION
+## This is Problem 2.3.28 from the APEX Calculus text. It covers higher order derivatives.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Higher-order derivatives)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.3')
+## Problem1('28')
+## MO(1)
+## Keywords('derivative', ' higher order derivatives', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+
+$a = random(2,9,1)*random(-1,1,2);
+
+$f = Formula("$a*cos(x)")->reduce();
+$df1 = Compute($f->D('x'));
+$df2 = Compute($df1->D('x'));
+$df3 = Compute($df2->D('x'));
+$df4 = Compute($df3->D('x'));
+
+#forces dfs to a string to allow better simplification of the final answer
+$ans1 = Compute("$df1")->reduce();
+$ans2 = Compute("$df2")->reduce();
+$ans3 = Compute("$df3")->reduce();
+$ans4 = Compute("$df4")->reduce();
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Compute the first four derivatives of [`f(x) = [$f]`].
+
+a)[`f'(x) = `] [_______________] [@ AnswerFormatHelp("formulas") @]*  
+b)[`f''(x) = `] [_______________]  
+c)[`f'''(x) = `] [_______________]  
+d)[`f^{(4)}(x) = `] [_______________]  
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+We alternate applying the derivatives for [`\cos(x)`] and [`\sin(x)`].
+
+[``
+  \begin{array}{rcl}
+    f(x) &=& [$f] \\
+    &&\\
+    f'(x) &=& [$ans1] \\
+    &&\\
+    f''(x) &=& [$ans2]\\
+    &&\\
+    f'''(x) &=& [$ans3]\\
+    &&\\
+    f^{(4)}(x) &=& [$ans4]\\
+    &&\\
+  \end{array}
+``]
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+ANS( $ans1->cmp() );
+ANS( $ans2->cmp() );
+ANS( $ans3->cmp() );
+ANS( $ans4->cmp() );
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 16 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    
+
+
+
+

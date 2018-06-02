@@ -1,0 +1,124 @@
+## DESCRIPTION
+## This is Problem 2.3.29 from the APEX Calculus text. It covers higher order derivatives.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Higher-order derivatives)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.3')
+## Problem1('29')
+## MO(1)
+## Keywords('derivative', ' higher order derivatives', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+Context()->variables->add(t => "Real");
+
+$a = random(2,9,1)*random(-1,1,2);
+$b = random(2,9,1)*random(-1,1,2);
+
+$f = Formula("$a*t^2 + $b*e^t")->reduce();
+$df1 = Formula("2*$a*t + $b*e^t")->reduce();
+$df2 = Formula("2*$a + $b*e^t")->reduce();
+$df3 = Formula("$b*e^t")->reduce();
+$df4 = Formula("$b*e^t")->reduce();
+#forces dfs to a string to allow better simplification of the final answer
+$ans1 = Compute("$df1")->reduce();
+$ans2 = Compute("$df2")->reduce();
+$ans3 = Compute("$df3")->reduce();
+$ans4 = Compute("$df4")->reduce();
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Compute the first four derivatives of [`f(t) = [$f]`].
+
+a)[`f'(t) = `] [_______________] [@ AnswerFormatHelp("formulas") @]*  
+b)[`f''(t) = `] [_______________]  
+c)[`f'''(t) = `] [_______________]  
+d)[`f^{(4)}(t) = `] [_______________]  
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+We apply power rule to the first term and use the fact that [`(e^t)' = e^t`] for the second term. 
+
+[``
+  \begin{array}{rcl}
+    f(t) &=& [$f] \\
+    &&\\
+    f'(t) &=& [$ans1] \\
+    &&\\
+    f''(t) &=& [$ans2]\\
+    &&\\
+    f'''(t) &=& [$ans3]\\
+    &&\\
+    f^{(4)}(t) &=& [$ans4]\\
+    &&\\
+  \end{array}
+``]
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+ANS( $ans1->cmp() );
+ANS( $ans2->cmp() );
+ANS( $ans3->cmp() );
+ANS( $ans4->cmp() );
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 256 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    
+
+
+

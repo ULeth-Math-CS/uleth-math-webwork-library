@@ -1,0 +1,114 @@
+## DESCRIPTION
+## This is Problem 2.3.18 from the APEX Calculus text. It covers differentiation using basic rules.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Derivatives involving multiple rules (no product, quotient, or chain rule))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.3')
+## Problem1('18')
+## MO(1)
+## Keywords('derivative', 'definition of derivative', 'power rule', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  "contextFraction.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Fraction")->noreduce('(-x)-y','(-x)+y)');
+
+$a = random(1,20,1);
+$b = random(1,20,1);
+$c = random(1,20,1);
+$d = random(1,20,1);
+$k = random(1,20,1);
+
+$p4 = 4*$a + 1;
+$p3 = 3*$b - 1;
+$p2 = 2*$c + 1;
+
+$f = Formula("$p4/4*x^4 + $p3/3*x^3 + $p2/2*x^2 + $d*x + $k")->reduce();
+$df = Compute($f->D('x'));
+
+#forces df to a string to allow better simplification of the final answer
+$ans = Compute("$df")->reduce();
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Compute the derivative of the given function.
+
+>>[``f(x) = [$f].``]<<
+
+[`f'(x) = `] [______________________] [@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Using the Sum/Difference Rule and Power Rule,
+
+[``
+  f'(x) = [$df]
+  = [$ans].
+``]
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+ANS( $ans->cmp() );
+
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 3,200,000 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    
+
+
