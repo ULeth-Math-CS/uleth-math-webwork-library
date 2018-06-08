@@ -1,0 +1,102 @@
+###################################################################
+## Description:
+##       Addition Problems with two terms where one term
+##        of the summation is positive integer, the other negative real number
+##          (one decimal place) with a larger absolute value.
+####################################################################
+
+####################################################################
+## Problem Classification:
+##      DBsubject('Arithmetic')
+##      DBchapter('Decimals')
+##      DBsection('Addition/Subtraction')
+##      KEYWORDS('Integers', 'Addition', 'ULETH-0500')
+##      Level(1)
+###################################################################
+
+##################################################################
+## Date(2018-05-24)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+##################################################################
+
+#####################################################################
+#  Initialization
+#####################################################################
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "PGML.pl",
+  "AnswerFormatHelp.pl",
+  "contextLimitedNumeric.pl",
+);
+TEXT(beginproblem());
+
+####################################################################
+#   Setup
+###################################################################
+
+#-ULETH-#
+Context("LimitedNumeric");
+$a=random(6,25) + random (0.1,0.9,0.1)+random(0.01,0.09,0.01); 
+do {$b = random (6,25);} until ( -$a + $b < 0);
+
+do{ $c=random(6,25) + random (0.1,0.9,0.1)+random(0.01,0.09,0.01); } until ($c!=$a);
+do{$d = random (6,25);} until( -$c + $d < 0);
+
+do{ $e=random(6,25) + random (0.1,0.9,0.1)+random(0.01,0.09,0.01); } until ($e!=$a and $e!=$c);
+do{$f = random (6,25);} until (-$e + $f < 0);
+
+$ans1 = -$a + $b;
+$ans2 = -$c + $d; 
+$ans3 = -$e + $f;
+
+
+#-END_ULETH-#
+  
+##################################################################
+#   Problem Text
+#################################################################
+
+#-ULETH-#
+BEGIN_PGML
+
+Evaluate:
+
+`(-[$a]) + [$b] =` [_____]     
+
+`[$d] + (-[$c]) =` [_____]     
+
+`(-[$e]) + [$f] =` [_____]     
+
+
+END_PGML
+# END_ULETH-#
+
+###################################################################
+#   Answer Evaluation
+###################################################################
+
+ANS(strict_num_cmp($ans1));
+ANS(strict_num_cmp($ans2));
+ANS(strict_num_cmp($ans3));
+
+#################################################################
+#   Solution
+##################################################################
+
+#Solution Not Included
+
+##################################################################
+# Instructor Comments 
+#################################################################
+COMMENT('
+    Randomization provides over a million different possible versions of this question.<BR>
+    Does not include a solution set.<BR>
+   Three random summations are generated. The summations contain distinct negative integer terms between -6 and -25 inclusive added to a real number with two decimals that is greater in absolute value.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
