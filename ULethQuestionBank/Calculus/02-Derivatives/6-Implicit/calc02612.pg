@@ -1,0 +1,136 @@
+## DESCRIPTION
+## This is Problem 2.6.12 from the APEX Calculus text. It covers differentiation with multiple rules.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Derivatives of polynomials and power functions)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.6')
+## Problem1('12')
+## MO(1)
+## Keywords('derivative', 'definition of derivative', 'trig function', 'product rule', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  "contextFraction.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Fraction")->noreduce('(-x)-y','(-x)+y)');
+Context()->variables->add(t => 'Real');
+    Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,
+  );
+
+$a = random(3,8,1);
+
+$f = Formula("t^(1/$a)");
+
+$a1 = 1 - $a;
+$fp = Formula("(1/$a)t^($a1/$a)");
+
+$b = random(2,8,1)*random(-1,1,2);
+$c = random(0.1,0.9,0.1)*random(-1,1,2);
+$bc = $b*$c;
+
+$choice = random(1,4,1);
+if ($choice==1) {
+  $g = Formula("sec(t) + $b e^{$c t}");
+  $gp = Formula("sec(t)*tan(t) + $bc e^{$c t}");
+} elsif ($choice==2) {
+  $g = Formula("csc(t) + $b e^{$c t}");
+  $gp = Formula("-csc(t)*cot(t) + $bc e^{$c t}");
+} elsif ($choice==3) {
+  $g = Formula("tan(t) + $b e^{$c t}");
+  $gp = Formula("(sec(t))^2 + $bc e^{$c t}");
+} else {
+  $g = Formula("cot(t) + $b e^{$c t}");
+  $gp = Formula("-(csc(t))^2 + $bc e^{$c t}");
+}
+
+$ans = Compute("($f)*($gp) + ($fp)*($g)")->reduce();
+
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Compute the derivative of the given function.
+
+>>[``f(t) =  [$f]([$g])``]<<
+
+[`f'(t) = `] [______________________] [@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Use the Product Rule.
+
+[``
+  \begin{array}{rcl}
+  f'(t) &=&\displaystyle [$f] \frac{d}{dx}[ [$g] ]
+  + \frac{d}{dx}[$f] ([$g]) \\
+  &&\\
+  &=&\displaystyle [$f] ([$gp]) + [$fp] ([$g]) 
+  \end{array}
+``]
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+ANS( $ans->cmp() );
+
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 6048 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();      
+
+
+
