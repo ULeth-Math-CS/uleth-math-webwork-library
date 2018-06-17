@@ -1,0 +1,123 @@
+## DESCRIPTION
+## This is Problem 2.4.40 from the APEX Calculus text. It covers higher order derivatives with product rule.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Product rule (with trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.4')
+## Problem1('40')
+## MO(1)
+## Keywords('derivative', 'product rule', ' higher order derivatives', 'trig functions', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+
+$a = random(2,9,1);
+
+$r = random(1,2,1);
+if ($r==1) {
+  $f = Formula("$a sec x")->reduce();
+
+  $df1 = Compute($f->D('x'));
+  $ans1 = Compute("$a sec(x) tan(x)");
+
+  $df2 = Compute("$a(sec x)(sec^2 x) + (sec x tan x)(tan x)");
+  $ans2 = Compute("$a(sec(x)^3 + sec(x) * tan(x)^2)");
+} else {
+  $f = Formula("$a csc x")->reduce();
+
+  $df1 = Compute($f->D('x'));
+  $ans1 = Compute("-$a csc(x) cot(x)");
+
+  $df2 = Compute("$-$a(csc x)(-csc^2 x) + (-csc x cot x)(cot x)");
+  $ans2 = Compute("$a (csc(x)^3 + csc(x) cot(x)^2)");
+}
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Compute the first two derivatives of [`f(x) = [$f]`].
+
+[`f'(x) = `] [_______________] [@ AnswerFormatHelp("formulas") @]*  
+
+[`f''(x) = `] [_______________]  
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Use the fact that [`(\sec(x))' = \sec(x)\tan(x)`] and the Product Rule.
+
+[``
+  \begin{array}{rcl}
+    f(x) &=& [$f] \\
+    &&\\
+    f'(x) &=& [$df1] &=&  [$ans1] \\
+    &&\\
+    f''(x) &=& [$df2] &=& [$ans2]\\
+    &&\\
+  \end{array}
+``]
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+ANS( $ans1->cmp() );
+ANS( $ans2->cmp() );
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 16 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+    
+ENDDOCUMENT();    

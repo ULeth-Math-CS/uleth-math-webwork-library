@@ -1,0 +1,167 @@
+## DESCRIPTION
+## This is Problem 2.4.32 from the APEX Calculus text. It covers finding equations for the tangent line to the graph of a function.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Quotient rule (without trigonometric functions))
+## Level(4)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.4')
+## Problem1('32')
+## MO(1)
+## Keywords('derivative', 'slope tangent line', ' tangent line ', 'quotient rule', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Allows a single problem to contain multiple parts, where later
+  # parts aren't visible until the earlier ones are completed.
+  "scaffold.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Used to provide contextual help for how to type solutions.
+  "AnswerFormatHelp.pl",
+  "contextFraction.pl"
+);
+
+TEXT(beginproblem());
+
+
+###################################
+#  Setup
+
+#-ULETH-#
+Context("Numeric")->flags->set(
+  tolerance => 0.01,
+  tolType => "absolute",
+);
+
+$a = random(2,6,1)*random(-1,1,2);
+$b = random(2,5,1);
+$c = random(1,6,1);
+
+$x1 = random(1,3,1);
+$y1_num = $a * ($x1**2);
+$y1_den = $b * $x1 + $c;
+$y1 = Compute("$y1_num/$y1_den");
+
+$ab = $a * $b;
+$ac2 = 2*$a * $c;
+
+$f = Formula("$a*x^2");
+$fp = Formula("2*$a*x^2")->reduce();
+
+$g = Formula("$b*x+$c");
+$gp = Formula("$b");
+
+$m_num = $ab * ($x1**2) + $ac2 * $x1;
+$m_den = ($b * $x1 + $c)**2;
+
+$m = Compute("$m_num / $m_den");
+
+$ans1 = Compute("($ab*x^2 + $ac2*x)/($b*x + $c)^2")->reduce();
+$ans2 = $m;
+$ans3 = Compute("$m (x - $x1) + $y1")->reduce();
+
+#-ENDULETH-#
+
+###################################
+#  Main Text
+
+#-ULETH-#
+# This applies to the PGML in each scaffolding section.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+# Initial problem text to explain the scaffolding setup.
+BEGIN_PGML
+
+Follow the steps to find the equation of the tangent line to the graph of the function [`f(x) = \displaystyle \frac{[$f]}{[$g]}`] at the point [`([$x1],\frac{[$y1_num]}{[$y1_den]})`].
+
+This problem has two parts. You may only open the next part after correctly
+completing the previous part.
+END_PGML
+#-ENDULETH-#
+
+Scaffold::Begin();
+Section::Begin("Slope");
+# Part 2 problem text.
+BEGIN_PGML
+What is the _derivative_ of [`f(x)`]? [___________________]{Compute($ans1)} [@ AnswerFormatHelp("formulas") @]*  
+What is the _slope_ of the tangent line to [`f(x)`] at [`x = [$x1]`]? [__________]{Compute($ans2)} [@ AnswerFormatHelp("numbers") @]* 
+END_PGML
+Section::End();
+
+Section::Begin("Tangent Line");
+# Part 3 problem text.
+BEGIN_PGML
+The formula for the tangent line is [`y = `] [_____________]{Compute($ans3)}.
+END_PGML
+Section::End();
+#-ENDULETH-#
+
+Scaffold::End();
+
+
+###################################
+#  Answer Evaluation 
+
+#evaluation must be completed in the problem text
+
+###################################
+#  Solution
+
+BEGIN_PGML_SOLUTION
+
+First, find the derivative:  
+
+[``
+  \begin{array}{rcl}
+    f'(x) &=& \displaystyle
+    \frac{([$g])([$fp]) - ([$f])( [$gp] )}{ ([$g])^2 }\\
+    &&\\
+     &=& \displaystyle
+    \frac{ [$ab] x^2 + [$ac2] x }{ ([$b] x + [$c])^2 }.
+  \end{array}
+``]
+
+Then plug in [`x = [$x1]`] to find the slope:  [`m = f'([$x1]) = \frac{[$m_num]}{[$m_den]}`].
+
+Using point-slope form, 
+
+[``
+  \begin{array}{rcl}
+  \displaystyle   y - \frac{[$y1_num]}{[$y1_den]} &=& \displaystyle \frac{[$m_num]}{[$m_den]}(x - [$x1]) \\
+    &&\\
+  \displaystyle  y &=& \displaystyle \frac{[$m_num]}{[$m_den]}(x - [$x1]) + (\frac{[$y1_num]}{[$y1_den]}).
+  \end{array}
+``]
+
+END_PGML_SOLUTION
+
+COMMENT("This is a multi-part problem
+in which the next part is revealed only after the previous
+part is correct. <BR>
+Randomization provides 720 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+");
+#-ENDULETH-#
+
+ENDDOCUMENT();
+
+
+

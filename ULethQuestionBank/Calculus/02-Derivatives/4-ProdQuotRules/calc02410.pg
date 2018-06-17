@@ -1,0 +1,181 @@
+## DESCRIPTION
+## This is Problem 2.4.10 from the APEX Calculus text. It covers a basic application of the Product Rule.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Product rule (without trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.4')
+## Problem1('10')
+## MO(1)
+## Keywords('derivative', 'differentiation', 'product rule', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Allows a single problem to contain multiple parts, where later
+  # parts aren't visible until the earlier ones are completed.
+  "scaffold.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Used to provide contextual help for how to type solutions.
+  "AnswerFormatHelp.pl"
+);
+
+TEXT(beginproblem());
+
+
+###################################
+#  Setup
+
+#-ULETH-#
+Context("Numeric")->variables->add(s => 'Real');
+
+$a = random(2,9,1)*random(-1,1,2);
+$b = random(1,10,1)*random(-1,1,2);
+$c = random(2,9,1)*random(-1,1,2);
+$d = random(1,10,1)*random(-1,1,2);
+
+$f = Formula("$a*s + $b")->reduce();
+$g = Formula("$c*s + $d")->reduce();
+
+$dfu = $f->D('s')->reduce();
+$dgu = $g->D('s')->reduce();
+
+$df = Formula("$dfu")->reduce();
+$dg = Formula("$dgu")->reduce();
+
+$h = Formula("$a*$c*s^2 + ($a*$d+$b*$c)*s + $b*$d")->reduce();
+$dhu = $h->D('s')->reduce();
+
+$dh = Formula("$dhu")->reduce();
+#-ENDULETH-#
+
+###################################
+#  Main Text
+
+#-ULETH-#
+# This applies to the PGML in each scaffolding section.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+# Initial problem text to explain the scaffolding setup.
+BEGIN_PGML
+
+Follow the steps to find the derivative of the given function in two different ways.
+
+>>[``h(s) = ([$f])([$g])``]<<
+
+This problem has three parts. You may only open the next part after correctly
+completing the previous part.
+END_PGML
+#-ENDULETH-#
+
+Scaffold::Begin();
+#-ULETH-#
+# For each part the answer or answer checker reference must appear in the curly 
+# braces immediately after the answer field.
+Section::Begin("Product Rule - Part 1");
+# Part 1 problem text.
+BEGIN_PGML
+Let [`f(s) = [$f]`] and [`g(s) = [$g]`] so that [`h(s) = f(s) \cdot g(s)`]. 
+Their respective derivatives are  
+
+[`f'(s) = `][_____________]{Compute($df)} [@ AnswerFormatHelp("formulas") @]*  
+and  
+[`g'(s) = `][_____________]{Compute($dg)}.
+END_PGML
+Section::End();
+
+Section::Begin("Product Rule - Part 2");
+# Part 2 problem text.
+BEGIN_PGML
+Using the derivatives from Part 1 and the Product Rule,
+
+[``h'(s) = \left[\frac{f}{g}\right]' 
+= f'\cdot g + f\cdot g' = ``]
+[`\Big(`][_____]{Compute($df)}[`\Big)`][`\cdot`][`\Big(`][_____]{Compute($g)}[`\Big)`] [`+`] [`\Big(`][_____]{Compute($f)}[`\Big)`][`\cdot`][`\Big(`][_____]{Compute($dg)}[`\Big)`].
+
+Simplifying, we find that
+[`h'(s) = `][_____]{Compute($dh)}.
+
+END_PGML
+Section::End();
+
+Section::Begin("Algebraic Manipulation");
+# Part 3 problem text.
+BEGIN_PGML
+
+You may use algebra to expand [`h(s)`] before taking the derivative.  
+In this instance, [`h(s)`] becomes [______________]{Compute($h)}.
+
+We may then use the Power Rule to determine that
+[`h'(s) = `][_____]{Compute($dh)}.
+
+END_PGML
+Section::End();
+#-ENDULETH-#
+
+Scaffold::End();
+
+
+
+###################################
+#  Answer Evaluation 
+
+#evaluation must be completed in the problem text
+
+###################################
+#  Solution
+
+BEGIN_PGML_SOLUTION
+
+First, using the Product Rule,
+
+[``
+  \begin{array}{rcl}
+    h'(s) &=& \frac{d}{ds}[[$f]]\cdot([$g]) + ([$f])\cdot \frac{d}{ds}[[$g]]\\
+    &&\\
+    &=& ([$df])([$g]) + ([$f])([$dg])  \\
+  \end{array}
+``]
+
+After simplifying the last line, we find [`h'(s) = [$dh]`].
+
+Next, expand [`h(s)`] first:
+
+[``
+  h(s) =  ([$f])([$g]) = [$h].
+``]
+
+Then, by Power Rule, we find [`h'(s) = [$dh]`].
+
+END_PGML_SOLUTION
+
+COMMENT("This is a multi-part problem
+in which the next part is revealed only after the previous
+part is correct. <BR>
+Randomization provides 102,400 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+");
+#-ENDULETH-#
+
+ENDDOCUMENT();
+
+
+

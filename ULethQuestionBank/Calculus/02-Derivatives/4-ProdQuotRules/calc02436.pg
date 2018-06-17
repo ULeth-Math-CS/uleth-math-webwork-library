@@ -1,0 +1,128 @@
+## DESCRIPTION
+## This is Problem 2.4.36 from the APEX Calculus. It covers horizontal tangent lines.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Quotient rule (without trigonometric functions))
+## Level(4)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.4')
+## Problem1('36')
+## MO(1)
+## Keywords('horizontal tangent', 'differentiation', 'derivative', 'quotient rule', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Used to format the table in the solution
+  "niceTables.pl",
+  # Used for answers which may be lists
+  "contextLimitedNumeric.pl"
+);
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+#Randomize the question parameters. 
+$a = random(1,6,1)*random(-1,1,2);
+$b = $a * random(2,7,1);
+$c = random(1,15,1)*random(-1,1,2);
+
+$k = $a * $b;
+$num = Formula("$k*x")->reduce();
+$den = Formula("$b*x + $c")->reduce();
+
+$num1 = $a*$b*$c;
+
+$f = Formula("$num/$den")->reduce();
+$dfu = $f->D('x')->reduce();
+
+$ans = List("DNE");
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+BEGIN_PGML
+
+Find the [`x`]-value(s) where the graph of the function has a horizontal tangent line. 
+
+>>[``
+  f(x) = [$f]
+``]<<
+
+Separate multiple answers with commas.
+Enter *DNE* if no such [`x`] exists.
+
+[`x =`] [___________] [@ AnswerFormatHelp("numbers") @]*
+
+END_PGML
+
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+We need to find all [`x`] for which [`f'(x) = 0`]. First, we compute the derivative (use Quotient Rule):
+
+[``f'(x) = [$dfu]``].
+
+Then we set the derivative equal to zero and solve for [`x`]:
+
+[``
+  \begin{array}{rcl}
+   f'(x) &=& \frac{[$num1]}{([$den])^2} \\
+    \frac{[$num1]}{([$den])^2} &=& 0 \\
+   [$num1] &=& 0
+  \end{array}
+``]
+
+There is no solution to this equation, and therefore no [`x`] for which there is a horizontal tangent line.
+
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+#-ENDULETH#
+ANS( Compute($ans)->cmp() );
+
+############################
+COMMENT('
+    Randomization provides 2160 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+
+

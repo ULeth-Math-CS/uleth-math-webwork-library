@@ -1,0 +1,114 @@
+## DESCRIPTION
+## This is Problem 2.4.15 from the APEX Calculus text. It covers differentiation of basic trig functions and the product rule.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Product rule (with trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.4')
+## Problem1('15')
+## MO(1)
+## Keywords('derivative', 'product rule', 'trig functions', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+$a = random(2,9,1);
+
+$f = Formula("x^{$a}");
+$fp = $f->D('x');
+
+$r = random(1,2,1);
+
+if ($r==1) {
+  $g = Formula("sin(x)");
+  $gp = Formula("cos(x)");
+  $ans = Formula("$f*cos(x) + $fp*sin(x)")->reduce();
+} else {
+  $g = Formula("cos(x)");
+  $gp = Formula("-sin(x)");
+  $ans = Formula("-$f*sin(x) + $fp*cos(x)")->reduce();
+}
+
+$fb = Formula($f*$gp)->reduce();
+$gb = Formula($fp*$g)->reduce();
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Compute the derivative of the given function.
+
+>>[``f(x) = [$f*$g].``]<<
+
+[`f'(x) = `] [_______________] [@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Use the Product Rule.
+
+[``
+  f'(x) = ([$f])([$gp]) + ([$fp])([$g]) =  [$fb] + [$gb]  = [$ans].
+``]
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+#-ENDULETH#
+ANS( $ans->cmp() );
+
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 16 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    
+
+
