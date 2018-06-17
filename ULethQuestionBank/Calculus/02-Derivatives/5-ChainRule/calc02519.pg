@@ -1,0 +1,135 @@
+## DESCRIPTION
+## This is Problem 2.5.19-22 from the APEX Calculus text. It deals with derivatives of exponential functions with bases other than e.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Derivatives of logarithmic functions)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.5')
+## Problem1('19-22')
+## MO(1)
+## Keywords('derivative', 'chain rule', 'logarithm', 'exponential', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  "contextFraction.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->variables->add(t => 'Real');
+Context()->variables->add(r => 'Real');
+Context()->flags->set(
+      reduceConstants => 0,
+      reduceConstantFunctions => 0
+   );
+
+$a = random(2,20,1);
+$b = random(2,20,1);
+$e = random(2,9,1);
+$c = random(2,20,1);
+$d = $c + random(-1,1,2);
+
+$f1 = Formula("$a^{r}");
+$f2 = Formula("$b^{$e}");
+$f3 = Formula("{$c^t}/{$d^t}");
+$f3adj = Formula("($c/$d)^t");
+
+$df1 = Formula("(ln($a))$a^{r}");
+$df2 = Compute(0);
+$df3 = Formula("(ln({$c}/{$d}))({$c}/{$d})^t");
+
+
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Compute the derivative of the given functions.
+
+>>[``f(r) = [$f1]``]<<
+
+[`f'(r) = `] [_______________] [@ AnswerFormatHelp("formulas") @]*
+
+>>[``g(x) = [$f2] ``]<<
+
+[`g'(x) = `] [_______________] [@ AnswerFormatHelp("formulas") @]*
+
+>>[``h(t) = [$f3] ``]<<
+
+[`h'(t) = `] [_______________] [@ AnswerFormatHelp("formulas") @]*  
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+Using the differentiation rule for general exponential functions,
+
+[`
+  f'(r) = [$df1].
+`]
+
+Since [`g(x) = [$f2]`] is just a constant value,
+
+[`g'(s) = 0.`]
+
+If we rewrite [`h(t) = [$f3] = [$f3adj]`], we see that
+
+[`
+  h'(t) = [$df3].
+`]
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+#-ENDULETH#
+ANS( $df1->cmp() );
+ANS( $df2->cmp() );
+ANS( $df3->cmp() );
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 16 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    
+

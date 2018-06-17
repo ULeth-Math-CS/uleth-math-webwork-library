@@ -1,0 +1,159 @@
+## DESCRIPTION
+## This is Problem 2.5.33 from the APEX Calculus text. It covers a basic application of the Quotient Rule.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Derivatives of logarithmic functions)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.5')
+## Problem1('33')
+## MO(1)
+## Keywords('derivative', 'logarithms', 'chain rule', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Allows a single problem to contain multiple parts, where later
+  # parts aren't visible until the earlier ones are completed.
+  "scaffold.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Used to provide contextual help for how to type solutions.
+  "AnswerFormatHelp.pl",
+  # For the popup
+  "parserPopUp.pl"
+);
+
+TEXT(beginproblem());
+
+
+###################################
+#  Setup
+
+#-ULETH-#
+Context("Numeric")->variables->add(k => 'Real');
+Context()->variables->add(u => 'Real');
+
+$ans1 = Formula("ln(u)");
+$ans2 = Formula("kx");
+$ans3 = Formula("ln(k)");
+$ans = Formula("1/x");
+
+$op = PopUp(["?", "+", "-", "*", "/"], "+");
+
+#-ENDULETH-#
+
+###################################
+#  Main Text
+
+#-ULETH-#
+
+# Initial problem text to explain the scaffolding setup.
+BEGIN_PGML
+
+Let [`k`] be a constant.  
+Compute [`\frac{d}{dx}[ \ln (kx) ]`] in two ways.
+
+This problem has two parts. You may only open the next part after correctly
+completing the previous part.
+END_PGML
+#-ENDULETH-#
+
+Scaffold::Begin();
+#-ULETH-#
+# For each part the answer or answer checker reference must appear in the curly 
+# braces immediately after the answer field.
+Section::Begin("Chain Rule");
+# Part 1 problem text.
+BEGIN_PGML
+
+Using the Chain Rule, first decompose [`y = \ln(kx)`]
+into an outside and inside function.
+
+Outside function (in terms of [`u`]): y = [__________]{Compute($ans1)}
+
+Inside function (in terms of [`x`]): u = [__________]{Compute($ans2)}
+
+Then find the derivative, [`\frac{d}{dx}[ \ln (kx) ] = `][___________]{Compute($ans)}
+
+END_PGML
+Section::End();
+
+Section::Begin("Algebraic Manipulation");
+# Part 2 problem text.
+BEGIN_PGML
+Using a law of logarithms to simplify first:
+
+[` \ln(kx) = `][____]{Compute($ans3)} [____]{$op} [`\, \ln x `].  
+(Fill in the blanks to make this a true statement.)
+
+Now take the derivative of the simplified function:
+[`\frac{dy}{dx} [ \ln(kx) ]`]= [_____________________]{Compute($ans)}
+
+END_PGML
+Section::End();
+#-ENDULETH-#
+
+Scaffold::End();
+
+
+
+###################################
+#  Answer Evaluation 
+
+#evaluation must be completed in the problem text
+
+###################################
+#  Solution
+
+BEGIN_PGML_SOLUTION
+
+*Chain Rule*
+
+ The decomposition is [` y = \ln u`], and [`u = kx`].  By
+the chain rule,
+
+[`\displaystyle
+  \frac{dy}{dx} = \frac{dy}{du} \cdot \frac{du}{dx}
+  = \frac{1}{u} \cdot k
+  = \frac{1}{kx} \cdot k
+  = \frac{1}{x}.
+`]
+
+*Algebraic Manipulation*
+
+ After simplifying [` \ln(kx) = \ln k + \ln x`], take the derivative
+(note, [`\ln k`] is simply a constant).
+
+[`\displaystyle
+  \frac{dy}{dx} = 0 + \frac{1}{x} = \frac{1}{x}.
+`]
+
+The answers in both parts should match.
+
+
+END_PGML_SOLUTION
+
+COMMENT("This is a multi-part problem
+in which the next part is revealed only after the previous
+part is correct. <BR>
+There is no randomization in this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+");
+#-ENDULETH-#
+
+ENDDOCUMENT();

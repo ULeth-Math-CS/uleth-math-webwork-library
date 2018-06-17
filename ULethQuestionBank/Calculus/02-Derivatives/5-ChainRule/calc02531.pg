@@ -1,0 +1,160 @@
+## DESCRIPTION
+## This is Problem 2.5.31 from the APEX Calculus text. It covers finding equations for the tangent line to the graph of a function.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Chain rule (with trigonometric functions))
+## Level(4)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.5')
+## Problem1('31')
+## MO(1)
+## Keywords('derivative', 'slope tangent line', ' tangent line ', 'trig functions', 'chain rule', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Allows a single problem to contain multiple parts, where later
+  # parts aren't visible until the earlier ones are completed.
+  "scaffold.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Used to provide contextual help for how to type solutions.
+  "AnswerFormatHelp.pl",
+  "contextFraction.pl"
+);
+
+TEXT(beginproblem());
+
+
+###################################
+#  Setup
+
+#-ULETH-#
+Context("Fraction")->variables->add(u => 'Real');
+Context()->noreduce('(-x)-y','(-x)+y');
+
+$a = random(1,5,1)*random(-1,1,2);
+$b = random(1,5,1)*random(-1,1,2);
+$c = random(2,3,1);
+
+$c1 = $c - 1;
+$kc = $c;
+
+$x1 = "\pi/2";
+$y1 = $a**$c;
+
+$m = -$b*$c*($a**$c1);
+$b1 = 1;
+
+$f = Formula("u^{$c}");
+$g = Formula("$a*sin(x) + $b*cos(x)")->reduce();
+
+$func = $f->substitute(u=>"$g");
+
+$ans1 = $func->D('x')->reduce();
+
+$ans2 = $ans1->eval(x=>pi/2);
+
+$ans3 = Formula("$y1 + $m (x - pi/2)")->reduce();
+
+#-ENDULETH-#
+
+###################################
+#  Main Text
+
+#-ULETH-#
+# This applies to the PGML in each scaffolding section.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+# Initial problem text to explain the scaffolding setup.
+BEGIN_PGML
+
+Follow the steps to find the equation of the tangent line to the graph of the function [`g(x) = [$func]`] at the point [`([$x1],[$y1])`].
+
+This problem has two parts. You may only open the next part after correctly
+completing the previous part.
+END_PGML
+#-ENDULETH-#
+
+Scaffold::Begin();
+Section::Begin("Slope");
+# Part 2 problem text.
+BEGIN_PGML
+What is the _derivative_ of [`g(x)`]? [_______________________]{Compute($ans1)} [@ AnswerFormatHelp("formulas") @]*  
+What is the _slope_ of the tangent line to [`g(x)`] at [`x = [$x1]`]? [____________________]{Compute($ans2)} [@ AnswerFormatHelp("numbers") @]* 
+END_PGML
+Section::End();
+
+Section::Begin("Tangent Line");
+# Part 3 problem text.
+BEGIN_PGML
+The formula for the tangent line is [`y = `] [________________]{Compute($ans3)}.
+END_PGML
+Section::End();
+#-ENDULETH-#
+
+Scaffold::End();
+
+
+###################################
+#  Answer Evaluation 
+
+#evaluation must be completed in the problem text
+
+###################################
+#  Solution
+
+BEGIN_PGML_SOLUTION
+
+First find the derivative (using the Chain Rule).
+
+[`
+  g'(x) =  [$kc] ([$a] \sin x + [$b] \cos x)^{[$c1]} ([$a] \cos x - [$b] \sin x) 
+`]
+
+Plug in [`x = [$x1]`] to get the slope of the tangent line.
+
+[`
+  m = g'([$x1]) = [$m].
+`]
+
+Finally, point-slope form is used to construc−8−36(x−π/2).t the equation
+of the line:
+
+[`
+  \begin{array}{rcl}
+    y - y_1 &=& m(x - x_1) \\
+    y - [$y1] &=& [$m](x - [$x1]) \\
+    y &=& [$y1] + [$m](x - [$x1]).
+  \end{array}
+`]
+
+END_PGML_SOLUTION
+
+COMMENT("This is a multi-part problem
+in which the next part is revealed only after the previous
+part is correct. <BR>
+Randomization provides 200 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+");
+#-ENDULETH-#
+
+ENDDOCUMENT();
+
+

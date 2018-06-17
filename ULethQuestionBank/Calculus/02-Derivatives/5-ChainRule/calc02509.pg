@@ -1,0 +1,117 @@
+## DESCRIPTION
+## This is Problem 2.5.9 from the APEX Calculus text. It covers an example of the Chain Rule with trigonometric functions
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Chain rule (without trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.5')
+## Problem1('9')
+## MO(1)
+## Keywords('derivative', 'chain rule', 'trig functions', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+Context()->variables->add(t => 'Real');
+
+$a = random(2,9,1)*random(-1,1,2);
+$b = random(2,9,1)*random(-1,1,2);
+$c = random(3,6,1);
+$k = random(2,6,1);
+
+$c1 = $c - 1;
+$kc = $k * $c;
+
+$f = Formula("$k ($a sin t + $b cos t)^{$c}");
+$fp = $f->D('t');
+
+$ans = Compute("$kc*($a sin(t) + $b cos(t))^{$c1}($a cos(t) - $b sin(t))");
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Compute the derivative of the given function.
+
+>>[``g(t) = [$k] ([$a] \sin t + [$b] \cos t)^{[$c]}``]<<
+
+[`g'(t) = `] [_______________] [@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Use the Chain Rule with inside function [`u = [$a] \sin t + [$b]\cos t`]
+and outside function [`y = [$k] u^{[$c]}`].
+
+[``
+  \begin{array}{rcl}
+    g'(t) &=& \displaystyle\frac{dy}{du} \cdot \frac{du}{dt}\\
+    &&\\
+    &=& [$kc] u^{[$c1]} ([$a] \cos t - [$b] \sin t) \\
+    &=& [$kc] ([$a] \sin t + [$b] \cos t)^{[$c1]} ([$a] \cos t - [$b] \sin t) \\
+  \end{array}
+``]
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+#-ENDULETH#
+ANS( $ans->cmp() );
+
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 5120 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    
+
+
+
+
