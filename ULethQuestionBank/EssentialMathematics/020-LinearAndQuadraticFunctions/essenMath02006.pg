@@ -1,0 +1,97 @@
+#######################################################################
+## DESCRIPTION 
+##
+## In this problem students are asked to find the equation of a vertical line.
+## 
+## ENDDESCRIPTION
+#######################################################################
+
+#######################################################################
+## DBsubject(Algebra)
+## DBchapter(Linear Equations and Functions)
+## DBsection(Finding the Slope)
+## Date(2018-06-15)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+## KEYWORDS('Linear Equations', 'Vertical Lines', 'ULETH-MATH-0500')
+#######################################################################
+
+#######################################################################
+## Initialization 
+#######################################################################
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "scaffold.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "contextFraction.pl",
+  "answerHints.pl",
+);
+TEXT(beginproblem());
+
+#######################################################################
+#  Setup
+#######################################################################
+
+Context("Fraction")->variables->are(y=>"Real");
+
+$x_1 = non_zero_random(-25, 25);
+$y_1 = non_zero_random(-25, 25);
+
+#######################################################################
+#  Main Text
+####################################################################### 
+
+BEGIN_PGML
+Determine the equation of the vertical line that passes through the 
+the point [`([$x_1],[$y_1])`]:
+
+[`x = `] [___________________]{$x_1}
+END_PGML
+
+#######################################################################
+#  Answer Evaluation
+#######################################################################
+
+$showPartialCorrectAnswers = 1;
+#answer evaluation has been built into the question.
+
+#######################################################################
+#  Solution
+#######################################################################
+
+BEGIN_PGML_SOLUTION
+
+A vertical line does not exhibit any change in its x-values because it moves up
+in down in such a way that all its points are directly above one another.For
+this reason the slope of a vertical line is undefined. We take a different
+approach to find the equation of such a line. Since the x-value of a vertical
+line is constant we know that the equation of this line will be of the form
+[`x=k`] where [`k`] is some constant number.
+
+Since we also know that the line passes through [`([$x_1],[$y_1])`] we know 
+that this constant must be [`[$x_1]`] because if it wasn't then the line would 
+never be able to pass through [`([$x_1],[$y_1])`]. 
+
+Thus, the equation of this line is  [`x=[$x_1]`]
+
+END_PGML_SOLUTION
+
+#######################################################################
+#  Comments for Instructors 
+#######################################################################
+
+COMMENT(
+"Randomization provides 2500 different possible versions of this question.<BR> 
+
+In this problem students will be given a point P(x_1 , y_1) and  asked to
+determine the equation of the vertical line that passes through this point. <BR>
+
+Made from a ULETH template.<BR>" 
+);
+
+ENDDOCUMENT();
