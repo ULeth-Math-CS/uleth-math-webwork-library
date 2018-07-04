@@ -1,0 +1,295 @@
+#######################################################################
+## DESCRIPTION 
+##
+## In this problem students are given two points that a line passed through
+## and asked to determine the slope, equation, x-intercept, y-intercept, and
+## x and y coordinates of two other points that fall on this line.
+## 
+## ENDDESCRIPTION
+#######################################################################
+
+#######################################################################
+## DBsubject(Algebra)
+## DBchapter(Linear Equations and Functions)
+## DBsection(Equations of lines: point-slope form)
+## Date(2018-06-15)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+## KEYWORDS('Linear Equations', 'Lines', 'intercepts', 'ULETH-MATH-0500')
+#######################################################################
+
+#######################################################################
+## Initialization 
+#######################################################################
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "scaffold.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "contextFraction.pl",
+  "answerHints.pl",
+);
+TEXT(beginproblem());
+
+#######################################################################
+#  Setup
+#######################################################################
+
+
+Context("Fraction")->variables->are(x=>"Real");
+
+#Randomly chooses the slope of a line between -5 and 5
+#Excludes -1, 0, and 1 as possible slopes 
+$slope = random(-1,1,2)*random(2,5,1); 
+
+$negSlope = -$slope; # Defined for display purposes
+
+#Randomly chooses a quadrent in the cartestian plane and then 
+#Randomly chooses a point P(x_1,y_2) that the the line will pass
+#through that appears within that quadrent. 
+#All coordinates have absolute value between 1 and 7 inclusive. 
+
+#This loop ensures the y-intercept is non-zero
+do{
+$quadrentP = random(1,4); # This can also be set to a quadrent of your
+                            #choice to control whether the point has 
+                              #positive or negative coordinates.
+
+if ( $quadrentP == 1 )
+{
+$x_1 = random (1,7);
+$y_1 = random (1,7);
+}
+
+elsif ($quadrentP == 2)
+{
+$x_1 = random (-7,-1);
+$y_1 = random (1,7);
+}
+
+elsif($quadrentP == 3)
+{
+$x_1 = random (-7,-1);
+$y_1 = random (-7,-1);
+}
+
+else
+{
+$x_1 = random (1,7);
+$y_1 = random (-7,-1);
+} 
+
+#Computes the y_intercept of the line using the random point
+$y_intercept = -$slope*$x_1 + $y_1;
+}
+until($y_intercept!= 0);
+
+#Computes the x_intercept of the line using the random point
+$x_intercept = Fraction( -$y_intercept, $slope)->reduce(); 
+
+#Defines the line using slope-intercept form.
+$line = Formula("$slope*x + $y_intercept") -> reduce();
+
+# Generates a random Point Q(x_2, y_2) that falls on the line
+# described above that is not the x_intercept or P
+do {$x_2 = non_zero_random(-7,7);} until ($x_2 != $x_1);
+$y_2 = $line->eval(x=>$x_2); 
+
+# Generates a random Point R(x_3, y_3) that falls on the line
+# described above that is not the x_intercept, P, or Q
+do {$x_3 = non_zero_random(-7,7);} 
+until ($x_3 != $x_2 and $x_3 != $x_1  );
+$y_3 = $line->eval(x=>$x_3); 
+
+# Generates a random Point S(x_4, y_4) that falls on the line
+# described above that is not the x_intercept, P, Q, or R
+do {$x_4 = non_zero_random(-7,7);} 
+until ($x_4 != $x_1 and $x_4 != $x_2 and $x_4!=$x_3);
+$y_4 = $line->eval(x=>$x_4); 
+
+#Defines a string that is either "+" or "-" that correlates with 
+# the sign of the y-intercept. This ensures the 
+# question makes more sense to students
+
+if ($y_intercept > 0) 
+{
+$pm = "+"
+}
+else
+{ 
+$pm = "-"
+} 
+
+#######################################################################
+#  Main Text
+####################################################################### 
+
+Scaffold::Begin(is_open  => "correct_or_first_incorrect");
+
+Section::Begin("Part A:");
+#-ULETH-#
+# Part 1 problem text.
+BEGIN_PGML
+Determine the slope of a line that passes through the points [`([$x_1] , [$y_1])`] and [`([$x_2] , [$y_2])`] and enter your answer below:
+
+Slope = [__________]{$slope}.
+
+END_PGML
+Section::End();
+
+Section::Begin("Part B:");
+# Part 2 problem text.
+BEGIN_PGML
+Use your answer from part [`A`] to express the equation of this line in the slope-intercept form [`y = mx + b`] below
+
+[`y=`] [___]{$slope} [` x \ [$pm]  `] [___]{abs($y_intercept)}
+
+
+END_PGML
+Section::End();
+
+Section::Begin("Part C:");
+# Part 3 problem text.
+BEGIN_PGML
+
+The x-intercept of the line described above is [`x=`][___]{$x_intercept}
+
+The y-intercept of the line described above is [`y=`][___]{$y_intercept}
+
+END_PGML
+
+Section::End();
+
+Section::Begin("Part D:");
+# Part 4 problem text.
+BEGIN_PGML
+Suppose that the points [`([$x_3], r)`] and [`(s, [$y_4])`] are also on the line described above. Determine the values of  [`r`] and [`s`] and enter your answers below:
+
+[`r`] = [___]{$y_3}.
+
+[`s`] = [___]{$x_4}.
+
+
+END_PGML
+Section::End();
+
+#-ENDULETH-#
+
+Scaffold::End();
+
+######################################################################
+#  Answer Evaluation
+######################################################################
+
+$showPartialCorrectAnswers = 1;
+
+#######################################################################
+#  Solution
+#######################################################################
+
+BEGIN_PGML_SOLUTION
+[`\\`]
+
+[`\textbf{Part A: Finding the Slope of a Line}`]
+
+The slope of a line is a useful metric which tells us how steep the
+line is and whether the line is increasing or decreasing as we move
+rightwards along the x-axis. Mathematically, the slope ([`m`]) of a
+line that passes through two points [`P(x_1,y_1)`] and [`Q(x_2,y_2)`]
+is given by the formula
+
+>>[` m =\displaystyle \frac{y_2 - y_1}{x_2 - x_1}`].<<
+
+Let's use the first point we are given in the question as point one
+[`P(x_1,y_1)`] = [`([$x_1] , [$y_1]) .`] 
+Then, [`Q(x_2,y_2)`] = [`([$x_2] , [$y_2])`] and:
+
+
+>>[` m =\displaystyle \frac{y_2 - y_1}{x_2 - x_1} = \frac{[$y_2]-
+[$y_1]}{[$x_2] - [$x_1]} =
+\frac{[$y_2-$y_1]}{[$x_2 - $x_1]} = [$slope] . `] <<
+
+[`\textbf{Part B: Finding the Equation of a Line}`]
+
+Every line can be written in the form [`y=mx+b`] where [`m`] is the 
+slope of the line and [`b`] is the line's y-intercept. Since we do not 
+know the value of [`b`] we assume that the line is of this form and 
+solve for [`b`] by plugging in one of the points we know to be on the
+line:
+
+>> [`y = mx + b `]  <<
+
+>> [`y = [$slope]x + b `]  <<
+
+>> [`[$y_1] = [$slope]\left([$x_1]\right) + b `] <<
+
+>> [`[$y_1] = [$slope*$x_1] + b `] <<
+
+>> [` b = [$y_intercept]`]. <<
+
+From the above calculation, we know that 
+\ [`y = [$slope]x +[$y_intercept]. `]
+
+[`\textbf{Part C: Finding the intercepts of the line}`]
+
+Since [`y = [$slope]x +[$y_intercept]`] we know that the y-intercept
+is [`b=[$y_intercept]`]. It remains to determine the value of the
+x-intercept. Recall that the x-intercept of a line occurs at the point at which [`y= 0`]. To this end we set [`y= 0`] and solve for [`x`]: 
+
+>> [`y = [$slope]x +[$y_intercept]`]  <<
+
+>> [`0 = [$slope]x +[$y_intercept]`] <<
+
+>> [`[$slope*(-1)]x = [$y_intercept]`] <<
+
+>> [`x = [$x_intercept]`]. <<
+
+So the x-intercept is [`[$x_intercept]`].
+
+[`\textbf{Part D: Determining the values of r and s}`]
+
+In order for a point to fall on the line it must satisfy the equation
+of that line. This means that when the first-coordinate is subbed in
+for [`x`] and the second coordinate is subbed in for [`y`] the two
+sides of the equation will be equal.
+
+Thus, to determine the value of [`r`] that ensures [`([$x_3], r)`]
+falls on this line we plug [`[$x_3]`] in for [`x`] and [`r`] for 
+[`y`] and solve for [`r`]:
+
+>> [`y = [$slope]x +[$y_intercept]`]  <<
+
+>> [`r = [$slope]([$x_3]) +[$y_intercept]`] <<
+
+>> [`r = [$y_3]`] <<
+
+Analogously, to determine the value of [`s`] that ensures
+[`(s, [$y_4])`] falls on this line we plug in and [`s`] for 
+[`x`] and [`[$y_4]`] in for [`y`] and solve for [`s`]:
+
+>> [`y = [$slope]x +[$y_intercept]`]  <<
+
+>> [`[$y_4] = [$slope]s +[$y_intercept]`] <<
+
+>> [`[$y_4 - $y_intercept] = [$slope](s)`] <<
+
+>> [`s = [$x_4]`] <<
+
+
+
+
+END_PGML_SOLUTION
+
+COMMENT(
+" Randomization provides 2,306,304 versions of this problem. <BR>
+This is a multi-part problem in which the next part is revealed only after
+the previous part is correct. <BR> The student first finds the slope, then the 
+equation of the line, the intercepts, and coordinates that fall 
+of points that fall on the line. Uses PGML.");
+#-ENDULETH-#
+
+ENDDOCUMENT();
