@@ -106,7 +106,7 @@ $y_2 = $line->eval(x=>$x_2);
 
 BEGIN_PGML
 Determine the equation of a line that has a slope of [`[$slope]`] and an
-x-intercept of [`\frac{-[$y_intercept]}{[$slope]}`]. 
+x-intercept of [`[$x_intercept]`]. 
 
 y = [__________]{$line}.
 
