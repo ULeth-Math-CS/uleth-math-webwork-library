@@ -1,0 +1,119 @@
+#######################################################################
+## DESCRIPTION 
+##
+## In this problem students will we given the slope of a line and its
+## x-intercept and asked to find the y-intercept of the line. The slope 
+## in this case will be a fraction.
+## 
+## ENDDESCRIPTION
+#######################################################################
+
+#######################################################################
+## DBsubject(Algebra)
+## DBchapter(Linear Equations and Functions)
+## DBsection(Equations of Lines: Slope-Intercept Form)
+## Date(2018-06-15)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+## KEYWORDS('Linear Equations', 'Lines', 'ULETH-MATH-0500')
+#######################################################################
+
+#######################################################################
+## Initialization 
+#######################################################################
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "scaffold.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "contextFraction.pl",
+  "answerHints.pl",
+);
+TEXT(beginproblem());
+
+
+#######################################################################
+#  Setup
+#######################################################################
+
+Context("Fraction")->variables->are(x=>"Real");
+
+#Defines the line using a y-intercept and x-intercept to compute slope
+# Slope will be a fraction
+
+$y_intercept = random(-1,1,2)*list_random(1,2,3,5,7);
+$x_intercept = random(-1,1,2)*list_random(4,6,8,9); 
+$slope = Fraction( -$y_intercept, $x_intercept)->reduce(); 
+$negSlope = -$slope;
+$line = Formula("$slope*x + $y_intercept") -> reduce();
+
+#######################################################################
+#  Main Text
+####################################################################### 
+
+BEGIN_PGML
+Determine the equation of a line that has a slope of [`[$slope]`] and an
+y-intercept of [`[$y_intercept]`]. 
+
+y = [__________]{$line}.
+
+What is the x-intercept of this line? [__________]{$x_intercept}.
+END_PGML
+
+#######################################################################
+#  Answer Evaluation
+#######################################################################
+
+$showPartialCorrectAnswers = 1;
+#answer evaluation has been built into the question.
+
+#######################################################################
+#  Solution
+#######################################################################
+
+BEGIN_PGML_SOLUTION
+
+When you are given the slope and y-intercept of a line the quickest way
+to find the equation of that line is to use the slope intercept form of
+a line: [`y= mx + b`] where [`m`] is the slope of the line and [`b`] is 
+the y-intercept of the line.
+
+In this problem, we are told that the slope is [`m = [$slope]`] and the
+y-intercept is [`b=[$y_intercept]`]. Thus, we have all the values we
+need to determine the line's equation using slope-intercept form. The 
+equation of this line is:
+
+>>[`y= mx + b = [$slope]x +[$y_intercept] `].<<
+
+Now that we have the equation of this line we are able to find its 
+x-intercept. Recall that the x-intercept of a line is the point where 
+it crosses the x-axis (which is the line [`y=0`]); in other words, a
+line's x-intercept can be found by setting [`y=0`] and solving for
+[`x`] as below: 
+
+>>[`0 = [$slope]x +[$y_intercept] `]<<
+
+>> [`[$negSlope]x = [$y_intercept] `]<<
+
+>>[`x = [$x_intercept]`]<<
+
+END_PGML_SOLUTION
+
+#######################################################################
+#  Comments for Instructors 
+#######################################################################
+
+COMMENT(
+"Randomization provides 80 different possible versions of this question.<BR> 
+
+In this problem students will we given the slope of a line and its y-intercept
+and asked to find the x-intercept of the line. Slope is a fraction.<BR>
+  
+Made from a ULETH template.<BR>" 
+);
+
+ENDDOCUMENT();
