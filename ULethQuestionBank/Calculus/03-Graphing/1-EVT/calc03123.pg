@@ -1,0 +1,152 @@
+## DESCRIPTION
+## This is Problem 3.1.23 from the APEX Calculus text (3.1.25 in the ULETH APEX text). It covers finding extreme values on closed intervals.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Global extrema)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('3.1')
+## Problem1('23')
+## MO(1)
+## Keywords('extreme value', 'maximum', 'minimum', 'absolute maximum minimum', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+   # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+   Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,
+   );
+   
+
+do {
+  $b = random(5,20,1);
+  $a = random(2,10,1);
+} until (gcd($a, $b) == 1);
+
+$amb = $a - $b;
+if ($amb < 0) {
+  $e_num = -$amb;
+  $e_den = $b;
+  $e = Formula("$e_num / $e_den");
+  
+} else {
+  $e_num = $amb;
+  $e_den = $b;
+  $e = Formula("-$e_num / $e_den");
+}  
+
+$f = Formula("{$a + $b ln x}/{x}")->reduce();
+
+$ansmin="DNE";
+$min_x = "DNE";
+
+$max_x = Formula("e^($e_num/$b)"); 
+$ansmax= Formula("$b/$max_x");
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+Find the extreme values of the function
+
+[``f(x) = [$f]``]
+
+on the interval [` (0, \infty) `], and the [`x`]-value(s)
+at which they occur. If an extreme value does not exist, enter *DNE* for both the value and its location.
+
+Absolute minimum value: [__________], located at [`x =`] [_____]. [@ AnswerFormatHelp("numbers") @]*
+
+Absolute maximum value: [__________], located at [`x =`] [_____].
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+Set the derivative equal to zero to locate all critical numbers:
+
+[`
+  \begin{array}{rcl}
+  f'(x) = \dfrac{x\left(\frac{[$b]}{x}\right) - 
+  ([$a] + [$b] \ln x)}{x^2} &=& 0 \quad \textrm{when} \\
+  &&\\
+  [$b] - [$a] - [$b]\ln x &=& 0 \\
+  -[$b] \ln x &=& [$amb] \\
+  \ln x &=& [$e] \\
+  x &=& e^{[$e]}. \\
+  \end{array}
+`]
+
+Since the interval [`(0,\infty)`] is not closed, we should examine the behavior of [`f(x)`] around the critical point [`x  = e^{[$e]}`] to determine what kind of extrema occurs at this point. One can observe that, for [`x`] in [`(0, e^{[$e]})`], [`f'(x)`] is positive, while for [`x`] in [`(e^{[$e]}, \infty)`], [`f'(x)`] is negative. This means the function increases for [`x`] up to [`e^{[$e]}`], then decreases, so [`f`] has an absolute maximum located at [`x = e^{[$e]}`] and no absolute minimum.
+
+The absolute maximum value is:
+[`
+  f(e^{[$e]}) = \frac{[$a] + [$b] \ln\left(e^{[$e]}\right)}{e^{[$e]}} =
+  \frac{[$b]}{e^{[$e]}} =
+  [$ansmax].
+`]
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+ANS(Compute($ansmin)->cmp());
+ANS(Compute($min_x)->cmp());
+
+ANS(Compute($ansmax)->cmp());
+ANS(Compute($max_x)->cmp());
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 84 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    
+
