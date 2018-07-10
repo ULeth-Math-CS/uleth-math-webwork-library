@@ -1,0 +1,122 @@
+## DESCRIPTION
+## This is Problem 3.2.12 from the APEX Calculus text. It covers the Mean Value Theorem.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Mean value theorem)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('3.2')
+## Problem1('12')
+## MO(1)
+## Keywords('rolles theorem', 'mean value theorem', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+   # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+$a = random(2,15,1)*random(-1,1,2);
+$b = random(2,15,1)*random(-1,1,2);
+$c = random(1,15,1)*random(-1,1,2);
+
+$p1 = random(-20,10,1);
+$p2 = $p1 + random(1,10,1);
+
+$f = Formula("$a x^2 + $b x + $c")->reduce();
+
+$crit = ($p1 + $p2)/2;
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+
+Check if the Mean Value Theorem can be applied to [`f(x) = \displaystyle [$f]`] on [`[[$p1],[$p2]]`].
+If so, find all values [`c`] in  [`[[$p1],[$p2]]`] guaranteed by the Mean Value Theorem.
+
+Separate multiple answers with commas. If the Mean Value Theorem does not apply, enter *DNE*.
+
+[`c=`] [__________________] [@ AnswerFormatHelp("numbers") @]*
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+$a2 = 2*$a;
+$num = ($a*($p2)**2 + $b*($p2)) -
+    ($a*($p1)**2 + $b*($p1));
+$den = $p2 - $p1;
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+The function [`f(x) = [$f]`] is a polynomial, therefore it is continuous 
+and differentiable on every interval (so the Mean Value
+Theorem applies).
+
+Set [`f'(c) = \dfrac{f(b) - f(a)}{b-a}`] and solve for [`c`]:
+
+[``
+  \begin{array}{rcl}
+    [$a2] c + [$b] &=& \dfrac{[[$a]([$p2])^2 + [$b]([$p2]) + [$c]] -
+    [[$a]([$p1])^2 + [$b]([$p1]) + [$c]]}{[$p2] - [$p1]}\\
+    &&\\
+    [$a2] c + [$b] &=& \displaystyle\frac{[$num]}{[$den]} \\
+    &&\\
+    c &=& [$crit].
+  \end{array}
+``]
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+ANS( Compute($crit)->cmp() );
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 23520 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    
+
