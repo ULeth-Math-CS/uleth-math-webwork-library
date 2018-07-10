@@ -1,0 +1,240 @@
+## DESCRIPTION
+## This is Problem 3.4.14 from the APEX Calculus text. It covers graphical interpretation of the derivative tests for concavity. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Concavity and points of inflection)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('3.4')
+## Problem1('14')
+## MO(1)
+## Keywords('second derivative test', 'concavity and points of inflection', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+##############################
+#  Initialization
+
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  "PGchoicemacros.pl",
+  "PGanswermacros.pl",
+  "extraAnswerEvaluators.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Needed to support graph generation.
+  "PGgraphmacros.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  "parserRadioButtons.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+
+# Refreshes the graph image every time the page is loaded, as opposed to
+# retrieving a cached version.
+$refreshCachedImages = 1;
+
+#establish the function to graph
+Context("Numeric");
+Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,
+   );
+
+$n = random(1,5,1);
+
+if ($n == 1) {
+  $f = Formula("{1}/{x}");
+} else {
+  $f = Formula("{1}/{x^{$n}}");
+}
+
+$n1 = $n + 1;
+
+$df = Formula("{-$n}/{x^{$n1}}")->reduce();
+
+$n2 = $n + 2;
+$num = $n * $n1;
+
+$ddf = Formula("{$num}/{x^{$n2}}")->reduce();
+
+$crit = 0;
+
+if (($n/2) == int($n/2)) {
+  ## Even $n
+  @answers1 = "(-INF, 0) U (0, INF)";
+  @answers2 = "DNE";
+  $sol_str_1 = "everywhere except 0";
+  $sol_str_2 = "nowhere";
+} else {
+  ## Odd $n
+  @answers1 = "(0, INF)";
+  @answers2 = "(-INF, 0)";
+  $sol_str_1 ="for all positive \(x\)";
+  $sol_str_2 ="for all negative \(x\)";
+}
+
+
+########################################
+## Graphs
+
+$w = 300;  # graph size
+$tw = 300; # graph size in TeX
+
+$x1 = -4;
+$x2 = 4;
+$xt = 8;
+
+$graph1 =  init_graph($x1,-4,$x2,4,'axes'=>[0,0],
+  'ticks'=>[$xt,10],'size'=>[300,300]);
+  $graph1->new_color("orange", 255,153,0);
+  $graph1->new_color("bl", 102, 153, 204); 
+  
+$graph2 =  init_graph($x1,-4,$x2,4,'axes'=>[0,0],
+  'ticks'=>[$xt,10],'size'=>[300,300]);
+    $graph2->new_color("orange", 255,153,0);
+    $graph2->new_color("bl", 102, 153, 204); 
+    
+$graph3 =  init_graph($x1,-4,$x2,4,'axes'=>[0,0],
+  'ticks'=>[$xt,10],'size'=>[300,300]);
+    $graph3->new_color("orange", 255,153,0);
+    $graph3->new_color("bl", 102, 153, 204);   
+    
+$graph4 =  init_graph($x1,-4,$x2,4,'axes'=>[0,0],
+  'ticks'=>[$xt,10],'size'=>[300,300]);
+    $graph4->new_color("orange", 255,153,0);
+    $graph4->new_color("bl", 102, 153, 204); 
+
+add_functions($graph1, "$f for x in [$x1,$x2]  using color:black weight:2");
+add_functions($graph1, "-$ddf for x in [$x1,$x2]  using color:orange weight:2");
+
+add_functions($graph2, "$f for x in [$x1,$x2]  using color:black weight:2");
+add_functions($graph2, "$ddf for x in [$x1,$x2]  using color:orange weight:2");
+
+add_functions($graph3, "$f for x in [$x1,$x2]  using color:black weight:2");
+add_functions($graph3, "-$df for x in [$x1,$x2]  using color:orange weight:2");
+
+add_functions($graph4, "$f for x in [$x1,$x2]  using color:black weight:2");
+add_functions($graph4, "$df for x in [$x1,$x2]  using color:orange weight:2");
+
+$r = random(1,4,1);
+if ($r==1) {
+   @graphs = ($graph1, $graph2, $graph3, $graph4);
+   $ans = RadioButtons(["A", "B", "C", "D"], "B",separator => " ");
+} elsif ($r==2) {
+   @graphs = ($graph4, $graph1, $graph2, $graph3);
+   $ans = RadioButtons(["A", "B", "C", "D"], "C",separator => " ");
+} elsif ($r==3) {
+   @graphs = ($graph3, $graph4, $graph1, $graph2);
+   $ans = RadioButtons(["A", "B", "C", "D"], "D",separator => " ");
+} else {
+   @graphs = ($graph2, $graph3, $graph4, $graph1);
+   $ans = RadioButtons(["A", "B", "C", "D"], "A",separator => " ");
+}
+
+#############################
+#  Main Text
+
+#-ULETH-#
+
+BEGIN_PGML
+Consider the function [`f(x) = \displaystyle [$f]`].
+
+Its derivative is [`f'(x)`] = [_______________________]{Compute($df)}. [@ AnswerFormatHelp("formulas") @]*  
+Its second derivative is [`f''(x)`] = [_______________________]{Compute($ddf)}.
+
+----
+The graph that correctly displays [`f(x)`] (in black) and [`f''(x)`] (in orange) is
+
+[_]{$ans}.
+
+END_PGML
+
+BEGIN_TEXT
+A. \{image(insertGraph(@graphs[0]),width=>$w*0.6,
+height=>$w*0.6,tex_size=>$tw)\}
+$SPACE$SPACE$SPACE 
+B. \{image(insertGraph(@graphs[1]),width=>$w*0.6,
+height=>$w*0.6,tex_size=>$tw)\}
+$BR$BR$BR
+C. \{image(insertGraph(@graphs[2]),width=>$w*0.6,
+height=>$w*0.6,tex_size=>$tw)\}
+$SPACE$SPACE$SPACE 
+D. \{image(insertGraph(@graphs[3]),width=>$w*0.6,
+height=>$w*0.6,tex_size=>$tw)\}
+END_TEXT
+Context("Interval")->variables->are(x=>"Real");
+BEGIN_PGML
+----
+Using the graphs of [`f`] and [`f''`], indicate where [`f`] is concave up and concave down. Enter *DNE* if such an interval does not exist.
+
+
+[`f`] is concave up on [__________________][@ AnswerFormatHelp("intervals") @]*.
+
+[`f`] is concave down on [__________________]
+
+END_PGML
+
+
+#############################
+#  Answer Evaluation
+
+ANS(interval_cmp(@answers1, strings=>["DNE"]));
+ANS(interval_cmp(@answers2, strings=>["DNE"]));
+
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+
+#-ENDULETH-#
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+The derivatives are [`f'(x) = \displaystyle [$df]`] and [`f''(x) = \displaystyle [$ddf]`].
+Use the graph of [`f''`] to help find where [`f`] is concave
+up and concave down.  Note, [`f`] is undefined at [`x = 0`].
+When [`f''(x) > 0`], [`f`] is concave up. This occurs [$sol_str_1].
+When [`f''(x) < 0`], [`f`] is concave down. This occurs [$sol_str_2].
+
+END_PGML_SOLUTION
+
+COMMENT('
+    Randomization provides 20 different possible versions of this question. 
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+#-ENDULETH-#
+
+# Marks the end of the problem document.
+ENDDOCUMENT(); 

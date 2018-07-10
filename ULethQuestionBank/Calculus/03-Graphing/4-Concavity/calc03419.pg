@@ -1,0 +1,204 @@
+## DESCRIPTION
+## This is Problem 3.4.19 from the APEX Calculus text. It covers tests for concavity and the second derivative test.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Concavity and points of inflection)
+## Level(4)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('3.4')
+## Problem1('19')
+## Also handles problems 32, 45.
+## MO(1)
+## Keywords('test for concavity', 'points of inflection','ULETH-MATH1560', 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+   # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+  Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,);
+     
+$c1 = random(-7,-1,3);
+do {
+   $c2 = random(1,7,3);
+} while ($c1 + $c2 == 0);
+
+$d = random(1,3,1)*random(-1,1,2);
+
+$b2 = 3*(-$c1-$c2)/2;
+$b1 = 3*($c1*$c2);
+
+$y1 = ($c1)**3 + $b2*($c1)**2 + $b1*($c1) + $d; 
+$y2 = ($c2)**3 + $b2*($c2)**2 + $b1*($c2) + $d; 
+
+$ymax = max(abs($y1), abs($y2)) + 5;
+$ymin = -$ymax;
+$yrange = $ymax - $ymin;
+
+
+$f = Formula("x^3 + $b2 x^2 + $b1 x + $d")->reduce();
+$b22 = 2*$b2;
+$df = Formula("3 x^2 + $b22 x + $b1")->reduce();
+$ddf = Formula("6x + $b22")->reduce();
+
+$crit = ($c1 + $c2)/2;
+
+Context("Interval");
+@domain = Compute("(-INF, INF)");
+
+@ans_cu = Interval("($crit, INF)");
+@ans_cd = Interval("(-INF, $crit)");
+
+Context("Point");
+$y1 = ($crit)**3 + $b2*($crit**2) + $b1*($crit) + $d;
+$infl = Point("($crit, $y1)");
+
+$max = List("$c1");
+$min = List("$c2");
+
+$max1 = List("DNE");
+$min1 = List("$crit");
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+Context("Interval");
+#-ULETH-#
+BEGIN_PGML
+
+In the following questions, consider the function 
+
+>>[`f(x) = [$f].`]<<
+
+Enter *DNE* if an answer does not exist.
+----
+[`\text{a)}`] Give the domain of [`f`] (in interval notation): [________________________]{Compute(@domain)}  [@ AnswerFormatHelp("intervals") @]*
+
+[`\text{b)}`] Determine the intervals on which [`f`] is concave up/down:  
+[`f`] is concave up on: [________________________]{Compute(@ans_cu)}  
+[`f`] is concave down on: [________________________]{Compute(@ans_cd)}
+
+[`\text{c)}`] Based on your answers in (a) and (b), determine the inflection points of [`f`]:  
+[_____________________]{Compute($infl)} [@ AnswerFormatHelp("numbers") @]*  
+(Each answer should be entered as an ordered pair, [`(x,y)`]. Separate multiple answers with commas.)
+
+[`\text{d)}`] Find the critical numbers of [`f`] and use the Second Derivative Test, when possible, to determine the relative extrema.  
+Relative maxima occur at [`x = `] [____________]{Compute($max)} (Separate multiple
+answers with commas.)  
+Relative minima occur at [`x = `] [____________]{Compute($min)} (Separate multiple answers with commas.)
+
+[`\text{e)}`] Find the [`x`]-values where [`f'(x)`] has a relative maximum or minimum:  
+[`f'`] has relative maxima at [`x = `] [____________]{Compute($max1)} (Separate multiple answers with commas.)  
+[`f'`] has relative minima at [`x = `] [____________]{Compute($min1)} (Separate multiple answers with commas.)
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+$ineq = ($a > 0) ? ">" : "<";
+$ud = ($a > 0) ? "up" : "down";
+$maxmin = ($a > 0) ? "minimum" : "maximum";
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+Since [`f(x) = [$f]`] is a polynomial, its domain is all real numbers,
+or [`(-\infty, \infty)`].
+
+Its first and second derivatives are, respectively, [` f'(x) = [$df] `] and [`f''(x) = [$ddf] `].  Set [`f''(x) = 0`] and solve: 
+
+[``
+  [$ddf] = 0 \;\Rightarrow \; x = [$crit].
+``]
+
+When [`x > [$crit]`], [`f''(x) > 0`] and so [`f`] is concave up
+on [`([$crit], \infty) `].
+When
+[`x < [$crit]`], [`f''(x) < 0`] and so [`f`] is concave down
+on [` (-\infty, [$crit]) `].
+
+Therefore, there is an inflection point at [`x = [$crit]`].
+Plug [`x`] into the original function to find the corresponding
+[`y`]-value:
+
+[``
+  f([$crit]) = ([$crit])^3 + [$b2]([$crit])^2 + [$b1]([$crit]) + [$d]
+  = [$y1]
+``]  
+The inflection point occurs at [` ([$crit], [$y1]) `].
+
+Find critical numbers by setting [`f'(x) = 0`]:
+
+[``
+  \begin{array}{rcl}
+    [$df] &=& 0 \\
+    &&\\
+    x &=& [$c1], [$c2]
+  \end{array}
+``]
+
+Since [`f''([$c1]) < 0`], there is a local maximum 
+at [`x = [$c1]`].  
+Since [`f''([$c2]) > 0`], there is a local minimum 
+at [`x = [$c2]`].
+
+To find where [`f'(x)`] will have a relative extreme point,
+first set [`f''(x) = 0`].  As seen above, [`x = [$crit]`] is
+the only such point.  Now, since [`f'''(x) = 6 > 0`], there
+must be a local minimum (by the Second Derivative Test applied to [`f'`]) at this point.
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#Answers are evaluated in the problem text.
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;-
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 36 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();   
+

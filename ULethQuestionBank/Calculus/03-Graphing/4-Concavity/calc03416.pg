@@ -1,0 +1,162 @@
+## DESCRIPTION
+## This is Problem 3.4.16-17 from the APEX Calculus text. It covers tests for concavity and the second derivative test.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Concavity and points of inflection)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('3.4')
+## Problem1('16-17')
+## Also handles problems 29-30.
+## MO(1)
+## Keywords('test for concavity', 'points of inflection','ULETH-MATH1560', 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+   # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+  Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,);
+     
+$a = random(1,5.5,0.5)*random(-1,1,2);
+$b = random(1,5,1)*random(-1,1,2);
+$c = random(1,5,1)*random(-1,1,2);
+
+$f = Formula("$a*x^2 + $b*x + $c")->reduce();
+
+$a2 = 2*$a;
+$df = Formula("$a2 x + $b")->reduce();
+$ddf = Formula("$a2");
+
+Context("Interval");
+@domain = Compute("(-INF, INF)");
+
+$crit = Formula("-$b / $a2");
+
+if ($a > 0) {
+  @ans_cu = Compute("(-INF, INF)");
+  @ans_cd = Compute("DNE");
+  $max = List("DNE");
+  $min = List("$crit");  
+} else {
+  @ans_cu = Compute("DNE");
+  @ans_cd = Compute("(-INF, INF)");
+  $max = List("$crit");  
+  $min = List("DNE");
+}
+
+$infl = List("DNE");
+
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+In the following questions, consider the function 
+
+>>[`f(x) = [$f].`]<<
+
+Enter *DNE* if an answer does not exist.
+----
+a) Give the domain of [`f`] (in interval notation): [________________________]{Compute(@domain)}  [@ AnswerFormatHelp("intervals") @]*
+
+b) Determine the intervals on which [`f`] is concave up/down:  
+[`f`] is concave up on: [________________________]{Compute(@ans_cu)}  
+[`f`] is concave down on: [________________________]{Compute(@ans_cd)}
+
+c) Based on your answers in (a) and (b), determine the inflection points of [`f`].  [_____________________]{Compute($infl)} [@ AnswerFormatHelp("numbers") @]*  
+(Each answer should be entered as an ordered pair, [`(x,y)`]. Separate multiple answers with commas.)
+
+d) Find the critical numbers of [`f`] and use the Second Derivative Test, when possible, to determine the relative extrema.  
+Relative maxima occur at [`x = `] [____________]{Compute($max)} (Separate multiple
+answers with commas.)  
+Relative minima occur at [`x = `] [____________]{Compute($min)} (Separate multiple answers with commas.)
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+$ineq = ($a > 0) ? ">" : "<";
+$ud = ($a > 0) ? "up" : "down";
+$maxmin = ($a > 0) ? "minimum" : "maximum";
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+Since [`f(x) = [$f]`] is a polynomial, its domain is all real numbers,
+or [`(-\infty, \infty)`].
+
+Its first and second derivatives are, respectively, [` f'(x) = [$df] `] and [`f''(x) = [$ddf]`].
+
+Since [` f''(x) [$ineq] 0 `] for all [`x`], [`f`] is concave [$ud]
+on [` (-\infty, \infty) `], and there are no inflection points.
+
+Find critical numbers by setting [`f'(x) = 0`]:
+
+[``
+  \begin{array}{rcl}
+    [$df] &=& 0 \\
+    x &=& \displaystyle \frac{[$b*-1]}{[$a2]} = [$crit]. \\  
+  \end{array}
+``]
+
+Since [`f''([$crit]) [$ineq] 0`], the Second Derivative Test tells us is a local [$maxmin] when [`x = [$crit]`].
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#Answers are evaluated in the problem text.
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 2000 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();   
+
