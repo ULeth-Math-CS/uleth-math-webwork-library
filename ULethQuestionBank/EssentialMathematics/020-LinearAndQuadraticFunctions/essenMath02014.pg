@@ -1,0 +1,172 @@
+#######################################################################
+## DESCRIPTION 
+##
+## In this problem students will be given two points with integer coefficients
+## and the slope of the line will be a fraction. Three of the  point coordinates
+## will be positive integers and one negative coordinate . 
+## Students are asked for the slope and equation of the line.
+##
+## ENDDESCRIPTION
+#######################################################################
+
+#######################################################################
+## DBsubject(Algebra)
+## DBchapter(Linear Equations and Functions)
+## DBsection(Finding Slope)
+## Date(2018-06-15)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+## KEYWORDS('Linear Equations', 'Lines', 'Slope', 'ULETH-MATH-0500')
+#######################################################################
+
+#######################################################################
+## Initialization 
+#######################################################################
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "scaffold.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "answerHints.pl",
+  "contextFraction.pl",
+  "PGauxiliaryFunctions.pl"
+);
+TEXT(beginproblem());
+
+#######################################################################
+#  Setup
+#######################################################################
+
+
+# Allows student to enter x as a variable in their answer
+Context("Fraction")->variables->are(x=>"Real");
+
+#Randomly chooses points P(x_1,y_1) and Q(x_2,y_2) that the the line will pass
+#through 
+#All coordinates have absolute value between 1 and 7 inclusive.
+
+do{ 
+
+$x_1 = random (-10,-1);
+$y_1 = random (-10,-1);
+do {$x_2= random(1,7);} until ($x_2!=$x_1);
+do {$y_2= random(1,7);} until ($y_2!=$y_1);
+$rise = $y_2 - $y_1; 
+$run = $x_2 - $x_1;
+$slope = Fraction($rise,$run)->reduce(); 
+$y_intercept = -$slope*$x_1 + $y_1;
+
+}
+until ($y_intercept!=0 and gcd($rise,$run)==1 and $run!=1 and $run!=-1);
+
+#Defines the line using slope-intercept form.
+$line = Formula("$slope*x + $y_intercept") -> reduce();
+
+#######################################################################
+#  Main Text
+####################################################################### 
+
+BEGIN_PGML
+Determine the slope of a line that passes through the points [`([$x_1],[$y_1])`] and [`([$x_2],[$y_2])`].
+
+Slope = [__________]{$slope}.
+
+What is the equation of this line? 
+
+[`y=`] [__________]{$line}.
+
+END_PGML
+
+#######################################################################
+#  Answer Evaluation
+#######################################################################
+
+$showPartialCorrectAnswers = 1;
+
+
+
+#######################################################################
+#  Solution
+#######################################################################
+
+BEGIN_PGML_SOLUTION
+
+[`\\`]
+When you are given the slope and y-intercept of a line the quickest way
+to find the equation of that line is to use the slope intercept form of
+a line: 
+
+>>[`y= mx + b`]<<
+
+where [`m`] is the slope of the line and [`b`] is the y-intercept of
+the line; however, here we are not given the line's slope or y-intercept, so we
+need to find these.
+
+[`\textbf{Finding the Slope of a Line:}`]
+
+The slope of a line is a useful metric which tells us how steep the
+line is and whether the line is increasing or decreasing as we move
+rightwards along the x-axis. Mathematically, the slope ([`m`]) of a line that
+passes through two points [`P(x_1,y_1)`] and [`Q(x_2,y_2)`] is given by the formula
+
+>>[` m =\displaystyle \frac{y_2 - y_1}{x_2 - x_1}`].<<
+
+In other words, the slope of a line is the ratio between the difference
+in the [`y`] values of two points on that line and the difference in
+the corresponding [`x`] values of those same two points. Thus, the
+slope of a line tells us how much of a change in [`y`] occurs for a
+unit change in [`x .`]
+
+You may choose either to be the first and/or second point and you will
+get the exact same value for the slope of the line:
+
+Let's use the first point we are given in the question as point one
+[`P(x_1,y_1)`] = [`([$x_1] , [$y_1]) .`] 
+Then, [`Q(x_2,y_2)`] = [`([$x_2] , [$y_2])`] and 
+
+>>[` m = \displaystyle \frac{y_2 - y_1}{x_2 - x_1} = \frac{[$y_2]-[$y_1]}{[$x_2] - [$x_1]} =
+\frac{[$y_2-$y_1]}{[$x_2 - $x_1]} = [$slope]. `]  <<
+
+[`\textbf{Finding the Line's Y-intercept:}`]
+
+Assume that we have the equation of the line
+[`y=mx+b`]. We know that the slope is [`m = [$slope]`], but we don't 
+know the y-intercept. We find it by plugging in the point 
+[`(x,y) = ([$x_1],[$x_2])`] and solving for [`b`]:
+
+>>[` y  = mx + b`]<<
+
+>>[` [$y_1] = [$slope] ([$x_1]) + b`]<<
+
+>>[` b  = [$y_intercept] `].<<
+
+Thus, the equation of the line is 
+
+>>[` y  = [$slope]x +[$y_intercept] `].<<
+
+END_PGML_SOLUTION
+
+#######################################################################
+#  Comments for Instructors 
+#######################################################################
+
+COMMENT(
+"Randomization provides more than 81 different possible versions of this
+question.<BR> 
+
+In this problem students will we given two distinct points  
+P(x_1 , y_1) and Q(x_2, y_2) and asked to determine the slope 
+of the line that passes through these points and the equation of the line. <BR>
+
+In this variation of the problem, the calculated slope will be fraction and  one
+point given to the student will have negative coordinates the other will have
+positive coordinates.<BR>
+  
+Made from a ULETH template.<BR>" 
+);
+
+ENDDOCUMENT();
