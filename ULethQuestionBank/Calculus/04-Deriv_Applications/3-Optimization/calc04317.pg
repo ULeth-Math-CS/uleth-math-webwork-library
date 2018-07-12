@@ -1,0 +1,164 @@
+## DESCRIPTION
+## This is Problem 4.3.17 from the APEX Calculus text. It covers an optimization problem. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Optimization - general)
+## Level(5)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('4.3')
+## Problem1('17')
+## MO(1)
+## Keywords('word problem', 'optimization', 'derivative extrema optimization ', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+ );
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+#############################
+#   Setup
+#-ULETH-#
+#Randomize the question parameters. 
+Context("Numeric");
+   Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,
+   );
+$sqr2 = Formula("sqrt(2)");
+
+$r = random(1,100,1);
+$rs = $r**2;
+$rs2 = 2*$rs;
+$rs4 = 4*$rs;
+
+$ans1 = $r*$sqr2;
+$ans2 = $r*$sqr2;
+$ans3 = $rs2;
+
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+[@ image("http://www.cs.uleth.ca/graphics/WeBWorK_images/ApexCalc04317.jpg", height=>300, width=> 400)@]*
+
+What are the dimensions of the rectangle with largest area
+that can be drawn inside a circle of radius [$r]?
+
+Width: [_______________]{Compute($ans1)} [@ AnswerFormatHelp("numbers") @]*  
+Height: [_______________]{Compute($ans2)}  
+Area: [_______________]{Compute($ans3)}  
+
+END_PGML
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Let the width of the rectangle be [`x`] and
+its height be [`y`].
+The fundamental equation (to be maximized)
+is the area of the rectangle, [`A = xy`].
+  
+
+[@ image("http://www.cs.uleth.ca/graphics/WeBWorK_images/ApexCalc04317fig2.jpg", height=>300, width=> 400)@]*
+
+Using a little geometry, we find an equation relating
+the radius to [`x`] and [`y`] (See figure):
+
+>>[``
+  \left( \dfrac{x}{2} \right)^2 + 
+  \left( \dfrac{y}{2} \right)^2 = r^2 = [$rs]
+``]<<
+  
+Solve for one of the variables, with the assumption that
+[`x, y > 0`].
+
+>>[``
+  \begin{array}{rcl}
+    \dfrac{x^2}{4} + \dfrac{y^2}{4} &=& [$rs] \\
+    && \\
+    y^2 &=& 4\left( [$rs] - \dfrac{x^2}{4} \right)\\
+    && \\
+    y &=& \sqrt{[$rs4] - x^2}
+  \end{array}
+``]<<
+  
+Substitute this into the fundamental equation and
+find the critical number(s):
+
+>>[``
+  \begin{array}{rcl}
+    A &=& xy = x\sqrt{[$rs4] - x^2}\\
+    && \\
+  \implies  A' &=& \dfrac{-x^2}{\sqrt{[$rs4] - x^2}} + \sqrt{[$rs4] - x^2}\\
+    &&\\
+    \dfrac{-x^2}{\sqrt{[$rs4] - x^2}} + \sqrt{[$rs4] - x^2} &=& 0\\
+    &&\\
+    \dfrac{x^2}{\sqrt{[$rs4] - x^2}} &=& \sqrt{[$rs4] - x^2} \\
+    &&\\
+    x^2 &=& [$rs4] - x^2 \\
+    2x^2 &=& [$rs4] \\
+    x &=& \sqrt{[$rs2]} = [$r]\sqrt{2}
+  \end{array}
+``]<<
+  
+Next, find [`y`].
+
+>>[``
+  y = \sqrt{ [$rs4] - x^2} = \sqrt{[$rs4] - ([$r]\sqrt{2})^2} = [$r]\sqrt{2}
+``]<<
+  
+It turns out that the optimal rectangle is in fact a square
+with width = height = [`[$r] \sqrt{2}`] and area
+[`A = ([$r] \sqrt{2})^2 = [$rs2]`].
+
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+COMMENT('
+    Randomization provides 100 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+
