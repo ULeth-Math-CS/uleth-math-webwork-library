@@ -1,0 +1,169 @@
+## DESCRIPTION
+## This is Problem 4.2.8 from the APEX Calculus text. It covers related rates. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Related rates)
+## Level(5)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('4.2')
+## Problem1('8')
+## MO(1)
+## Keywords('derivative related rates', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+ );
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+#############################
+#   Setup
+#-ULETH-#
+#Randomize the question parameters. 
+Context("Numeric");
+
+$spd = random(300,500,10);
+$elev = random(100,200,5);
+
+$num = $elev * $spd;
+$th1 = arctan($elev/1000);
+$th2 = arctan($elev/100);
+
+$x1 = $num / ( 1000**2 * sec($th1)**2 );
+$x2 = $num / ( 100**2 * sec($th2)**2 );
+
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+[@ image("http://www.cs.uleth.ca/graphics/WeBWorK_images/ApexCalc04208.jpg", height=>300, width=> 400)@]*
+
+An aircraft is flying at [$spd] ft/s with an elevation of
+[$elev] ft from the ground on a straight-line path that will
+take it directly over an anti-aircraft gun.  
+How fast, in radians per second, will the gun have to turn
+to accurately track the aircraft when the plane is:
+
+1000 feet away? [____________]{Compute($x1)} [@ AnswerFormatHelp("numbers") @]*  
+
+100 feet away? [____________]{Compute($x2)}
+
+END_PGML
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+#-ULETH-#
+$th1 = int($th1*10**4)/10**4;
+$th2 = int($th2*10**4)/10**4;
+
+$x1 = int($x1*10**4)/10**4;
+$x2 = int($x2*10**4)/10**4;
+BEGIN_PGML_SOLUTION
+
+Construct a right triangle with base [`x`] measuring
+the distance from the gun to the point directly
+below the aircraft.  The height of the triangle is
+[$elev].  Let [`\theta`] be the angle at the point where the 
+gun is located.  Then, since [`\tan \theta = \frac{\text{opposite}}{\text{adjacent}}`],
+
+>>[``
+  \tan \theta = \dfrac{[$elev]}{x}.
+``]<<
+   
+The goal is to find [` \dfrac{d\theta}{dt} `].
+Take the derivative with respect to [`t`] of both sides of the
+equation. That is,
+
+>>[``
+  \begin{array}{rcl}
+    \dfrac{d}{dt}\left[ \tan \theta \right] &=&
+    \dfrac{d}{dt}\left[ [$elev] x^{-1} \right] \\
+    &&\\
+   \implies \sec^2 \theta \dfrac{d\theta}{dt} &=& -[$elev] x^{-2} \dfrac{dx}{dt}
+  \end{array}
+``]<<
+   
+Then plug in
+the known information and solve.  Note, [` \dfrac{dx}{dt} = -[$spd]`],
+since the aircraft is flying toward the gun (thus decreasing the
+distance between them). We see that
+
+>>[``
+  \begin{array}{rcl}
+    \dfrac{d\theta}{dt} &=& -\dfrac{[$elev]  \dfrac{dx}{dt}}
+    { x^{2} \sec^2 \theta} \\
+    &&\\
+    &=& \dfrac{[$num]}{x^2 \sec^2 \theta}.
+  \end{array}
+``]<<
+   
+When [`x = 1000`],
+
+>>[``
+  \tan \theta = \dfrac{[$elev]}{1000} \;\Rightarrow\; \theta = [$th1]
+``]<<
+
+>>[``
+  \Rightarrow \; \dfrac{d\theta}{dt}
+  = \dfrac{[$num]}{(1000)^2 \sec^2 ([$th1])} \approx [$x1].
+``]<<
+   
+When [`x = 100`],
+
+>>[``
+  \tan \theta = \dfrac{[$elev]}{100} \;\Rightarrow\; \theta = [$th2]
+``]<<
+
+>>[``
+  \Rightarrow \; \dfrac{d\theta}{dt}
+  = \dfrac{[$num]}{(100)^2 \sec^2 ([$th2])} \approx [$x2].
+``]<<
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answers are evaluated in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+COMMENT('
+    Randomization provides 441 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+
+
