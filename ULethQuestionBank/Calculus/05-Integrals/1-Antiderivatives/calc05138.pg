@@ -1,0 +1,129 @@
+## DESCRIPTION
+## This is Problem 5.1.38 from the APEX Calculus text (39 in the ULETH text). It covers a basic initial value problem.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Integrals)
+## DBsection(Antiderivatives (with trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.1')
+## Problem1('38')
+## MO(1)
+## Keywords('antiderivative', 'initial value problem', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+$x = random(-9,9,1);
+$y1 = random(-9,9,1);
+$y2 = random(-9,9,1);
+
+$f = "0";
+
+$C1 = $y1;
+$C2 = $y2 - $y1*$x;
+$f_int = Formula("$C1 x + $C2")->reduce();
+
+
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Find the function [`f(x)`] described by the given
+initial value problem.
+
+>>[``
+  f''(x) = [$f], \quad f'([$x]) = [$y1], \quad f([$x]) = [$y2]
+``]<<
+  
+[`f(x) =`] [_________________________]{Compute($f_int)}  [@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+We begin by finding the indefinite integral of [`f''(x)`],
+
+>>[``
+  f'(x) = \int 0 \, dx = 0x + C_1 = C_1.
+``]<<
+
+Since [`f'([$x]) = [$y1]`], we have [`C_1 = [$y1]`].
+  
+Now find the indefinite integral of [`f'(x)`],
+
+>>[``
+  f(x) = \int [$y1] \, dx 
+  = [$y1] x + C_2.
+``]<<
+
+Find [`C_2`] by setting [`f([$x]) = [$y2]`].
+
+>>[``
+  \begin{array}{rcl}
+    [$y1]([$x]) + C_2 &=& [$y2]\\
+     C_2 &=& [$C2]
+  \end{array}
+``]<<
+   
+Thus, [`f(x) = [$f_int]`].
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+#-ENDULETH#
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 6859 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    
+
+
