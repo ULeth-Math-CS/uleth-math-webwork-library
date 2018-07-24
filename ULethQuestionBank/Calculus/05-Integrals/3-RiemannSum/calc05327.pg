@@ -1,0 +1,291 @@
+## DESCRIPTION
+## This is Problem 5.3.27 from the APEX Calculus text. It covers left and right Riemann Sums. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Integrals)
+## DBsection(Riemann sums)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.3')
+## Problem1('27')
+## MO(1)
+## Keywords('integral summation area riemann', 'right endpoints', 'left endpoints', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+##############################
+#  Initialization
+
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Needed to support graph generation.
+  "PGgraphmacros.pl",
+  # Allows the graph and text to be placed in side-by-side columns.
+  "unionTables.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Allows the use of drop down menus
+  "parserPopUp.pl",
+  "weightedGrader.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+
+# Refreshes the graph image every time the page is loaded, as opposed to
+# retrieving a cached version.
+$refreshCachedImages = 1;
+
+#-ULETH-#
+
+Context("Numeric");
+
+install_weighted_grader();
+
+## Plots
+
+# Construct a graph for the left endpoint Riemann sum,
+# define the function to be graphed, and add it to the graph
+$graphL = init_graph(-1,-1,9,9,ticks=>[10,10],axes=>[0,0],pixels=>[600,600]);
+$graphL->lb('reset');
+foreach my $i (1..8) {
+  $graphL->lb( new Label($i,-0.5,$i, 'black','center','middle'));
+  $graphL->lb( new Label(-0.5,$i,$i, 'black','center','middle'));
+}
+$graphL->lb(new Label ( 8.5,0.25,'x','black','center','middle'));
+$graphL->lb(new Label ( 0.25,8.5,'y','black','center','middle'));
+
+
+$c = random(6,12,1); # a constant for scaling the function
+$f = FEQ("x**2/$c for x in <-1,9> using color:blue and weight:2");
+$ftex = "\frac{x^2}{$c}";
+# the parentheses around $fRefL are necessary
+($fRefL) = plot_functions( $graphL, $f );
+
+# Generate arrays of x and y values for the Riemann sum.
+# There are n+1 entries in each array so that we can use
+# only one pair of arrays for both the left and the right 
+# endpoint Riemann sums.
+$a = random(1,4,1); # left endpoint of interval
+$b = $a+4; # right endpoint of interval
+$n = 8; # number of rectangles
+$deltax = ($b - $a)/$n;
+foreach $k (0..$n) { $x[$k] = $a + $k * $deltax; }
+foreach $k (0..$n) { $y[$k] = &{$fRefL->rule}($x[$k]); }
+
+
+# Graph the left endpoint Riemann sum
+$lightblue = $graphL->im->colorAllocate(148,201,255);
+$darkblue = $graphL->im->colorAllocate(100,100,255);
+# Create arrays of pixel references for x and y values
+foreach $k (0..8) {
+   $xpixL[$k] = $graphL->ii($x[$k]);
+   $ypixL[$k] = $graphL->jj($y[$k]);
+}
+$xaxisL = $graphL->jj(0);
+# Plot the rectangles in the Riemann sum
+foreach $k (0..$n-1) {
+   $graphL->im->filledRectangle($xpixL[$k],$ypixL[$k],$xpixL[$k+1],
+   $xaxisL,$lightblue);
+   $graphL->im->rectangle($xpixL[$k],$ypixL[$k],$xpixL[$k+1],
+   $xaxisL,$darkblue);
+}
+
+# Construct a graph for the right endpoint Riemann sum
+$graphR = init_graph(-1,-1,9,9,ticks=>[10,10],axes=>[0,0],pixels=>[600,600]);
+$graphR->lb('reset');
+foreach my $i (1..8) {
+  $graphR->lb( new Label($i,-0.5,$i, 'black','center','middle'));
+  $graphR->lb( new Label(-0.5,$i,$i, 'black','center','middle'));
+}
+$graphR->lb(new Label ( 8.5,0.25,'x','black','center','middle'));
+$graphR->lb(new Label ( 0.25,8.5,'y','black','center','middle'));
+
+# the parentheses around $fRefR are necessary
+($fRefR) = plot_functions( $graphR, $f );
+
+
+# Graph the right endpoint Riemann sum
+$lightblue = $graphR->im->colorAllocate(148,201,255);
+$darkblue = $graphR->im->colorAllocate(100,100,255);
+# Create arrays of pixel references for x and y values
+foreach $k (0..8) {
+   $xpixR[$k] = $graphR->ii($x[$k]);
+   $ypixR[$k] = $graphR->jj($y[$k]);
+}
+$xaxisR = $graphR->jj(0);
+# Plot the rectangles in the Riemann sum
+foreach $k (1..$n) {
+   $graphR->im->filledRectangle($xpixR[$k-1],$ypixR[$k],$xpixR[$k],
+   $xaxisR,$lightblue);
+   $graphR->im->rectangle($xpixR[$k-1],$ypixR[$k],$xpixR[$k],
+   $xaxisR,$darkblue);
+}
+
+###################################
+## Answers
+
+##Answers
+# Part 1
+$end1 = PopUp(["?", "left endpoint", "right endpoint", "midpoint"], "left endpoint");
+
+$LeftRiemannSum = 0;
+foreach $k (0..$n-1) { $LeftRiemannSum = $LeftRiemannSum + $y[$k]; }
+$LeftRiemannSum = Real("$deltax * $LeftRiemannSum");
+
+$est1 = PopUp(["?", "overestimates", "equals", "underestimates", "cannot be compared with"], "underestimates");
+
+# Part 2
+$end2 = PopUp(["?", "left endpoint", "right endpoint", "midpoint"], "right endpoint");
+
+$RightRiemannSum = 0;
+foreach $k (1..$n) { $RightRiemannSum = $RightRiemannSum + $y[$k]; }
+$RightRiemannSum = Real("$deltax * $RightRiemannSum");
+
+$est2 = PopUp(["?", "overestimates", "equals", "underestimates", "cannot be compared to"], "overestimates");
+#-ENDULETH-#
+
+#############################
+#  Main Text
+
+#-ULETH-#
+# Places the following information in column1 (the leftmost) of the layout table.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+$column2 = PGML::Format2(<<'END_PGML');
+ The rectangles in the graph to the left illustrate a [$end1->menu()]*
+Riemann sum for 
+[` \displaystyle f(x) = [$ftex] `] on the interval [` \lbrack [$a], [$b] \rbrack `].  
+
+The value of this Riemann sum 
+is [_______________], 
+and this Riemann sum [$est1->menu()]* the area of the region enclosed by [`\displaystyle y = f(x) `], the x-axis, 
+and the vertical lines x = [$a] and x = [$b].
+
+END_PGML
+
+$column4 = PGML::Format2(<<'END_PGML');
+ The rectangles in the graph to the left illustrate a [$end2->menu()]*
+Riemann sum for 
+[` \displaystyle f(x) = [$ftex] `] on the interval [` \lbrack [$a], [$b] \rbrack `].  
+
+The value of this Riemann sum 
+is [_______________], 
+and this Riemann sum [$est1->menu()]* the area of the region enclosed by [`\displaystyle y = f(x) `], the x-axis, 
+and the vertical lines x = [$a] and x = [$b].
+
+END_PGML
+# Places the graph image in column1 (the leftmost) of the layout table.
+# The additional arguments after insertGraph($gr) specify the width and height
+# of the image when it's on-screen, while the tex_size is a percentage multiplier
+# determining what size the image will print at in a hard copy version.
+$column1 = image(insertGraph($graphL), width=>600, height=>600, tex_size=>600).
+$BR.$BCENTER.$BR."Riemann sum for  \(y = $ftex\) on 
+ \(\lbrack $a, $b \rbrack\)".$ECENTER;
+
+$column3 = image(insertGraph($graphR), width=>600, height=>600, tex_size=>600).
+$BR.$BCENTER.$BR."Riemann sum for  \(y = $ftex\) on 
+ \(\lbrack $a, $b \rbrack\)".$ECENTER;
+
+
+#-ENDULETH-#
+
+BEGIN_TEXT
+Note: You can click on graphs to view them in a separate window.
+
+\{ColumnTable($column1, $column2, indent => 0, separation => 30, valign => "TOP");\}
+$BR
+$HR
+$BR
+END_TEXT
+
+TEXT(ColumnTable($column3, $column4, indent => 0, separation => 30, valign => "TOP"));
+
+
+
+#############################
+#  Answer Evaluation
+
+WEIGHTED_ANS( ($end1)->cmp(), 5 );
+WEIGHTED_ANS( Compute($LeftRiemannSum)->cmp(), 40 );
+WEIGHTED_ANS( ($est1)->cmp(), 5 );
+WEIGHTED_ANS( ($end2)->cmp(), 5 );
+WEIGHTED_ANS( Compute($RightRiemannSum)->cmp(), 45 );
+WEIGHTED_ANS( ($est2)->cmp(), 5 );
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+
+#-ENDULETH-#
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+BEGIN_PGML_SOLUTION
+
+The first image is a left endpoint Riemann sum.  Its value is:
+
+>>[`` 
+  f([$x[0]]) \cdot 0.5 + f([$x[1]]) \cdot 0.5 + \cdots + f([$x[[$n]-1]]) \cdot 0.5
+``]<<
+>>[``
+  = (\dfrac{{[$x[0]]}^2}{[$c]} + \dfrac{{[$x[1]]}^2}{[$c]} + \cdots + \dfrac{{[$x[[$n]-1]]}^2}{[$c]} ) \cdot 0.5 = [$LeftRiemannSum].
+``]<<
+  
+It is an underestimate because every rectangle is drawn below
+the curve.
+  
+----
+   
+The second image is a right endpoint Riemann sum.  Its value is:
+>>[`` 
+  f([$x[1]]) \cdot 0.5 + f([$x[2]]) \cdot 0.5 + \cdots + f([$x[[$n]]]) \cdot 0.5
+``]<<
+>>[``
+  = (\dfrac{{[$x[1]]}^2}{[$c]} + \dfrac{{[$x[2]]}^2}{[$c]} + \cdots + \dfrac{{[$x[[$n]]]}^2}{[$c]} ) \cdot 0.5 = [$RightRiemannSum].
+``]<<
+  
+It is an overestimate because every rectangle is drawn above
+the curve.
+
+
+END_PGML_SOLUTION
+
+COMMENT('
+    Randomization provides 28 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+#-ENDULETH-#
+
+# Marks the end of the problem document.
+ENDDOCUMENT();

@@ -1,0 +1,191 @@
+## DESCRIPTION
+## This is Problem 5.3.5-6 in the APEX Calculus text. It is an introduction to summation notation.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Integrals)
+## DBsection(Riemann sums)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.3')
+## Problem1('5-6')
+## MO(1)
+## Keywords('summation', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Used to allow students to enter answers in any order.
+  "unorderedAnswer.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+$a1 = random(2,9,1);
+$b1 = $a1 + 2;
+
+$a2 = random(-4,-1,1);
+$b2 = $a2 + 5;
+$m = random(2,6,1);
+$b = random(1,9,1)*random(-1,1,2);
+
+#Answers
+
+## (a)
+$a11 = $a1 + 1;
+
+$ans_a1 = Compute($a1**2);
+$ans_a2 = Compute(($a11)**2);
+$ans_a3 = Compute(($b1)**2);
+$ans_a = $ans_a1 + $ans_a2 + $ans_a3;
+
+## (b)
+$a21 = $a2 + 1;
+$a22 = $a2 + 2;
+$a23 = $a2 + 3;
+$a24 = $a2 + 4;
+
+$ans_b1 = $m * $a2 + $b;
+$ans_b2 = $m * $a21 + $b;
+$ans_b3 = $m * $a22 + $b;
+$ans_b4 = $m * $a23 + $b;
+$ans_b5 = $m * $a24 + $b;
+$ans_b6 = $m * $b2 + $b;
+$ans_b = $ans_b1 + $ans_b2 + $ans_b3 + $ans_b4 + $ans_b5 + $ans_b6;
+
+
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+For the following, write out each term of the
+summation in the boxes provided.  Then compute
+the sum.
+    
+[`\displaystyle\sum_{i=[$a1]}^{[$b1]} i^2 `] 
+= [______] [`+`] [______] [`+`] [______] 
+END_PGML
+UNORDERED_ANS( 
+Compute($ans_a1)->cmp(), 
+Compute($ans_a2)->cmp(), 
+Compute($ans_a3)->cmp(),
+);
+
+BEGIN_PGML
+[`\displaystyle\sum_{i=[$a1]}^{[$b1]} i^2 `] 
+= [__________] [@ AnswerFormatHelp("numbers") @]*  
+----
+END_PGML
+ANS(Compute($ans_a)->cmp);
+
+BEGIN_PGML
+[`\displaystyle\sum_{i=[$a2]}^{[$b2]} ([$m] i + [$b]) `] 
+= [______] [`+`] [______] [`+`] [______]
+[`+`] [______] [`+`] [______]  [`+`] [______]
+END_PGML
+UNORDERED_ANS( 
+Compute($ans_b1)->cmp(), 
+Compute($ans_b2)->cmp(), 
+Compute($ans_b3)->cmp(),
+Compute($ans_b4)->cmp(), 
+Compute($ans_b5)->cmp(), 
+Compute($ans_b6)->cmp(),
+);
+
+BEGIN_PGML
+[`\displaystyle\sum_{i=[$a2]}^{[$b2]} ([$m] i + [$b]) `] 
+= [__________]
+END_PGML
+ANS(Compute($ans_b)->cmp);
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+Write out the terms for each value of [`i`] from [$a1] to [$b1],
+then add the terms.
+>>[``
+  \begin{array}{rcl}
+    i = [$a1] &\to& a_{[$a1]} = ([$a1])^2 = [$ans_a1]\\
+    i = [$a11] &\to& a_{[$a11]} = ([$a11])^2 = [$ans_a2]\\
+    i = [$b1] &\to& a_{[$b1]} = ([$b1])^2 = [$ans_a3]\\
+  \end{array}
+``]<<
+
+The sum is: [`\displaystyle\sum_{i=[$a1]}^{[$b1]} i^2  = [$ans_a]`] 
+
+----
+
+Write out the terms for each value of [`i`] from [$a2] to [$b2],
+then add the terms.
+>>[``
+  \begin{array}{rcl}
+    i = [$a2] &\to& a_{[$a2]} = [$m]([$a2]) + [$b] = [$ans_b1]\\
+    i = [$a21] &\to& a_{[$a21]} = [$m]([$a21]) + [$b] = [$ans_b2]\\
+    i = [$a22] &\to& a_{[$a22]} = [$m]([$a22]) + [$b] = [$ans_b3]\\
+    i = [$a23] &\to& a_{[$a23]} = [$m]([$a23]) + [$b] = [$ans_b4]\\
+    i = [$a24] &\to& a_{[$a24]} = [$m]([$a24]) + [$b] = [$ans_b5]\\
+    i = [$b2] &\to& a_{[$b2]} = [$m]([$b2]) + [$b] = [$ans_b6]\\
+  \end{array}
+``]<<
+
+The sum is: [`\displaystyle\sum_{i=[$a2]}^{[$b2]} ([$m] i + [$b])  = [$ans_b]`] 
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+# Answers are evaluated beside the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+
+$showPartialCorrectAnswers = 0;
+
+install_problem_grader(~~&std_problem_grader);
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 3240 possible versions of this question.<BR>
+    Students may enter the terms of each sum in any order.
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    
+
+

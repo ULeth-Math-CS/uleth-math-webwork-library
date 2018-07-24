@@ -1,0 +1,171 @@
+## DESCRIPTION
+## This is Problem 5.3.23-26 from the APEX Calculus text (5.3.25-28 in the ULETH text). It covers the evaluation sums of consecutive integers, squares, and cubes. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Integrals)
+## DBsection(Riemann sums)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.3')
+## Problem1('23')
+## MO(1)
+## Keywords('summation', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+Context()->{format}{number} = "%f#"; 
+
+$a1 = random(10,20,5) + 1;
+$a2 = $a1 - 1 + random(10,20,5);
+
+$b1 = random(10,20,5) + 1;
+$b2 = $b1 - 1 + random(10,20,5);
+
+$c1 = random(5,20,1);
+$c2 = $c1 + random(10,30,1);
+$m = random(3,9,1);
+
+$d1 = random(5,20,5) + 1;
+$d2 = $d1 - 1 + random(10,20,5);
+$p = random(3,9,1);
+
+
+# Answer
+$a11 = $a1 - 1;
+$ans1 = Compute($a2 * ($a2+1) / 2 - $a11*($a11+1) / 2);
+
+$b11 = $b1 - 1;
+$ans2 = Compute(($b2 * ($b2+1) / 2)**2 - ($b11*($b11+1) / 2)**2);
+
+$c11 = $c1 - 1;
+$ans3 = Compute(($c2 - $c11) * $m);
+
+$d11 = $d1 - 1;
+$ans4 = Compute($p*($d2*($d2 + 1)*(2*$d2 + 1)/6 -
+      $d11*($d11 + 1)*(2*$d11 + 1)/6));
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+One of the properties of summation states that [`
+\displaystyle \sum_{i = 1}^n a_i = \sum_{i=1}^k a_i +
+\sum_{i = k+1}^{n} a_i`], so [` \displaystyle
+  \sum_{i = k+1}^n a_i = \sum_{i=1}^n a_i -
+ \sum_{i = 1}^{k} a_i.
+`]
+
+Use this fact, along with other properties of summation,
+to evaluate the given summations.
+
+[`\displaystyle \sum_{i=[$a1]}^{[$a2]} i =`][______________]{$ans1}  [@ AnswerFormatHelp("numbers") @]*
+----
+    
+[`\displaystyle \sum_{i=[$b1]}^{[$b2]} i^3 =`][______________]{$ans2}
+----
+    
+[`\displaystyle \sum_{i=[$c1]}^{[$c2]} [$m] =`][______________]{$ans3}
+----
+
+[`\displaystyle \sum_{i=[$d1]}^{[$d2]} [$p] i^2 =`][______________]{$ans4}
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+In each case, use the appropriate property of summations to determine [`\sum_{i=1}^n a_i`] and [`\sum_{i=1}^k a_i`], then use the property given in the question text to determine [`\sum_{i=k+1}^n a_i`]. 
+
+>>[``
+  \sum_{i=[$a1]}^{[$a2]} i =
+  \sum_{i=1}^{[$a2]} i -
+  \sum_{i=1}^{[$a11]} i =
+  \dfrac{[$a2]([$a2] + 1)}{2} - \dfrac{[$a11]([$a11] + 1)}{2} = [$ans1]
+``]<<
+----
+    
+>>[``
+  \sum_{i=[$b1]}^{[$b2]} i^3 =
+  \sum_{i=1}^{[$b2]} i^3 -
+  \sum_{i=1}^{[$b11]} i^3 =
+  \left[\dfrac{[$b2]([$b2] + 1)}{2}\right]^3 - 
+  \left[\dfrac{[$b11]([$b11] + 1)}{2}\right]^3 = [$ans2]
+``]<<
+----
+    
+>>[``
+  \sum_{i=[$c1]}^{[$c2]} [$m] =
+  \sum_{i=1}^{[$c2]} [$m] -
+  \sum_{i=1}^{[$c11]} [$m]  = [$c2]([$m]) - [$c11]([$m]) = [$ans3]
+``]<<
+----
+    
+>>[``
+  \sum_{i=[$d1]}^{[$d2]} [$p] i^2 =
+  [$p]\left(\sum_{i=1}^{[$d2]} i^2 -
+  \sum_{i=1}^{[$d11]} i^2\right)  = 
+  [$p]\left(\dfrac{[$d2]([$d2] + 1)(2([$d2]) + 1)}{6}
+  - \dfrac{[$d11]([$d11] + 1)(2([$d11]) + 1}{6}\right)
+  = [$ans4]
+``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answers are evaluated in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides over 21 million possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    
+

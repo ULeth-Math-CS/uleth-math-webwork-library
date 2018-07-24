@@ -1,0 +1,135 @@
+## DESCRIPTION
+## This is Problem 5.3.21-22 (+1 bonus question) from the APEX Calculus text (5.3.23-24+1 in the ULETH text). It covers the evaluation sums of consecutive integers, squares, and cubes. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Integrals)
+## DBsection(Riemann sums)
+## Institution('Valdosta State University')
+## Level(2)
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.3')
+## Problem1('21')
+## MO(1)
+## Keywords('summation', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+Context()->{format}{number} = "%f#"; 
+
+$n = random(50,500,5);
+
+$a1 = $n - 1;
+$a2 = $n;
+
+$b1 = ($n - 1)**2;
+$b2 = $n ** 2;
+
+$c1 = ($n - 1)**3;
+$c2 = $n ** 3;
+
+# Answer
+
+$ans1 = Compute($n * ($n+1) / 2);
+$ans2 = Compute($n * ($n+1) * (2*$n + 1) / 6);
+$ans3 = Compute(($n * ($n+1) / 2)**2);
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+Evaluate the following summations using the properties of summations.
+
+[`1 + 2 + 3 + \cdots + [$a1] + [$a2] =`][______________]{$ans1}  [@ AnswerFormatHelp("numbers") @]*
+----
+    
+[`1 + 4 + 9 + \cdots + [$b1] + [$b2] =`][______________]{$ans2}
+----
+    
+[`1 + 8 + 27 + \cdots + [$c1] + [$c2] =`][______________]{$ans3}
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+Use the appropriate properties of summations in each case.
+
+Sum of consecutive integers:
+>>[``
+  1 + 2 + 3 + \cdots + [$a1] + [$a2] = \sum_{i = 1}^{[$n]} i 
+  = \dfrac{[$n]([$n] + 1)}{2} = [$ans1]
+``]<<
+----
+    
+Sum of consecutive squares:
+>>[``
+  1 + 2^2 + 3^2 + \cdots + [$a1]^2 + [$a2]^2 = \sum_{i = 1}^{[$n]} i^2 
+  = \dfrac{[$n]([$n] + 1)(2\cdot [$n] + 1)}{6} = [$ans2]
+``]<<
+----
+    
+Sum of consecutive cubes:
+>>[``
+  1 + 2^3 + 3^3 + \cdots + [$a1]^3 + [$a2]^3 = \sum_{i = 1}^{[$n]} i^3
+  = \left[\dfrac{[$n]([$n] + 1)}{2}\right]^2 = [$ans3]
+``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answers are evaluated in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 91 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    
+
