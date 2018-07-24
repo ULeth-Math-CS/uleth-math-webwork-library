@@ -1,0 +1,169 @@
+## DESCRIPTION
+## This is Problem 5.4.15-17 from the APEX Calculus text. It covers a basic definite integration problem.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Integrals)
+## DBsection(Definite integrals (without trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.4')
+## Problem1('15')
+## MO(1)
+## Keywords('definite integral' ,'fundamental theorem of calculus', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+Context()->flags->set(
+  tolerance => 0.01,
+  tolType => "absolute",
+);
+## a)
+$a = random(2,15,1)*random(-1,1,2);
+
+$a1 = 0;
+$x1 = random(2,7,1);
+$b1 = $x1**2;
+
+$f = "\sqrt{t}";
+
+$fI = Formula("2*(x^(3/2))/3");
+$ans1 = $fI->eval(x=>$b1) - $fI->eval(x=>$a1);
+
+## b)
+$b = random(2,15,1)*random(-1,1,2);
+
+$x2 = random(1,5,1);
+$y2 = $x2 + random(1,5,1);
+$a2 = $x2**2;
+$b2 = $y2**2;
+
+$g = "\dfrac{1}{\sqrt{z}}";
+
+$gI = Formula("2*sqrt(x)");
+$ans2 = $gI->eval(x=>$b2) - $gI->eval(x=>$a2);
+
+## c)
+$x3 = random(1,5,1);
+$y3 = $x3 + random(1,5,1);
+$a3 = $x3**3;
+$b3 = $y3**3;
+
+$h = "\sqrt[3]{x}";
+
+$hI = Formula("3*(x^(4/3))/4");
+$ans3 = $hI->eval(x=>$b3) - $hI->eval(x=>$a3);
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+Evaluate the definite integrals
+
+a) [`\displaystyle\int_{[$a1]}^{[$b1]} [$f] \, dt = `] 
+[_______________]{Compute($ans1)} [@ AnswerFormatHelp("numbers") @]*
+
+b) [`\displaystyle\int_{[$a2]}^{[$b2]} [$g] \, dz = `] 
+[_______________]{Compute($ans2)}
+
+c)  [`\displaystyle\int_{[$a3]}^{[$b3]} [$h] \, dx = `] 
+[_______________]{Compute($ans3)}
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+$num1 = 2*($x1**3);
+$num3 = 3*($y3**4) - 3*($x3**4);
+
+BEGIN_PGML_SOLUTION
+
+Use the Fundamental Theorem of Calculus.
+>>[``
+  \begin{array}{rcl}
+    \displaystyle \int_{[$a1]}^{[$b1]} [$f] \, dt &=&
+    \left(\dfrac{2t^{3/2}}{3} \right) \Big|_{[$a1]}^{[$b1]}\\
+    &&\\
+    &=& \dfrac{2([$b1])^{3/2}}{3} -  \dfrac{2([$a1])^{3/2}}{3} \\
+    &&\\
+    &=& \dfrac{[$num1]}{3}\\
+    &=& [$ans1]
+  \end{array}
+``]<<
+----
+>>[``
+  \begin{array}{rcl}
+    \displaystyle \int_{[$a2]}^{[$b2]} [$g] \, dz
+    &=& \left( 2\sqrt{z} \right) \Big|_{[$a2]}^{[$b2]}\\
+    &=& 2\sqrt{[$b2]} - 2\sqrt{[$a2]}\\
+    &=& [$ans2]
+  \end{array}
+``]<<
+----
+>>[``
+  \begin{array}{rcl}
+    \displaystyle \int_{[$a3]}^{[$b3]} [$h] \, dx &=&
+    \left(\dfrac{3x^{4/3}}{4} \right) \Big|_{[$a3]}^{[$b3]}\\
+    &&\\
+    &=& \dfrac{3([$b3])^{4/3}}{4} -  \dfrac{3([$a3])^{4/3}}{4} \\
+    &&\\
+    &=& \dfrac{[$num3]}{4}\\
+    &=& [$ans3]
+  \end{array}
+``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answer checking is completed in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 2940000 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+

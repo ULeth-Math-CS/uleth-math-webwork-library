@@ -1,0 +1,124 @@
+## DESCRIPTION
+## This is Problem 5.4.33 from the APEX Calculus text (5.4.34 in the ULETH text). It covers the Mean Value Theorem for Integration.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Integrals)
+## DBsection(Definite integrals (without trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.4')
+## Problem1('33')
+## MO(1)
+## Keywords('definite integral' ,'fundamental theorem of calculus', 'mean value theorem', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+Context()->flags->set(
+  tolerance => 0.001,
+  tolType => "absolute",
+);
+
+
+## a)
+$a1 = 0;
+
+$b = random(1,9,1);
+$b1 = $b**2;
+$c = random(2,10,1)*random(-1,1,2);
+
+$bc1 = $c * $b1;
+$num = 2*($b**3)*$c;
+$ans1 = ($num / (3*$bc1))**2;
+
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+For the definite integral below, find a value [`c`] which is guaranteed by the Mean
+Value Theorem of Integration.
+
+[`\displaystyle\int_{[$a1]}^{[$b1]} [$c] \sqrt{x} \, dx, \text{  }`] [` c = `][_______________]{Compute($ans1)} [@ AnswerFormatHelp("numbers") @]*
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+$ans2 = sprintf('%.5f', $ans2);
+BEGIN_PGML_SOLUTION
+
+By the MVT of Integration, if [`f`] is continuous on [`[a, b]`], then there exists a value [`c`] in [`[a, b]`]
+such that [` \int_{a}^b f(x) \, dx = f(c)(b-a)`]. Evaluate both sides of this equation and solve for [`c`] to answer the question. 
+
+>>[``
+  \begin{array}{rcl}
+    \displaystyle \int_{[$a1]}^{[$b1]} [$c] \sqrt{x} \, dx &=& [$c] \sqrt{c} 
+    ([$b1] - [$a1]) \\
+    \left( [$c]\cdot\dfrac{2x^{3/2}}{3}\right) \Big|_{[$a1]}^{[$b1]}
+    &=& [$bc1] \sqrt{c} \\
+    &&\\
+    [$c] \cdot\dfrac{2([$b1])^{3/2}}{3} &=& [$bc1] \sqrt{c} \\
+    &&\\
+    \dfrac{[$num]}{3} &=& [$bc1] \sqrt{c} \\
+    &&\\
+    c &=& [$ans1]
+  \end{array}
+``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answer checking is completed in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 162 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+

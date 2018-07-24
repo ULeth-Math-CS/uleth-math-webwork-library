@@ -1,0 +1,160 @@
+## DESCRIPTION
+## This is Problem 5.4.25-27 from the APEX Calculus text. It covers a basic definite integration problem.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Integrals)
+## DBsection(Definite integrals (without trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.4')
+## Problem1('25-27')
+## MO(1)
+## Keywords('definite integral' ,'fundamental theorem of calculus', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+Context()->flags->set(
+  tolerance => 0.001,
+  tolType => "absolute",
+);
+
+## a)
+$a1 = random(1,15,1)*random(-1,1,2);
+$b1 = $a1 + random(5,25,1);
+
+$c = random(1,9,1)*random(-1,1,2);
+
+$f = "$c";
+
+$fI = Formula("$c x");
+$ans1 = $fI->eval(x=>$b1) - $fI->eval(x=>$a1);
+
+## b)
+$a2 = random(1,15,1)*random(-1,1,2);
+$b2 = $a2 + random(5,25,1);
+
+$g = "\,";
+
+$gI = Formula("x");
+$ans2 = $gI->eval(x=>$b2) - $gI->eval(x=>$a2);
+
+## c)
+$a3 = random(1,15,1)*random(-1,1,2);
+$b3 = $a3 + random(5,25,1);
+
+$h = "0";
+
+$ans3 = 0;
+
+
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+Evaluate the definite integrals
+
+a) [`\displaystyle\int_{[$a1]}^{[$b1]} [$f] \, dt = `] 
+[_______________]{Compute($ans1)} [@ AnswerFormatHelp("numbers") @]*
+
+b) [`\displaystyle\int_{[$a2]}^{[$b2]} [$g] \, dx = `] 
+[_______________]{Compute($ans2)}
+
+c)  [`\displaystyle\int_{[$a3]}^{[$b3]} [$h] \, dx = `] 
+[_______________]{Compute($ans3)}
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+$ee = $e3 - 1;
+$eee = $e5 + 1;
+
+BEGIN_PGML_SOLUTION
+
+
+Use the Fundamental Theorem of Calculus.
+>>[``
+  \begin{array}{rcl}
+    \displaystyle \int_{[$a1]}^{[$b1]} [$f] \, dx &=&
+    \left([$c] x  \right) \Big|_{[$a1]}^{[$b1]}\\
+    &=& [$c]([$b1]) - [$c]([$a1])\\
+    &=& [$ans1]
+  \end{array}
+``]<<
+----
+>>[``
+  \begin{array}{rcl}
+    \displaystyle \int_{[$a2]}^{[$b2]} [$g] \, dx
+    =    \displaystyle \int_{[$a2]}^{[$b2]} 1 \, dx
+    &=& \left( x \right) \Big|_{[$a2]}^{[$b2]}\\
+    &=& ([$b2]) - ([$a2])\\
+    &=& [$ans2]
+  \end{array}
+``]<<
+----
+>>[``
+  \begin{array}{rcl}
+    \displaystyle \int_{[$a3]}^{[$b3]} [$h] \, dx &=&
+    \left(0 \right) \Big|_{[$a3]}^{[$b3]}\\
+    &=& [$ans3]
+  \end{array}
+``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answer checking is completed in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides over 4 billion possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+

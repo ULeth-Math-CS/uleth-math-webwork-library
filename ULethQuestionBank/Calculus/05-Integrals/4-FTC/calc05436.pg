@@ -1,0 +1,153 @@
+## DESCRIPTION
+## This is Problem 5.4.36-38 from the APEX Calculus text (5.4.37-39 in the ULETH text). It covers an application of Mean Value Theorem for Integration.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Integrals)
+## DBsection(Definite integrals (without trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.4')
+## Problem1('36-38')
+## MO(1)
+## Keywords('definite integral' ,'fundamental theorem of calculus', 'mean value theorem', 'average value of a function',  'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+Context()->flags->set(
+  tolerance => 0.001,
+  tolType => "absolute",
+);
+
+$a1 = random(1,9,1);
+$b1 = $a1 + random(3,10,1);
+
+$ab1 = $b1 - $a1;
+
+## a)
+$num1 = $b1**2 - $a1**2;
+$den1 = 2*$ab1;
+$ans1 = $num1 / $den1;
+
+## b)
+$num2 = $b1**3 - $a1**3;
+$den2 = 3 * $ab1;
+$ans2 = $num2 / $den2;
+
+## c)
+$num3 = $b1**4 - $a1**4;
+$den3 = 4 * $ab1;
+$ans3 = $num3 / $den3;
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+Find the average value of the functions on the given interval.
+
+a) Average value of [`f(x) = x`] on [` [[$a1], [$b1]] `]:[_______________]{Compute($ans1)} [@ AnswerFormatHelp("numbers") @]*
+
+b) Average value of [`f(x) = x^2`] on [` [[$a1], [$b1]] `]:[_______________]{Compute($ans2)} 
+
+c) Average value of [`f(x) = x^3`] on [` [[$a1], [$b1]] `]:[_______________]{Compute($ans3)} 
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+$c2 = 2*$c;
+
+$ans1 = sprintf('%.2f',$ans1);
+$ans2 = sprintf('%.2f',$ans2);
+$ans3 = sprintf('%.2f',$ans3);
+
+BEGIN_PGML_SOLUTION
+
+The average value of [`f`] on [`[a, b]`] is equal to [` \dfrac{1}{b-a}\int_{a}^b f(x) \, dx`].
+
+Part (a):
+>>[``
+  \begin{array}{rcl}
+    \displaystyle \dfrac{1}{[$b1] - [$a1]}\int_{[$a1]}^{[$b1]} x \, dx &=& 
+    \dfrac{1}{[$ab1]} \left(\dfrac{x^2}{2}\right) \Big|_{[$a1]}^{[$b1]}\\
+    &=& \dfrac{[$num1]}{[$den1]}\\
+    &=& [$ans1]
+  \end{array}
+``]<<
+-----
+Part (b):
+>>[``
+  \begin{array}{rcl}
+    \displaystyle \dfrac{1}{[$b1] - [$a1]}\int_{[$a1]}^{[$b1]} x^2 \, dx &=& 
+    \dfrac{1}{[$ab1]} \left(\dfrac{x^3}{3}\right) \Big|_{[$a1]}^{[$b1]}\\
+    &=& \dfrac{[$num2]}{[$den2]}\\
+    &=& [$ans2]
+  \end{array}
+``]<<
+----
+Part (c):
+>>[``
+ \begin{array}{rcl}
+    \displaystyle \dfrac{1}{[$b1] - [$a1]}\int_{[$a1]}^{[$b1]} x^3 \, dx &=& 
+    \dfrac{1}{[$ab1]} \left(\dfrac{x^4}{4}\right) \Big|_{[$a1]}^{[$b1]}\\
+    &=& \dfrac{[$num3]}{[$den3]}\\
+    &=& [$ans3]
+  \end{array}
+``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answer checking is completed in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 72 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+
