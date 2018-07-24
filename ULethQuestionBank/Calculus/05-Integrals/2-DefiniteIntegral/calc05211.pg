@@ -1,0 +1,220 @@
+## DESCRIPTION
+## This is Problem 5.2.11 from the APEX Calculus text. It covers graphical evaluation of integrals. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Integrals)
+## DBsection(Conceptual understanding of integration)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.2')
+## Problem1('11')
+## MO(1)
+## Keywords('integral', 'signed area', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+##############################
+#  Initialization
+
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Needed to support graph generation.
+  "PGgraphmacros.pl",
+  # Allows the graph and text to be placed in side-by-side columns.
+  "unionTables.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+
+# Refreshes the graph image every time the page is loaded, as opposed to
+# retrieving a cached version.
+$refreshCachedImages = 1;
+
+#-ULETH-#
+# Random values for the function/graph.
+Context("Numeric")->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,
+   );
+$pi = Formula("pi");
+
+$a = random(2,500,2);
+
+$v1 = 2*$a;
+
+$x1 = $a;
+$x2 = 2*$a;
+$x0 = $a/2;
+
+# Functions to graph.
+$f1 = Formula("sin($pi*x/$a)");
+
+###################################
+## Graph
+$w = 500;  # graph size
+$tw = 500; # graph size in TeX
+
+$xmin=0;
+$xmax=2*$a;
+$ymin=-2;
+$ymax=2;
+$xr = $xmax - $xmin;
+$yr = $ymax - $ymin;
+
+$graph = init_graph($xmin,$ymin,$xmax,$ymax,'axes'=>[0,0],
+  'ticks'=>[$xr,$yr], 'size'=>[500,500]);
+
+$label1="A";
+$label2="B";
+$graph->lb( new Label($a/2,0.5,$label1,
+    'black','center','middle'));
+$graph->lb( new Label(3*$a/2,-0.5,$label2,
+    'black','center','middle'));
+
+$graph->new_color("orange", 255,153,51);
+
+add_functions($graph, "$f1 for x in [$xmin,$xmax] using color:orange weight:2");
+($graph->fn)[0]->steps(200);
+
+#Answers
+$ans1 = $v1/$pi;
+$ans2 = -$ans1;
+$ans3 = 0;
+$ans4 = $v1/(2*$pi);
+
+#-ENDULETH-#
+
+#############################
+#  Main Text
+
+#-ULETH-#
+# Places the following information in column1 (the leftmost) of the layout table.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+$column2 = PGML::Format2(<<'END_PGML');
+A graph of [`f(x) = \sin(\pi x/[$a])`] is shown.    
+The regions A and B both have geometric area equal to [`[$v1] / \pi`].  
+Evaluate the following definite integrals.
+
+
+a) [`\displaystyle\int_0^{[$x1]} f(x)
+ \, dx `] = [____________________] [@ AnswerFormatHelp("numbers") @]*
+   
+b) [`\displaystyle\int_{[$x1]}^{[$x2]} f(x)
+ \, dx `] = [____________________]
+   
+c) [`\displaystyle\int_{0}^{[$x2]} f(x)
+ \, dx `] = [____________________]
+   
+d) [`\displaystyle\int_{0}^{[$x0]} f(x)
+ \, dx `] = [____________________]
+
+END_PGML
+
+# Places the graph image in column1 (the leftmost) of the layout table.
+# The additional arguments after insertGraph($gr) specify the width and height
+# of the image when it's on-screen, while the tex_size is a percentage multiplier
+# determining what size the image will print at in a hard copy version.
+$column1 = image(insertGraph($graph), width=>$w, height=>$w, tex_size=>600).
+$BR.$BCENTER.$BR."Graph of \( y = f(x) \)".$ECENTER;
+#-ENDULETH-#
+
+TEXT(ColumnTable($column1, $column2, indent => 0, separation => 30, valign => "TOP"));
+
+
+#############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS( Compute($ans1)->cmp );
+ANS( Compute($ans2)->cmp );
+ANS( Compute($ans3)->cmp );
+ANS( Compute($ans4)->cmp );
+#-ENDULETH-#
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+BEGIN_PGML_SOLUTION
+Find the signed area, using the graph.
+   
+[`\text{a}`]) The region between [`x = 0`] and [`x = [$x1]`] represents
+a positive net area, so
+
+>>[``
+  \int_0^{[$x1]} f(x) \, dx = \dfrac{[$v1]}{\pi}.
+``]<<
+   
+
+[`\text{b}`]) The region between [`x = [$x1]`] and [`x = [$x2]`] represents
+a negative net area, so
+
+>>[``
+  \int_{[$x1]}^{[$x2]} f(x) \, dx = -\dfrac{[$v1]}{\pi}.
+``]<<
+   
+[`\text{c}`])Split the integral:
+
+>>[``
+  \int_{0}^{[$x2]} f(x) \, dx = 
+  \int_{0}^{[$x1]} f(x) \, dx +
+  \int_{[$x1]}^{[$x2]} f(x) \, dx =
+  \dfrac{[$v1]}{\pi} - \dfrac{[$v1]}{\pi} = 
+  [$ans3].
+``]<<
+   
+[`\text{d}`])  The region between [`x = 0`] and [`x = [$x0]`] represents
+exactly half of the region between [`x = 0`] and
+[`x = [$x1]`] (by symmetry of the sine graph).
+
+>>[``
+  \int_{0}^{[$x0]} f(x) \, dx = \dfrac{1}{2}
+  \int_{0}^{[$x1]} f(x) \, dx = \dfrac{1}{2}\left(\dfrac{[$v1]}{\pi}\right).
+``]<<
+
+
+END_PGML_SOLUTION
+
+COMMENT('
+    Randomization provides 250 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+#-ENDULETH-#
+
+# Marks the end of the problem document.
+ENDDOCUMENT();

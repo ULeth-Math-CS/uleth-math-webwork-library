@@ -1,0 +1,168 @@
+## DESCRIPTION
+## This is Problem 5.2.16-17 in the APEX Calculus text (5.2.17-18 in the ULETH APEX text). It covers an integration word problem.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Integrals)
+## DBsection(Conceptual understanding of integration)
+## Level(5)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.2')
+## Problem1('16-17')
+## MO(1)
+## Keywords('integration', 'velocity', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for dropdown menus
+  "parserPopUp.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+$h = random(10,90,2);
+$b = $h + random(12,92,2);
+
+$ans1 = $b;
+$ans2 = $b;
+$ans3 = $b**2 / 64;
+$ans4 = $b/32;
+$ans5 = $b/16;
+$ans6 = $h + $ans3;
+
+$units1 = PopUp(["?", "ft", "s", "ft/s"], "ft/s");
+$units2 = PopUp(["?", "ft", "s", "ft/s"], "ft/s");
+$units3 = PopUp(["?", "ft", "s", "ft/s"], "ft");
+$units4 = PopUp(["?", "ft", "s", "ft/s"], "s");
+$units5 = PopUp(["?", "ft", "s", "ft/s"], "s");
+$units6 = PopUp(["?", "ft", "s", "ft/s"], "ft");
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+An object is thrown straight up with a velocity, in
+ft/s, given by [`v(t) = -32t + [$b]`], where [`t`] is
+in seconds, from a height of [$h] feet.
+   
+a) What is the object's initial velocity? 
+[__________]{Compute($ans1)} [__]{$units1}
+
+b) What is the object's maximum velocity? 
+[__________]{Compute($ans2)} [__]{$units2}
+   
+c) What is the object's maximum displacement? 
+[__________]{Compute($ans3)} [__]{$units3}
+   
+d) When does the maximum displacement occur?
+[__________]{Compute($ans4)} [__]{$units4}
+   
+e) When is the object's displacement 0?
+[__________]{Compute($ans5)} [__]{$units5}
+   
+f) What is the object's maximum height?
+[__________]{Compute($ans6)} [__]{$units6}
+   
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+$ans3 = sprintf("%0.3f", $ans3 );
+$ans6 = sprintf("%0.3f", $ans6 );
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+[`\text{a}`]) The initial velocity is [`v(0) = [$b]`].
+  
+[`\text{b}`]) The maximum velocity is the same as the initial velocity, [$b],
+in this problem.  This is because there are no critical
+values for [`v`] (since [`v'(t) = -32`] has no zeros), and
+so the extreme values must occur at endpoints.
+  
+[`\text{c}`]) First determine when velocity is positive or negative:  
+  
+>>[``
+  -32 t + [$b] > 0 \;\Rightarrow\; t < \dfrac{[$b]}{32}.
+``]<<  
+  
+Thus, velocity is only positive in the interval [` [0, [$b]/32] `],
+so the maximum displacement must occur at time [`t = [$b]/32`].
+Find the area of the triangle formed by the graph of [`v`],
+which has base [`[$b]/32`] and height [$b]. This area is  
+  
+>>[``
+  \textrm{Area} = \frac{1}{2}\left(\frac{[$b]}{32}\right)([$b]) 
+  = [$ans3] \,\textrm{ft}.
+``]<<
+  
+[`\text{d}`]) The maximum displacement occurs at [`t = [$b] / 32`] (see above).  
+  
+[`\text{e}`]) The object's displacement will be 0 when the net area
+of [`v(t)`] is zero.  Since the graph of [`v(t)`] is a straight
+line, it is easy to see that this occurs when [`t`] is
+twice the value of the [`t`]-intercept, that is,  
+>>[``
+  t = 2\left(\frac{[$b]}{32}\right) = \frac{[$b]}{16} \,\textrm{s}.
+``]<<
+  
+[`\text{f}`]) This is found by adding the maximum displacement to
+the initial height.  
+  
+>>[``
+  [$h] + [$ans3] = [$ans6]\,\textrm{ft}.
+``]<<
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 1681 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    
+
+

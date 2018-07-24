@@ -1,0 +1,233 @@
+## DESCRIPTION
+## This is Problem 5.2.15 from the APEX Calculus text. It covers a graphical integration problem involving velocity. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Integrals)
+## DBsection(Conceptual understanding of integration)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.2')
+## Problem1('15')
+## MO(1)
+## Keywords('integral', 'signed area', 'velocity', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+##############################
+#  Initialization
+
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Needed to support graph generation.
+  "PGgraphmacros.pl",
+  # Allows the graph and text to be placed in side-by-side columns.
+  "unionTables.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Allows the use of drop down menus
+  "parserPopUp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+
+# Refreshes the graph image every time the page is loaded, as opposed to
+# retrieving a cached version.
+$refreshCachedImages = 1;
+
+#-ULETH-#
+# Random values for the function/graph.
+Context("Numeric");
+
+$x1 = 0;
+$y1 = random(3,15);
+
+$x2 = random(2,4,1);
+$y2 = $y1;
+
+$x3 = $x2 + random(2,4,1);
+$y3 = 0;
+
+$x4 = $x3 + random(2,4,1);
+$y4 = random(3,15);
+
+$x5 = $x4 + random(4,7,1);
+$y5 = $y4;
+
+# Functions to graph.
+
+$f1 = Formula("$y1");
+$m2 = ($y3-$y2)/($x3-$x2);
+$f2 = Formula("$m2*(x - $x2) + $y2");
+
+$m3 = ($y4-$y3)/($x4-$x3);
+$f3 = Formula("$m3*(x - $x3) + $y3");
+
+$f4 = Formula("$y4");
+
+###################################
+## Graph
+$w = 500;  # graph size
+$tw = 500; # graph size in TeX
+
+
+
+$xmin=-1;
+$xmax=$x5;
+$ymin=-1;
+$ymax = max($y1+2, $y4+2);
+$xr = $xmax - $xmin;
+$yr = $ymax - $ymin;
+
+$graph = init_graph($xmin,$ymin,$xmax,$ymax,'axes'=>[0,0],
+  'ticks'=>[$xr,$yr], 
+  'grid'=>[$xr,$yr],
+  'size'=>[500,500]);
+  
+$graph->lb( new Label($x1,$y1,"($x1, $y1)",
+    'black','left','bottom'));
+$graph->lb( new Label($x2,$y2,"($x2, $y2)",
+    'black','left','bottom'));
+$graph->lb( new Label($x3,$y3,"($x3, $y3)",
+    'black','left','bottom'));
+$graph->lb( new Label($x4,$y4,"($x4, $y4)",
+    'black','left','bottom'));
+$graph->lb( new Label($x5,$y5,"($x5, $y5)",
+    'black','right','bottom'));
+
+
+$graph->new_color("orange", 255,153,51);
+
+add_functions($graph, "$f1 for x in [$x1,$x2] using color:orange weight:2");
+add_functions($graph, "$f2 for x in [$x2,$x3] using color:orange weight:2");
+add_functions($graph, "$f3 for x in [$x3,$x4] using color:orange weight:2");
+add_functions($graph, "$f4 for x in [$x4,$x5] using color:orange weight:2");
+
+###################################
+## Popups
+$units1 = PopUp(["?", "s", "m/s", "m"], "m/s");
+$units2 = PopUp(["?", "s", "m/s", "m"], "m");
+
+#Answers
+$b2 = $x3 - $x2;
+$b3 = $x4 - $x3;
+$b4 = $x5 - $x4;
+
+$ans1 = ($y1 > $y5) ? $y1 : $y5;
+$ans2 = $x2*$y1 + (1/2)*$b2*$y2 + (1/2)*$b3*$y4 + $b4*$y4;
+
+#-ENDULETH-#
+
+#############################
+#  Main Text
+
+#-ULETH-#
+# Places the following information in column1 (the leftmost) of the layout table.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+$column2 = PGML::Format2(<<'END_PGML');
+A graph of the velocity function  [`v(t)`] of an object moving in
+a straight line is given.  Velocity is measured in m/s, and
+time in seconds.
+   
+a) What is the object's maximum velocity? 
+[__________]{Compute($ans1)} [__]{$units1}
+   
+b) What is the object's maximum displacement? 
+[__________]{Compute($ans2)} [__]{$units2}
+
+
+END_PGML
+
+# Places the graph image in column1 (the leftmost) of the layout table.
+# The additional arguments after insertGraph($gr) specify the width and height
+# of the image when it's on-screen, while the tex_size is a percentage multiplier
+# determining what size the image will print at in a hard copy version.
+$column1 = image(insertGraph($graph), width=>$w, height=>$w, tex_size=>600).
+$BR.$BCENTER.$BR."Graph of the velocity function.".$ECENTER;
+#-ENDULETH-#
+
+TEXT(ColumnTable($column1, $column2, indent => 0, separation => 30, valign => "TOP"));
+
+
+#############################
+#  Answer Evaluation
+
+#answers are evaluated in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+
+#-ENDULETH-#
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+BEGIN_PGML_SOLUTION
+
+a) The maximum velocity is the highest value on the graph,
+ [` v = [$ans1] `] m/s.
+   
+b) Since  [` v \geq 0`] on  [` [0, [$xmax]] `], the maximum displacement
+is the entire area under the curve on this interval.  Break up
+the integral into rectangles and triangles:
+>>[``
+  \int_{0}^{[$xmax]} v(t) \, dt = 
+  \int_{[$x1]}^{[$x2]} v(t) \, dt +
+  \int_{[$x2]}^{[$x3]} v(t) \, dt + 
+  \int_{[$x3]}^{[$x4]} v(t) \, dt + 
+  \int_{[$x4]}^{[$x5]} v(t) \, dt.
+``]<<
+
+Evaluating the area of each section using geometry, we find that 
+
+>>[``
+  \int_{0}^{[$xmax]} v(t) \, dt 
+  = ([$x2])([$y1]) + \frac{1}{2}([$b2])([$y2])
+  + \frac{1}{2}([$b3])([$y4]) + ([$b4])([$y4])
+  = [$ans2].
+``]<<
+
+The units are m (meters) because displacement is a measure of distance.
+
+END_PGML_SOLUTION
+
+COMMENT('
+    Randomization provides 18252 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+#-ENDULETH-#
+
+# Marks the end of the problem document.
+ENDDOCUMENT();
