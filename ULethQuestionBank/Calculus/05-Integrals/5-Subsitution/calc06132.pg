@@ -1,0 +1,167 @@
+## DESCRIPTION
+## This is Problem 6.1.32-34 from the APEX Calculus text (5.5.33-36 from the ULETH APEX text). It covers indefinite integration using substitution.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Techniques of integration)
+## DBsection(Substitution (without trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('6.1')
+## Problem1('30')
+## MO(1)
+## Keywords('indefinite integral', 'substitution', ' antiderivatives ', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  	'contextFraction.pl',
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+
+## (a) ##
+$e1 = random(2,9,1);
+$exp = ($e1==2 ? '' : $e1 - 1);
+
+$u1 = "\ln x";
+
+$f1 = "\dfrac{($u1)^{$e1}}{x}";
+
+
+## (b) ##
+$e2 = random(3,9,1);
+
+$u2 = "\ln x";
+
+$f2 = "\dfrac{\ln(x^{$e2})}{x}";
+
+## (c) ##
+$e3 = random(2,9,1);
+
+$u3 = "\ln x";
+
+$f3 = "\dfrac{1}{x \ln(x^{$e3})}";
+
+
+#### Answers ####
+
+$e1p = $e1 + 1;
+
+$limits = [ 1.1, 10 ];
+Context('Numeric')->variables->are(x => [ 'Real', limits => $limits ]);
+
+$F1 = Formula("((ln(x))^($e1p))/($e1p)")->reduce;
+$F2 = Formula("($e2/2) * (ln(x))^2")->reduce;
+$F3 = Formula("ln(ln(x)) / ($e3)")->reduce;
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+Evaluate the indefinite integrals using Substitution (write your answers in terms of [`x`]). 
+
+a) [`\displaystyle\int [$f1] \, dx `] = [___________________________________]{$F1->cmp(upToConstant=>1)} [` + C`]. [@ AnswerFormatHelp("formulas") @]*
+
+a) [`\displaystyle\int [$f2] \, dx `] = [___________________________________]{$F2->cmp(upToConstant=>1)} [` + C`]. 
+
+a) [`\displaystyle\int [$f3] \, dx `] = [___________________________________]{$F3->cmp(upToConstant=>1)} [` + C`]. 
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+Context('Fraction');
+$coeff = Fraction($e2, 2)->reduce;
+
+Context()->normalStrings;
+
+
+BEGIN_PGML_SOLUTION
+
+Part (a): Substitute [`u = [$u1]`].  Then [`du = \frac{1}{x} \,dx`].
+>>[``
+  \begin{array}{rcl}
+    \displaystyle  \int [$f1] \, dx &=&
+    \displaystyle \int (\ln x)^{[$e1]} \cdot \frac{1}{x} \,dx \\
+    &=& \displaystyle \int u^{[$e1]} \,du \\
+    &=& \dfrac{u^{[$e1p]}}{[$e1p]} + C\\
+    &=& \dfrac{(\ln x)^{[$e1p]}}{[$e1p]} + C. \\
+  \end{array}
+``]<<
+
+Part (b): First use the laws of logarithms to rewrite [`\ln(x^{[$e2]}) = [$e2]\ln x`]. Then substitute [`u = [$u2]`] so that [`du = \frac{1}{x} \,dx`].
+>>[``
+  \begin{array}{rcl}
+    \displaystyle  \int [$f2] \, dx &=&
+    \displaystyle  \int \dfrac{[$e2] \ln x}{x} \, dx \\
+    &=& [$e2] \displaystyle \int u \, du\\
+    &=& [$e2] \cdot \dfrac{u^2}{2}  + C. \\
+    &=& [$coeff] (\ln x)^2 + C.
+  \end{array}
+``]<<
+
+Part (b): First use the laws of logarithms to rewrite [`\ln(x^{[$e3]}) = [$e3]\ln x`]. Then substitute [`u = [$u3]`] so that [`du = \frac{1}{x} \,dx`].
+>>[``
+  \begin{array}{rcl}
+    \displaystyle  \int [$f3] \, dx &=&
+    \displaystyle  \int \dfrac{1}{[$e3] \ln x} \cdot 
+    \dfrac{1}{x} \, dx \\
+    &=& \dfrac{1}{[$e3]} \displaystyle \int \dfrac{1}{u} \, du\\
+    &=& \dfrac{1}{[$e3]} \ln|u|  + C. \\
+    &=& \dfrac{\ln|\ln x|}{[$e3]} + C.
+  \end{array}
+``]<<
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answer checking is completed in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 448 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+
+

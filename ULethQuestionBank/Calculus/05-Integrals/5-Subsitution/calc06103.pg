@@ -1,0 +1,199 @@
+## DESCRIPTION
+## This is Problem 6.1.3-6 from the APEX Calculus text (5.5.3-6 from the ULETH APEX text). It covers indefinite integration using substitution.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Techniques of integration)
+## DBsection(Substitution (without trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('6.1')
+## Problem1('3-6')
+## MO(1)
+## Keywords('indefinite integral', 'substitution' ,' antiderivatives ', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  	'contextFraction.pl',
+);
+
+sub str {
+        my $x = shift;
+        return ( $x > 0 ? '' : '-' )
+        . ( ($x)**2 == 1 ? '' : abs($x) )
+}
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+Context()->flags->set(reduceConstants=>0);
+
+## (a) ##
+$c1 = non_zero_random(-9, 9);
+$e1 = random(3,8,1);
+
+$u1 = Formula("x^3 + $c1")->reduce;
+$f1 = Formula("3x^2($u1)^{$e1}")->reduce;
+
+
+## (b) ##
+$b2 = random(2, 9, 1)*random(-1,1,2);
+$c2 = non_zero_random(-9, 9);
+$e2 = random(3,8,1);
+
+$u2 = "x^2 + $b2 x + $c2";
+$f2 = Formula("(2x + $b2)($u2)^{$e2}")->reduce;
+
+
+## (c) ##
+$c3 = non_zero_random(-9, 9);
+$e3 = random(3,8,1);
+
+$u3 = Formula("x^2 + $c3")->reduce;
+$f3 = Formula("x($u3)^{$e3}")->reduce;
+
+
+## (d) ##
+$a4 = random(2, 9, 1)*random(-1,1,2);
+$b4 = random(2, 9, 1)*random(-1,1,2);
+$c4 = non_zero_random(-9, 9);
+$e4 = random(3,8,1);
+
+$bb4 = 4*$a4;
+$cc4 = 2*$b4;
+
+$u4 = "$a4 x^2 + $b4 x + $c4";
+$f4 = "($bb4 x + $cc4)($u4)^{$e4}";
+
+#### Answers ####
+$e1p = $e1 + 1;
+$F1 = Formula("($u1)^{$e1p}/($e1p)")->reduce();
+
+$e2p = $e2 + 1;
+$F2 = Formula("($u2)^{$e2p}/($e2p)")->reduce();
+
+$e3p = $e3 + 1;
+$den3 = $e3p * 2;
+$F3 = Formula("($u3)^{$e3p}/($den3)")->reduce();
+
+$a42 = $a4 * 2;
+$e4p = $e4 + 1;
+Context('Fraction');
+$coeff4 = Fraction(2, $e4p)->reduce;
+
+Context('Numeric');
+$F4 = Formula(str($coeff4) . "($u4)^{$e4p}")->reduce();
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+Evaluate the indefinite integrals using Substitution (write your answers in terms of [`x`]). 
+
+a) [`\displaystyle\int [$f1] \, dx `] = [___________________________________]{$F1->cmp(upToConstant=>1)} [` + C`]. [@ AnswerFormatHelp("formulas") @]*
+
+a) [`\displaystyle\int [$f2] \, dx `] = [___________________________________]{$F2->cmp(upToConstant=>1)} [` + C`].
+
+a) [`\displaystyle\int [$f3] \, dx `] = [___________________________________]{$F3->cmp(upToConstant=>1)} [` + C`].
+
+a) [`\displaystyle\int [$f4] \, dx `] = [___________________________________]{$F4->cmp(upToConstant=>1)} [` + C`].
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Part (a): Substitute [`u = [$u1]`].  Then [`du = 3x^2 \,dx`].
+>>[``
+  \begin{array}{rcl}
+    \displaystyle  \int 3x^2 ([$u1])^{[$e1]} \, dx &=&
+    \displaystyle \int u^{[$e1]} \, du \\
+    &=& \dfrac{1}{[$e1p]} u^{[$e1p]} + C\\
+    &=& \dfrac{1}{[$e1p]} ([$u1])^{[$e1p]} + C.
+  \end{array}
+``]<<
+
+Part (b): Substitute [`u = [$u2]`].  Then [`du = (2x + [$b2])\,dx`].
+>>[``
+  \begin{array}{rcl}
+    \displaystyle  \int (2x + [$b2])([$u2])^{[$e2]} \, dx &=&
+    \displaystyle \int u^{[$e2]} \, du \\
+    &=& \dfrac{1}{[$e2p]} u^{[$e2p]} + C\\
+    &=& \dfrac{1}{[$e2p]} ([$u2])^{[$e2p]} + C.
+  \end{array}
+``]<<
+
+Part (c): Substitute [`u = [$u3]`].  Then [`du = 2x \,dx`].
+>>[``
+  \begin{array}{rcl}
+    \displaystyle  \int x ([$u3])^{[$e3]} \, dx &=&
+    \displaystyle \dfrac{1}{2}\int u^{[$e3]} \, du \\
+    &=& \dfrac{1}{2}\cdot\dfrac{1}{[$e3p]} u^{[$e3p]} + C\\
+    &=& \dfrac{1}{[$den3]} ([$u3])^{[$e3p]} + C.
+  \end{array}
+``]<<
+
+Part (d): Substitute [`u = [$u4]`].  Then [`du = [$a42] x + [$b4] \,dx`].
+>>[``
+  \begin{array}{rcl}
+    \displaystyle  \int [$f4] \, dx &=&
+    \displaystyle  \int 2([$a42] x + [$b4])([$u4])^{[$e4]} \, dx \\
+    &=& \displaystyle 2\int u^{[$e4]} \, du \\
+    &=& 2\cdot\dfrac{1}{[$e4p]} u^{[$e4p]} + C\\
+    &=& [$coeff4] ([$u4])^{[$e4p]} + C.
+  \end{array}
+``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answer checking is completed in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides over 500 billion possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+
+

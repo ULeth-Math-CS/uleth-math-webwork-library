@@ -1,0 +1,113 @@
+## DESCRIPTION
+## This is Problem 6.1.55 from the APEX Calculus text (5.5.57 from the ULETH APEX text). It covers indefinite integration using substitution.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Techniques of integration)
+## DBsection(Substitution (with trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('6.1')
+## Problem1('55')
+## MO(1)
+## Keywords('indefinite integral', 'substitution', 'trig function', ' antiderivatives ', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  	'contextFraction.pl',
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+
+
+## (a) ##
+$a1 = non_zero_random(-9,9,1);
+
+$u1 = Formula("cos(x)");
+
+$f1 = Formula("$a1 sin(x) sqrt{$u1}")->reduce();
+
+#### Answers ####
+Context('Fraction');
+$F1 = Formula("-$a1 * (2/3) * (cos(x))^(3/2)")->reduce();
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+Evaluate the indefinite integral (write your answer in terms of [`x`]). 
+
+[`\displaystyle\int [$f1] \, dx `] = [___________________________________]{$F1->cmp(upToConstant=>1)} [` + C`].
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+
+$coeff = Fraction(-$a1 * 2, 3)->reduce;
+
+BEGIN_PGML_SOLUTION
+
+Substitute [`u = [$u1]`].  Then [`du = -\sin(x) \,dx`].
+>>[``
+  \begin{array}{rcl}
+    \displaystyle  \int [$f1] \, dx &=&
+    \displaystyle - \int [$a1] u^{1/2} \, du \\
+    &=& -[$a1] \cdot \dfrac{2}{3}u^{3/2} + C\\
+    &=& [$coeff] ([$u1])^{3/2} + C.
+  \end{array}
+``]<<
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answer checking is completed in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 18 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+
+
