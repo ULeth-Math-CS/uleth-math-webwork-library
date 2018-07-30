@@ -1,0 +1,164 @@
+## DESCRIPTION
+## This is Problem 2.6.41 from the APEX Calculus text. It covers finding equations for the tangent line to the graph of a function with logarithmic differentiation.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Implicit differentiation)
+## Level(4)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.6')
+## Problem1('41')
+## MO(1)
+## Keywords('derivative', 'slope tangent line', ' tangent line ', 'implicit', 'logarithmic', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Allows a single problem to contain multiple parts, where later
+  # parts aren't visible until the earlier ones are completed.
+  "scaffold.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Used to provide contextual help for how to type solutions.
+  "AnswerFormatHelp.pl");
+
+TEXT(beginproblem());
+
+
+###################################
+#  Setup
+
+#-ULETH-#
+Context("Numeric")->variables->add(y => 'Real');
+
+do {
+  $a = random(1,8,1)*random(-1,1,2);
+  $b = random(1,8,1)*random(-1,1,2);
+  $c = random(1,8,1)*random(-1,1,2);
+  $d = random(1,8,1)*random(-1,1,2);
+} while (gcd($a*$b, $c*$d) != 1);
+
+$f = "\dfrac{(x+$a)(x+$b)}{(x+$c)(x+$d)}";
+$y1_num = $a*$b;
+$y1_den = $c*$d;
+$y1 = $y1_num/$y1_den;
+
+$m = $y1*(1/$a + 1/$b - 1/$c - 1/$d);
+
+$ans1 = Compute("[(x+$a)(x+$b)]/[(x+$c)(x+$d)] * [
+   1/(x + $a) + 1/(x + $b) - 1/(x + $c) - 1/(x + $d)]")->reduce();;
+$ans2 = "$m";
+$ans3 = "$m x + $y1";
+
+
+#-ENDULETH-#
+
+###################################
+#  Main Text
+
+#-ULETH-#
+# This applies to the PGML in each scaffolding section.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+# Initial problem text to explain the scaffolding setup.
+BEGIN_PGML
+
+Follow the steps to find the equation of the tangent line to 
+[` y = [$f]`] at [`x = 0`].
+
+This problem has two parts. You may only open the next part after correctly
+completing the previous part.
+END_PGML
+#-ENDULETH-#
+
+Scaffold::Begin();
+Section::Begin("Slope");
+# Part 1 problem text.
+BEGIN_PGML
+Use logarithmic differentiation to find [`\dfrac{dy}{dx}`].[____________________________________________________]{Compute($ans1)} [@ AnswerFormatHelp("formulas") @]*  
+What is the slope of the tangent line to [` y = [$f]`] at [`x = 0`]? [__________]{Compute($ans2)} [@ AnswerFormatHelp("numbers") @]* 
+END_PGML
+Section::End();
+
+Section::Begin("Tangent Line");
+# Part 2 problem text.
+BEGIN_PGML
+The formula for the tangent line at [`x = 0`] is [`y = `] [______________]{Compute($ans3)}.
+END_PGML
+Section::End();
+#-ENDULETH-#
+
+Scaffold::End();
+
+
+###################################
+#  Answer Evaluation 
+
+#evaluation must be completed in the problem text
+
+###################################
+#  Solution
+
+BEGIN_PGML_SOLUTION
+
+First use logarithmic differentiation to find the derivative:
+>>[``
+ \begin{array}{rcl}
+   y &=& [$f]\\
+   &&\\
+   \ln y &=& \ln \left[ [$f] \right] \\
+   &&\\
+   &=& \ln(x + [$a]) + \ln(x + [$b]) - \ln(x + [$c]) - \ln(x + [$d]) \\
+   &&\\
+   \dfrac{1}{y} \dfrac{dy}{dx} &=&
+   \dfrac{1}{x + [$a]} + \dfrac{1}{x + [$b]} -
+   \dfrac{1}{x + [$c]} - \dfrac{1}{x + [$d]}\\
+   &&\\
+   \dfrac{dy}{dx} &=& [$f] \left[
+   \dfrac{1}{x + [$a]} + \dfrac{1}{x + [$b]} -
+   \dfrac{1}{x + [$c]} - \dfrac{1}{x + [$d]}
+   \right] 
+  \end{array}
+``]<<
+Plug in [`x = 0`] to find the slope:
+>>[``
+ m = \dfrac{([$a])([$b])}{([$c])([$d])}\left[\dfrac{1}{[$a]} + \dfrac{1}{[$b]}
+  - \dfrac{1}{[$c]} - \dfrac{1}{[$d]}\right] \approx [$m].
+``]<<
+
+Note, [`y_1 = \frac{[$y1_num]}{[$y1_den]}`]. Use point-slope form to find the equation of the tangent line:
+
+>>[``
+ y - \dfrac{[$y1_num]}{[$y1_den]} = [$m](x - 0) \;\Rightarrow\;
+  y = [$m] x + [$y1].
+``]<<
+
+END_PGML_SOLUTION
+
+COMMENT("This is a multi-part problem
+in which the next part is revealed only after the previous
+part is correct. <BR>
+Randomization provides 532 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+");
+#-ENDULETH-#
+
+ENDDOCUMENT();
+
+
+

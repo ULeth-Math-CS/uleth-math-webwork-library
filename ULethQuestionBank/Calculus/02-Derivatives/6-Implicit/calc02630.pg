@@ -1,0 +1,134 @@
+## DESCRIPTION
+## This is Problem 2.6.30 from the APEX Calculus text. It covers finding equations for the tangent line to the graph of a function with implicit differentiation.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Implicit differentiation)
+## Level(4)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.6')
+## Problem1('30')
+## MO(1)
+## Keywords('derivative', 'slope tangent line', ' tangent line ', 'implicit', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Used to provide contextual help for how to type solutions.
+  "AnswerFormatHelp.pl",
+  "contextFraction.pl"
+);
+
+TEXT(beginproblem());
+
+
+###################################
+#  Setup
+
+#-ULETH-#
+Context("Numeric")->variables->add(y => 'Real');
+
+$x1 = 0;
+$y1 = 1;
+
+$a = random(2,7,1);
+$b = random(2,7,1);
+
+$a1 = $a - 1;
+$b1 = $b - 1;
+
+$b2 = 2*$b;
+
+$f = "(x^{$a} + y^{$b} + x)^2";
+$g = "x^{$a} + y^{$b}";
+
+$m = -2/$b;
+$y_int = $y1 - $m*$x1;
+
+$ans = Compute("$m x + $y_int")->reduce();
+
+
+#-ENDULETH-#
+
+###################################
+#  Main Text
+
+#-ULETH-#
+
+BEGIN_PGML
+
+Find the equation of the tangent line to the curve [`[$f] = [$g]`] at the point [` ([$x1], [$y1]) `].
+
+The formula for the tangent line is [`y = `] [___________________]{Compute($ans)}. [@ AnswerFormatHelp("formulas") @]*
+
+END_PGML
+#-ENDULETH-#
+
+
+###################################
+#  Answer Evaluation 
+
+#evaluation must be completed in the problem text
+
+###################################
+#  Solution
+
+BEGIN_PGML_SOLUTION
+
+First use implicit differentiation to find the derivative.
+>>[``
+  \begin{array}{rcl}
+    \dfrac{d}{dx}[[$f]] &=& \dfrac{d}{dx}[[$g]]\\
+  &&\\
+    2([$g] + x)([$a] x^{[$a1]} + [$b] y^{[$b1]}\dfrac{dy}{dx} + 1)  &=& [$a] x^{[$a1]} 
+    + [$b] y^{[$b1]}\dfrac{dy}{dx}
+  \end{array}
+``]<<
+   
+At this point we may plug in [`x = [$x1]`] and [`y = [$y1]`]
+and solve for [`\dfrac{dy}{dx}`] to get the slope.
+>>[``
+  \begin{array}{rcl}
+    2(([$x1])^{[$a]} + ([$y1])^{[$b]} + ([$x1]))([$a] ([$x1])^{[$a1]} + 
+    [$b] ([$y1])^{[$b1]}\dfrac{dy}{dx} + 1)  &=& [$a] ([$x1])^{[$a1]} 
+    + [$b] ([$y1])^{[$b1]}\dfrac{dy}{dx} \\
+    2([$b] \dfrac{dy}{dx} + 1) &=& [$b] \dfrac{dy}{dx} \\
+    [$b2] \dfrac{dy}{dx} + 2 &=& [$b] \dfrac{dy}{dx} \\
+    [$b] \dfrac{dy}{dx} &=& -2 \\
+    &&\\
+    \dfrac{dy}{dx} &=& -\frac{2}{[$b]} = [$m]
+  \end{array}
+``]<<
+   
+Then use point-slope form to find the equation of the tangent line.
+>>[``
+  y - [$y1] = [$m](x - [$x1]) \; \textrm{or,} \;
+  y = [$m] x + [$y_int]
+``]<<
+
+END_PGML_SOLUTION
+
+COMMENT("Randomization provides 36 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+");
+#-ENDULETH-#
+
+ENDDOCUMENT();
+
+
+

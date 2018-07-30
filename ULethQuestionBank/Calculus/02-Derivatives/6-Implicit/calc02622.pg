@@ -1,0 +1,135 @@
+## DESCRIPTION
+## This is Problem 2.6.22 from the APEX Calculus text. It covers implicit differentiation. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Implicit differentiation)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.6')
+## Problem1('22')
+## MO(1)
+## Keywords('derivative', 'implicit', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+Context()->variables->add(y=>'Real');
+
+do {
+  $a = random(2,9,1);
+  $b = random(2,9,1);
+  $c = random(2,9,1);
+  $d = random(2,9,1);
+} while ($a*$d == $b*$c);
+$e = random(2,30,1)*random(-1,1,2);
+
+$f1 = "$a x^2 + $b y";
+$f2 = "$c x + $d y^2";
+
+$a2 = 2*$a;
+$d2 = 2*$d;
+$ec = $e*$c;
+$ed2 = $e*$d2;
+
+$deriv = "\dfrac{$ec - $a2 x}{$b - $ed2 y}";
+
+$ans = Compute("($ec - $a2 x)/($b - $ed2 y)")->reduce();;
+
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Find [`\displaystyle \frac{dy}{dx} `] using implicit differentiation.
+
+>>[``
+   \dfrac{[$f1]}{[$f2]}  = [$e]
+``]<<
+
+Hint:  First clear the denominator to get [` [$f1] = [$e]([$f2]) `].
+
+[` \dfrac{dy}{dx} = `] [_________________________]{$ans->cmp()} [@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Starting with
+>>[``
+    [$f1] = [$e]([$f2]) ,
+``]<<
+take the derivative with respect to [`x`] of both sides (when taking derivatives of [`y`] terms, remember to multiply by [`\frac{dy}{dx}`]):
+>>[``
+      \begin{array}{rcl}
+    \dfrac{d}{dx}[[$f1]] &=& \dfrac{d}{dx}[[$e]([$f2])]\\
+  &&\\
+    [$a2] x + [$b] \dfrac{dy}{dx} &=& [$e]([$c] + [$d2] y \dfrac{dy}{dx}) = [$ec] + [$ed2] y \dfrac{dy}{dx}.
+    \end{array}
+``]<<
+Now, solve for [`\frac{dy}{dx}`]:
+>>[``
+  \begin{array}{rcl}
+       ([$b] - [$ed2] y)\dfrac{dy}{dx} &=& [$ec] - [$a2] x\\
+  &&\\
+    \dfrac{dy}{dx} &=&  [$deriv].
+  \end{array}
+``]<<
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 580 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    
+
+

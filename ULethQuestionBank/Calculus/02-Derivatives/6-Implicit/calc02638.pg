@@ -1,0 +1,160 @@
+## DESCRIPTION
+## This is Problem 2.6.38 from the APEX Calculus text. It covers finding equations for the tangent line to the graph of a function with logarithmic differentiation.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Implicit differentiation)
+## Level(4)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.6')
+## Problem1('38')
+## MO(1)
+## Keywords('derivative', 'slope tangent line', ' tangent line ', 'implicit', 'logarithmic', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Allows a single problem to contain multiple parts, where later
+  # parts aren't visible until the earlier ones are completed.
+  "scaffold.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Used to provide contextual help for how to type solutions.
+  "AnswerFormatHelp.pl");
+
+TEXT(beginproblem());
+
+
+###################################
+#  Setup
+
+#-ULETH-#
+Context("Numeric")->variables->add(y => 'Real');
+
+$a = random(2,6,1);
+$b = random(1,9,1);
+
+$f = "\dfrac{x^x}{$a x + $b}";
+$y1 = 1/($a + $b);
+
+$yden = $a + $b;
+$mden = ($a + $b)**2;
+$m = ($b/$mden);
+
+$y_int = $y1 - $m;
+
+
+$ans1 = "(x^x)/($a x + $b) * [ 1 + ln(x) - $a/($a x + $b)]";
+$ans2 = "$m";
+$ans3 = "$m x + $y_int";
+
+#-ENDULETH-#
+
+###################################
+#  Main Text
+
+#-ULETH-#
+# This applies to the PGML in each scaffolding section.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+# Initial problem text to explain the scaffolding setup.
+BEGIN_PGML
+
+Follow the steps to find the equation of the tangent line to 
+[` y = [$f]`] at [`x = 1`].
+
+This problem has two parts. You may only open the next part after correctly
+completing the previous part.
+END_PGML
+#-ENDULETH-#
+
+Scaffold::Begin();
+Section::Begin("Slope");
+# Part 1 problem text.
+BEGIN_PGML
+Use logarithmic differentiation to find [`\dfrac{dy}{dx}`]. [__________________________________________]{Compute($ans1)} [@ AnswerFormatHelp("formulas") @]*  
+What is the slope of the tangent line to [` y = [$f]`] at [`x = 1`]? [__________]{Compute($ans2)} [@ AnswerFormatHelp("numbers") @]* 
+END_PGML
+Section::End();
+
+Section::Begin("Tangent Line");
+# Part 2 problem text.
+BEGIN_PGML
+The formula for the tangent line at [`x = 1`] is [`y = `] [_____________]{Compute($ans3)}.
+END_PGML
+Section::End();
+#-ENDULETH-#
+
+Scaffold::End();
+
+
+###################################
+#  Answer Evaluation 
+
+#evaluation must be completed in the problem text
+
+###################################
+#  Solution
+
+BEGIN_PGML_SOLUTION
+
+First use logarithmic differentiation to find the derivative:
+>>[``
+ \begin{array}{rcl}
+   y &=& [$f]\\
+   \ln y &=& \ln [ [$f] ] \\
+   &=& x \ln x - \ln ([$a] x + [$b]) \\
+   &&\\
+   \dfrac{d}{dx}[ \ln y ] &=& \dfrac{d}{dx}\left[
+    x \ln x - \ln ([$a] x + [$b]) \right] \\
+   &&\\
+   \dfrac{1}{y} \dfrac{dy}{dx} &=&
+   x \cdot \dfrac{1}{x} + 1 \cdot \ln x - 
+    \dfrac{[$a]}{[$a] x + [$b]} \\
+   &&\\
+   \dfrac{dy}{dx} &=& [$f] \left[1 + \ln x -
+       \dfrac{[$a]}{[$a] x + [$b]} \right]. \\
+  \end{array}
+``]<<
+Plug in [`x = 1`] to find the slope:
+>>[``
+  m = \frac{1^1}{[$a](1) + [$b]} \left[ 1 + \ln 1 -
+      \dfrac{[$a]}{[$a](1) + [$b]} \right] = \frac{[$b]}{[$mden]}.
+``]<<
+
+Note, [`y_1 = \frac{1}{[$a] + [$b]} = \frac{1}{[$yden]}`]. Use point-slope form to find the equation of the tangent line:
+
+>>[``
+  y - \dfrac{1}{[$yden]} = \frac{[$b]}{[$mden]}(x - 1) \;\Rightarrow\;
+  y = \frac{[$b]}{[$mden]} x + \frac{[$a]}{[$mden]}
+``]<<
+
+END_PGML_SOLUTION
+
+COMMENT("This is a multi-part problem
+in which the next part is revealed only after the previous
+part is correct. <BR>
+Randomization provides 45 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+");
+#-ENDULETH-#
+
+ENDDOCUMENT();
+
+
+
