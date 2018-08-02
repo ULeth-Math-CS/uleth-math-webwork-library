@@ -1,0 +1,129 @@
+## DESCRIPTION
+## This is Problem 8.7.5 in the APEX calculus text (Problem 4.5.5 from the ULETH Calculus text). It covers Maclaurin polynomials. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Infinite sequences and series)
+## DBsection(Taylor polynomials)
+## Level(2)
+## Institution('University of Lethbridge')
+## Author('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('8.7')
+## Problem1('5')
+## MO(1)
+## Keywords('derivative', 'taylor polynomial', 'maclaurin polynomial', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  "contextFraction.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Fraction")->noreduce('(-x)-y','(-x)+y)');
+    Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,
+  );
+
+$a = random(1,10,1);
+$b = random(1,10,1);
+
+$f = Formula("$b e^{-$a*x}")->reduce();
+
+$ab = $a*$b;
+$a2b= $a*$ab;
+$a3b= $a*$a2b;
+
+$deg = 3;
+
+$ans = Formula("$b - $ab x + ($a2b x^2)/2 - ($a3b x^3)/6")->reduce();
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Find the Maclaurin polynomial of degree [$deg] for the given function. 
+
+>>[``f(t) =  [$f]``]<<
+
+[`p_{[$deg]}(t) = `] [____________________________]{Compute($ans)} [@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+We need to produce a degree [$deg] Maclaurin polynomial. By definition, we want 
+
+>>[``p_[$deg](x) = f(0) + f'(0)x + \dfrac{f''(0)}{2!}x^2 + \dfrac{f'''(0)}{3!}x^3.``]<<
+
+Taking [`f(x)`] and its first [$deg] derivatives and evaluating each at [`x = 0`], we find that: 
+
+>>[``
+  \begin{array}{rcrcrcr}
+    f(x) &=& [$f] &\rightarrow& f(0) &=& [$b]\\
+    &&\\
+    f'(x) &=& -[$ab]e^{-[$a]x} &\rightarrow& f'(0) &=& -[$ab]\\
+    &&\\
+    f''(x) &=& [$a2b]e^{-[$a]x} &\rightarrow& f''(0) &=& [$a2b] \\
+    &&\\
+    f'''(x) &=& -[$a3b]e^{-[$a]x} &\rightarrow& f'''(0) &=& -[$a3b].
+  \end{array}
+``]<<
+
+If we substitute these values into the definition of a degree [$deg] Maclaurin polynomial, we have
+
+>>[``p_{[$deg]}(x) = [$ans].``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 100 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    
+
+
+
+

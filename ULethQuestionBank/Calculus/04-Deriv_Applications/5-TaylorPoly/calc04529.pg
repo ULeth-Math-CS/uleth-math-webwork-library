@@ -1,0 +1,118 @@
+## DESCRIPTION
+## This is Problem 8.7.29 in the APEX calculus text (Problem 4.5.29 from the ULETH Calculus text). It covers finding terms of Taylor polynomials. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Infinite sequences and series)
+## DBsection(Taylor polynomials)
+## Level(2)
+## Institution('University of Lethbridge')
+## Author('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('8.7')
+## Problem1('29')
+## MO(1)
+## Keywords('derivative', 'taylor polynomial', 'approximation', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  "contextFraction.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)+y') ;
+    Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,
+  );
+
+#This line is necessary for the answer checker to work
+Context()->variables->add(n => ['Real', limits=>[1,20], 
+    resolution=>1]);
+
+$e = Formula("e");
+
+
+$c = random(2,16)*random(-1,1,2);
+
+$f = Formula("e^{x}");
+$ans = Formula("($e)^{$c}(x-$c)^{n}/n!")->reduce();
+
+
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Find a formula for the [`n`]th term of a Taylor polynomial centered at [`x = [$c]`] for [`f(x) = [$f]`]. Enter your answer in terms of [`x`] and [`n`].
+
+[_______________________________________________] [@ AnswerFormatHelp("formulas") @]*
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+The [`n`]th term of a Taylor polynomial centered at [`x = [$c]`] for a function [`f(x)`] is, in general
+
+>>[``\dfrac{f^{(n)}([$c])}{n!} (x-[$c])^n.``]<<
+
+Since [`f(x) = [$f]`], we know that its derivative is [`f'(x) = e^x = f(x)`], and so we know that its [`n`]th derivative must also be [`f^{(n)} = [$f]`]. Therefore, for any [`n`], [`f^(n)([$c]) = e^{[$c]}`]. The general [`n`]th term must be 
+
+>>[``\displaystyle [$ans].``]<<
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+ANS( $ans->cmp() );
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 30 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    
+
+
+
+

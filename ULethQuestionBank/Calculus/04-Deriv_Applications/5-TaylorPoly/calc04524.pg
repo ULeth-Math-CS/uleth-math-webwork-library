@@ -1,0 +1,140 @@
+## DESCRIPTION
+## This is Problem 8.7.24 in the APEX calculus text (Problem 4.5.24 from the ULETH Calculus text). It covers approximating functions using Taylor polynomials. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Infinite sequences and series)
+## DBsection(Taylor polynomials)
+## Level(2)
+## Institution('University of Lethbridge')
+## Author('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('8.7')
+## Problem1('24')
+## MO(1)
+## Keywords('derivative', 'taylor polynomial', 'approximation', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  "contextFraction.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)+y') ;
+    Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,
+  );
+  
+ Context()->flags->set(
+  tolerance => 0.00001,
+  tolType => "absolute",
+);
+
+
+$s = non_zero_random(0.5,1.5,0.1);
+
+$c = 1;
+
+$a = $c + $s;
+
+
+$deg = 3;
+$f = Formula("ln(x)");
+$poly = Formula("(x-1)-(x-1)^2/2+(x-1)^3/3");
+
+$ansf = $poly->substitute(x=>"$a");
+
+$ans = Compute($poly->eval(x=>"$a"));
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Approximate [`\ln{[$a]}`] with a Taylor polynomial of degree [$deg] centered at [`x = [$c]`]. 
+(Enter either an exact answer or at least 5 decimal places.)
+
+[`\ln{[$a]} \approx`] [____________________________________________________]{Compute($ans)} [@ AnswerFormatHelp("numbers") @]*
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+First, we need to produce the degree [$deg] Taylor polynomial for [`f(x) = [$f]`] at [`x = [$c]`]. By definition, we want 
+
+>>[``p_[$deg](x) = f([$c]) + f'([$c])(x-[$c]) + \dfrac{f''([$c])}{2!}(x-[$c])^{2} + \dfrac{f'''([$c])}{3!}(x-[$c])^{3}.``]<<
+
+Taking [`f(x)`] and its first [$deg] derivatives and evaluating each at [`x = [$c]`], we find that: 
+
+>>[``
+  \begin{array}{rcrcrcr}
+    f(x) &=& [$f] &\implies& f([$c]) &=& 0\\
+    &&\\
+    f'(x) &=& \dfrac{1}{x} &\implies& f'([$c]) &=& 1\\
+    &&\\
+    f''(x) &=& \dfrac{-1}{x^2} &\implies& f''([$c]) &=& -1 \\
+    &&\\
+    f'''(x) &=& \dfrac{2}{x^3} &\implies& f'''([$c]) &=& 2
+    \end{array}
+``]<<
+
+If we substitute these values into the definition of the degree [$deg] Maclaurin polynomial, we have
+
+>>[``p_{[$deg]}(x) = \displaystyle [$poly].``]<<
+
+Hence, we approximate
+
+>>[``\ln{[$a]} \approx p_{[$deg]}([$a]) = [$ansf] = [$ans].``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 11 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    
+
+
+
+
