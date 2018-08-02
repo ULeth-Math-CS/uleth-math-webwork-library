@@ -1,0 +1,127 @@
+## DESCRIPTION
+## This is Problem 6.7.17 from the APEX Calculus text (4.6.17 from the ULETH Math 1565 ebook). It covers limits using l'Hospital's rule.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Indeterminate forms and L'Hopital's rule)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('6.7')
+## Problem1('17')
+## MO(1)
+## Keywords('limit', 'limits', ' lhopitals rule ', 'lhospitals rule ' , 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+$a1=random(2,16,1);
+$b1=random(2,16,1);
+
+$c1 = 0;
+
+$num1 = "$a1 e^x - $a1 x - $a1";
+$den1 = "$b1 x^2";
+
+$dnum1 = "$a1 e^x - $a1";
+$bb = 2*$b1;
+$dden1 = "$bb x";
+
+$ddnum1 = "$a1 e^x";
+$ddden1 = "$bb";
+
+$ans1 = $a1/$bb;
+
+
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+Evaluate the limit using l'Hospital's Rule.  
+Enter *INF* for [`\infty`], *-INF* 
+for [`-\infty`], or *DNE* if the limit does not exist,
+but is neither [`\infty`] nor [`-\infty`].
+
+
+[``   \lim_{x\to [$c1]} \frac{[$num1]}{[$den1]} =``] [___________] [@ AnswerFormatHelp("numbers") @]*
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+Observe that the limit has the indeterminate form "[`0/0`]". We may apply l'Hospital's rule to determine the limit. The derivative of the numerator is [`([$num1])' = [$dnum1]`], while the derivative of the denominator is [`([$den1])' = [$dden1]`]. Therefore, 
+
+>>[``    
+  \lim_{x \to [$c1]} \frac{[$num1]}{[$den1]}
+  = \lim_{x \to [$c1]} \frac{[$dnum1]}{[$dden1]}.
+``]<<
+
+Here, again, we have a limit in an indeterminate form. We apply l'Hospital's rule again. The derivative of the numerator is [`([$dnum1])' = [$ddnum1]`], while the derivative of the denominator is [`([$dden1])' = [$ddden1]`]. Therefore, 
+
+>>[``    
+  \lim_{x \to [$c1]} \frac{[$num1]}{[$den1]}
+  = \lim_{x \to [$c1]} \frac{[$dnum1]}{[$dden1]}
+  = \lim_{x \to [$c1]} \frac{[$ddnum1]}{[$ddden1]}
+  = \dfrac{[$a1]}{[$bb]}.
+``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+ANS(num_cmp($ans1, strings=>["DNE","-INF","INF"]));
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 225 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    
+

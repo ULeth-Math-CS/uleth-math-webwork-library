@@ -1,0 +1,113 @@
+## DESCRIPTION
+## This is Problem 6.7.10 from the APEX Calculus text (4.6.10 from the ULETH Math 1565 ebook). It covers limits using l'Hospital's rule.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Indeterminate forms and L'Hopital's rule)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('6.7')
+## Problem1('10')
+## MO(1)
+## Keywords('limit', 'limits', ' lhopitals rule ', 'lhospitals rule ' , 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+$a=random(2,16,1)*random(-1,1,2);
+
+$c = "\pi";
+
+$num = "$a \sin x";
+$den = "x - \pi";
+
+$dnum = "$a \cos x";
+$dden = "1";
+
+$ans = -$a;
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+Evaluate the limit using l'Hospital's Rule.  
+Enter *INF* for [`\infty`], *-INF* 
+for [`-\infty`], or *DNE* if the limit does not exist,
+but is neither [`\infty`] nor [`-\infty`].
+
+
+[``   \lim_{x\to [$c]} \frac{[$num]}{[$den]} =``] [___________] [@ AnswerFormatHelp("numbers") @]*
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Observe that the limit has the indeterminate form "[`0/0`]". We may apply l'Hospital's rule to determine the limit. The derivative of the numerator is [`([$num])' = [$dnum]`], while the derivative of the denominator is [`([$den])' = [$dden]`]. Therefore, 
+
+>>[``    
+  \lim_{x \to [$c]} \frac{[$num]}{[$den]}
+  = \lim_{x \to [$c]} \frac{[$dnum]}{[$dden]}
+  = [$a](-1) = [$ans].
+``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+ANS(num_cmp($ans, strings=>["DNE","-INF","INF"]));
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 30 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    
+
