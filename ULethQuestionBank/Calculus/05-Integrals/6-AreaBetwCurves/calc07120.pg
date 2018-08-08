@@ -1,0 +1,205 @@
+## DESCRIPTION
+## This is Problem 7.1.20 from the APEX Calculus text (5.6.24 from the ULETH text). It covers area between curves. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of integration)
+## DBsection(Areas between curves)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('7.1')
+## Problem1('20')
+## MO(1)
+## Keywords('integral', 'signed area', 'area between curves', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+## Adapted from "Utah/Quantitative_Analysis/set10_Definite_Integrals_Techniques_of_Integration/pr_6.pg"
+
+
+##############################
+#  Initialization
+
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Needed to support graph generation.
+  "PGgraphmacros.pl",
+  # Allows the graph and text to be placed in side-by-side columns.
+  "unionTables.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+#############################
+#   Setup
+
+# Refreshes the graph image every time the page is loaded, as opposed to
+# retrieving a cached version.
+$refreshCachedImages = 1;
+
+#-ULETH-#
+# Random values for the function/graph.
+Context("Numeric");
+
+#Here are the parameters that will be varied.
+$r = non_zero_random(-3,3,0.5);
+$s = random(1,3,0.5);
+$p = non_zero_random(-3,3,0.5);
+$q = non_zero_random(-3,3,0.5);
+
+$a = -$p/$r;
+$b = -$q/$s;
+
+$c2 = $r*$s;
+$c1 = $r*$q + $s*$p;
+$c0 = $p*$q; 
+
+$c22 = 2*$c2;
+
+$f = Formula("-$c2*x^2")->reduce();
+$g = Formula("$c1*x+$c0")->reduce();
+$ff = Formula("-$c22*x")->reduce();
+$gg = Formula("$c0")->reduce();
+
+
+
+$ya = $f->eval(x=>$a);
+$yb = $f->eval(x=>$b);
+$ym = $gg->eval(x=>($a+$b)/2);
+
+#With $bound* we ensure that the graph of the function will always be in view.
+$boundx1 = $a - 2;
+$boundy1 = $ym - 2;
+$boundx2 = $b + 2;
+$boundy2 = max($ya, $yb) + 2;
+
+#We put the functions here to keep plot_functions' entries simple
+$fun1 = FEQ("$f for x in [$boundx1,$boundx2] using color:blue and weight:2");
+$fun2 = FEQ("$g for x in [$boundx1,$boundx2] using color:red and weight:2");
+
+$graph = init_graph($boundx1,$boundy1,$boundx2,$boundy2,'axes' => [0,0],
+	'height' => 500,
+        'width'  => 500
+	);
+
+($fun1_ref,$fun2_ref) = plot_functions ($graph,
+	$fun1, $fun2
+			);
+
+#Answers
+
+$poly = Formula("-$c2*x^2 - $c1*x - $c0")->reduce();
+$F = Formula("($c2*x^3)/3 + ($c1*x^2)/2 + $c0*x")->reduce();
+
+$F1 = $F->eval(x=>($b));
+$F2 = $F->eval(x=>($a));
+$ans = $F1 - $F2;
+
+#-ENDULETH-#
+
+#############################
+#  Main Text
+
+#-ULETH-#
+# Places the following information in column1 (the leftmost) of the layout table.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+$column2 = PGML::Format2(<<'END_PGML');
+Find the area  of the region enclosed between 
+ [` f(x) = [$g] `] and
+ [` g(x) = [$f]`]. 
+
+Area = [____________________] [@ AnswerFormatHelp("numbers") @]*
+
+(*Note:* The graph provided represents both functions [`f`] and [`g`] but is intentionally left unlabeled.)
+
+
+END_PGML
+
+# Places the graph image in column1 (the leftmost) of the layout table.
+# The additional arguments after insertGraph($gr) specify the width and height
+# of the image when it's on-screen, while the tex_size is a percentage multiplier
+# determining what size the image will print at in a hard copy version.
+$column1 = image(insertGraph($graph), width=>400, height=>400, tex_size=>600).
+$BR.$BCENTER.$BR."The functions \(f\) and \(g\).".$ECENTER;
+#-ENDULETH-#
+
+TEXT(ColumnTable($column1, $column2, indent => 0, separation => 30, valign => "TOP"));
+
+
+#############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS( Compute($ans)->cmp );
+
+#-ENDULETH-#
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+BEGIN_PGML_SOLUTION
+
+The area between curves is found using the 
+definite integral [` \int_{a}^b \left( f(x) - g(x) \right) \, dx`].
+First determine the points of intersection by
+solving (possibly via the quadratic formula):
+>>[``
+  [$f] = [$g] \;\Rightarrow\; [$poly] = 0
+  \;\Rightarrow\; x = [$a], [$b].
+``]<<
+
+Now evaluate the integral.
+
+>>[``
+  \begin{array}{rcl}
+  \textrm{Area} &=&
+    \displaystyle \int_{[$a]}^{[$b]} \left( ([$g]) - ([$f]) \right) \, dx\\
+     &=& \displaystyle \int_{[$a]}^{[$b]} -\left( [$poly]
+      \right) \, dx  \\
+    &=& \left([$F] \right)\Big|_{[$a]}^{[$b]}\\
+    &=& [$ans].\\
+  \end{array}
+``]<<
+
+
+END_PGML_SOLUTION
+
+COMMENT('
+    Randomization provides 8640 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+#-ENDULETH-#
+
+# Marks the end of the problem document.
+ENDDOCUMENT();
