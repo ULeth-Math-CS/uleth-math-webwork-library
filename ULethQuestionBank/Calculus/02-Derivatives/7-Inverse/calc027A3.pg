@@ -1,0 +1,118 @@
+## DESCRIPTION
+## This is an unattached problem for use when reviewing inverses of trigonometric functions. It involves a double angle identity.
+## ENDDESCRIPTION
+
+## DBsubject(Trigonometry)
+## DBchapter(Triognometic Functions)
+## DBsection(Inverse trigonometric functions - definitions, graphs, & properties)
+## Level(3)
+## Institution('University of Lethbridge')
+## Author('F. J. Francis')
+## TitleText1('APEX Calculus')
+## MO(1)
+## Keywords('trigonometric function', 'inverse', 'double angle', 'pythagorean theorem', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->variables->add(t => 'Real');
+
+$a = random(2, 10, 1);
+
+$x1 = $a-1;
+$x2 = $a+1;
+
+Context()->variables->set(x=>{limits=>[$x1,$x2]});
+
+$f = Formula("sin(x)");
+$fin = Formula("arcsin(x)");
+$fa = $fin->substitute(x=>"x-$a");
+$ans = Formula("2*(x-$a)*sqrt(1-(x-$a)**2)");
+
+$h = $f->substitute(x=>2*$fa);
+
+$ident = Formula("2*x/(1+x^2)");
+$identan = $ident->substitute(x=>"tan(t)");
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+Context()->functions->disable("Trig");
+
+BEGIN_PGML
+Let [`x`] be a real number between [`[$x1]`] and [`[$x2]`].  
+Provide an expression for [`[$h]`] (in terms of [`x`]) which does not involve any trigonometric functions.
+
+[`[$h] = `][_________________________________]{Compute($ans)} [@ AnswerFormatHelp("formulas") @]*
+
+
+*Hint:* It may be useful to apply the following double angle identity:
+
+[`\sin(2t) =\displaystyle [$identan]`].
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Note that [`[$fa]`] is defined for the specified values of [`x`]. If we write [`t = [$fa]`], then we have that [`\sin(t) =\displaystyle \frac{x-[$a]}{1}`].  
+Using SOHCAHTOA and the Pythagorean theorem, you can determine that
+[`\tan(t) = \displaystyle \frac{x-[$a]}{\sqrt{1-(x-[$a])^2}}`].  
+Substiting this expression for [`\tan(t)`] into the identity above, we have
+
+>>[``\sin(2t) = \frac{2\left(\displaystyle\frac{x-[$a]}{\sqrt{1-(x-[$a])^2}}\right)}{1+\displaystyle \frac{(x-[$a])^2}{1-(x-[$a])^2}} = [$ans].``]<<
+
+Now, with [`t = [$fa]`], we see that
+[`[$h] = [$ans]`]
+for [`x`] between [`[$x1]`] and [`[$x2]`]. 
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 9 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    
+
+
+
+

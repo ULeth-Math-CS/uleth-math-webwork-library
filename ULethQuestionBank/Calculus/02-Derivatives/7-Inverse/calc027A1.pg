@@ -1,0 +1,106 @@
+## DESCRIPTION
+## This is an unattached problem for use when reviewing inverses of trigonometric functions. It involves composing sin/cos with their own inverses.
+## ENDDESCRIPTION
+
+## DBsubject(Trigonometry)
+## DBchapter(Triognometic Functions)
+## DBsection(Inverse trigonometric functions - definitions, graphs, & properties)
+## Level(2)
+## Institution('University of Lethbridge')
+## Author('F. J. Francis')
+## TitleText1('APEX Calculus')
+## MO(1)
+## Keywords('trigonometric function', 'inverse', 'pythagorean theorem', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+$a = random(1, 10, 1);
+$r = random(1,2,1);
+
+if ( $r == 1 ) {
+    $f = Formula("cos(x)");
+    $finv = Formula("arccos(x)");
+    $fa = $finv->substitute(x=>"x/$a");
+}
+else {
+    $f = Formula("sin(x)");
+    $finv = Formula("arcsin(x)");
+    $fa = $finv->substitute(x=>"x/$a");
+}
+
+$g = $f->substitute(x=>$fa);
+
+$ans = Formula("x/$a");
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+Context()->functions->disable("Trig");
+
+BEGIN_PGML
+Let [`x`] be a real number between [`-[$a]`] and [`[$a]`]. Provide an expression for [`[$g]`] (in terms of [`x`]) which does not involve any trigonometric functions.
+
+[`[$g] = `][_____________]{Compute($ans)}. [@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Observe that [`[$f]`] and [`[$finv]`] are inverses for the specified values of [`x`]. Therefore, 
+
+[`[$g] = [$ans]`].
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 20 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    
+
+
+
+
