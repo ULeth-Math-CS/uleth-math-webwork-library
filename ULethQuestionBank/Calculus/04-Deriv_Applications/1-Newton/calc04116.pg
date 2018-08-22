@@ -1,0 +1,151 @@
+## DESCRIPTION
+## This is Problem 4.1.16 from the APEX Calculus text (4.1.17 from the ULETH Calculus text). It covers Newton's Method.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Newton's method)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('4.1')
+## Problem1('17')
+## MO(1)
+## Keywords('Newton's Method', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  #for the multiple choice portion of the question.
+  "parserRadioButtons.pl"
+);
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+Context()->flags->set(
+  tolerance => 0.00001,
+  tolType => "absolute",
+);
+
+$f = Formula("x^3 - 3x^2 + x + 3");
+$df=$f->D('x');
+
+$x0 = 1;
+
+$x1 = $x0 - ($f->eval(x=>$x0))/($df->eval(x=>$x0));
+$x2 = $x1 - ($f->eval(x=>$x1))/($df->eval(x=>$x1));
+$x3 = $x2 - ($f->eval(x=>$x2))/($df->eval(x=>$x2));
+$x4 = $x3 - ($f->eval(x=>$x3))/($df->eval(x=>$x3));
+$x5 = $x4 - ($f->eval(x=>$x4))/($df->eval(x=>$x4));
+
+$ans = RadioButtons(
+     ["The function has no roots",
+     "The derivative becomes 0",
+     "The approximations will not converge",
+     "More iterations are needed before the root can be found"],
+   "The approximations will not converge");
+
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+Give the first 5 values found using Newton's method with the given function and initial value.
+
+>>[`  
+ f(x) = x^3 - 3x^2 + x + 3, \quad x_0 = [$x0]
+`]<<  
+
+[`x_1 =`] [___________]{Compute($x1)} [@ AnswerFormatHelp("numbers") @]*  
+[`x_2 =`] [___________]{Compute($x2)}  
+[`x_3 =`] [___________]{Compute($x3)}  
+[`x_4 =`] [___________]{Compute($x4)}  
+[`x_5 =`] [___________]{Compute($x5)}  
+
+Why does Newton's Method fail in finding the root?  
+[__]{$ans}
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Set up the iterative formula for Newton's Method:
+
+>>[``
+  x_{n+1} = x_n - \dfrac{f(x_n)}{f'(x_n)} 
+  = x_n - \dfrac{x_n^3 - 3x_n^2 + x_n + 3}
+  {3x_n^2 - 6x_n + 1}
+``]<<
+
+Iterate using the formula and the provided initial approximation:
+>>[``
+  \begin{array}{rcl}
+    x_0 &=& [$x0] \\
+    &&\\
+    x_1 &=& [$x1] \\
+    x_2 &=& [$x2] \\
+    x_3 &=& [$x3] \\
+    x_4 &=& [$x4] \\
+    x_5 &=& [$x5] \\
+  \end{array}
+``]<<
+
+Newton's Method will not lead to a correct root because the
+approximations keep oscillating between 1 and 2.  (Approximations
+will not converge).
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answers are evaluated in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+
+#-ENDULETH-#
+
+COMMENT('
+   There is only 1 possible version of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    
+
