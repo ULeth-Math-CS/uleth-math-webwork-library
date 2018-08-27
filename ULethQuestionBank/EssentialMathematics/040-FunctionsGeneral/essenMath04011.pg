@@ -1,0 +1,124 @@
+## DESCRIPTION
+## In this problem students are given a function rule in words and asked to
+## perform some function operations/substitutions
+## ENDDESCRIPTION
+
+
+## DBsubject('Algebra')
+## DBchapter('Functions')
+## DBsection('Definition, Concept')
+## Date(2018-07-21)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+##Level(2)
+## KEYWORDS('ULETH-MATH-0500', 'Function Notation')
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "parserAssignment.pl",
+  "AnswerFormatHelp.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "niceTables.pl"
+);
+
+TEXT(beginproblem());
+
+##########################
+#  Setup
+
+#-ULETH-#
+Context("Numeric")->variables->are(x=>"Real",y=>"Real");
+$a = non_zero_random(2,7,1);
+$b = random(-1,1,2)*non_zero_random(-4,-2,1);
+$c = non_zero_random(1,9);
+$f = Formula("$a x^2 +$b x+$c")->reduce();
+$r = random (3,7);
+$rootr = sqrt($r);
+$f_rootr =$f->eval(x=>sqrt($r));
+$f_ra =$f->eval(x=>$r+$a);
+$f_0=$f->eval(x=>0);
+$f_1=$f->eval(x=>1);
+$f_2=$f->eval(x=>2);
+$f_3=$f->eval(x=>3);
+$f_4=$f->eval(x=>4);
+$f_5=$f->eval(x=>5);
+endtable();
+#-ENDULETH-#
+
+
+#################################
+#  Main text
+
+#-ULETH-#
+BEGIN_PGML
+Suppose that 
+
+>>[` \displaystyle f(x) = [$f]`]<<
+
+Compute the following values:
+
+>>[`f(\sqrt[$r]) = `]  [____________________________]{$f_rootr}<<
+
+>>[`f(x)+f(y) =`] [____________________________]{$f+$f->substitute(x => "y");}<<
+
+>>[`f(x+y) =`] [____________________________]{$f->substitute(x => "x+y");}<<
+
+For help entering formulas click here: [@ AnswerFormatHelp("formula") @]*.
+
+
+END_PGML
+#-ENDULETH-#
+
+
+#################################
+#  Answer Evaluation
+
+#################################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+BEGIN_PGML_SOLUTION
+
+To evaluate a function, we substitute the input for the function's variable.
+In this case, this input may be either a number or an expression and is found in
+brackets beside the function's name. In this case, [`f`]. The function's
+variable is [`x`]. Therefore, 
+
+>>[` f(\sqrt[$r]) = [$a] (\sqrt{[$r]})^2 + [$b] (\sqrt{[$r]}) + [$c] = [$b]
+(\sqrt{[$r]}) + [$a*$r + $c] `]<<
+_____________________________________________________________________________
+
+>>[` f(x)+f(y) = [$a]x^2 + [$b]x + [$c] + [$a]y^2 + [$b]y + [$c]`]<<
+
+>>[` f(x)+f(y) = [$a]x^2 + [$b]x  + [$a]y^2 + [$b]y + [$c*2] `]<<
+_____________________________________________________________________________
+
+>>[` f(x+y) =  [$a](x+y)^2 + [$b](x+y) + [$c]`]<<
+
+>>[` f(x+y) = [$a](x^2 + 2xy + y^2) + [$b](x+y) + [$c]`]<<
+
+>>[` f(x+y) = [$a]x^2 + [$a*2]xy + [$a]y^2 + [$b]x + [$b]y + [$c]`]<<
+
+_____________________________________________________________________________
+
+END_PGML_SOLUTION
+
+COMMENT("Randomization provides 1620 different possible versions of this question.<BR> 
+Made from a ULETH template.<BR>" 
+);
+#-ENDULETH-#
+
+ENDDOCUMENT();
