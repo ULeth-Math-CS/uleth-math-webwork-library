@@ -1,0 +1,104 @@
+## DESCRIPTION
+## In this problem students are given a senario and a function that descibes it.
+## They are then asked to determine the input and output of a senario.
+## ENDDESCRIPTION
+
+## DBsubject('Algebra')
+## DBchapter('Functions')
+## DBsection('Definition, Concept')
+## Date(2018-07-21)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+## Level(5)
+## KEYWORDS('ULETH-MATH-0500', 'Function Notation')
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "parserAssignment.pl",
+  "AnswerFormatHelp.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "niceTables.pl"
+);
+
+TEXT(beginproblem());
+
+##########################
+#  Setup
+
+#-ULETH-#
+Context("Numeric")->variables->are(y=>"Real");
+$a = non_zero_random(0.001,0.007,0.0001);
+$b = non_zero_random(0.01,0.09,0.001);
+$c = non_zero_random(15.75,55.25,0.50);
+$f = Formula("$a y^3 + $b y + $c ")->reduce();
+$r = random (15,25);
+$f_r = $f->eval(y=>$r);
+$f_0 = $f->eval(y=>0);
+#-ENDULETH-#
+
+
+#################################
+#  Main text
+
+#-ULETH-#
+BEGIN_PGML
+
+The daily cost of supporting [`y`] yaks on a yak farm is given by the equation
+[` C(y) = [$f]`]. 
+
+The cost of supporting [`[$r]`] yaks is:
+
+>>[`C \bigg(`][_]{$r}[`\bigg)=`][_______________]{$f_r}<<
+
+Yak farmers have to pay various fixed costs. These costs must be paid by a Yak
+farmer even if they do not support any yaks. 
+
+The daily fixed costs associated with Yak farming are:
+
+>>[`C\bigg(`][_]{0}[`\bigg)=`][_______________]{$f_0}<<
+
+END_PGML
+#-ENDULETH-#
+
+
+#################################
+#  Answer Evaluation
+
+#################################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+Since  the cost of supporting [`y`] yaks is given by the function
+[` C(y) = [$f]`] to find the cost of supporting [`[$r]`] yaks we need to find
+the quantity [`C([$r])`]:
+
+[`C([$r]) = [$a] ([$r])^3 + [$b]([$r]) + [$c] = [$a*$r*$r*$r+$b*$r +$c]`]
+
+To find the daily fixed costs associated with yak farming we need to find the 
+costs that the farmer pays even if he has no yaks. This is [`C(0)`]:
+
+[`C(0) = [$a] (0)^3 + [$b](0) + [$c] = [$c]`]
+
+
+END_PGML_SOLUTION
+
+COMMENT("Randomization provides 3,904,000 different possible versions of this question.<BR> 
+Made from a ULETH template.<BR>" 
+);
+#-ENDULETH-#
+
+ENDDOCUMENT();
