@@ -1,0 +1,161 @@
+## DESCRIPTION
+## In this problem students are given a function rule in a table, told the function
+## is quadratic and must express it in function notation.
+## ENDDESCRIPTION
+
+## DBsubject('Algebra')
+## DBchapter('Functions')
+## DBsection('Definition, Concept')
+## Date(2018-07-21)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+## KEYWORDS('ULETH-MATH-0500', 'Function Notation')
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "parserAssignment.pl",
+  "AnswerFormatHelp.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "niceTables.pl"
+);
+
+TEXT(beginproblem());
+
+##########################
+#  Setup
+
+#-ULETH-#
+Context("Numeric")->variables->are(x=>"Real",y=>"Real");
+$a = non_zero_random(1,5,1);
+$b = non_zero_random(1,5,1);
+$c = non_zero_random(-10,10,1);
+$f = Formula("$a x^2 + $b x + $c")->reduce();
+$f_0=$f->eval(x=>0);
+$f_1=$f->eval(x=>1);
+$f_2=$f->eval(x=>2);
+$f_3=$f->eval(x=>3);
+$f_4=$f->eval(x=>4);
+$f_5=$f->eval(x=>5);
+$table = begintable(4) .
+row( "\( \ \  x \ \   \)", "0", "1", "2", "3", "4", "5" ) .
+row( "\( \ \  f(x) \ \  \)", "$f_0" , "$f_1", "$f_2", "$f_3",
+"$f_4", "$f_5" ) .
+endtable();
+#-ENDULETH-#
+
+
+#################################
+#  Main text
+
+#-ULETH-#
+BEGIN_PGML
+The quadratic function [`f(x)`] can be described using the table of values below:
+
+
+>>[@ $table @]***<<
+
+
+Use this table to express [`f(x)`] using function notation:
+
+>> [`f(x)=`][_____________________________][@ AnswerFormatHelp("formula") @]*<<
+
+
+END_PGML
+#-ENDULETH-#
+
+
+#################################
+#  Answer Evaluation
+
+#-ULETH-#
+$showPartialCorrectAnswers = 1;
+ANS($f->cmp());
+#-ENDULETH-#
+
+
+#################################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Since we are told that [`f(x)`] is a quadratic function we know that there are
+somenumbers [`A`], [`B`], and [`C`] such that [`f(x) = Ax^2 + Bx +C`]. To solve
+for these constants we can use any three pair of values from the table that we
+wish.(We need three points since there are three unknowns.)
+So, let's use [`(0,[$f_0])`], [`(1,[$f_1])`], and [`(2,[$f_2])`]:
+
+When we plug in [`x=0`] and [`y=[$f_0]`] we get:
+
+>>[`[$f_0] = A(0)^2 + B(0) + C`] <<
+
+>>[`[$f_0] =  C`] <<
+
+So the function is of the form [`f(x) = A x^2 + B x + [$f_0]`]. 
+We can now solve for [`A`], and [`B`] by setting up a system of 
+two linear equations.
+
+Plugging in [`x=1`] and [`y=[$f_1]`] gives the equation:
+
+>>[`f(x) = A x^2 + B x + [$f_0]`]<<
+
+>>[`[$f_1] = A (1)^2 + B (1) + [$f_0]`]<<
+
+>>[`[$f_1 - $f_0] = A + B`]<<
+
+Plugging in [`x=2`] and [`y=[$f_2]`] gives the equation:
+
+>>[`f(x) = A x^2 + B x + [$f_0]`]<<
+
+>>[`[$f_2] = A (2)^2 + B (2) + [$f_0]`]<<
+
+>>[`[$f_2 - $f_0] = 4A + 2B`]<<
+
+
+To solve these two equations, we rearrange the first equation into 
+[`B = [$f_1 - $f_0] - A `] and substitute this into our second equation:
+
+>>[`[$f_2 - $f_0] = 4A + 2B`]<<
+
+>>[`[$f_2 - $f_0] = 4A + 2 ([$f_1 - $f_0] - A )`]<<
+
+>>[`[$f_2 - $f_0] = 4A + 2([$f_1 - $f_0]) - 2A`]<<
+
+>>[`[$a*2] = 2A `]<<
+
+>>[`[$a] = A `]<<
+
+Thus, 
+
+>> [`B = [$f_1 - $f_0] - A `] <<
+
+>> [`B = [$f_1 - $f_0] - [$a] `] <<
+
+>> [`B = [$b] `] <<
+
+Thus, the equation of the quadratic function is:
+
+>> [`f(x) = Ax^2 + Bx + C `]<<
+
+>> [`f(x) = [$f]`] <<
+
+END_PGML_SOLUTION
+
+COMMENT(
+"Randomization provides 500 different possible versions of this question.<BR> 
+Made from a ULETH template.<BR>" 
+);
+#-ENDULETH-#
+
+ENDDOCUMENT();

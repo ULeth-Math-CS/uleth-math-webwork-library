@@ -1,0 +1,111 @@
+## DESCRIPTION
+## In this problem students are given a function f(x) and asked to do some
+## basic substitutions / function operations
+## ENDDESCRIPTION
+
+
+## DBsubject('Algebra')
+## DBchapter('Functions')
+## DBsection('Definition, Concept')
+## Date(2018-07-21)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+## KEYWORDS('ULETH-MATH-0500', 'Function Notation')
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "parserAssignment.pl",
+  "AnswerFormatHelp.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "niceTables.pl"
+);
+
+TEXT(beginproblem());
+
+##########################
+#  Setup
+
+#-ULETH-#
+Context("Numeric")->variables->are(x=>"Real",y=>"Real");
+$a = non_zero_random(1,5,1);
+$b = non_zero_random(-4,4,1);
+$c = non_zero_random(1,9);
+$f = Formula("$a x^2 + $b x + $c")->reduce();
+$r = random (-8,-4);
+$f_r =$f->eval(x=>$r);
+$f_0=$f->eval(x=>0);
+$f_1=$f->eval(x=>1);
+$f_2=$f->eval(x=>2);
+$f_3=$f->eval(x=>3);
+$f_4=$f->eval(x=>4);
+$f_5=$f->eval(x=>5);
+$f_y =$f->substitute(x => "y-[$r+3]")->reduce();
+endtable();
+#-ENDULETH-#
+
+
+#################################
+#  Main text
+
+#-ULETH-#
+BEGIN_PGML
+Suppose that [`f(x) = [$f].`] Compute the following: 
+
+>>[`f([$r]) = `][____________________________]{$f_r}<<
+
+>>[`f(y-[$r+3]) = `] [____________________________]{$f->substitute(x => "y-[$r+3]");}<<
+
+For help entering formulas click here: [@ AnswerFormatHelp("formula") @]*.
+END_PGML
+#-ENDULETH-#
+
+
+#################################
+#  Answer Evaluation
+
+#################################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+To evaluate a function, we substitute the input for the function's variable.
+In this case, this input may be either a number or an expression and is found in 
+brackets beside the function's name. In this case, [`f`]. The functions variable
+is [`x`]. 
+
+To this end,
+
+>> [`f([$r]) = [$a] ([$r])^2 + [$b]([$r]) + [$c] = [$f->substitute(x => "$r")]`] <<
+
+While, 
+
+ [`f(y-[$r+3]) = [$a] (y-[$r+3])^2 + [$b](y-[$r+3]) + [$c] `] 
+
+[`f(y-[$r+3])= [$a] (y^2-[$r*2+6]y+[$r**2+6*$r+9]) + [$b](y-[$r+3]) + [$c]`]
+
+ [`f(y-[$r+3])=  ([$a]y^2-[$r*2*$a+6*$a]y+[$r**2*$a+6*$r*$a+9*$a]) + ([$b]y-[$r*$b+3*$b]) + [$c]`]
+
+[`f(y-[$r+3])= [$a]y^2-[$r*2*$a+6*$a-$b]y+[$r**2*$a+6*$r*$a+9*$a-$r*$b-3*$b+$c]. `]
+
+
+END_PGML_SOLUTION
+COMMENT(
+"Randomization provides 4320 different possible versions of this question.<BR> 
+Made from a ULETH template.<BR>" 
+);
+#-ENDULETH-#
+
+ENDDOCUMENT();
