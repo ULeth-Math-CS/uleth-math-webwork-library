@@ -1,0 +1,101 @@
+## DESCRIPTION
+## In this problem students are given a function rule in words and asked to
+## express the function using function notation.
+## ENDDESCRIPTION
+
+## DBsubject('Algebra')
+## DBchapter('Functions')
+## DBsection('Definition, Concept')
+## Date(2018-07-21)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+##Level(2)
+## MO(1)
+## KEYWORDS('ULETH-MATH-0500', 'Function Notation')
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "parserAssignment.pl",
+  "AnswerFormatHelp.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+##########################
+#  Setup
+
+#-ULETH-#
+Context("Numeric")->variables->are(x=>"Real",y=>"Real");
+$a = non_zero_random(1,50,1);
+do {$b = non_zero_random(-10,10,1);} until (b!=1 and b!=-1);
+
+
+# Defines the answer equation and function.
+parser::Assignment->Allow;
+parser::Assignment->Function("f");
+$function = Compute("f(x)=$b*(x+$a)")->reduce;
+
+#-ENDULETH-#
+
+
+
+
+#################################
+#  Main text
+
+#-ULETH-#
+BEGIN_PGML
+The rule which explicity defines [`f(x)`] is described using words below:
+
+>>Add [`[$a]`] and then multiply by [`[$b]`] <<
+
+Use this desciption to express [`f(x)`] using function notation:
+
+>> [_____________________________][@ AnswerFormatHelp("equation") @]*<<
+
+Hint: Your answer should be in the form [`f(x) = \ . . .`]
+
+END_PGML
+#-ENDULETH-#
+
+
+#################################
+#  Answer Evaluation
+
+#-ULETH-#
+$showPartialCorrectAnswers = 1;
+ANS($function->cmp());
+#-ENDULETH-#
+
+
+#################################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+To express the function's desciption in function notation we have to see what the
+function does to an arbitrary element [`x`]. Since we first add [`[$a]`] the 
+arbitrary element [`x`] is transformed to [`x + [$a]`]. Next we multiply by
+[`[$b]`] so the result becomes [`[$b](x + [$a])`]. Thus, the function with this
+description is [`f(x) = [$b](x + [$a])`].
+END_PGML_SOLUTION
+
+COMMENT(
+"Randomization provides 900 different possible versions of this question.<BR> 
+Made from a ULETH template.<BR>" 
+);
+#-ENDULETH-#
+
+ENDDOCUMENT();
