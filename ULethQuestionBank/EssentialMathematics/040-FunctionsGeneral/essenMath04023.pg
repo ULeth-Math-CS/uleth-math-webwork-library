@@ -1,0 +1,143 @@
+## DESCRIPTION
+## Algebra
+## ENDDESCRIPTION
+
+## Tagged by tda2d
+
+## DBsubject(Algebra)
+## DBchapter(Functions)
+## DBsection(Compositions and combinations of functions)
+## Date(6/3/2002)
+## Institution(ASU)
+## MLT(ccf-f-and-g-composition-four-options-domain-frac)
+## MLTleader(1)
+## Level(2)
+## TitleText1('College Algebra')
+## AuthorText1('Stewart, Redlin, Watson')
+##Revisedby('Dakota Duffy')
+##Institution('University of Lethbridge')
+## EditionText1('3')
+## Section1('4.7')
+## Problem1('33')
+## TitleText2('Precalculus')
+## AuthorText2('Stewart, Redlin, Watson')
+## EditionText2('3')
+## Section2('2.6')
+## Problem2('30')
+## KEYWORDS('domain', 'function' 'composition','algebra', 'combining functions', 'domain','function','composition of functions', 'ULETH-MATH0500')
+
+##INTITIALIZATION
+DOCUMENT();        # This should be the first executable line in the problem.
+
+loadMacros(
+  "PGstandard.pl",
+  "PGchoicemacros.pl",
+  "PGcourse.pl",
+   "PGstandard.pl",
+  "PGchoicemacros.pl",
+  "PGcourse.pl",
+    "PGstandard.pl",
+  "MathObjects.pl",
+  "parserAssignment.pl",
+  "AnswerFormatHelp.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+);
+
+#SETUP
+TEXT(beginproblem());
+$showPartialCorrectAnswers = 1;
+
+#-ULETH-#
+$a = random(2,9,1);
+$b = non_zero_random(-9,9,1);
+#-ENDULETH-#
+
+##MAIN TEXT
+#-ULETH-#
+BEGIN_PGML
+Given that [`f(x)=\frac{1}{x}`] and [`g(x)=[$a] x ? {[$b]}`], calculate 
+
+(a) [`f\circ g(x)=`] [________________], 
+    its domain is all real numbers except [________________] 
+
+(b) [`g\circ f(x)=`] [________________] ,
+    its domain is all real numbers except [________________] 
+ 
+(c) [`f\circ f(x)=`] [________________],
+    its domain is all real numbers except [________________] 
+
+(d) [`g\circ g(x)=`] [________________],
+    its domain is [`\bigg(`][________________], [________________] [`\bigg)`] 
+
+Note:  If needed enter [`\infty`] as  infinity
+and [`-\infty `] as  -infinity  .
+
+END_PGML
+#-ENDULETH-#
+##ANSWER EVALUATION
+$ans1 = "1/($a*x + $b)";
+$ans2 = -$b/$a;
+$ans3 = "$a/x+$b";
+$ans4 = 0;
+$ans5 = "x";
+$ans6 = 0;
+$ans7 = "$a*($a*x + $b)+$b";
+$ans8 = "-infinity";
+$ans9 = "infinity";
+ANS(fun_cmp($ans1));
+ANS(num_cmp($ans2));
+ANS(fun_cmp($ans3));
+ANS(num_cmp($ans4));
+ANS(fun_cmp($ans5));
+ANS(num_cmp($ans6));
+ANS(fun_cmp($ans7));
+ANS(str_cmp($ans8));
+ANS(str_cmp($ans9));
+
+BEGIN_PGML_SOLUTION
+When two functions are composed it means that one of the functions is evaluated 
+using the second function as its input. More precisely, [`f \circ g`] means the 
+function [`f(x)`] is evaluated using the function [`g(x)`] as input:
+
+[`f \circ g = f \left ( g(x) \right )`]
+
+Therefore,
+
+[`(f\circ g)(x) = f \left ( g(x) \right ) =
+f \left ( [$a] x + [$b] \right) = \frac{1}{[$a] x +[$b]}  `]
+
+which is undefined when the denominator is zero, which occurs at [`x=\frac{[$b*(-1)]}{[$a]}.`]
+
+and
+
+[`(g\circ f)(x) = g \left ( f(x) \right ) =
+g \left ([$a] x + [$b] \right) = [$a](\frac{1}{x}) +[$b]`]
+
+which is undefined when the denominator is zero, which occurs at [`x=0`].
+
+and
+
+[`(f\circ f)(x) = f \left ( f(x) \right ) =
+f\left (\frac{1}{x} \right) = \frac{1}{\frac{1}{x}} = [$ans5],`] provided [`x \neq 0 `]
+
+This function is undefined at [`x=0`] since you cannot divide by zero in the
+intermediate step (i.e when taking the composition.)
+
+and
+
+[`(g\circ g)(x) = g\left (g(x) \right ) =
+f \left ([$a] x +[$b] \right)= [$a]([$a]x+[$b]) + [$b] = [$a*$a]x+[$a*$b+$b]`].
+
+which is a polynomial an thus has domain [`(-\infty, \infty)`].
+
+
+
+END_PGML_SOLUTION
+COMMENT(
+"Randomization provides 144 different possible versions of this question.<BR> 
+Made from a ULETH template.<BR>" 
+);
+#-ENDULETH-#
+
+ENDDOCUMENT();
