@@ -1,0 +1,89 @@
+## DESCRIPTION
+## Algebra
+## ENDDESCRIPTION
+
+## Tagged by tda2d
+
+## DBsubject(Algebra)
+## DBchapter(Functions)
+## DBsection(Compositions and combinations of functions)
+## Date(6/3/2002)
+## MLT(ccf-decompose-find-outer)
+## Level(3)
+## TitleText1('College Algebra')
+## AuthorText1('Stewart, Redlin, Watson')
+##Revisedby('Dakota Duffy')
+##Institution('University of Lethbridge')
+## EditionText1('3')
+## Section1('4.7')
+## Problem1('48')
+## KEYWORDS('domain', 'function' 'composition','algebra', 'combining functions', 'domain')
+
+##INITIALIZATION
+DOCUMENT();        # This should be the first executable line in the problem.
+
+loadMacros(
+    "PGstandard.pl",
+  "PGchoicemacros.pl",
+  "PGcourse.pl",
+    "PGstandard.pl",
+  "MathObjects.pl",
+  "parserAssignment.pl",
+  "AnswerFormatHelp.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+ 
+);
+
+TEXT(beginproblem());
+$showPartialCorrectAnswers = 1;
+
+##SETUP
+#-ULETH-#
+$a = non_zero_random(-9,9,1);
+$b = random(2,9,1);
+#END-ULETH#
+
+#-ULETH-#
+
+#MAIN TEXT
+BEGIN_PGML
+Assume [`f \circ g(x)=\frac{1}{x ? {[$a]}}`] If [`g(x)=x+[$a]`], find the function [`f(x)`]:
+
+[`f(x) = `][_____________________];
+
+END_PGML
+
+##ANSWER EVALUATION
+$ans1 = "1/x";
+ANS(fun_cmp($ans1));
+
+BEGIN_PGML_SOLUTION
+When two functions are composed it means that one of the functions is evaluated 
+using the second function as its input. More precisely, [`f \circ g`] means the 
+function [`f(x)`] is evaluated using the function [`g(x)`] as input:
+
+[`f \circ g = f \left ( g(x) \right )`]
+
+Therefore,
+
+[`\frac{1}{x ? {[$a]}} = f(x+[$a]) `] 
+
+so [`f(x) = [$ans1] `]
+
+END_PGML_SOLUTION
+COMMENT(
+"Randomization provides 144 different possible versions of this question.<BR>
+Solutions Included.
+Made from a ULETH template.<BR>" 
+);
+#-ENDULETH-#
+
+ENDDOCUMENT();        # This should be the last executable line in the problem.
+
+
+
+
+
+
+

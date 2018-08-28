@@ -1,0 +1,123 @@
+## DESCRIPTION
+## Algebra
+## ENDDESCRIPTION
+
+## Tagged by tda2d
+
+## DBsubject(Algebra)
+## DBchapter(Functions)
+## DBsection(Compositions and combinations of functions)
+## Date(6/3/2002)
+## Institution(Rochester)
+## MLT(ccf-domain-only)
+## Level(3)
+## MO(1)
+## TitleText1('College Algebra')
+## AuthorText1('Stewart, Redlin, Watson')
+##Revisedby('Dakota Duffy')
+##Institution('University of Lethbridge')
+## EditionText1('3')
+## Section1('4.7')
+## Problem1('34')
+## KEYWORDS('domain', 'function' 'composition','functions', 'polynomials', 'composition', 'ULETH-MATH0500')
+
+
+##INITIALIZATION
+DOCUMENT();        # This should be the first executable line in the problem.
+
+loadMacros(
+  "PGstandard.pl",
+  "PGchoicemacros.pl",
+  "PGcourse.pl",
+    "PGstandard.pl",
+  "MathObjects.pl",
+  "parserAssignment.pl",
+  "AnswerFormatHelp.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+);
+
+Context('Numeric');
+
+TEXT(beginproblem());
+$showPartialCorrectAnswers = 1;
+
+###################
+#
+#  Setup
+
+
+
+#-ULETH-#
+$a = Real( random(1,9,1) );
+$c = $a*($a+1);
+#-END-ULETH-#
+
+###################
+#
+#  Text
+
+BEGIN_PGML
+Let [`f(x) = \sqrt{[$c] - x} `] and [`g(x) = x^2 - x `].
+
+Then, in interval notation, the domain of [` f\circ g`] is equal to [` [a,b] `] where:
+
+[` [a,b] = \bigg[ `][_],[_]  [`\bigg]`]
+
+END_PGML
+
+###################
+#
+#  Answers
+
+
+ANS(( -$a)->cmp);
+ANS(num_cmp($a+1));
+
+BEGIN_PGML_SOLUTION
+When two functions are composed it means that one of the functions is evaluated 
+using the second function as its input. More precisely, [`f \circ g`] means the 
+function [`f(x)`] is evaluated using the function [`g(x)`] as input:
+
+[`f \circ g = f \left ( g(x) \right )`]
+
+Therefore,
+
+[`(f\circ g)(x) = f \left ( g(x) \right ) = f \left (x^2 - x \right) = \sqrt{[$c] - (x^2 -x)} = \sqrt{[$c] + x - x^2 }   `]
+
+In order for this function to be defined [`[$c] + x - x^2 \geq 0`].
+So we solve this inequality:
+
+>>[`[$c] + x - x^2 \geq 0`]<<
+
+>> [`([$a]+x)([$a+1]-x) \geq 0`]<<
+
+The corresponding equation [`([$a]+x)([$a+1]-x) = 0`] has solutions [`[$a*(-1)]`]
+and [`[$a+1]`]. These numbers divide the real line into three intervals:
+[`(-\infty,[$a*(-1)]), ([$a*(-1)],[$a+1]),`] and [`([$a+1], \infty)`].
+
+To determine the sign of [`([$a]+x)([$a+1]-x)`] in each of these intervals
+we will select a test value from each interval and evaluate: 
+
+[`x = [$a*(-1) - 1]`] is in [`(-\infty,[$a*(-1)])`] and 
+[`([$a]+x)([$a+1]-x)`] = [`([$a]+([$a*(-1) - 1]))([$a+1]-([$a*(-1) - 1])) = (-1)([$a*2+2]) = [$a*(-2)-2] < 0 `]
+
+[`x = 0`] is in [`([$a*(-1)],[$a+1])`] and 
+[`([$a]+x)([$a+1]-x)`] = [`([$a]+0)([$a+1]-0) = [$a*$a+$a] > 0 `]
+
+[`x = [$a+2]`] is in [`([$a+1], \infty)`] and 
+[`([$a]+x)([$a+1]-x)`] = [`([$a]+[$a+2])([$a+1]-[$a+2]) = 
+([$a*2+2])(-1) = ([$a*(-2)-2]) < 0 `]
+
+Thus, the domain is where [`([$a]+x)([$a+1]-x) \geq 0`] which is the interval
+[`[[$a*(-1)],[$a+1]]`]
+
+END_PGML_SOLUTION
+COMMENT(
+"Randomization provides 9 different possible versions of this question.<BR>
+Solutions Included.
+Made from a ULETH template.<BR>" 
+);
+#-ENDULETH-#
+
+ENDDOCUMENT();        # This should be the last executable line in the problem.
