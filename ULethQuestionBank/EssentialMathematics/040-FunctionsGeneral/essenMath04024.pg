@@ -1,0 +1,142 @@
+## DESCRIPTION
+## Algebra
+## ENDDESCRIPTION
+
+## Tagged by tda2d
+
+## DBsubject(Algebra)
+## DBchapter(Functions)
+## DBsection(Compositions and combinations of functions)
+## Date(6/3/2002)
+## MLT(ccf-f-and-g-composition-four-options-domain-lin)
+## Level(2)
+## TitleText1('College Algebra')
+## AuthorText1('Stewart, Redlin, Watson')
+##RevisedBy('Dakota Duffy')
+##Institution('University of Lethbridge')
+## EditionText1('3')
+## Section1('4.7')
+## Problem1('29')
+## TitleText2('Precalculus')
+## AuthorText2('Stewart, Redlin, Watson')
+## EditionText2('3')
+## Section2('2.6')
+## Problem2('27')
+## KEYWORDS('domain', 'function' 'composition','algebra', 'combining functions', 'domain')
+
+DOCUMENT();        # This should be the first executable line in the problem.
+
+loadMacros(
+  "PGstandard.pl",
+  "PGchoicemacros.pl",
+  "PGcourse.pl",
+   "PGstandard.pl",
+  "MathObjects.pl",
+  "PGcourse.pl",
+    "PGstandard.pl",
+  "MathObjects.pl",
+  "parserAssignment.pl",
+  "AnswerFormatHelp.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+);
+
+Context("Numeric");
+
+TEXT(beginproblem());
+$showPartialCorrectAnswers = 1;
+
+$a = random(2,9,1);
+$b = non_zero_random(-9,9,1);
+$c = random(2,9,1);
+$d = non_zero_random(-9,9,1);
+
+TEXT(EV2(<<EOT));
+Given that \(f(x)=$a x ? {$b}\) and \(g(x)=$c x ? {$d}\), calculate 
+$BR
+(a) \(f\circ g(x)\)= \{ans_rule(15)\}, 
+    its domain is (\{ans_rule(15)\}, \{ans_rule(15)\}) 
+$BR  
+(b) \(g\circ f(x)\)= \{ans_rule(15)\} ,
+    its domain is (\{ans_rule(15)\}, \{ans_rule(15)\}) 
+$BR  
+(c) \(f\circ f(x)\)= \{ans_rule(15)\},
+    its domain is (\{ans_rule(15)\}, \{ans_rule(15)\}) 
+$BR  
+(d) \(g\circ g(x)\)= \{ans_rule(15)\},
+    its domain is (\{ans_rule(15)\}, \{ans_rule(15)\}) 
+$BR  
+$BBOLD Note: $EBOLD If needed enter \(\infty\) as $BITALIC infinity
+$EITALIC and \(-\infty \) as $BITALIC -infinity $EITALIC .
+$BR  
+EOT
+Context()->texStrings;
+$ans1 = "$a($c x + $d)+$b";
+$expanded1 = Compute("($a*$c)x + ($a*$d+$b)")->reduce;
+$ans2 = "-infinity";
+$ans3 = "infinity";
+$ans4 = "$c($a x + $b)+$d";
+$expanded2 = Compute("($a*$c)x + ($b*$c+$d)")->reduce;
+$ans5 = "-infinity";
+$ans6 = "infinity";
+$ans7 = "$a($a x + $b)+$b";
+$expanded3 = Compute("($a*$a)x + ($a*$b+$b)")->reduce;
+$ans8 = "-infinity";
+$ans9 = "infinity";
+$ans10 = "$c($c x + $d)+$d";
+$expanded4 = Compute("($c*$c)x + ($c*$d+$d)")->reduce;
+$ans11 = '-infinity';
+$ans12 = 'infinity';
+ANS(fun_cmp($ans1));
+ANS(str_cmp($ans2));
+ANS(str_cmp($ans3));
+ANS(fun_cmp($ans4));
+ANS(str_cmp($ans5));
+ANS(str_cmp($ans6));
+ANS(fun_cmp($ans7));
+ANS(str_cmp($ans8));
+ANS(str_cmp($ans9));
+ANS(fun_cmp($ans10));
+ANS(str_cmp($ans11));
+ANS(str_cmp($ans12));
+
+BEGIN_PGML_SOLUTION
+When two functions are composed it means that one of the functions is evaluated 
+using the second function as its input. More precisely, [`f \circ g`] means the 
+function [`f(x)`] is evaluated using the function [`g(x)`] as input:
+
+[`f \circ g = f \left ( g(x) \right )`]
+
+Therefore,
+[`(f\circ g)(x) = f \left ( g(x) \right ) =
+f \left ( [$c] x + [$d] \right) = [$ans1] =[$expanded1] `]
+
+and
+
+[`(g\circ f)(x) = g \left ( f(x) \right ) =
+g \left ([$a] x + [$b] \right) = [$ans4] = [$expanded2]`]
+
+and
+
+[`(f\circ f)(x) = f \left ( f(x) \right ) =
+f \left ([$a] x +[$b] \right) = [$ans7] = [$expanded3] `]
+
+and
+
+[`(g\circ g)(x) = g \left ( g(x) \right ) =
+g \left ([$c] x+[$d] \right) = [$ans10] = [$expanded4] `]
+
+
+Since these are all polynomials each of them has a domain of 
+[`(-\infty, \infty)`].
+END_PGML_SOLUTION
+COMMENT(
+"Randomization provides 2268 different possible versions of this question.<BR> 
+Made from a ULETH template.<BR>" 
+);
+#-ENDULETH-#
+
+
+ENDDOCUMENT();        # This should be the last executable line in the problem.
+
+
