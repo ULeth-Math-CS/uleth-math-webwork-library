@@ -1,0 +1,141 @@
+## DESCRIPTION
+## This is Problem 2.5.12-13 from the APEX Calculus text. It covers an example of the Chain Rule
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Chain rule (with trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.5')
+## Problem1('12-13')
+## MO(1)
+## Keywords('derivative', 'chain rule', 'trig functions', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->variables->add(u=>"Real");
+
+$a = random(2,16,1)*random(-1,1,2);
+$b = random(2,16,1);
+$ab = $a * $b;
+
+$g = Formula("$b*x")->reduce();
+
+#-ULETH-#
+## use $r = random(1,2,1) for sin/cos only (problem 2.5.12)
+## use $r = random(3,6,1) to exclude sin/cos (problem 2.5.13)
+$r = random(1,6,1);
+#-ENDULETH-#
+
+if ($r==1) {
+   $y = Formula("$a sin(u)");
+   $dy = $y->D('u');
+} elsif ($r==2) {
+ $y = Formula("$a cos(u)");
+   $dy = $y->D('u');
+} elsif ($r==3) {
+ $y = Formula("$a tan(u)");
+   $dy = $y->D('u');
+} elsif ($r==4) {
+ $y = Formula("$a cot(u)");
+   $dy = $y->D('u');
+} elsif ($r==5) {
+ $y = Formula("$a sec(u)");
+   $dy = $y->D('u');
+} else {
+ $y = Formula("$a csc(u)");
+   $dy = $y->D('u');
+}
+
+$f = Compute($y->substitute(u=>$g))->reduce();
+
+$df = $f->D('x');
+
+$ans = Compute("$df")->reduce();
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Compute the derivative of the given function.
+
+>>[``f(x) = [$f]``]<<
+
+[`f'(x) = `] [_______________] [@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Use the Chain Rule with inside function  [`u = [$g]`]
+and outside function [`y = [$y]`].
+
+[``
+  \begin{array}{rcl}
+    f'(x) &=& \displaystyle\frac{dy}{du} \cdot \frac{du}{dx}\\
+    &&\\
+    &=& [$dy]\cdot[$b] \\
+    &=& [$ans]
+  \end{array}
+``]
+
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+#-ENDULETH#
+ANS( $ans->cmp() );
+
+
+#############################
+#  Comments
+    COMMENT('
+        Randomization provides 20,250 different possible versions of this question.<BR>
+    Randomization allows the trig function to be one of sin, cos, tan, cot, sec, csc, but this can be easily modified (see code for details). <BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();  
+
+

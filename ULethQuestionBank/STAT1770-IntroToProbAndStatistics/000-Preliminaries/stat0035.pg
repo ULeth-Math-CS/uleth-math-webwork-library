@@ -1,0 +1,119 @@
+## DESCRIPTION
+## This is a multiple choice question intended to test student's ability to recognize the relevant statistical variables from a specific context. The order the anwsers are displayed in randomized but the question and the anwsers themselves do not vary. This question is similar to another question in the same DBsection (that asks instead for the observational units).
+## ENDDESCRIPTION
+
+
+## DBsubject('Statistics')
+## DBchapter('Preliminaries')
+## DBsection('6 step method')
+## Date(2018-05-08)
+## Institution(University of Lethbridge)
+## Author(Kyler Fisher)
+## MO(1)
+## KEYWORDS('pop-up menu', 'radio buttons', 'multiple choice', 'ULETH-STAT1770', 'variables')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Following two used for multiple choice 
+  "parserRadioButtons.pl",
+  "PGchoicemacros.pl"
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+#-ULETH-#
+
+# The options in the square brackets are the different radio button options
+# that will be available.
+# The next argument is the correct answer.
+# The arguments in the square brackets after last=> dictate which options
+# come last in the radio button list (left empty randomizes the order).
+$radioButtons = RadioButtons(
+  ["whether or not each student pulls all-nighters and the night of the week that the all-nighter occurs", 
+  "frequency of all-nighters and the number of years the student has attended college",
+  "GPA of each student and whether or not each student pulls all-nighters",
+  "GPA of each student and frequency of all-nighters"],
+  "GPA of each student and whether or not each student pulls all-nighters",#anwser
+  last=>[""]);#randomize
+  
+#-ENDULETH-#
+
+
+###########################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+
+Identify the _variables_ in this question: Do college students who pull all-nighters tend to have lower grade point averages than those who do not pull all-nighters?
+
+[@ $radioButtons->buttons() @]*
+END_PGML
+
+
+###########################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($radioButtons->cmp());
+#-ENDULETH-#
+
+
+###########################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+In statistics, variables are characteristics that can be measured. They may be quantiative, like height in centimeters, or categorical, like color of eyes. We expect that variables will vary between the different observational units under investigation.  
+
+In this question, we are interested in whether all-nighters have an effect on grade point averages for college students. Here, College students are the observational units and the characteristics about them that we are interested in are the variables, for this question. In this case, we are interested whether or not a student pulls all-nighters and in a student's grade point average. 
+
+The other selections contain descriptions of measurable characteristics but they do not relate as well to the question we are trying to answer. 
+
+END_PGML_SOLUTION
+
+COMMENT('
+    Simple multiple choice format.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 1<BR>
+    - Max attempts: 3<BR>
+    - Show me another: Never<BR>
+    - Rerandomize after: Default<BR>
+
+    Uses PGML.
+    '); 
+#-ENDULETH-#
+
+ENDDOCUMENT();

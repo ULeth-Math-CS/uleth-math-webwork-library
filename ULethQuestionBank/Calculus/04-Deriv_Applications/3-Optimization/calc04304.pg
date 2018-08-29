@@ -1,0 +1,130 @@
+## DESCRIPTION
+## This is Problem 4.3.4 from the APEX Calculus text. It covers an optimization problem. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Optimization - general)
+## Level(5)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('4.3')
+## Problem1('3')
+## MO(1)
+## Keywords('word problem', 'optimization', 'derivative extrema optimization ', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+ );
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+#############################
+#   Setup
+#-ULETH-#
+#Randomize the question parameters. 
+Context("Numeric");
+   
+$prod = random(5,1000,5);
+
+$ans = 2*sqrt($prod);
+
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+Find the minimum sum of two positive numbers
+(not necessarily integers) whose product is
+[$prod].
+
+[___________]{Compute($ans)} [@ AnswerFormatHelp("numbers") @]*  
+
+END_PGML
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Let [`x, y`] be the two numbers.  Then [`xy = [$prod]`].
+The fundamental equation (to be minimized) is the
+sum, [` S = x + y`].  Substitute [`y = [$prod]/x = 
+[$prod] x^{-1}`]
+and differentiate:
+
+>>[``
+  \begin{array}{rcl}
+    S &=& x + [$prod] x^{-1} \\
+    &&\\
+   \implies S' &=& 1 - [$prod] x^{-2} \\
+   \end{array}
+``]<<
+
+Now set [`S' = 0`] to find the critical number(s):
+
+>>[``
+  \begin{array}{rcl}
+   && 1 - [$prod] x^{-2} &=& 0 \\
+    &\implies& [$prod] x^{-2} &=& 1\\
+    &\implies& [$prod] &=& x^2 \\
+    &\implies& x &=& \pm \sqrt{[$prod]}.
+  \end{array}
+``]<<
+
+Since the numbers are required to be positive, we
+choose [`x = \sqrt{[$prod]}`].  
+[`S`] is minimized at this point since [`S'(x) < 0`] for [`0 \leq x < \sqrt{[$prod]}`] and [`S'(x) > 0`] for [`x > \sqrt{[$prod]}`].  
+The other number
+is:
+
+>>[``
+   y = \dfrac{[$prod]}{x} = \dfrac{[$prod]}{\sqrt{[$prod]}}
+   = \sqrt{[$prod]}.
+``]<<
+
+The minimum sum must be [`x + y = 2\sqrt{[$prod]} = [$ans] `].
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+COMMENT('
+    Randomization provides 200 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+
+

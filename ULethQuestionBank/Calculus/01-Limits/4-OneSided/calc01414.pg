@@ -1,0 +1,125 @@
+## DESCRIPTION
+## This is Problem 1.4.14 from the APEX Calculus text. It covers a basic example of one-sided limits.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Limits and continuity)
+## DBsection(One-sided limits - concept of)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('1.4')
+## Problem1('14')
+## MO(1)
+## Keywords('limit', 'limits', 'left,right,one-sided', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for Piecewise Functions
+  "contextPiecewiseFunction.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("PiecewiseFunction");
+
+$a = random(2,10,1)*random(-1,1,2);
+$b = random(2,10,1)*random(-1,1,2);
+$c = random(1,10,1);
+$d = random(2,8,1)*random(-1,1,2);
+
+$f = Compute("$a*x^2+$b*x+$c if x < 0 else $d*sin(x) if x>=0")->reduce();
+
+$ans1 = $c;
+$ans2 = 0;
+$ans3 = "DNE";
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+Let
+[``f(x) = [$f]``].
+
+Find the following limits:
+
+[``\lim_{x \to 0^-} \, f(x) =``] [___________] [@ AnswerFormatHelp("numbers") @]*
+
+[``\lim_{x \to 0^+} \, f(x) = ``] [___________] [@ AnswerFormatHelp("numbers") @]*
+
+[``\lim_{x \to 0} \, f(x) = ``] [___________] [@ AnswerFormatHelp("numbers") @]*
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+Taking the limit from the left, we have
+
+[``
+ \lim_{x \to 0^-} f(x) = \lim_{x \to 0} \, ([$a] x^2 + [$b] x + [$c]) = 
+  [$a](0)^2 + [$b](0) + [$c] = [$ans1].
+``]
+
+Whereas from the right, we have
+
+[``
+ \lim_{x \to 0^+} f(x) = \lim_{x \to 0} \,[$d] \sin x = [$d] \sin(0) = 0.
+``]
+
+Since the left and right hand limits are not equal, [`\displaystyle \lim_{x \to 0} f(x) `] does not exist.
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+ANS(num_cmp($ans1, strings=>["DNE"]));
+ANS(num_cmp($ans2, strings=>["DNE"]));
+ANS(num_cmp($ans3, strings=>["DNE"]));
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 45360 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    The first two limits will always exist and the last limit will never exist.  <BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    

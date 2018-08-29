@@ -1,0 +1,206 @@
+## DESCRIPTION
+## This is Problem 3.5.11 from the APEX Calculus text. It covers curve sketching.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Summary of curve sketching)
+## Level(4)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('3.5')
+## Problem1('11')
+## MO(1)
+## Keywords('curve sketching', 'critical numbers', 'points of inflection','ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+   # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+  Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,);
+     
+$a = random(1,20,1)*random(-1,1,2);
+$b = random(1,20,1)*random(-1,1,2);
+
+$f = Formula("{1}/{(x-$a)^2} + $b")->reduce();
+$df = Formula("-{2}/{(x-$a)^3}")->reduce();
+$ddf = Formula("{6}/{(x-$a)^4}")->reduce();
+
+$crit1 = "DNE";
+
+Context("Interval");
+$I1 = Interval((-inf, $a));
+$I2 = Interval(($a, inf));
+
+@domain = $I1 + $I2;
+
+$crit = List("$crit1");
+
+$POI = List("DNE");
+
+$VA = List("$a");
+
+$HA = List("$b");
+
+@ans_inc = $I1;
+@ans_dec = $I2;
+
+@ans_cu = $I1 + $I2;
+@ans_cd = "DNE";
+
+Context("Point");
+$ans_points = "DNE";
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+BEGIN_PGML
+
+In the following questions, consider the function 
+
+>>[`f(x) = \displaystyle [$f].`]<<
+
+Enter *DNE* if an answer does not exist.
+----
+[`\text{1.}`]  Determine the domain of [`f`] (as an interval)  
+[____________________]{Compute(@domain)}  [@ AnswerFormatHelp("intervals") @]*
+
+
+
+[`\text{2.}`]  Find the critical values of [`f`].  
+[____________________]{Compute($crit)} (Separate multiple answers with commas.)
+
+
+
+[`\text{3.}`] List the [`x`]-values of any possible points of inflection of [`f`].  
+[____________________]{Compute($POI)}  (Separate multiple answers with commas.)
+
+
+
+[`\text{4.}`]  Find the vertical asymptotes.  
+[`x = `][____________________]{Compute($VA)}  (Separate multiple answers with commas.)
+
+
+
+[`\text{5.}`]  Find the horizontal aymptotes.  
+[`y = `][____________________]{Compute($HA)}  (Separate multiple answers with commas.)
+
+
+
+[`\text{6.}`]  Use a number line analysis to complete the following (enter answers as intervals).  
+[`f`] is increasing on: [______________________________]{Compute(@ans_inc)}  
+[`f`] is decreasing on: [______________________________]{Compute(@ans_dec)}  
+[`f`] is concave up on: [______________________________]{Compute(@ans_cu)}  
+[`f`] is concave down on: [______________________________]{Compute(@ans_cd)}  
+
+
+[`\text{7.}`] Evaluate [`f`] at each critical point and possible point
+of inflection.  List all such points below.
+Each point should be entered as an *ordered pair* (that is, in the form [`(x, y) `]).  
+[__________________________________________________]{Compute($ans_points)}  
+(Separate multiple answers with commas.)
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+$sign = ($a > 0) ? "positive" : "negative";
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+[`\text{1.}`] The domain of [`\displaystyle [$f]`] excludes [`x = [$a]`], at which the
+denominator is equal to 0.  Thus, the domain is
+[` (-\infty, [$a]) \cup ([$a], \infty)`].
+
+
+[`\text{2.}`]  Since [`f'(x) = \displaystyle [$df]`] is never 0, there are no
+critical numbers.
+
+
+[`\text{3.}`]  Since [`f''(x) = \displaystyle [$ddf]`] is never 0, there are no possible
+points of inflection.
+
+
+[`\text{4.}`]  There is vertical asymptote at [`x = [$a]`] since   
+
+[``
+  \lim_{x \to [$a]} [$f] = \infty.
+``]
+
+
+[`\text{5.}`] There is a horizontal asymptote at [` y = [$b]`] since   
+
+[``
+  \lim_{x \to \pm\infty} [$f] = 0 + [$b] = [$b].
+``]
+
+
+[`\text{6.}`]  Note, even though [`x = [$a]`] is not considered critical,
+the behavior of the graph could still change at [`[$a]`].
+Use a number line analysis. Plug samples into [`f'`] to test
+for increase/decrease.  Plug samples into [`f''`] to test
+concavity.
+  
+[`f`] increases on [`(-\infty, [$a])`].  
+[`f`] decreases on [`([$a], \infty)`].  
+[`f`] is concave up on [`(-\infty, [$a]) \cup ([$a], \infty)`].  
+[`f`] is never concave down.  
+
+
+[`\text{7.}`]  There is no critical points or points of inflection,
+so this answer is "DNE".
+
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#Answers are evaluated in the problem text.
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 1600 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();   
+

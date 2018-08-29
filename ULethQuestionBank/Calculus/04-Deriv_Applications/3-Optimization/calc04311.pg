@@ -1,0 +1,166 @@
+## DESCRIPTION
+## This is Problem 4.3.11 from the APEX Calculus text. It covers an optimization problem. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Optimization - general)
+## Level(5)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('4.3')
+## Problem1('11')
+## MO(1)
+## Keywords('word problem', 'optimization', 'derivative extrema optimization ', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+ );
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+#############################
+#   Setup
+#-ULETH-#
+#Randomize the question parameters. 
+Context("Numeric");
+   Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,
+   );
+
+$h = random(1, 60, 0.5);
+
+$country = list_random("Archenland" , "Calormen", "Narnia", "Ettinsmoor");
+
+$max = $h*6;
+$max2 = $max*2;
+
+$ans = 2*$h*$h*$h;
+
+
+if ($h <= 20) {
+$units3 = "\(\text{in}^3\)";
+$units = "\(\text{in}\)";
+}
+elsif ($h <= 40) {
+$units3 = "\(\text{cm}^3\)";
+$units = "\(\text{cm}\)";
+}
+else {
+$units3 = "\(\text{mm}^3\)";
+$units = "\(\text{mm}\)";
+}
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+The [$country] Postal Service charges more for
+boxes whose combined length and girth exceeds
+[$max] [$units].  
+The length of a package is the length
+[`\ell`] of its longest side; the girth is the perimeter
+of the cross section, [`2w + 2h`].
+
+What is the maximum volume of a package with
+a square cross section ( [`w = h`] ) that
+does not exceed the [$max] [$units] standard?
+
+Maximum volume [`V =`] [__________]{Compute($ans)} [$units3] [@ AnswerFormatHelp("numbers") @]*  
+
+
+END_PGML
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+The fundamental equation (to be maximized) is the
+volume of the box whose length, width, and height
+are [`\ell, w, h`], respectively:
+
+>>[``
+  V = \ell w h.
+``]<<
+
+We are given that [`w = h`], and that the
+combined length and girth should be [$max]:
+
+>>[``
+  \textrm{(length)} + \textrm{(girth)} = \ell + 2w + 2h = 
+  \ell + 4h = [$max].
+``]<<
+
+Substitute this into the fundamental equation, take the derivative:
+
+>>[``
+  \begin{array}{rcl}
+    V &=& \ell w h = ([$max] - 4h)(h)(h) \\
+    && \\
+     &=& [$max]h^2 - 4h^3 \\
+  \implies  V' &=& [$max2]h - 12 h^2
+  \end{array}
+``]<<
+
+Then set [`V' = 0`] to find the critical number(s): 
+
+>>[``
+  \begin{array}{rcl}
+   12h([$h] - h)  &=& 0 \\
+   \implies h &=& 0, [$h].
+  \end{array}
+``]<<
+
+Only [`h = [$h]`] is reasonable (since a box with no height would have no volume).
+
+Use this value to find the maximum volume:
+
+>>[``
+  V = [$max]h^2 - 4h^3 = [$max]([$h])^2 - 4([$h])^3 = [$ans].
+``]<<
+
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+COMMENT('
+    Randomization provides 119 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();   

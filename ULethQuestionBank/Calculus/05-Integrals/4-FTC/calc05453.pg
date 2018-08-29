@@ -1,0 +1,186 @@
+## DESCRIPTION
+## This is Problem 5.4.53 from the APEX Calculus text (Problem 5.4.55 in the ULETH text). It involves an application of the Fundamental theorem of Calculus to a definite integrals whose bounds are variables. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Integrals)
+## DBsection(Fundamental theorem of calculus)
+## Level(4)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.4')
+## Problem1('53')
+## MO(1)
+## Keywords('integral', 'fundamental theorem of calculus', 'chain rule', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)+y','(-x)-y');
+Context()->variables->add(t => 'Real');
+
+$f = "\dfrac{1}{t}";
+
+## a)
+$a1 = random(1,25,1);
+
+$ans1 = Formula("1/x");
+
+## b)
+$b2 = random(1,25,1);
+
+$ans2 = Formula("-1/x");
+
+## c)
+$a3 = random(1,25,1);
+
+$e = random(3,9,1);
+$g = "x^{$e}";
+
+$ans3 = Formula("$e/x");
+
+## d)
+$u = "2 + \cos x";
+$v = "x^2 + 1";
+
+$ans4 = Formula("2x/(x^2 + 1) + sin(x)/(2 + cos(x))");
+
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+a) If [`\displaystyle F(x) = \int_{[$a1]}^{x} [$f] \, dt `],
+then [` F'(x) = `][____________________________________]{Compute($ans1)}. [@ AnswerFormatHelp("formulas") @]*
+
+b) If [`\displaystyle F(x) = \int_{x}^{[$b2]} [$f] \, dt `],
+then [` F'(x) = `][____________________________________]{Compute($ans2)}.
+
+c) If [`\displaystyle F(x) = \int_{[$a3]}^{[$g]} [$f] \, dt `],
+then [` F'(x) = `][____________________________________]{Compute($ans3)}.
+
+d) If [`\displaystyle F(x) = \int_{[$u]}^{[$v]} [$f] \, dt `],
+then [` F'(x) = `][____________________________________]{Compute($ans4)}.
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+$e1 = $e - 1;
+BEGIN_PGML_SOLUTION
+
+Part (a): 
+
+In this part, a direct application of the Fundamental Theorem of Calculus (Part 1) shows us that
+
+>>[``
+  \dfrac{d}{dx} \int_{[$a1]}^x [$f] \, dt = \dfrac{1}{x}.
+``]<<
+
+----
+
+Part (b): 
+
+The integral in Part (b) isn't quite in the form we need to apply FToC (Part 1), but using a property of integrals we see that
+
+>>[``\dfrac{d}{dx} \int_{x}^{[$b2]} [$f] \, dt = 
+ -\dfrac{d}{dx} \int_{[$b2]}^x [$f] \, dt ``].<<
+ 
+Now apply FToC (Part 1) to find that [`F'(x) = -\dfrac{1}{x}.`]
+
+----
+
+Part (c): 
+
+Notice that if we apply the chain rule to the FToC (Part 1), then for some function [`u(x)`],
+
+>>[`` \dfrac{d}{dx} \int_{a}^{u(x)} f(t) \, dt = f(u(x)) \cdot u'(x). ``]<<
+
+Using this rule with [`u(x) = [$g]`] the derivative in Part (c) becomes
+
+>>[``
+  \dfrac{d}{dx} \int_{[$a3]}^{[$g]} [$f] \, dt = 
+ \dfrac{1}{[$g]} \cdot ([$g])' = \dfrac{1}{[$g]} \cdot [$e] x^{[$e1]}
+ = \dfrac{[$e]}{x}.
+``]<<
+
+----
+
+Part (d): 
+
+We want to get [`F(x)`] into a form where we can use the Fundamental Theorem of Calculus (Part 1). First, as a consequence of the properties of definite integrals, we may write
+
+>>[``
+  \begin{array}{rcl}
+  \displaystyle
+ F(x) = \int_{[$u]}^{[$v]} [$f] \, dt &=&
+   \displaystyle
+ \int_{a}^{[$v]} [$f] \, dt - \int_{a}^{[$u]} [$f] \, dt 
+   \end{array}
+``]<<
+
+for some real number [`a \neq 0`]. 
+
+Applying the chain rule (see Part (c)) to the difference of integrals above, using [`u(x) = [$v]`] in the first integral and [`u(x) = [$u]`] in the second integral, we discover that
+
+>>[``
+  \begin{array}{rcl}
+  \displaystyle
+  F'(x) &=& \dfrac{d}{dx} \left( \int_{a}^{[$v]} [$f] \, dt - \int_{a}^{[$u]} [$f] \, dt \right) \\
+ &=& \dfrac{1}{[$v]} \cdot ([$v])' - \dfrac{1}{[$u]} \cdot ([$u])' \\
+ &=& \displaystyle [$ans4].
+ \end{array}
+``]<<
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 109375 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    
+

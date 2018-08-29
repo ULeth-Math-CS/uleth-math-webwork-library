@@ -1,0 +1,118 @@
+## DESCRIPTION
+## This is Problem 8.7.11 in the APEX calculus text (Problem 4.5.11 from the ULETH Calculus text). It covers Maclaurin polynomials. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Infinite sequences and series)
+## DBsection(Taylor polynomials)
+## Level(2)
+## Institution('University of Lethbridge')
+## Author('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('8.7')
+## Problem1('11')
+## MO(1)
+## Keywords('derivative', 'taylor polynomial', 'maclaurin polynomial', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  "contextFraction.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Fraction")->noreduce('(-x)+y') ;
+    Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,
+  );
+
+$a = random(2,15,1);
+
+$f = Formula("$a/($a+x)")->reduce();
+
+$deg = 4;
+
+$ans = Formula("1 - x/$a + x^2/($a)^2 - x^3/($a)^3 + x^4/($a)^4")->reduce();
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Find the Maclaurin polynomial of degree [$deg] for the given function. 
+
+>>[``f(t) =  [$f]``]<<
+
+[`p_{[$deg]}(t) = `] [____________________________________________________]{Compute($ans)} [@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+We need to produce a degree [$deg] Maclaurin polynomial. By definition, we want 
+
+>>[``p_[$deg](x) = f(0) + f'(0)x + \dfrac{f''(0)}{2!}x^2 + \ldots + \dfrac{f^{([$deg])}(0)}{[$deg]!}x^{[$deg]}.``]<<
+
+Taking the first [$deg] derivatives of [`f(x)`], we find that 
+
+>>[``f^{(k)}(x) = \dfrac{(-1)^{k}\cdot[$a]\cdot k!}{([$a]+x)^{k+1}}``]<<
+
+for any nonnegative integer [`k`] and therefore
+
+>>[``f^{(k)}(0) = \dfrac{(-1)^{k}k!}{[$a]^k}.``]<<
+
+If we substitute this into the definition of the degree [$deg] Maclaurin polynomial, we have
+
+>>[``p_{[$deg]}(x) = [$ans].``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 14 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    
+
+
+
+

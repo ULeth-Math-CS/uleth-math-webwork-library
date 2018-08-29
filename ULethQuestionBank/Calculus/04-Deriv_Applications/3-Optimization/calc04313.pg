@@ -1,0 +1,194 @@
+## DESCRIPTION
+## This is Problem 4.3.13 from the APEX Calculus text. It covers an optimization problem. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Optimization - general)
+## Level(5)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('4.3')
+## Problem1('13')
+## MO(1)
+## Keywords('word problem', 'optimization', 'derivative extrema optimization ', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+ );
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+#############################
+#   Setup
+#-ULETH-#
+#Randomize the question parameters. 
+Context("Numeric");
+
+
+$D = random(1,5,1);
+$L = random(4,12,1);
+$Ds = $D**2;
+
+if ($D == 1) {$plur = "mile";}
+else {$plur = "miles";}
+
+$u1 = random(40,60,5);
+$u2 = $u1 + random(25,45,5);
+
+$uq = $u2/$u1;
+$uqs = $uq**2;
+$uqs1 = $uqs - 1;
+
+$x1 = sqrt($Ds/$uqs1);
+
+$ans1 = $L - $x1;
+$ans2 = sqrt($Ds + $x1**2);
+$ans3 = 1000*($u1*$ans1 + $u2*$ans2);
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+[@ image("http://www.cs.uleth.ca/graphics/WeBWorK_images/ApexCalc04313.jpg", height=>300, width=> 500)@]*
+
+A power line is to be run to an offshore facility as shown
+in the figure above.  The offshore facility is
+[`D = [$D]`] [$plur] at sea and [`L = [$L]`] miles
+along the shoreline from the power 
+plant.  It costs $ [$u1],000 per mile to lay a power
+line underground and $ [$u2],000 per mile to
+run the line underwater.
+  
+How much of the power line should be run underground, and
+how much underwater to minimize the overall costs?
+
+Length underground (in miles): [_______________]{Compute($ans1)} [@ AnswerFormatHelp("numbers") @]*  
+Length underwater (in miles): [_______________]{Compute($ans2)}  
+Minimal cost (in dollars): [_______________]{Compute($ans3)}  
+
+END_PGML
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+$uq = int($uq*10**3)/10**3;
+$uqs = int($uqs*10**3)/10**3;
+$uqs1 = int($uqs1*10**3)/10**3;
+$x1 = int($x1*10**3)/10**3;
+
+$ans1 = int($ans1*10**3)/10**3;
+$ans2 = int($ans2*10**3)/10**3;
+$ans3 = int($ans3*10**2)/10**2;
+BEGIN_PGML_SOLUTION
+
+Observe, the offshore facility is a vertex of a right
+triangle with legs equal to [$D] and [`x`] and
+hypotenuse [`z`].  Therefore, [`[$D]^2 + x^2 = z^2`], or
+
+>>[``
+  z = \sqrt{[$Ds] + x^2}
+``]<<
+  
+The cost for laying the power line underground is:
+>>[``
+  \textrm{(Cost per mile)} \cdot
+  \textrm{(miles underground)}
+  = [$u1],000([$L] - x).
+``]<<
+  
+The cost for laying the power line underwater is
+
+>>[``
+  \textrm{(Cost per mile)} \cdot
+  \textrm{(miles underwater)}
+  = [$u2],000(z) = [$u2],000\sqrt{[$Ds] + x^2}.
+``]<<
+
+Thus, the total cost function (which is the
+fundamental equation) is
+
+>>[``
+  C = [$u1],000([$L] - x) + [$u2],000\sqrt{[$Ds] + x^2}.
+``]<<
+
+Its derivative is [`C' = -[$u1],000 + \dfrac{[$u2*1000] x}{\sqrt{[$Ds] + x^2}}`].
+
+Set [`C' = 0`] to find the critical number(s):
+
+>>[``\begin{array}{rcl}
+   -[$u1*1000] + \dfrac{[$u2*1000] x}{\sqrt{[$Ds] + x^2}}  &=& 0\\
+    &&\\
+    \dfrac{[$u2*1000] x}{\sqrt{[$Ds] + x^2}}  &=& [$u1*1000] \\
+    &&\\
+    [$uq] x &=& \sqrt{[$Ds] + x^2} \\
+    [$uqs] x^2 &=& [$Ds] + x^2 \\
+    [$uqs1] x^2 &=& [$Ds] \\
+    x &=& \sqrt{[$Ds]/[$uqs1]} = [$x1].
+  \end{array}
+``]<<
+
+Note, we used the positive square root because we are measuring
+positive distances.
+  
+Since [`x = [$x1]`], we find the length of line to be run
+underground is:
+
+>>[``
+  L - x = L - [$x1] = [$ans1].
+``]<<
+  
+The length [`z`] to be run underwater is:
+
+>>[``
+  z = \sqrt{ [$Ds] + x^2 } = \sqrt{[$Ds] + ([$x1])^2} = [$ans2].
+``]<<
+  
+Finally, the minimal cost is:
+
+>>[``
+  C = [$u1],000([$ans1]) + [$u2],000([$ans2]) = [$ans3].
+``]<<
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+COMMENT('
+    Randomization provides 40 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+

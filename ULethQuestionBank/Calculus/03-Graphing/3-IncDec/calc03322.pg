@@ -1,0 +1,228 @@
+## DESCRIPTION
+## This is Problem 3.3.22 from the APEX Calculus text (3.3.23 in the ULETH APEX text). It covers the First Derivative Test.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Increasing/decreasing functions and local extrema)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('3.3')
+## Problem1('22')
+## MO(1)
+## Keywords('first derivative test', 'increasing and decreasing functions','ULETH-MATH1560', 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+   # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+   Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,
+   );
+   
+$a = random(2,9,1)*random(-1,1,2);
+
+$f = Formula("$a sin(x)*cos(x)")->reduce();
+
+$df = Formula("$a(-sin^2(x) + cos^2(x))")->reduce();
+
+$pi = Formula("pi");
+
+$c1 = -3*$pi/4;
+$c2 = -($pi/4);
+$c3 = $pi/4;
+$c4 = 3*$pi/4;
+
+$ans_crit = List($c1, $c2, $c3, $c4);
+$e1 = -($pi);
+$e2 = $pi;
+
+Context("Interval");
+   Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,
+   );
+@domain = Interval(($e1, $e2));
+
+$I1 = Interval(($e1, $c1));
+$I2 = Interval(($c1, $c2));
+$I3 =Interval(($c2, $c3));
+$I4 =Interval(($c3, $c4));
+$I5 =Interval(($c4, $e2));
+
+if ($a < 0){
+   @inc = $I2+$I4;
+   @dec = $I1+$I3+$I5;
+   $ans_max = List($c2, $c4);
+   $ans_min = List($c1, $c3);
+   $s1 = "negative";
+   $s2 = "positive";
+   $s3 = "negative";
+   $s4 = "positive";
+   $s5 = "negative";
+   $q1 = "decreasing";
+   $q2 = "increasing";
+   $q3 = "decreasing";
+   $q4 = "increasing";
+   $q5 = "decreasing";
+   $strmax = "-\frac{\pi}{4}, \frac{3\pi}{4}";
+   $strmin = "-\frac{3\pi}{4}, \frac{\pi}{4}";
+} else {
+   @inc = $I1+$I3+$I5;
+   @dec = $I2+$I4;
+   $ans_max = List($c1, $c3);
+   $ans_min = List($c2, $c4);
+   $s1 = "positive";
+   $s2 = "negative";
+   $s3 = "positive";
+   $s4 = "negative";
+   $s5 = "positive";
+   $q1 = "increasing";
+   $q2 = "decreasing";
+   $q3 = "increasing";
+   $q4 = "decreasing";
+   $q5 = "increasing";
+   $strmax = "-\frac{3\pi}{4}, \frac{\pi}{4}";
+   $strmin= "-\frac{\pi}{4}, \frac{3\pi}{4}";
+}
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+In the following questions, consider the function 
+
+>>[`f(x) = \displaystyle [$f] \quad \textrm{on} \; (-\pi, \pi).`]<<
+
+Enter *DNE* if an answer does not exist.
+----
+a) Give the domain of [`f`] (in interval notation): [________________________]{Compute(@domain)}  [@ AnswerFormatHelp("intervals") @]*
+
+b) Find the critical numbers of [`f`].  [________________]{Compute($ans_crit)} [@ AnswerFormatHelp("numbers") @]*  
+(Separate multiple answers with commas.)
+
+c) Determine the intervals on which [`f`] is increasing and decreasing.  
+[`f`] is increasing on: [________________________]{Compute(@inc)}  
+[`f`] is decreasing on: [________________________]{Compute(@dec)}
+
+d) Use the First Derivative Test to determine whether each
+critical point is a relative maximum, minimum, or neither.  
+Relative maxima occur at [`x = `] [____________]{Compute($ans_max)} (Separate multiple
+answers with commas.)  
+Relative minima occur at [`x = `] [____________]{Compute($ans_min)} (Separate multiple answers with commas.)
+
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+The function [`f(x) = \displaystyle [$f]`] is defined on [`(-\pi,\pi)`] and has no problems (divisions by zero, for example) inside this interval. Therefore, its domain is [`(-\pi,\pi)`].  
+
+Its derivative is [`f'(x) = [$df] `]. We may find the critical points by setting the derivative equal to zero and solving:
+
+[``
+  \begin{array}{rcl}
+    -\sin^2 x + \cos^2 x &=& 0 \\
+    \sin^2 x &=& \cos^2 x \\
+    \sin x &=& \pm \cos x \\
+    \tan x &=& \pm 1.
+  \end{array}
+``]
+
+In the interval [`(-\pi, \pi)`], there are four solutions to the above equation, [`x = \pm \frac{3\pi}{4}, \pm \frac{\pi}{4}`], and therefore four critical numbers.
+
+Use the first derivative test, choosing sample points in each interval.
+Note, the intervals are determined by both critical numbers and
+the endpoints of the domain.
+
+[`
+  \begin{array}{|l|l|l|}
+    \hline
+    \textrm{Interval} & 
+    \textrm{Sign of}\; f'\; \textrm{at sample} & 
+    \textrm{Conclusion} \\
+    \hline
+    \hline
+    \left(-\pi, -\frac{3\pi}{4}\right) & 
+      \textrm{[$s1]} & \textrm{[$q1]} \\
+    \hline
+    \left(-\frac{3\pi}{4}, -\frac{\pi}{4}\right) & 
+      \textrm{[$s2]} & \textrm{[$q2]} \\
+    \hline
+    \left(-\frac{\pi}{4}, \frac{\pi}{4}\right) & 
+      \textrm{[$s3]} & \textrm{[$q3]} \\
+    \hline
+    \left(\frac{\pi}{4}, \frac{3\pi}{4}\right) & 
+      \textrm{[$s4]} & \textrm{[$q4]} \\
+    \hline
+    \left(\frac{3\pi}{4}, \pi\right) & 
+      \textrm{[$s5]} & \textrm{[$q5]} \\
+    \hline
+  \end{array}
+`]
+
+There is a relative maximum at each change from positive to negative derivative,
+i.e. at [`x = [$strmax]`].
+There is a relative minimum at each change from negative to positive derivative, 
+i.e. at [`x = [$strmin]`].
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#Answers are evaluated in the problem text.
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 18 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();   
+
+

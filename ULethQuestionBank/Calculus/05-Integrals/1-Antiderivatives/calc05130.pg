@@ -1,0 +1,121 @@
+## DESCRIPTION
+## This is Problem 5.1.30 from the APEX Calculus text (31 in the ULETH text). It covers a basic initial value problem.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Integrals)
+## DBsection(Antiderivatives (without trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.1')
+## Problem1('30')
+## MO(1)
+## Keywords('antiderivative', 'initial value problem', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  "contextFraction.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Fraction");
+
+$a = random(1,9,1);
+
+$c = random(1,9,1);
+$d = random(3,9,1);
+$e = random(5,15,1);
+
+$f = Formula("$e x  + $c x^{$d}")->reduce();
+$d1 = $d + 1;
+$C = Fraction("$a - ($e/2) - ($c/$d1)*((-1)**$d1)");
+$f_int = Formula("$e/2 x^2 + $c/$d1 x^{$d1} + $C");
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Find the function [`f(x)`] described by the given
+initial value problem.
+
+>>[``
+  f'(x) = [$f], \quad f(-1) = [$a]
+``]<<
+  
+[`f(x) =`] [_________________________]{Compute($f_int)}  [@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+We begin by finding the indefinite integral of [`f'(x)`],
+
+>>[``
+  \int [$f] \, dx = \frac{[$e]}{2}x^2 + \frac{[$c]}{[$d1]}x^{[$d1]} + C
+``]<<
+
+Find [`C`] by setting [`f(-1) = [$a]`].
+
+>>[``
+  \begin{array}{rcl}  
+     \frac{[$e]}{2}(-1)^2 + \frac{[$c]}{[$d1]}(-1)^{[$d1]} + C &=& [$a] \\
+     C &=& [$C]
+  \end{array}
+``]<<
+   
+Thus, [`f(x) = \frac{[$e]}{2}x^2 + \frac{[$c]}{[$d1]}x^{[$d1]} + [$C]`].
+
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+#-ENDULETH#
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 6237 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    
+
+

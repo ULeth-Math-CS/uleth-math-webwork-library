@@ -1,0 +1,120 @@
+## DESCRIPTION
+## This is Problem 2.7.14 from the APEX Calculus text. It covers derivatives of inverse functions.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Derivatives of inverse functions)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.7')
+## Problem1('14')
+## MO(1)
+## Keywords('derivative', 'inverse function', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  	'contextFraction.pl',
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+
+## number in ULETH text for Theorem: Derivatives of Inverse Functions ##
+$thm = "2.7.1";
+
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+
+$a = random(2,12,1);
+$b = random(2,12,1);
+$ab = $a * $b;
+
+$f = "$a e^{$b x}";
+$fp = "$ab e^{$b x}";
+
+$x1 = 0;
+$y1 = $a;
+
+$ans = Compute("1/$ab");
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+An invertible function [`f(x)`] is given along with a point that lies on its graph. Using Theorem [$thm], evaluate [` (f^{-1})'(x) `] at the indicated value.
+
+>>[``
+  f(x)= [$f], 
+  \qquad \textrm{Point} = ([$x1], [$y1])
+``]<<
+    
+[` (f^{-1})'([$y1]) = `][______]{Compute($ans)} [@ AnswerFormatHelp("numbers") @]*
+
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Using Theorem 22, label [`a = [$x1]`] and [`b = [$y1]`].  Also note
+that [`f'(x) = [$fp] `].
+Then
+>>[``
+   (f^{-1})'(b) = \frac{1}{f'(a)} = 
+  \frac{1}{[$ab] e^{[$b]([$x1])}} = \frac{1}{[$ab]}.
+``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answer checking is completed in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 121 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    You may need to change the referenced theorem number to match your version of the text. 
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+
+

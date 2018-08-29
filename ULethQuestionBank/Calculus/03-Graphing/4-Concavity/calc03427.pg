@@ -1,0 +1,195 @@
+## DESCRIPTION
+## This is Problem 3.4.27 from the APEX Calculus text. It covers tests for concavity and the second derivative test.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Concavity and points of inflection)
+## Level(4)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('3.4')
+## Problem1('27')
+## Also handles problem 40.
+## MO(1)
+## Keywords('test for concavity', 'points of inflection','ULETH-MATH1560', 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+   # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+  Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,);
+     
+     
+$n = random(2,9,1);
+$n1 = $n - 1;
+$n2 = $n - 2;
+$nn1 = 2*$n - 1;
+$nn2 = $n*$n1;
+
+$f = Formula("x^{$n} ln x");
+$df = Formula("x^{$n1} + $n x^{$n1} ln x")->reduce();
+$ddf = Formula("$nn1 x^{$n2} + $nn2 x^{$n2} ln x")->reduce();
+
+$c1 = exp(-$nn1/$nn2);
+$y1 = $c1 ** $n * ln($c1);
+$m = exp(-1/$n);
+
+Context("Interval");
+
+$I1 = Interval(($c1, INF));
+$I2 = Interval((0,$c1));
+
+@ans_cu = $I1;
+@ans_cd = $I2;
+
+$max = List("DNE");
+$min = List("$m");
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+Context("Interval");
+#-ULETH-#
+BEGIN_PGML
+
+In the following questions, consider the function 
+
+>>[`f(x) = \displaystyle [$f].`]<<
+
+Enter *DNE* if an answer does not exist.
+----
+[`\text{a)}`] Determine the intervals on which [`f`] is concave up/down:  
+[`f`] is concave up on: [________________________]{Compute(@ans_cu)}   [@ AnswerFormatHelp("intervals") @]*  
+[`f`] is concave down on: [________________________]{Compute(@ans_cd)}
+END_PGML
+Context("Point");
+
+$infl1 = Point("($c1, $y1)");
+$infl = List($infl1);
+
+BEGIN_PGML
+
+
+[`\text{b)}`] Based on your answers in (a), determine the inflection points of [`f`]:  
+[_____________________]{Compute($infl)} [@ AnswerFormatHelp("numbers") @]*  
+(Each answer should be entered as an ordered pair, [`(x,y)`]. Separate multiple answers with commas.)
+END_PGML
+Context("Interval");
+BEGIN_PGML
+
+
+[`\text{c)}`] Find the critical numbers of [`f`] and use the Second Derivative Test, when possible, to determine the relative extrema.  
+Relative maxima occur at [`x = `] [____________]{Compute($max)} (Separate multiple
+answers with commas.)  
+Relative minima occur at [`x = `] [____________]{Compute($min)} (Separate multiple answers with commas.)
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+Its first and second derivatives are, respectively, [` f'(x) = [$df] `] and [`f''(x) = [$ddf] `].  
+Set [`f''(x) = 0`]
+and solve:
+
+[``
+  \begin{array}{rcl}
+    [$ddf] &=& 0 \\
+    [$nn2] x^{[$n2]} \ln x &=& -[$nn1] x^{[$n2]} \\
+    \ln x &=& -\dfrac{[$nn1]}{[$nn2]}\\
+    &&\\
+    x &=& e^{-[$nn1]/[$nn2]}
+  \end{array}
+``]
+
+
+Thus, concavity could change at [`x = e^{-[$nn1]/[$nn2]}`].
+By testing sample points in each interval, we find [`f'' > 0`] 
+([`f`] is concave up)
+on [` (e^{-[$nn1]/[$nn2]}, \infty) `] and [`f'' < 0`]
+([`f`] is concave down)
+on [` (0, e^{-[$nn1]/[$nn2]}) `]. 
+
+
+Therefore, there is an inflection point at [`x = e^{-[$nn1]/[$nn2]}`].
+Plug this [`x`] value into the original function to find 
+the corresponding
+[`y`]-value:
+
+[``
+  f(e^{-[$nn1]/[$nn2]}) = [$y1]
+``]
+
+The inflection point occurs at [` (e^{-[$nn1]/[$nn2]}, [$y1]) `].
+
+
+Find critical numbers by setting [`f'(x) = 0`]
+
+[``
+  \begin{array}{rcl}
+    [$df] &=& 0 \\
+    [$n] x^{[$n1]}\ln x &=& -x^{[$n1]} \\  
+    \ln x &=& -\dfrac{1}{[$n]}\\
+    &&\\
+    x &=& e^{-1/[$n]}.
+  \end{array}
+``]
+
+Since [`f''(e^{-1/[$n]}) > 0`], there is a local minimum there.
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#Answers are evaluated in the problem text.
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 8 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();   
+

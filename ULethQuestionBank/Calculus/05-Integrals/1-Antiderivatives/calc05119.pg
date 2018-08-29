@@ -1,0 +1,129 @@
+## DESCRIPTION
+## This is Problem 5.1.19-21 from the APEX Calculus text (20-22 from the ULETH APEX text). It covers indefinite integration using basic rules.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Integrals)
+## DBsection(Indefinite integrals (without trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.1')
+## Problem1('19')
+## MO(1)
+## Keywords('indefinite integral' ,' antiderivatives ', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+Context()->variables->add(t=>'Real',r=>'Real');
+Context()->flags->set(reduceConstants=>0);
+
+$a = random(2,20,1)*random(-1,1,2);
+$b = random(2,10,1);
+$c = random(2,10,1);
+$d = random(2,20,1);
+
+$integranda=Formula("$a e^t");
+$integrandb=Formula("$b^r");
+$integrandc=Formula("{$c^x}/{$d}");
+
+$antideriva=Formula("$a e^t");
+$antiderivb=Formula("($b^r)/ln($b)");
+$antiderivc=Formula("($c^x)/( $d*ln($c) )");
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+Evaluate the given indefinite integrals.
+
+a) [` \displaystyle\int [$integranda] \, dt `]= [___________________________________]{$antideriva->cmp(upToConstant=>1)} [` + C`].
+
+b) [` \displaystyle\int [$integrandb] \, dr `]= [___________________________________]{$antiderivb->cmp(upToConstant=>1)} [` + C`].
+
+c) [` \displaystyle\int [$integrandc] \, dx `]= [___________________________________]{$antiderivc->cmp(upToConstant=>1)} [` + C`].
+
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Use the appropriate integration rules for logarithms and exponentials.
+
+>>[``
+  \int [$integranda] \, dt = [$a] \int e^t \, dt = [$a] e^t + C.
+``]<<
+
+-----
+
+>>[``
+  \int [$integrandb] \, dr = 
+  \dfrac{[$b]^r}{\ln [$b]} + C.
+``]<<
+
+-----
+
+>>[``
+  \int [$integrandc] \, dx = \dfrac{1}{[$d]} \int [$c]^x \, dx =
+  \dfrac{[$c]^x}{[$d] \ln [$c]} + C.
+``]<<
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answer checking is completed in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 521284 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+
+

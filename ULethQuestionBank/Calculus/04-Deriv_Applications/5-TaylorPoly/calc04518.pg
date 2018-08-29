@@ -1,0 +1,119 @@
+## DESCRIPTION
+## This is Problem 8.7.18* in the APEX calculus text (Problem 4.5.18 from the ULETH Calculus text) (*with a lower degree to make answer entry easier). It covers Taylor polynomials. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Infinite sequences and series)
+## DBsection(Taylor polynomials)
+## Level(2)
+## Institution('University of Lethbridge')
+## Author('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('8.7')
+## Problem1('18')
+## MO(1)
+## Keywords('derivative', 'taylor polynomial', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  "contextFraction.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Fraction")->noreduce('(-x)+y') ;
+    Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,
+  );
+$c = random(1,3,1);
+$b = random(4, 15, 1);
+
+$f = Formula("$b/x^2")->reduce();
+
+$deg = 5;
+
+$ansreduced = Formula("1/($c)^{2} - (2(x-$c))/($c)^3 + (3(x-$c)^2)/($c)^4 - (4(x-$c)^3)/($c)^5 + (5(x-$c)^4)/($c)^6 - (6(x-$c)^5)/($c)^7")->reduce();
+
+$ans = $b*$ansreduced;
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Find the Taylor polynomial of degree [$deg] at [`x = [$c]`] for the given function . 
+
+>>[``f(x) =  [$f]``]<<
+
+[`p_{[$deg]}(t) = `] [____________________________________________________]{Compute($ans)} [@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+We need to produce a degree [$deg] Taylor polynomial of [`f(x) = \displaystyle [$f]`] at [`x = [$c]`]. By definition, we want 
+
+>>[``p_[$deg](x) = f([$c]) + f'([$c])(x-[$c]) + \dfrac{f''([$c])}{2!}(x-[$c])^2 + \ldots + \dfrac{f^{([$deg])}([$c])}{[$deg]!}x^{[$deg]}.``]<<
+
+For the [`k`]th derivative of [`f(x)`], we find that 
+
+>>[``f^{(k)}(x) = \dfrac{[$b](-1)^{k}(k+1)!}{x^{k+2}} ``]<<
+
+for any nonnegative integer [`k`] and therefore
+
+>>[``f^{(k)}([$c]) = \dfrac{[$b](-1)^{k}(k+1)!}{{[$c]}^{k+2}}.``]<<
+
+If we substitute these values into the definition of the degree [$deg] Taylor polynomial at [`x = [$c]`], we have
+
+>>[``p_{[$deg]}(x) = \displaystyle [$ans].``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 33 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    
+
+
+
+

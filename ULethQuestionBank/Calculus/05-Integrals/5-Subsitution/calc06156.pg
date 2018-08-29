@@ -1,0 +1,153 @@
+## DESCRIPTION
+## This is Problem 6.1.56-57 from the APEX Calculus text (5.5.59-60 from the ULETH APEX text). It covers indefinite integration using substitution.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Techniques of integration)
+## DBsection(Substitution (without trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('6.1')
+## Problem1('30')
+## MO(1)
+## Keywords('indefinite integral', 'substitution', ' antiderivatives ', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  	'contextFraction.pl',
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+
+## (a) ##
+$a1 = non_zero_random(-9,9,1);
+
+$u1 = Formula("x + $a1")->reduce();
+
+$f1 = "\dfrac{1}{$u1}";
+
+
+## (b) ##
+$a2 = random(2,20,1);
+$b2 = non_zero_random(-9,9,1);
+$c2 = non_zero_random(-20,20,1);
+
+$u2 = Formula("$b2*x + $c2")->reduce();
+
+$f2 = Formula("{$a2}/{$u2}");
+
+
+#### Answers ####
+
+$limits = [ -$a1 + 0.1, 100 ];
+Context('Numeric')->variables->are(x => [ 'Real', limits => $limits ]);
+
+$F1 = Formula("ln($u1)");
+
+$l = -$c2/$b2;
+if ($b2 > 0) {
+  $limits = [ $l + 0.1, 100 ];
+} else {
+  $limits = [-100, $l - 0.1];
+}
+Context('Numeric')->variables->are(x => [ 'Real', limits => $limits ]);
+
+$F2 = Formula("($a2/$b2)ln($u2)");
+
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+Evaluate the indefinite integrals using Substitution (write your answers in terms of [`x`]). 
+
+a) [`\displaystyle\int [$f1] \, dx `] = [___________________________________]{$F1->cmp(upToConstant=>1)} [` + C`]. [@ AnswerFormatHelp("formulas") @]*
+
+a) [`\displaystyle\int [$f2] \, dx `] = [___________________________________]{$F2->cmp(upToConstant=>1)} [` + C`]. 
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+Context('Fraction');
+$coeff = Fraction($a2, $b2)->reduce;
+
+Context()->normalStrings;
+
+
+BEGIN_PGML_SOLUTION
+
+Part (a): Substitute [`u = [$u1]`].  Then [`du = 1\,dx`].
+>>[``
+  \begin{array}{rcl}
+    \displaystyle  \int [$f1] \, dx &=&
+    \displaystyle \int \frac{1}{u} \,du \\
+    &=& \ln |u| + C\\
+    &=& \ln |[$u1]| = C.
+  \end{array}
+``]<<
+
+Part (b): Substitute [`u = [$u2]`].  Then [`du = [$b2] \,dx`].
+>>[``
+  \begin{array}{rcl}
+    \displaystyle  \int [$f2] \, dx &=&
+    \displaystyle \dfrac{1}{[$b2]} \int \dfrac{[$a2]}{u} \, du \\
+    &=& \dfrac{1}{[$b2]} \cdot [$a2] \ln |u| + C\\
+    &=& [$coeff] \ln |[$u2]| + C\\
+  \end{array}
+``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answer checking is completed in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 13680 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+
+

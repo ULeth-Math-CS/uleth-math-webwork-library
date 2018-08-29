@@ -1,0 +1,119 @@
+## DESCRIPTION
+## This is Problem 6.1.59 from the APEX Calculus text (5.5.62 from the ULETH APEX text). It covers indefinite integration using substitution.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Techniques of integration)
+## DBsection(Substitution (without trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('6.1')
+## Problem1('59')
+## MO(1)
+## Keywords('indefinite integral', 'substitution', ' antiderivatives ', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  	'contextFraction.pl',
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+
+## (a) ##
+$e1 = random(-9,-1,1);
+$e2 = random(1,9,1);
+
+$b1 = -$e1 - $e2;
+$c1 = $e1*$e2;
+
+$u1 = "x^2 + $b1 x + $c1";
+$du1 = "2x + $b1";
+
+$f1 = "\dfrac{$du1}{$u1}";
+
+#### Answers ####
+$limits = [ $e2 + 0.1, $e2 + 10 ];
+Context('Numeric')->variables->are(x => [ 'Real', limits => $limits ]);
+
+$F1 = Formula("ln($u1)")->reduce();
+
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+Evaluate the indefinite integral using Substitution (write your answer in terms of [`x`]). 
+
+[`\displaystyle\int [$f1] \, dx `] = [___________________________________]{$F1->cmp(upToConstant=>1)} [` + C`]. [@ AnswerFormatHelp("formulas") @]*
+
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Substitute [`u = [$u1]`].  Then [`du = [$du1]\,dx`].
+>>[``
+  \begin{array}{rcl}
+    \displaystyle  \int [$f1] \, dx &=&
+    \displaystyle \int \dfrac{du}{u} \\
+    &=& \ln u + C\\
+    &=& \ln|[$u1]| + C.
+  \end{array}
+``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answer checking is completed in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 81 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+
+

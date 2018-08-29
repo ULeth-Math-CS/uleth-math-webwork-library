@@ -1,0 +1,110 @@
+## DESCRIPTION
+## This is Problem 2.7.24 from the APEX Calculus text. It covers derivatives of inverse trigonometric functions.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Derivatives of inverse trigonometric functions)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.7')
+## Problem1('24')
+## MO(1)
+## Keywords('derivative', 'inverse', 'trig functions', 'chain rule', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+$choice1 = random(1,6,1);
+if ($choice1 == 1) {
+  $f = "\sin";
+  $arcf = "\arcsin";
+} elsif($choice1 == 2) {
+  $f = "\cos";
+  $arcf = "\arcsin";
+} elsif($choice1 == 3) {
+  $f = "\tan";
+  $arcf = "\arcsin";
+} elsif($choice1 == 4) {
+  $f = "\cot";
+  $arcf = "\text{arccot}";
+} elsif($choice1 == 5) {
+  $f = "\sec";
+  $arcf = "\text{arcsec}";
+} elsif($choice1 == 6) {
+  $f = "\csc";
+  $arcf = "\text{arccsc}";
+} 
+$ans = "1";
+
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Compute the derivative of the given function.
+
+[` \dfrac{d}{dx}\left[ [$f]([$f]^{-1} x)  \right] = `][__________________________________________________]{Compute($ans)} [@ AnswerFormatHelp("formulas") @]*  
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Since [`[$f] x`] and [`[$f]^{-1} x`] are inverse functions, [` [$f]([$f]^{-1} x)
+= x`].  The derivative of [`x`] is 1.
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 6 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    

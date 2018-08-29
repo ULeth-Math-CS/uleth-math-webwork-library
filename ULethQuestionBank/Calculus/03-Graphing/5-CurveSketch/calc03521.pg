@@ -1,0 +1,247 @@
+## DESCRIPTION
+## This is Problem 3.5.21 from the APEX Calculus text. It covers curve sketching.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Summary of curve sketching)
+## Level(4)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('3.5')
+## Problem1('21')
+## MO(1)
+## Keywords('curve sketching', 'critical numbers', 'points of inflection','ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+   # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+  Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0);
+     
+$a = random(2,9,1)*random(-1,1,2);
+$h = random(1,15,1);
+
+$f = Formula("$a*x*sqrt{x + $h}")->reduce();
+
+$a3 = 3*$a;
+$ah2 = 2*$a*$h;
+$df = Formula("{$a3*x + $ah2}/{sqrt{x + $h}}")->reduce();
+
+$ah4 = 4*$a*$h;
+$ddf = Formula("{$a3*x + $ah4}/{4(x+$h)*sqrt{x+$h}}")->reduce();
+
+$not_infl = -4*$h/3;
+
+$crit1 = -$ah2/$a3;
+
+Context("Interval");
+$I1 = Interval("[-$h, inf)");
+$I2 = Interval(($crit1, inf));
+$I3 = Interval((-$h, $crit1));
+$I4 = Interval((-$h, inf));
+
+@domain = Compute($I1);
+
+$crit = List($crit1);
+
+$infl = "DNE";
+$POI = List($infl);
+
+$va1 = "DNE";
+$VA = List($va1);
+
+$ha = "DNE";
+$HA = List($ha);
+
+if ($a > 0) {
+  @ans_inc = $I2;
+  @ans_dec = $I3;
+  $inc_str = "($crit1, \infty)";
+  $dec_str = "(-$h,$crit1)";
+
+  @ans_cu = $I4;
+  @ans_cd = "DNE";
+  $str1 = "up";
+  $str2 = "down";
+} else {
+  @ans_inc = $I3;
+  @ans_dec = $I2;
+  $inc_str = "(-$h,$crit1)";
+  $dec_str = "($crit1, \infty)";
+
+  @ans_cu = "DNE";
+  @ans_cd = $I4;
+  $str1 = "down";
+  $str2 = "up";
+}
+
+
+Context("Point");
+
+$y1 = (-2*$a*$h/3)*sqrt($h/3);
+$p1 = Point(($crit1, $y1));
+
+$ans_points = List($p1);
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+BEGIN_PGML
+
+In the following questions, consider the function 
+
+>>[`f(x) = \displaystyle [$f].`]<<
+
+Enter *DNE* if an answer does not exist.
+----
+[`\text{1.}`]  Determine the domain of [`f`] (as an interval)  
+[____________________]{Compute(@domain)}  [@ AnswerFormatHelp("intervals") @]*
+
+
+
+[`\text{2.}`]  Find the critical values of [`f`].  
+[____________________]{Compute($crit)} (Separate multiple answers with commas.)
+
+
+
+[`\text{3.}`] List the [`x`]-values of any possible points of inflection of [`f`].  
+[____________________]{Compute($POI)}  (Separate multiple answers with commas.)
+
+
+
+[`\text{4.}`]  Find the vertical asymptotes.  
+[`x = `][____________________]{Compute($VA)}  (Separate multiple answers with commas.)
+
+
+
+[`\text{5.}`]  Find the horizontal aymptotes.  
+[`y = `][____________________]{Compute($HA)}  (Separate multiple answers with commas.)
+
+
+
+[`\text{6.}`]  Use a number line analysis to complete the following (enter answers as intervals).  
+[`f`] is increasing on: [______________________________]{Compute(@ans_inc)}  
+[`f`] is decreasing on: [______________________________]{Compute(@ans_dec)}  
+[`f`] is concave up on: [______________________________]{Compute(@ans_cu)}  
+[`f`] is concave down on: [______________________________]{Compute(@ans_cd)}  
+
+
+[`\text{7.}`] Evaluate [`f`] at each critical point and possible point
+of inflection.  List all such points below.
+Each point should be entered as an *ordered pair* (that is, in the form [`(x, y) `]).  
+[__________________________________________________]{Compute($ans_points)}  
+(Separate multiple answers with commas.)
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+$not_infl = int($not_infl * 10**5)/10**5;
+$crit1 = int($crit1 * 10**5)/10**5;
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+[`\text{1.}`]   The domain is found by setting [`x + [$h] \geq 0`] (to avoid a negative value in the square root).  As an interval, this would be [` [-[$h], \infty) `].
+
+
+[`\text{2.}`]  Find and simplify [`f'(x)`].  Then
+solve [`f'(x) = 0`] to find the critical numbers:
+
+[``
+  [$df] = 0 \;\Rightarrow\; [$a3] x + [$ah2] = 0 \;\Rightarrow\;
+  x = [$crit1].
+``]
+
+
+[`\text{3.}`] Solve [`f''(x) = 0`] to find the possible
+points of inflection:
+
+[``
+  [$ddf] = 0 \;\Rightarrow\; [$a3] x + [$ah4] = 0 \;\Rightarrow\;
+  x = [$not_infl].
+``]
+
+However this value does not lie within the domain of [`f`],
+so disregard it.  There are no inflection points.
+
+
+[`\text{4.}`] There are no vertical asymptotes.
+
+
+[`\text{5.}`] There are no horizontal asymptote.
+
+
+[`\text{6.}`] Use a number line analysis. 
+Plug samples into [`f'`] to test
+for increase/decrease.  Plug samples into [`f''`] to test
+concavity.
+  
+[`f`] increases on [` [$inc_str] `].  
+[`f`] decreases on [` [$dec_str] `].  
+[`f`] is concave [$str1] on its entire domain, [`(-[$h], \infty)`],
+and never concave [$str2].
+
+
+
+[`\text{7.}`]  Evaluate [`f`] at the single critical number
+
+[``  
+  \begin{array}{rcl}
+    f([$crit1]) &=& [$y1]
+  \end{array}
+``]
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#Answers are evaluated in the problem text.
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 240 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();   
+
+

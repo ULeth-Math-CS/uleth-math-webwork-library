@@ -1,0 +1,172 @@
+## DESCRIPTION
+## This is Problem 5.5.17 from the APEX Calculus text (5.5.18 from the ULETH Math 1565 ebook). It covers numerical integration.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Indeterminate forms and L'Hopital's rule)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.5')
+## Problem1('17')
+## MO(1)
+## Keywords('numerical integration', 'trapezoidal rule', ' simpsons rule ', 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+$a = 1;
+$b = random(4,15,1);
+
+$n = 6;
+
+$c = random(2,9,1);
+$f = "$c\ln x";
+$ff = Formula("$c * ln(x)");
+
+$Deltax = ($b-$a)/$n;
+$x1 = $a;
+$x2 = $a + $Deltax;
+$x3 = $a + 2*$Deltax;
+$x4 = $a + 3*$Deltax;
+$x5 = $a + 4*$Deltax;
+$x6 = $a + 5*$Deltax;
+$x7 = $a + 6*$Deltax;
+
+$y1 = $ff->eval(x=>$x1);
+$y2 = $ff->eval(x=>$x2);
+$y3 = $ff->eval(x=>$x3);
+$y4 = $ff->eval(x=>$x4);
+$y5 = $ff->eval(x=>$x5);
+$y6 = $ff->eval(x=>$x6);
+$y7 = $ff->eval(x=>$x7);
+
+$ans1 = ($Deltax/2)*($y1 + 2*($y2 + $y3 + $y4 + $y5 + $y6) + $y7);
+$ans2 = ($Deltax/3)*($y1 + 4*$y2 + 2*$y3 + 4*$y4 + 2*$y5 + 4*$y6 + $y7);
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+Consider the definite integral:
+
+>>[`` \int_{[$a]}^{[$b]} [$f] \, dx``]<<
+
+a) Approximate the definite integral with the Trapezoidal Rule 
+and [`n = [$n]`].  
+[___________]{Compute($ans1)} [@ AnswerFormatHelp("numbers") @]*
+
+b) Approximate the definite integral with Simpson's Rule
+and [`n = [$n]`].  
+[___________]{Compute($ans2)}
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+$cs2 = $cs/2;
+
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+[`\Delta x = \dfrac{b-a}{n} = \dfrac{[$b] - ([$a])}{[$n]}= [$Deltax]`].
+Find the values of [`x_i`] and [`f(x_i)`].
+
+>>[``
+  \begin{array}{l|l|l}
+  i & x_i & y_i = f(x_i) = [$c] \ln x_i \\
+   \hline
+  1 & [$x1] & [$y1] \\
+  2 & [$x2] & [$y2] \\
+  3 & [$x3] & [$y3] \\
+  4 & [$x4] & [$y4] \\
+  5 & [$x5] & [$y5] \\
+  6 & [$x6] & [$y6] \\
+  7 & [$x7] & [$y7] \\
+  \end{array}
+``]<<
+    
+
+Trapezoidal Rule:
+>>[``
+  \dfrac{\Delta x}{2}\left[ y_1 + 2(y_2 + y_3 + y_4 + y_5 + y_6)
+  + y_7\right]
+``]<<
+
+>>[``
+  = \dfrac{[$Deltax]}{2}[ [$y1] + 2([$y2] + [$y3] + [$y4] + [$y5] + [$y6]) + [$y7] ]
+``]<<
+
+>>[``
+  = [$ans1]
+``]<<
+    
+Simpson's Rule:
+>>[``
+ \dfrac{\Delta x}{3}\left[ y_1 + 4y_2 + 2y_3 + 4y_4 + 
+  2y_5 + 4y_6 + y_7\right]
+``]<<
+
+>>[``
+  = \dfrac{[$Deltax]}{3}[ [$y1] + 4([$y2]) + 2([$y3]) +  4([$y4]) + 2([$y5]) + 4([$y6]) + [$y7]]
+``]<<
+
+>>[``
+  = [$ans2]
+``]<<
+    
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 96 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    
+

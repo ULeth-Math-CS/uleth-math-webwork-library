@@ -1,0 +1,168 @@
+## DESCRIPTION
+## This is Problem 5.4.8-9 from the APEX Calculus text. It covers a basic definite integration problem.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Integrals)
+## DBsection(Definite integrals (with trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.4')
+## Problem1('8-9')
+## MO(1)
+## Keywords('definite integral' ,'fundamental theorem of calculus', 'trig functions',  'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+Context()->flags->set(
+  tolerance => 0.01,
+  tolType => "absolute",
+);
+
+## a)
+
+$a = random(2,15,1)*random(-1,1,2);
+
+$a1 = pi/2;
+$b1 = pi;
+
+$f = "$a \cos x";
+
+$fI = Formula("$a sin(x)");
+$ans1 = $fI->eval(x=>$b1) - $fI->eval(x=>$a1);
+
+$ans1 = $fI->eval(x=>$b1) - $fI->eval(x=>$a1);
+
+## b)
+$b = random(2,15,1)*random(-1,1,2);
+
+$a2 = 0;
+$b2 = pi/4;
+
+$g = "$b \sec^2 \theta";
+
+$gI = Formula("$b tan(x)");
+$ans2 = $gI->eval(x=>$b2) - $gI->eval(x=>$a2);
+
+## c)
+$c = random(2,15,1);
+
+$a3 = pi/6;
+$b3 = pi/3;
+
+$h = "$c \csc t \cot t";
+
+$hI = Formula("-$c/sin(x)");
+$ans3 = $hI->eval(x=>$b3) - $hI->eval(x=>$a3);
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+Evaluate the definite integrals
+
+a) [`\displaystyle\int_{\pi/2}^{\pi} [$f] \, dx = `] 
+[_______________]{Compute($ans1)} [@ AnswerFormatHelp("numbers") @]*
+
+b) [`\displaystyle\int_{0}^{\pi/4} [$g] \, d\theta = `] 
+[_______________]{Compute($ans2)}
+
+c) [`\displaystyle\int_{\pi/6}^{\pi/3} [$h] \, dt = `] 
+[_______________]{Compute($ans3)}
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+$c2 = $c * 2;
+
+BEGIN_PGML_SOLUTION
+
+Use the Fundamental Theorem of Calculus.
+>>[``
+  \begin{array}{rcl}
+    \displaystyle \int_{\pi/2}^{\pi} [$f] \, dx &=&
+    \left([$a] \sin x \right) \Big|_{\pi/2}^{\pi}\\
+    &=& \left([$a] \sin \pi\right) -  \left([$a] \sin (\pi/2)\right)\\
+    &=& [$ans1]
+  \end{array}
+``]<<
+----
+>>[``
+  \begin{array}{rcl}
+    \displaystyle \int_{0}^{\pi/4} [$g] \, d\theta 
+    &=& \left( [$b]\tan \theta \right) \Big|_{0}^{\pi/4}\\
+    &=& \left( [$b]\tan(\pi/4)\right) -
+    \left( [$b]\tan 0\right)\\
+    &=& [$ans2]
+  \end{array}
+``]<<
+----
+>>[``
+  \begin{array}{rcl}
+    \displaystyle \int_{\pi/6}^{\pi/3} [$h] \, dt &=&
+    \left(-[$c] \csc t \right) \Big|_{\pi/6}^{\pi/3}\\
+    &=& \left(\dfrac{-[$c]}{\sin (\pi/3)}\right) - 
+    \left(\dfrac{-[$c]}{\sin(\pi/6)}
+    \right)\\
+    &=& -\dfrac{[$c2]}{\sqrt{3}} + [$c2]
+  \end{array}
+``]<<
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answer checking is completed in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 10976 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+

@@ -1,0 +1,152 @@
+## DESCRIPTION
+## This is Problem 2.5.16 from the APEX Calculus text. It covers an example of the Chain Rule 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Chain rule (with trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.5')
+## Problem1('16')
+## MO(1)
+## Keywords('derivative', 'chain rule', 'trig functions', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->variables->add(u=>"Real");
+
+$g = Formula("ln(u)")->reduce();
+
+#-ULETH-#
+## use $r = random(1,2,1) for sin/cos only
+## use $r = random(3,6,1) to exclude sin/cos
+$r = random(1,6,1);
+#-ENDULETH-#
+
+if ($r==1) {
+   $u = Formula("sin(x)");
+   $du = $u->D('x');
+} elsif ($r==2) {
+   $u = Formula("cos(x)");
+   $du = $u->D('x');
+} elsif ($r==3) {
+   $u = Formula("tan(x)");
+   $du = $u->D('x');
+} elsif ($r==4) {
+   $u = Formula("cot(x)");
+   $du = $u->D('x');
+} elsif ($r==5) {
+   $u = Formula("sec(x)");
+   $du = $u->D('x');
+} else {
+   $u = Formula("csc(x)");
+   $du = $u->D('x');
+}
+
+$f = Compute($g->substitute(u=>$u))->reduce();
+$df = $f->D('x');
+
+if ($r==1) {
+   $ans = Formula("cot(x)");
+} elsif ($r==2) {
+   $ans = Formula("-tan(x)");
+} elsif ($r==3) {
+   $ans = Formula("(1+tan^2(x))/tan(x)");
+} elsif ($r==4) {
+   $ans = Formula("(-1 - cot^2(x))/cot(x)");
+} elsif ($r==5) {
+   $ans = Formula("tan(x)");
+} else {
+   $ans = Formula("-cot(x)");
+}
+
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Compute the derivative of the given function.
+
+>>[``f(x) = [$f]``]<<
+
+[`f'(x) = `] [_______________] [@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Use the Chain Rule with inside function [`u = [$u]`]
+and outside function [`y = [$g]`].
+
+[``
+  \begin{array}{rcl}
+    f'(x) &=& \displaystyle\frac{dy}{du} \cdot \frac{du}{dx}\\
+    &&\\
+    &=& \displaystyle \left([$g->D('u')] \right)([$du]) \\
+    &&\\
+    &=& \displaystyle\frac{1}{[$u]} ([$du]) \\
+    &&\\
+    &=& \displaystyle [$df]\\
+    &&\\
+    &=& \displaystyle [$ans]
+  \end{array}
+``]
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+#-ENDULETH#
+ANS( $ans->cmp() );
+
+
+#############################
+#  Comments
+    COMMENT('
+        There are 6 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();  
+
+

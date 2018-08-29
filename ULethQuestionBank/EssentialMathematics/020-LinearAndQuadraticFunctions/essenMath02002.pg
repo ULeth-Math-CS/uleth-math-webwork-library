@@ -1,0 +1,172 @@
+#######################################################################
+## DESCRIPTION 
+##
+## In this problem students will be given the y-intercept of a line
+## and the slope of that line and asked for the equation of that line.
+## They will then be asked for the x-intercept of that line.
+## 
+## ENDDESCRIPTION
+#######################################################################
+
+#######################################################################
+## DBsubject(Algebra)
+## DBchapter(Linear Equations and Functions)
+## DBsection(Finding the Slope)
+## Date(2018-06-15)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+## KEYWORDS('Linear Equations', 'Lines', 'ULETH-MATH-0500')
+#######################################################################
+
+#######################################################################
+## Initialization 
+#######################################################################
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "scaffold.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "answerHints.pl",
+);
+TEXT(beginproblem());
+
+#######################################################################
+#  Setup
+#######################################################################
+
+# Let's student enter x as a variable in their answer
+Context("Numeric")->variables->are(x=>"Real");
+
+#Randomly chooses the slope of a line between -5 and 5
+#Excludes -1, 0, and 1 as possible slopes 
+$slope = random(-1,1,2)*random(2,5,1); 
+
+$negSlope = -$slope; # This is defined for display purposes
+
+#Randomly chooses a quadrent in the cartestian plane and then 
+#Randomly chooses a point P(x_1,y_2) that the the line will pass
+#through that appears within that quadrent. 
+#All coordinates have absolute value between 1 and 7 inclusive. 
+
+do #This loop ensures that the y-intecept will be non-zero
+{
+$quadrentP = random(1,4); # This can also be set to a quadrent of your
+                            #choice to control whether the point has 
+                              #positive or negative coordinates.
+
+if ( $quadrentP == 1 )
+{
+$x_1 = random (1,7);
+$y_1 = random (1,7);
+}
+
+elsif ($quadrentP == 2)
+{
+$x_1 = random (-7,-1);
+$y_1 = random (1,7);
+}
+
+elsif($quadrentP == 3)
+{
+$x_1 = random (-7,-1);
+$y_1 = random (-7,-1);
+}
+
+else
+{
+$x_1 = random (1,7);
+$y_1 = random (-7,-1);
+} 
+
+#Computes the y_intercept of the line using the random point
+$y_intercept = -$slope*$x_1 + $y_1;
+
+}
+
+until ($y_intercept != 0); 
+
+#Computes the x_intercept of the line using the random point
+$x_intercept = -$y_intercept / $slope; 
+
+#Defines the line using slope-intercept form.
+$line = Formula("$slope*x + $y_intercept") -> reduce();
+
+# Generates a random Point Q(x_2, y_2) that falls on the line
+# described above
+
+do {$x_2 = non_zero_random(-5,5);} until ($x_2 != $x_1);
+$y_2 = $line->eval(x=>$x_2); 
+
+
+
+#######################################################################
+#  Main Text
+####################################################################### 
+
+BEGIN_PGML
+Determine the equation of a line with a slope of [`[$slope]`] and a
+y-intercept of [`[$y_intercept]`].
+
+y = [__________]{$line}.
+
+What is the x-intercept of this line? [__________]{$x_intercept}.
+END_PGML
+
+#######################################################################
+#  Answer Evaluation
+#######################################################################
+
+$showPartialCorrectAnswers = 1;
+#Answer Evaluation included in the problem
+
+#######################################################################
+#  Solution
+#######################################################################
+
+BEGIN_PGML_SOLUTION
+
+When you are given the slope and y-intercept of a line the quickest way
+to find the equation of that line is to use the slope intercept form of
+a line: [`y= mx + b`] where [`m`] is the slope of the line and [`b`] is 
+the y-intercept of the line.
+
+In this problem, we are told that the slope is [`m = [$slope]`] and the
+y-intercept is [`b=[$y_intercept]`]. Thus, we have all the values we
+need to determine the line's equation using slope-intercept form. The 
+equation of this line is:
+
+>>[`y= mx + b = [$slope]x +[$y_intercept] `].<<
+
+Now that we have the equation of this line we are able to find its 
+x-intercept. Recall that the x-intercept of a line is the point where 
+it crosses the x-axis (which is the line [`y=0`]); in other words, a
+line's x-intercept can be found by setting [`y=0`] and solving for
+[`x`] as below: 
+
+>>[`0 = [$slope]x +[$y_intercept] `]<<
+
+>> [`[$negSlope]x = [$y_intercept] `]<<
+
+>>[`x = [$x_intercept]`]<<
+
+END_PGML_SOLUTION
+
+#######################################################################
+#  Comments for Instructors 
+#######################################################################
+
+COMMENT(
+"Randomization provides 13,440 different possible versions of this question.<BR> 
+
+In this problem students will be given the slope and y-intercept of a line and
+asked to determined the equation of that line. They are then asked for an
+x-intercept. <BR>
+  
+Made from a ULETH template.<BR>" 
+);
+
+ENDDOCUMENT();

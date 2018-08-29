@@ -1,0 +1,205 @@
+## DESCRIPTION
+## This is Problem 3.4.20 from the APEX Calculus text. It covers tests for concavity and the second derivative test.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Concavity and points of inflection)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('3.4')
+## Problem1('20')
+## Also handles problems 33, 46.
+## MO(1)
+## Keywords('test for concavity', 'points of inflection','ULETH-MATH1560', 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+   # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+  Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,);
+     
+$b = random(1,4,1);
+
+$e = random(1,5,1)*random(-1,1,2);
+
+$f = Formula("{x^4}/{4} - $b*x^3 + $e")->reduce();
+
+$c1 = 0;
+$c2 = 3*$b;
+
+$df = Formula("x^3 - $c2 x^2")->reduce();
+
+$d = 2*$c2;
+$ddf = Formula("3x^2 - $d x")->reduce();
+
+$b2 = 2*$b;
+
+$y1 = $e; 
+$y2 = (($b2)**4)/4 - $b*($b2)**3 + $e; 
+
+Context("Interval");
+@domain = Interval("(-INF, INF)");
+
+@ans_cu = Interval("(-INF, 0) U ($b2, INF)");
+@ans_cd = Interval("(0, $b2)");
+
+
+
+$max = List("DNE");
+$min = List("$c2");
+
+$max1 = List("0");
+$min1 = List("$b2");
+
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+Context("Interval");
+#-ULETH-#
+BEGIN_PGML
+
+In the following questions, consider the function 
+
+>>[`f(x) = \displaystyle [$f].`]<<
+
+Enter *DNE* if an answer does not exist.
+----
+[`\text{a)}`] Give the domain of [`f`] (in interval notation): [________________________]{Compute(@domain)}  [@ AnswerFormatHelp("intervals") @]*
+
+[`\text{b)}`] Determine the intervals on which [`f`] is concave up/down:  
+[`f`] is concave up on: [________________________]{Compute(@ans_cu)}  
+[`f`] is concave down on: [________________________]{Compute(@ans_cd)}
+END_PGML
+Context("Point");
+
+$infl1 = Point("(0, $y1)");
+$infl2 = Point("($b2,$y2)");
+$infl = List($infl1, $infl2);
+BEGIN_PGML
+[`\text{c)}`] Based on your answers in (a) and (b), determine the inflection points of [`f`]:  
+[_____________________]{Compute($infl)} [@ AnswerFormatHelp("numbers") @]*  
+(Each answer should be entered as an ordered pair, [`(x,y)`]. Separate multiple answers with commas.)
+END_PGML
+Context("Interval");
+BEGIN_PGML
+[`\text{d)}`] Find the critical numbers of [`f`] and use the Second Derivative Test, when possible, to determine the relative extrema.  
+Relative maxima occur at [`x = `] [____________]{Compute($max)} (Separate multiple
+answers with commas.)  
+Relative minima occur at [`x = `] [____________]{Compute($min)} (Separate multiple answers with commas.)
+
+[`\text{e)}`] Find the [`x`]-values where [`f'(x)`] has a relative maximum or minimum:  
+[`f'`] has relative maxima at [`x = `] [____________]{Compute($max1)} (Separate multiple answers with commas.)  
+[`f'`] has relative minima at [`x = `] [____________]{Compute($min1)} (Separate multiple answers with commas.)
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+Since [`f(x) = \displaystyle [$f]`] is a polynomial, its domain is the real numbers,
+or [`(-\infty, \infty)`].
+
+Its first and second derivatives are, respectively, [` f'(x) = [$df] `] and [`f''(x) = [$ddf] `].  Set [`f''(x) = 0`] and solve: 
+
+[`
+  [$ddf] = 0 \;\Rightarrow \; 3x(x - [$b2]) = 0.
+`]
+
+Thus, the concavity of [`f`] could change at [`x = 0`] and [`x = [$b2]`].
+By testing sample points in each interval, we find [`f'' > 0`] ([`f`] is concave up) on [` (-\infty, 0) \cup ([$b2], \infty) `] and [`f'' < 0`] ([`f`] is concave down) on [` (0, [$b2]) `]. 
+
+Therefore, there are inflection points at [`x = 0, [$b2]`].
+Plug these [`x`] values into the original function to find the corresponding
+[`y`]-values:
+
+[``
+  f(0) = [$y1], \quad f([$b2]) = [$y2].
+``]
+
+The inflection points occur at [` (0, [$y1]) `] and
+[` ([$b2], [$y2]) `].
+
+
+Find critical numbers by setting [`f'(x) = 0`]
+
+[``
+  \begin{array}{rcl}
+    [$df] &=& 0 \\
+    x^2(x - [$c2]) &=& 0 \\  
+    &&\\
+    x &=& 0, [$c2].
+  \end{array}
+``]
+
+Since [`f''(0) = 0`], the Second Derivative Test is inconclusive.
+However, the First Derivative Test shows that there is neither
+a minimum nor maximum at [`x = 0`], since [`f'(x)`] does not
+change sign at [`x = 0`].  
+Since [`f''([$c2]) > 0`], there is a local minimum at [`x = [$c2]`].
+
+
+To find where [`f'(x)`] will have a relative extrema,
+first set [`f''(x) = 0`].  As above, [`x = 0, [$b2]`].  
+Find [` f'''(x) =  6x - [$d] `].  Since [`f'''(0) = -[$d] < 0`],
+there is a local maximum (for [`f'`]) at [`x = 0`].
+Since [`f'''([$b2]) = [$d] > 0`], there is a 
+local minimum (for [`f'`]) at [`x = [$b2]`].
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#Answers are evaluated in the problem text.
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;-
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 40 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();   
+

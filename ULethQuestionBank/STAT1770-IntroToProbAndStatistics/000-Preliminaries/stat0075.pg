@@ -1,0 +1,465 @@
+## DESCRIPTION
+# This problem displays a geogebra dotplot graph with 4 different distributions of scores (labeled quiz A-D) and the student is asked to arrange the distribtions from largest to smallest standard deviation, using tiles that correspond to the 4 quizzes. 1 of the 4 quizzess has its values fixed (so it is always clearly recgonized as having the highest std) and 3 of the distribtutions retain the same shape but are randomly shifted. Which distributions are designated with which quiz letters is always random, as are their colors and their vertical positions. There is a significant amount of code that handles this random shuffling. Colorblind friendly colors are chosen.
+# This problem tests a student's ability to discern relative differences is standard deviations from a visual representation without doing any calculations (the distributions are such that ambiguity about relative standard deviations is minimal). 
+## ENDDESCRIPTION
+
+## DBsubject('Statistics')
+## DBchapter('Experimental Design')
+## DBsection('Concepts')
+## Date(2017-05-11)
+## Institution(University of Lethbridge)
+## Author(Kyler Fisher, Adopted from template by Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('multiple choice', 'ULETH-STAT1770', 'dot plot', 'dot-plot', 'standard deviation')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to support the GeoGebra applet.
+  "AppletObjects.pl",
+  # Formats problem data into two layout columns.
+  "unionTables.pl",
+  # Provides course-specific initializations.
+  "PGcourse.pl",
+  "PGML.pl",
+  # Used for drop down responses.
+  "parserPopUp.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  "draggableProof.pl",
+);
+
+TEXT(beginproblem());
+
+
+##########################################
+#  Setup
+
+#-ULETH-#
+
+#This section randomly arranges the integers [0-3] into an array. Later used to arrange distribtutions vertically.
+@order;
+do{
+for ($i=0; $i < 4; $i++){
+    $order[$i] = random(0,3)
+    }
+    $allDifferent = 1;
+    for ($i=0; $i < 4; $i++){
+        for ($j=0; $j < 4; $j++){
+            if($order[$i] == $order[$j] and $i != $j)
+            { $allDifferent = 0 }
+        }
+    }
+} while ($allDifferent == 0); #keep selecting new values until they are all different
+
+#This section randomly arranges the integers [0-3] into an array. Later used to assign colors randomly.
+@colorNames = ("Red","Gold","Orange","Brown");
+@colors;
+do{
+for ($i=0; $i < 4; $i++){
+    $colors[$i] = random(0,3);
+    }
+    $allDifferent = 1;
+    for ($i=0; $i < 4; $i++){
+        for ($j=0; $j < 4; $j++){
+            if($colors[$i] == $colors[$j] and $i != $j)
+            { $allDifferent = 0 }
+        }
+    }
+} while ($allDifferent == 0); #keep selecting new values until they are all different
+
+#This section randomly arranges the integers [0-3] into an array. Later used to assign the letters randomly.
+@lettersStr = ("A", "B", "C", "D");
+@letters;
+do{
+for ($i=0; $i < 4; $i++){
+    $letters[$i] = random(0,3)
+    }
+    $allDifferent = 1;
+    for ($i=0; $i < 4; $i++){
+        for ($j=0; $j < 4; $j++){
+            if($letters[$i] == $letters[$j] and $i != $j)
+            { $allDifferent = 0 }
+        }
+    }
+} while ($allDifferent == 0); #keep selecting new values until they are all different
+
+# this section is the setup for the tile arrangment part
+$CorrectProof = DraggableProof([ 
+"Quiz ".$lettersStr[$letters[0]],
+"Quiz ".$lettersStr[$letters[2]],
+"Quiz ".$lettersStr[$letters[3]],
+"Quiz ".$lettersStr[$letters[1]],
+],[],
+#Put all the entries under the left column and specify these as SourceLabel
+#TargetLabel is the column after ordering all the entries 
+SourceLabel => "Choose from the quizzes here:",
+TargetLabel =>  "Place in order by standard deviation below (greatest standard deviation at top and smallest at bottom):",
+);
+
+#This section is to assign the correct heights that are needed for the horizontal lines that seperate the distribtions and to determine where how much each plots needs to be shifted upwards (depending on which plots are before it in order and their heights). Needed because the vertical placement of the distributions is randomized.
+@plotHeights;
+@lineHeights;
+$lineHeightSum = 0;
+$plotHeightSum = 0;
+for ($i=0; $i < 4; $i++){
+    if($order[$i] == 0) { $plotHeights[$i] = $plotHeightSum; $plotHeightSum  = $plotHeightSum + 7; #if distribution 0, set plot height to current height plus height of this plot, 7 -- #increment the plot height by this amount
+    $lineHeights[$i] = 7 + $lineHeightSum; #if distribution 0, set line height to current line height plus height of this plot, which is 7
+    $lineHeightSum = $lineHeightSum + 7; } #increment the line height
+    
+    if($order[$i] == 1) { $plotHeights[$i] = $plotHeightSum; $plotHeightSum  = $plotHeightSum + 2; #if distribution 1, set plot height to current height plus height of this plot, 2 -- #increment the plot height by this amount
+    $lineHeights[$i] = 2 + $lineHeightSum; #if distribution 1, set line height to current line height plus height of this plot, which is 2
+    $lineHeightSum = $lineHeightSum + 2; } #increment the line height
+    
+    if($order[$i] == 2) { $plotHeights[$i] = $plotHeightSum; $plotHeightSum  = $plotHeightSum + 10; #if distribution 2, set plot height to current height plus height of this plot, 10 -- #increment the plot height by this amount
+    $lineHeights[$i] = 10 + $lineHeightSum; #if distribution 2, set line height to current line height plus height of this plot, which is 10
+    $lineHeightSum = $lineHeightSum + 10; } #increment the line height
+    
+    if($order[$i] == 3) { $plotHeights[$i] = $plotHeightSum; $plotHeightSum  = $plotHeightSum + 5; #if distribution 3, set plot height to current height plus height of this plot, 5 -- #increment the plot height by this amount
+    $lineHeights[$i] = 5 + $lineHeightSum; #if distribution 3, set line height to current line height plus height of this plot, which is 5
+    $lineHeightSum = $lineHeightSum + 5; } #increment the line height
+}
+for ($i=0; $i < 4; $i++){ $lineHeights[$i] = $lineHeights[$i] + 0.5 } #shift all line heights up by 0.5 (so they fit between plots)
+
+# assign quizHeights from array, used to pass commands into GeoGebra
+for ($i=0; $i < 4; $i++){
+    if($order[$i] == 0) { $QuizDHeight = $plotHeights[$i] }
+    if($order[$i] == 1) { $QuizCHeight = $plotHeights[$i] }
+    if($order[$i] == 2) { $QuizBHeight = $plotHeights[$i] }
+    if($order[$i] == 3) { $QuizAHeight = $plotHeights[$i] }
+}
+
+#set the distribution with the highest std and create the string for it to pass command into GeoGebra
+@highestSTD = (1,1,1,1,1,10,10,10,10,10);
+$QuizA = join(",", @highestSTD);
+$QuizA = "{".$QuizA."}";
+
+#set the distribution with the lowest std and create the string for it to pass command into GeoGebra
+$val = random(1,9);
+@lowestSTD = ($val,$val,$val,$val,$val,$val,$val,$val,$val,$val);
+$QuizB = "{".join(",", @lowestSTD)."}";
+
+#set the distribution with the lower std (with help of a random shift) and create the string for it to pass command into GeoGebra
+@lowSTD = (0,0,1,1,1,1,1,1,2,2);
+$shiftLowSTD = random(1,8);
+for($i=0; $i < 10; $i++){$lowSTD[$i] = $lowSTD[$i] + $shiftLowSTD; }
+$QuizD = "{".join(",", @lowSTD)."}";
+
+#set the distribution with the higher std (with help of a random shift) and create the string for it to pass command into GeoGebra
+@highSTD = (0,0,1,1,2,2,3,3,4,4);
+$shiftHighSTD = random(1,5);
+for($i=0; $i < 10; $i++){$highSTD[$i] = $highSTD[$i] + $shiftHighSTD; }
+$QuizC = "{".join(",", @highSTD)."}";
+
+
+#################################################
+# How many data points are in the graph.
+$numPoints = 20;
+# Number of units above the x-axis the image is drawn.
+$yOffset = 2.5;
+# Height of the box.
+$yScale = 1.25;
+
+# Set the bounds of the graph.
+$minX = -3;
+$minY = -3.5;
+$maxX = 10.7;
+$maxY = 26.5;
+#-ENDULETH-#
+
+
+######################################
+# Create  link to applet:
+###################################
+# You can name your applet (anything reasonable :-) )
+# Adjust the height and width as desired
+# Paste the geogebra parameters in at the bottom of the page just above the
+# command end command so that they don't get in the way.
+# See the note down there for more information.
+###################################
+
+#-ULETH-#
+# Choose an appropriate name for your applet.  Can also leave as ggbfoo.
+$appletName = "ggbfoo";
+#-ENDULETH-#
+
+$applet =  GeogebraWebApplet(
+   code       => "geogebra.GeoGebraApplet",
+   archive    => "geogebra.jar",
+   codebase                 => findAppletCodebase("geogebra.jar"),
+   appletName              => $appletName,
+   appletId                    => $appletName,
+   submitActionAlias     => 'getAppletValues',  # default actionAlias
+   initializeActionAlias   => 'configure',  # default actionAlias
+   setStateAlias             => 'setXML',
+   getStateAlias             => 'getXML',
+   setConfigAlias           => '',
+   getConfigAlias           => '',
+   returnFieldName       => '',
+   #-ULETH-#
+   width                 => 500,              # may want to modify width
+   height                => 500,              # may want to modify height
+   #-ENDULETH-#
+   # mayscript             => "true",
+   #-ULETH-#
+   debugMode             => 0,   # set debugMode to 0 for no debug
+                                              # to 1 to make xml representation visible
+                                              # to 2 to add alerts detailing progression
+                                              # through the applet
+   #-ENDULETH-#
+   onInit                => 'ggbOnInit',
+   type                  => 'geogebraweb',
+   #submitActionScript    => qq{ getQE('answerBox').value = getAppletValues() },
+   submitActionScript => '',
+   selfLoading           => 1,
+
+   # Defined as a separate subroutine so the parameters can go at the bottom of
+   # the page.
+   params     => GEOGEBRA_PARAMS(),# paste parameters in
+
+);
+
+
+##################################
+# Setup GeogebraWebApplet --
+###################################
+
+###############################################
+#
+#  For persistence of GeoGebra applet state
+#  when answers are submitted or page is refreshed.
+#  Uses JavaScript interface to GeoGebra.
+#  This fetches the GeoGebra applet with $appletname.
+#  Note that this variable gets set in the "Create link to applet" section.
+
+HEADER_TEXT(
+qq!
+<script language="javascript">
+   function ggbOnInit(param) {
+       if (param == "$appletName") {
+           applet_loaded(param,1);  // report that applet is ready.
+           ww_applet_list[param].safe_applet_initialize(2);
+       }
+   }
+</script>
+<noscript>For this question to work properly,
+you must enable JavaScript, or use another browser
+(or computer) on which JavaScript works.</noscript>
+!);
+
+
+#######################################################
+#
+#  For setting initial values in GeoGebra from WeBWorK
+#  Uses JavaScript interface to GeoGebra.
+#  Note the area right under all the ///////////////.
+#  This is where you match up your variables from WeBWorK
+#  with your variables in GeoGebra.
+
+TEXT( MODES(TeX=>'', HTML=><<END_SCRIPT ) );
+<script language="javascript">
+function setAppletCoefficients() {
+   var applet=getApplet("$appletName");   // alert("Updating coefficients");
+   if (typeof(applet)!="undefined") {
+     if (typeof(applet.setValue)!="undefined") {
+
+     ////////////////////////////////////////////////////////////////
+     //  List the values of the parameters to be set in the applet here
+
+          // Set variables for GeoGebra from WebWork
+          applet.setValue("yOffset", $yOffset); // the number of units above the        x-axis the image is drawn
+          applet.setValue("yScale", $yScale); // the height of the box
+          // #-ULETH-#
+          // Raw data variables get set here.  Do not change values here!
+          // You can, however, comment/uncomment lines to match the number of
+          // data points you are passing in.
+          //applet.setListValue("xList",1,$dataSet[0]);
+          //applet.setListValue("xList",2,$dataSet[1]);
+          //applet.setListValue("xList",3,$dataSet[2]);
+          //applet.setListValue("xList",4,$dataSet[3]);
+          //applet.setListValue("xList",5,$dataSet[4]);
+          //applet.setListValue("xList",6,$dataSet[5]);
+          //applet.setListValue("xList",7,$dataSet[6]);
+          //applet.setListValue("xList",8,$dataSet[7]);
+          //applet.setListValue("xList",9,$dataSet[8]);
+          //applet.setListValue("xList",10,$dataSet[9]);
+          //applet.setListValue("xList",11,$dataSet[10]);
+          //applet.setListValue("xList",12,$dataSet[11]);
+          //applet.setListValue("xList",13,$dataSet[12]);
+          //applet.setListValue("xList",14,$dataSet[13]);
+          //applet.setListValue("xList",15,$dataSet[14]);
+          //applet.setListValue("xList",16,$dataSet[15]);
+          //applet.setListValue("xList",17,$dataSet[16]);
+          //applet.setListValue("xList",18,$dataSet[17]);
+          //applet.setListValue("xList",19,$dataSet[18]);
+          //applet.setListValue("xList",20,$dataSet[19]);
+          //applet.setListValue("xList",21,$dataSet[20]);
+          //applet.setListValue("xList",22,$dataSet[21]);
+          //applet.setListValue("xList",23,$dataSet[22]);
+          //applet.setListValue("xList",24,$dataSet[23]);
+          //applet.setListValue("xList",25,$dataSet[24]);
+          //applet.setValue("outliers",1); // To show outliers set to 1, otherwise set this to 0
+          // Changing the text value will change the label text on the graph, and
+          // the coordinates at the end represent the point on the graph's grid
+          // where the label will be placed.
+          applet.evalCommand("ZoomIn[$minX,$minY,$maxX,$maxY]");
+          applet.evalCommand("A = DotPlot[$QuizA]+(0,$QuizAHeight)");
+          applet.evalCommand("D = DotPlot[$QuizD]+(0,$QuizDHeight)");
+          applet.evalCommand("B = DotPlot[$QuizB]+(0,$QuizBHeight)");
+          applet.evalCommand("C = DotPlot[$QuizC]+(0,$QuizCHeight)");
+          applet.evalCommand("SetColor(A, $colorNames[$colors[0]])");
+          applet.evalCommand("SetColor(B, $colorNames[$colors[1]])");
+          applet.evalCommand("SetColor(C, $colorNames[$colors[2]])");
+          applet.evalCommand("SetColor(D, $colorNames[$colors[3]])");
+          //
+          applet.evalCommand("A1 = (0,$lineHeights[0])");
+          applet.evalCommand("A2 = (10.5,$lineHeights[0])");
+          applet.evalCommand("lineA = Segment[A1, A2]");
+          applet.evalCommand("SetCoords(text1, -2.25, $QuizAHeight+2)");
+          applet.evalCommand("text1 = \"Quiz $lettersStr[$letters[0]]\"");
+          //
+          applet.evalCommand("B1 = (0,$lineHeights[1])");
+          applet.evalCommand("B2 = (10.5,$lineHeights[1])");
+          applet.evalCommand("lineB = Segment[B1, B2]");
+          applet.evalCommand("SetCoords(text2, -2.25, $QuizBHeight+5)");
+          applet.evalCommand("text2 = \"Quiz $lettersStr[$letters[1]]\"");
+          //
+          applet.evalCommand("C1 = (0,$lineHeights[2])");
+          applet.evalCommand("C2 = (10.5,$lineHeights[2])");
+          applet.evalCommand("lineC = Segment[C1, C2]");
+          applet.evalCommand("SetCoords(text3, -2.25, $QuizCHeight+1)");
+          applet.evalCommand("text3 = \"Quiz $lettersStr[$letters[2]]\"");
+          //
+          applet.evalCommand("D1 = (0,$lineHeights[3])");
+          applet.evalCommand("D2 = (10.5,$lineHeights[3])");
+          applet.evalCommand("lineD = Segment[D1, D2]");
+          applet.evalCommand("SetCoords(text4, -2.25, $QuizDHeight+3)");
+          applet.evalCommand("text4 = \"Quiz $lettersStr[$letters[3]]\"");
+          //
+          
+          // #-ENDULETH-#
+     } else {
+          setTimeout("setAppletCoefficients()", 1000);
+     }
+   } else {
+      setTimeout("setAppletCoefficients()",1000);
+   }
+}
+ww_applet_list["$appletName"].setConfig = function() {setAppletCoefficients()};
+</script>
+END_SCRIPT
+
+
+#######################################
+# TEXT
+#######################################
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+
+10 students are taking a statistics course. The course has 4 quizzes labeled Quiz A - Quiz D. For each quiz, students are given a grade from 0 - 10. Below are the distributions of scores for the 10 students on the 4 quizzes represented in a *dot plot* format. In a dot plot, each dot represent an observation. In this dot plot, when dots are stacked, it means numerous students recieved the same quiz score for that quiz.
+
+[@
+ColumnTable("",
+$BCENTER.
+$BBOLD."Quiz Scores for 10 Students on 4 Different Quizzes".$EBOLD.$PAR.
+MODES(HTML=>$applet->insertAll(debug=>0, includeAnswerBox=>0,), TeX=>$im).
+$ECENTER
+,
+indent => 0, separation => 30, valign => "MIDDLE"
+);
+@]*
+
+Arrange the the tiles for the 4 quizzes below by their *standard deviations*. Put the quiz with the _greatest_ standard deviation at the top and continue placing tiles below in order of decreasing standard deviation so that the quiz at the bottom has the _lowest_ standard deviation. 
+
+END_PGML
+
+
+BEGIN_TEXT
+$BR$BR
+$BBOLD NOTE: You must drag the tile to the top of the right column then move it down into place. $EBOLD
+$PAR
+\{ $CorrectProof->Print \}
+
+END_TEXT
+
+
+#########################################
+# ANSWER section
+#########################################
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+ANS($CorrectProof->cmp);
+
+#########################################
+# The applet as a base64 string
+#########################################
+
+sub GEOGEBRA_PARAMS {
+    my $result = {
+showResetIcon=>"false" ,
+enableRightClick=>"false" ,
+enableLabelDrags=>"false",
+showMenuBar=>"false" ,
+showToolBar=>"false",
+showAlgebraInput=>"false",
+useBrowserForJS=>"true",
+#-ULETH-#
+# In the GeoGebra desktop application, create your applet.  Once you are done,
+# press Ctrl + Shift + B.  This will copy the base64 string (like the one below)
+# to your clipboard.  Paste this string between the double quotes below.  Make
+# sure not to paste over the }; or $result lines that follow this section.
+# You should end up with (e.g. ggbbase64=>"skj8981519+!KJ!MSD!.....") as the
+# parameter below.
+ggbbase64=>"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"
+#-ENDULETH-#
+};
+
+$result;
+}
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+The standard deviation is a measure of the variability of data. Distributions with values that are far apart, on average, will have a larger standard deviation that similar data with values that are, on average, closer together. The standard deviation for a distribution of numbers is roughly the average positive distance that those numbers are from their mean.
+
+Quiz [$lettersStr[$letters[0]]] above has the largest standard deviation of the four quizzes. This is because the scores for Quiz [$lettersStr[$letters[0]]] are all far from their mean which is 5.5, right in between the two columns of scores. So although many of the students recieved the same scores for Quiz [$lettersStr[$letters[0]]], the variability of the data, reflected by the standard deviation, is high relative to the other Quizzes. 
+
+Quiz [$lettersStr[$letters[1]]] above has the smallest standard deviation of the four quizzes. This is because all of the values are positioned exactly at their mean, because all the students recieved the same score on this quiz. There is no variability for the distribution of scores on Quiz [$lettersStr[$letters[1]]] and the standard deviation is 0!
+
+
+Quiz [$lettersStr[$letters[2]]] has a relatively high standard deviation although it is not as extreme as Quiz [$lettersStr[$letters[0]]]. Quiz [$lettersStr[$letters[2]]] has a greater standard deviation than Quiz [$lettersStr[$letters[3]]] because the scores for [$lettersStr[$letters[3]]] are more closely bunched around their mean.
+
+
+
+END_PGML_SOLUTION
+
+COMMENT('GeoGebra question reuqiring students to interpret a dotplot graph with 4 distributions (arranged vertically) and arrange the relative standard deviations using tiles. <BR>
+        Distributions are randomly arranged vertically, randomly assigned colors, are randomly assigned from 4 letters, and 3 of the distribtutions are randomly shifted although the shapes of all distributions are retained.
+        Graph may not render on editor screen, but renders for students. <BR>
+        Includes a solution set.<BR>
+        
+        Uses PGML. <BR>
+Uses GeoGebraWeb (JavaScript), so it should work on computers and tablets.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

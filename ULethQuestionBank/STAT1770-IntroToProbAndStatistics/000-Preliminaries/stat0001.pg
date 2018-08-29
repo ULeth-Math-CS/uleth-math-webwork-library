@@ -1,0 +1,113 @@
+## DESCRIPTION
+## This is a multiple choice question intended to test student's ability to recognize the relevant statistical observational units from a specific context. The order the answers are displayed is randomized but the question and the answers themselves do not vary. This question is similar to another question in the same DBsection (that asks instead for the variables).
+## ENDDESCRIPTION
+
+
+## DBsubject('Statistics')
+## DBchapter('Experimental design')
+## DBsection('Concepts')
+## Date(2018-05-08)
+## Institution(University of Lethbridge)
+## Author(Kyler Fisher)
+## MO(1)
+## KEYWORDS('pop-up menu', 'radio buttons', 'multiple choice', 'ULETH-STAT1770', 'observational units')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Following two macros for multiple choice.
+  "parserRadioButtons.pl",
+  "PGchoicemacros.pl"
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+#-ULETH-#
+
+# The options in the square brackets are the different radio button options
+# that will be available.
+# The next argument is the correct answer.
+# The arguments in the square brackets after last=> dictate which options
+# come last in the radio button list (left empty randomizes the order).
+$radioButtons = RadioButtons(
+  ["date shopping began", 
+  "number of presents bought", 
+  "typical Canadian consumers", 
+  "amount spent"],
+  "typical Canadian consumers", #answer
+  last=>[""]); #left blank to randomize answer positions
+  
+#-ENDULETH-#
+
+
+###########################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_PGML
+
+Identify the _observational units_ in this question: How much did a typical Canadian consumer spend on Christmas presents in 2017?
+
+[@ $radioButtons->buttons() @]*
+END_PGML
+
+
+###########################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# Anwser for the multiple choice question.
+ANS($radioButtons->cmp());
+
+#-ENDULETH-#
+
+
+###########################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+The _observational units_ in this question are the typical Canadian consumers. This is because Canadian consumers are the entities whose characteristics we are interested in measuring. The other options here are all measurements that we could make about these observational units. 
+
+Observational units are not always individual people as they were in this case. In another context, vehicles could be the observational units of the study and we could be making measurements on these vehicles such as their gas mileage, retail price, and weight which are all possible variables for vehicles. 
+
+
+END_PGML_SOLUTION
+
+COMMENT('
+    Simple multiple choice format.<BR>
+    Includes a solution set.<BR>
+    Only one version.<BR>
+    Multiple choice anwser positions are shuffled randomly.
+    
+    Uses PGML.
+    '); 
+#-ENDULETH-#
+
+ENDDOCUMENT();

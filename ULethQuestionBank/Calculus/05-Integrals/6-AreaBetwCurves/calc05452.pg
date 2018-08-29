@@ -1,0 +1,199 @@
+## DESCRIPTION
+## This is Problem 5.4.52 from the APEX Calculus text. It covers area between curves. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of integration)
+## DBsection(Areas between curves)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.4')
+## Problem1('52')
+## MO(1)
+## Keywords('integral', 'signed area', 'area between curves', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+## Adapted from "Utah/Quantitative_Analysis/set10_Definite_Integrals_Techniques_of_Integration/pr_6.pg"
+
+
+##############################
+#  Initialization
+
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Needed to support graph generation.
+  "PGgraphmacros.pl",
+  # Allows the graph and text to be placed in side-by-side columns.
+  "unionTables.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+#############################
+#   Setup
+
+# Refreshes the graph image every time the page is loaded, as opposed to
+# retrieving a cached version.
+$refreshCachedImages = 1;
+
+#-ULETH-#
+# Random values for the function/graph.
+Context("Numeric");
+
+#Here are the parameters that will be varied.
+$a = random(-4,-1,1);
+$b = random(2,6,1);
+
+$c1 = random(-3,3,1);
+$c2 = $c1 - $a*$b;
+$b1 = random(-3,3,1);
+$b2 = $a + $b + $b1;
+
+$f = Formula("x^2 + $b2 x + $c2")->reduce();
+$g = Formula("2 x^2 + $b1 x + $c1")->reduce();
+$ff = Formula("x^2 + $b2 x + $c2")->reduce();
+$gg = Formula("2x^2 + $b1 x + $c1")->reduce();
+
+$ya = $ff->eval(x=>$a);
+$yb = $ff->eval(x=>$b);
+$ym = $gg->eval(x=>($a+$b)/2);
+
+#With $bound* we ensure that the graph of the function will always be in view.
+$boundx1 = $a - 2;
+$boundy1 = $ym - 2;
+$boundx2 = $b + 2;
+$boundy2 = max($ya, $yb) + 2;
+
+#We put the functions here to keep plot_functions' entries simple
+$fun1 = FEQ("$f for x in [$boundx1,$boundx2] using color:blue and weight:2");
+$fun2 = FEQ("$g for x in [$boundx1,$boundx2] using color:red and weight:2");
+
+$graph = init_graph($boundx1,$boundy1,$boundx2,$boundy2,'axes' => [0,0],
+	'height' => 500,
+        'width'  => 500
+	);
+
+($fun1_ref,$fun2_ref) = plot_functions ($graph,
+	$fun1, $fun2
+			);
+
+#Answers
+
+$Fb = $b2 - $b1;
+$Fc = $c2 - $c1;
+$F = Formula("-(x^3/3) + $Fb x^2/2 + $Fc x");
+
+$F1 = $F->eval(x=>($b));
+$F2 = $F->eval(x=>($a));
+$ans = $F1 - $F2;
+
+#-ENDULETH-#
+
+#############################
+#  Main Text
+
+#-ULETH-#
+# Places the following information in column1 (the leftmost) of the layout table.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+$column2 = PGML::Format2(<<'END_PGML');
+Find the area  of the region enclosed between 
+ [` f(x) = [$f] `] and
+ [` g(x) = [$g]`]. 
+
+Area = [____________________] [@ AnswerFormatHelp("numbers") @]*
+
+(*Note:* The graph provided represents both functions [`f`] and [`g`] but is intentionally left unlabeled.)
+
+
+END_PGML
+
+# Places the graph image in column1 (the leftmost) of the layout table.
+# The additional arguments after insertGraph($gr) specify the width and height
+# of the image when it's on-screen, while the tex_size is a percentage multiplier
+# determining what size the image will print at in a hard copy version.
+$column1 = image(insertGraph($graph), width=>400, height=>400, tex_size=>600).
+$BR.$BCENTER.$BR."The functions \(f\) and \(g\).".$ECENTER;
+#-ENDULETH-#
+
+TEXT(ColumnTable($column1, $column2, indent => 0, separation => 30, valign => "TOP"));
+
+
+#############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS( Compute($ans)->cmp );
+
+#-ENDULETH-#
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+BEGIN_PGML_SOLUTION
+
+The area between curves is found using the 
+definite integral [` \int_{a}^b \left( f(x) - g(x) \right) \, dx`].
+First determine the points of intersection by
+solving:
+>>[``
+  [$f] = [$g] \;\Rightarrow\; \cdots
+  \;\Rightarrow\; x = [$a], [$b].
+``]<<
+
+Now evaluate the integral.
+
+>>[``
+  \begin{array}{rcl}
+  \textrm{Area} &=&
+    \displaystyle \int_{[$a]}^{[$b]} \left( ([$f]) - ([$g]) \right) \, dx\\
+     &=& \displaystyle \int_{[$a]}^{[$b]} \left( -x^2 + [$Fb] x + [$Fc]
+      \right) \, dx  \\
+    &=& \left(-\dfrac{x^3}{3} + \dfrac{[$Fb] x^2}{2} + 
+    [$Fc] x \right)\Big|_{[$a]}^{[$b]}\\
+    &=& [$ans].\\
+  \end{array}
+``]<<
+
+
+END_PGML_SOLUTION
+
+COMMENT('
+    Randomization provides 735 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+#-ENDULETH-#
+
+# Marks the end of the problem document.
+ENDDOCUMENT();

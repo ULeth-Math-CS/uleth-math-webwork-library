@@ -1,0 +1,91 @@
+###################################################################
+## Description:
+##      Integer Arithmetic Division Problems with two terms where   
+##      both of the terms are negative.
+####################################################################
+
+####################################################################
+## Problem Classification:
+##      DBsubject('Arithmetic')
+##      DBchapter('Integers')
+##      DBsection('Integer Division)
+##      KEYWORDS('Integers', 'Division', 'ULETH-0500')
+##      Level(1)
+###################################################################
+
+##################################################################
+## Date(2018-05-19)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+##################################################################
+
+#####################################################################
+#  Initialization
+#####################################################################
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "PGML.pl",
+  "AnswerFormatHelp.pl",
+  "contextLimitedNumeric.pl",
+);
+TEXT(beginproblem());
+
+###############################################################################
+#   Setup
+##################################################################################
+
+$a = random(2,12,1);
+$b = random (2,12)*$a;
+do{$c = random (2,12);} until ($c != $a);
+$d = random (2,12)*$c;
+do{$e = random (2,12);} until ($e != $a and $e!=$c);
+$f = random (2,12)*$e;
+
+$ans1 = $b/$a;
+$ans2 = $d/$c;
+$ans3 = $f/$e;
+
+
+
+###################################################################
+#   Problem Text
+###################################################################
+BEGIN_PGML
+
+Copute the following products:
+
+`([$b]) \div ([$a]) =` [_____]     
+
+`([$d]) \div([$c]) =` [_____]     
+
+`([$f]) \div ([$e]) =` [_____]
+
+END_PGML
+
+
+
+#############################
+#   Answer Evaluation
+
+ANS(strict_num_cmp($ans1));
+ANS(strict_num_cmp($ans2));
+ANS(strict_num_cmp($ans3));
+
+#############################
+#   Solution
+
+# NO SOLUTION 
+
+#######################################################################
+COMMENT('
+    Randomization provides 1,197,900 different possible versions of this question.<BR>
+    Does not include a solution set.<BR>
+    The values in quotients are randomly determined. The numerator will range from 4 to 144 and the denomenator ranges from 2 to 12. The numerator always evenly divides the numerator. <BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();

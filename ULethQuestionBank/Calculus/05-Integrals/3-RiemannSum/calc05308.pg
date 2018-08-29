@@ -1,0 +1,267 @@
+## DESCRIPTION
+## This is Problem 5.3.8-10 in the APEX Calculus text (5.3.9-11 in the ULETH text). It is an introduction to summation notation.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Integrals)
+## DBsection(Riemann sums)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.3')
+## Problem1('8-10')
+## MO(1)
+## Keywords('summation', 'telescope', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Used to allow students to enter answers in any order.
+  "unorderedAnswer.pl",
+  "contextFraction.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->flags->set(
+  tolerance => 0.01,
+  tolType => "absolute",
+);
+
+$a1 = random(1,5,1);
+$b1 = $a1 + 4;
+
+$a2 = random(0,6,2);
+$b2 = $a2 + 5;
+
+$a3 = random(1,5,1);
+$b3 = $a3 + 3;
+#Answers
+
+## (a)
+
+$a11 = $a1 + 1;
+$a12 = $a1 + 2;
+$a13 = $a1 + 3;
+
+$ans_a1 = (1/$a1);
+$ans_a11 = (1/$a11);
+$ans_a12 = (1/$a12);
+$ans_a13 = (1/$a13);
+$ans_b1 = (1/$b1);
+$ans_a = ($ans_a1 + $ans_a11 + $ans_a12 + $ans_a13 + $ans_b1);
+
+## (b)
+$a21 = $a2 + 1;
+$a22 = $a2 + 2;
+$a23 = $a2 + 3;
+$a24 = $a2 + 4;
+
+$ans_a2 = $a2;
+$ans_a21 = -$a21;
+$ans_a22 = $a22;
+$ans_a23 = -$a23;
+$ans_a24 = $a24;
+$ans_b2 = -$b2;
+$ans_b = ($ans_a2 + $ans_a21 + $ans_a22 + $ans_a23 + $ans_a24 + $ans_b2);
+
+## (c)
+$a31 = $a3 + 1;
+$a32 = $a3 + 2;
+$b31 = $b3 + 1;
+
+$ans_a3 = (1/$a3 - 1/$a31);
+$ans_a31 = (1/$a31 - 1/$a32);
+$ans_a32 = (1/$a32 - 1/$b3);
+$ans_b3 = (1/$b3 - 1/$b31);
+$ans_c = ($ans_a3 + $ans_a31 + $ans_a32 + $ans_b3);
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+For the following, write out each term of the
+summation in the boxes provided.  Then compute
+the sum.
+    
+[`\displaystyle\sum_{i=[$a1]}^{[$b1]} \dfrac{1}{i} `] = [______] [`+`] [______] [`+`] [______] [`+`] [______] [`+`] [______] 
+END_PGML
+UNORDERED_ANS( 
+Compute($ans_a1)->cmp(), 
+Compute($ans_a11)->cmp(), 
+Compute($ans_a12)->cmp(),
+Compute($ans_a13)->cmp(), 
+Compute($ans_b1)->cmp(),
+);
+
+BEGIN_PGML
+[`\displaystyle\sum_{i=[$a1]}^{[$b1]} \dfrac{1}{i} `] = [__________] [@ AnswerFormatHelp("numbers") @]*  
+----
+END_PGML
+ANS(Compute($ans_a)->cmp);
+
+BEGIN_PGML
+[`\displaystyle\sum_{i=[$a2]}^{[$b2]} (-1)^i i `] = [______] [`+`] [______] [`+`] [______] [`+`] [______] [`+`] [______]  [`+`] [______]
+END_PGML
+
+UNORDERED_ANS( 
+Compute($ans_a2)->cmp(), 
+Compute($ans_a21)->cmp(), 
+Compute($ans_a22)->cmp(),
+Compute($ans_a23)->cmp(), 
+Compute($ans_a24)->cmp(), 
+Compute($ans_b2)->cmp(),
+);
+
+BEGIN_PGML
+[`\displaystyle\sum_{i=[$a2]}^{[$b2]} (-1)^i i `] 
+= [__________]  
+----
+END_PGML
+ANS(Compute($ans_b)->cmp);
+
+BEGIN_PGML
+[`\displaystyle\sum_{i=[$a3]}^{[$b3]}\left( \dfrac{1}{i} - \dfrac{1}{i+1} 
+\right) `] = [_________]  [`+`] [_________] [`+`] [_________] [`+`] [_________] 
+END_PGML
+UNORDERED_ANS( 
+Compute($ans_a3)->cmp(), 
+Compute($ans_a31)->cmp(), 
+Compute($ans_a32)->cmp(),
+Compute($ans_b3)->cmp(),
+);
+
+BEGIN_PGML
+[`\displaystyle\sum_{i=[$a3]}^{[$b3]}\left( \dfrac{1}{i} - \dfrac{1}{i+1} 
+\right) `] = [__________] [@ AnswerFormatHelp("numbers") @]*  
+END_PGML
+ANS(Compute($ans_c)->cmp);
+
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+$a1num = 5*$a1**4 + 40*$a1**3 + 105*$a1**2 + 100*$a1 +24;
+$a1den = $a1*($a11)*($a12)*($a13)*($b1);
+$ans_a = sprintf("%.3f", $ans_a);
+
+$a3num = 4;
+$a3den = $a3*$b31;
+$ans_c = sprintf("%.3f", $ans_c);
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+Write out the terms for each value of [`i`] from [$a1] to [$b1],
+then add the terms.
+>>[``
+  \begin{array}{rcl}
+    i = [$a1] &\to& a_{[$a1]} = \frac{1}{[$a1]}\\
+    i = [$a11] &\to& a_{[$a11]} = \frac{1}{[$a11]}\\
+    i = [$a12] &\to& a_{[$a12]} = \frac{1}{[$a12]}\\
+    i = [$a13] &\to& a_{[$a13]} = \frac{1}{[$a13]}\\
+    i = [$b1] &\to& a_{[$b1]} = \frac{1}{[$b1]}\\
+  \end{array}
+``]<<
+
+The sum is: [`\displaystyle\sum_{i=[$a1]}^{[$b1]} \dfrac{1}{[$a1]} =
+1 + \frac{1}{[$a11]} + \frac{1}{[$a12]} + \frac{1}{[$a13]} + \frac{1}{[$b1]} =
+\frac{[$a1num]}{[$a1den]} = [$ans_a]`].
+
+----
+
+Write out the terms for each value of [`i`] from [$a2] to [$b2],
+then add the terms.
+>>[``
+  \begin{array}{rcl}
+    i = [$a2] &\to& a_{[$a2]} = (-1)^{[$a2]} ([$a2]) = [$ans_a2]\\
+    i = [$a21] &\to& a_{[$a21]} = (-1)^{[$a21]} ([$a21]) = [$ans_a21]\\
+    i = [$a22] &\to& a_{[$a22]} = (-1)^{[$a22]} ([$a22]) = [$ans_a22]\\
+    i = [$a23] &\to& a_{[$a23]} = (-1)^{[$a23]} ([$a23]) = [$ans_a23]\\
+    i = [$a24] &\to& a_{[$a24]} = (-1)^{[$a24]} ([$a24]) = [$ans_a24]\\
+    i = [$b2] &\to& a_{[$b2]} = (-1)^{[$b2]} ([$b2]) = [$ans_b2]\\
+  \end{array}
+``]<<
+
+The sum is: [`\displaystyle\sum_{i=[$a2]}^{[$b2]} (-1)^i i = [$ans_a2] [$ans_a21] + [$ans_a22] [$ans_a23] + [$ans_a24] [$ans_b2] = [$ans_b]`] 
+
+----
+
+Write out the terms for each value of [`i`] from [$a3] to [$c3],
+then add the terms.
+
+>>[``
+  \begin{array}{rcl}
+    i = [$a3] &\to& a_{[$a3]} = \frac{1}{[$a3]} - \frac{1}{[$a31]} = \frac{1}{[$a3*$a31]}\\
+    i = [$a31] &\to& a_{[$a31]} = \frac{1}{[$a31]} - \frac{1}{[$a32]} = \frac{1}{[$a31*$a32]}\\
+    i = [$a32] &\to& a_{[$a32]} = \frac{1}{[$a32]} - \frac{1}{[$b3]} = \frac{1}{[$a32*$b3]}\\
+    i = [$b3] &\to& a_{[$b3]} = \frac{1}{[$b3]} - \frac{1}{[$b31]} = \frac{1}{[$b3*$b31]}\\
+  \end{array}
+``]<<
+
+Note, the sum *telescopes*, which may save you
+some work when computing the
+sum.
+>>[``
+  \sum_{i=[$a3]}^{[$b3]}\left( \dfrac{1}{i} - \dfrac{1}{i+1} 
+  \right)  = \frac{1}{[$a3]} - \frac{1}{[$a31]} +
+  \frac{1}{[$a31]} - \frac{1}{[$a32]} +
+  \frac{1}{[$a32]} - \frac{1}{[$b3]} + 
+  \frac{1}{[$b3]} - \frac{1}{[$b31]}
+``]<<
+>>[``
+  = \frac{1}{[$a3]} - \frac{1}{[$b31]} = \frac{[$a3num]}{[$a3den]} = [$ans_c].
+``]<<
+
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+# Answers are evaluated beside the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+
+$showPartialCorrectAnswers = 0;
+
+install_problem_grader(~~&std_problem_grader);
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 100 possible versions of this question.<BR>
+    Students may enter the terms of each sum in any order.
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    
+
+

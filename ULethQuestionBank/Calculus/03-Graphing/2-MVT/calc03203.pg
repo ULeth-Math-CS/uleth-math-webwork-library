@@ -1,0 +1,149 @@
+## DESCRIPTION
+## This is Problem 3.2.3-4 from the APEX Calculus text. It tests students' ability to check the conditions of Rolle's Theorem.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Mean value theorem)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('3.2')
+## Problem1('3-4')
+## MO(1)
+## Keywords('derivative, rolles theorem, mean value theorem', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  # Used for dropdown menus
+  "parserPopUp.pl"
+);
+
+#############################
+#   Setup
+#-ULETH-#
+$a = random(2,21,1)*random(-1,1,2);
+$b = random(1,30,1);
+$ab = $a*$b;
+
+$cont1 = PopUp(["?", "is", "is not"], "is");
+$diff1 = PopUp(["?", "is", "is not"], "is");
+$fa1   = $a;
+$fb1   = $a;
+$eq1   = PopUp(["?", "equal", "not equal"], "equal");
+$rolle1= PopUp(["?", "does", "does not"], "does");
+
+$cont2 = PopUp(["?", "is", "is not"], "is");
+$diff2 = PopUp(["?", "is", "is not"], "is");
+$fa2   = -$ab;
+$fb2   = $ab;
+$eq2   = PopUp(["?", "equal", "not equal"], "not equal");
+$rolle2= PopUp(["?", "does", "does not"], "does not");
+
+$cont3 = PopUp(["?", "is", "is not"], "is");
+$diff3 = PopUp(["?", "is", "is not"], "is not");
+$fa3   = $ab;
+$fb3   = $ab;
+$eq3   = PopUp(["?", "equal", "not equal"], "equal");
+$rolle3= PopUp(["?", "does", "does not"], "does not");
+
+TEXT(beginproblem());
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+BEGIN_PGML
+
+In each part, a function [`f(x)`] and interval [`[a, b]`] are given.
+Check if Rolle's Theorem can be applied to [`f`] on [`[a, b]`].
+
+----
+
+[`{\bf a}) \, f(x) = [$a]`] on [`[-[$b], [$b]]`].
+
+[` f `] [______]{$cont1} continuous on [`[-[$b], [$b]]`].
+
+[` f `] [______]{$diff1} differentiable on [`(-[$b], [$b])`].
+
+[`f(-[$b]) = `] [______]{$fa1} and
+[`f([$b]) = `] [______]{$fb1}. The two values are [______]{$eq1}.
+
+Rolle's Theorem [______]{$rolle1} apply in this situation.  
+
+----
+
+[`{\bf b}) \, f(x) = [$a]x`] on [`[-[$b], [$b]]`].
+
+[` f `] [______]{$cont2} continuous on [`[-[$b], [$b]]`].
+
+[` f `] [______]{$diff2} differentiable on [`(-[$b], [$b])`].
+
+[`f(-[$b]) = `] [______]{$fa2} and
+[`f([$b]) = `] [______]{$fb2}. The two values are [______]{$eq2}.
+
+Rolle's Theorem [______]{$rolle2} apply in this situation.  
+
+----
+
+[`{\bf c}) \, f(x) = [$a]|x|`] on [`[-[$b], [$b]]`].
+
+[` f `] [______]{$cont3} continuous on [`[-[$b], [$b]]`].
+
+[` f `] [______]{$diff3} differentiable on [`(-[$b], [$b])`].
+
+[`f(-[$b]) = `] [______]{$fa3} and
+[`f([$b]) = `] [______]{$fb3}. The two values are [______]{$eq3}.
+
+Rolle's Theorem [______]{$rolle3} apply in this situation.
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+[`{\bf a)}`] Since [`f(x) = [$a]`] is a constant function, it is both continuous and differentiable. Furthermore, [`f(-[$b]) = f([$b]) = [$a]`], so Rolle's Theorem applies.  
+
+[`{\bf b)}`] Since [`f(x) = [$a]x`] is a linear function, it is both continuous and differentiable. However, [`f(-[$b]) = [$fa2] \neq [$fb2] = f([$b])`], so Rolle's Theorem does not apply.  
+
+[`{\bf c)}`] The function [`f(x) = [$a]|x|`] is a continuous, but it is not differentiable at [`x = 0`], which is in the interval [`(-[$b],[$b])`]. Therefore, Rolle's theorem does not apply, even though [`f(-[$b]) = [$fa3] = f([$b])`].
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+#-ENDULETH#
+
+
+#############################
+#  Comments
+COMMENT('
+    Randomization provides 12000 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+
+ENDDOCUMENT();

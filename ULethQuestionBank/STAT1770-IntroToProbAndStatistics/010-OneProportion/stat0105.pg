@@ -1,0 +1,456 @@
+## DESCRIPTION
+#  This question 
+## ENDDESCRIPTION
+
+## DBsubject('Statistics')
+## DBchapter('Experimental Design')
+## DBsection('Concepts')
+## Date(2017-05-11)
+## Institution(University of Lethbridge)
+## Author(Kyler Fisher, Adopted from template by Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('multiple choice', 'ULETH-STAT1770', 'dot plot', 'dot-plot', 'proportion', 'significance', 'one proportion', 'p-value')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to support the GeoGebra applet.
+  "AppletObjects.pl",
+  # Formats problem data into two layout columns.
+  "unionTables.pl",
+  # Provides course-specific initializations.
+  "PGcourse.pl",
+  "PGML.pl",
+  # Used for drop down responses.
+  "parserPopUp.pl",
+  # Following two macros for multiple choice.
+  "parserRadioButtons.pl",
+  "PGchoicemacros.pl",
+);
+
+TEXT(beginproblem());
+
+
+##########################################
+#  Setup
+
+#-ULETH-#
+
+$p = 0.5;
+$numTrials = 20;
+$numReps = 100;
+
+sub executeTrial {
+    if (random(0,1,0.0000001) > $p){
+        return 0;
+    }
+    else{
+        return 1;
+    }
+}
+
+sub executeRepetition {
+    $successes = 0;
+    for ($i = 0; $i < $numTrials; $i++){
+        $successes += executeTrial();
+    }
+    return $successes;
+}
+
+sub executeSimulation {
+    @counts;
+    do {
+        $max = 0;
+        $min = $numTrials;
+        for ($j = 0; $j < $numReps; $j++){
+            $counts[$j] = executeRepetition();
+            if ( $counts[$j] > $max ) { $max = $counts[$j] } #used to get maximum value
+            if ( $counts[$j] < $min ) { $min = $counts[$j] } #used to get minimum value
+        }
+    } while ($max < 11);
+    $results = join(",", @counts);
+    return $results;
+}
+
+
+do {
+$results = executeSimulation();
+
+# generate a number for the observed heads, ensuring it is no larger than the observed max of simulation
+do{ $numObserved = random(11,14); } 
+while ( $numObserved >= $max);
+
+#find tallest column (used for scaling)
+$maxHeight = 0;
+for ($num = 1; $num < 20; $num++){
+    $sum = 0;
+    for ($m = 0; $m < $numReps; $m++){
+        if ( $counts[$m] == $num ) { $sum++ }
+    }
+    if ( $sum > $maxHeight ) { $maxHeight = $sum }
+}
+
+#find the p-value from the simulation results
+$countAtOrAbove = 0;
+for ($i = 0; $i < $numReps; $i++) {
+    if ($counts[$i] >= $numObserved) { $countAtOrAbove++ }
+}
+$pVal = $countAtOrAbove / $numReps;
+} while ((abs($pVal - 0.1) < 0.01) or (abs($pVal - 0.05) < 0.01) or (abs($pVal - 0.01) < 0.005)); #keep looping (running simulation) until p-value is sufficiently far away from the evidence cutoff points (it is not desirable to have the p-value too close to 0.10, 0.05 or 0.01 when asking student about evidence).
+
+$countBelow = ($numReps-$countAtOrAbove); #for multiple choice options
+$wrongPVal1 = $countBelow / $numReps; #for multiple choice options
+$wrongPVal2 = $pVal * 10; #for multiple choice options
+$wrongPVal3 = $wrongPVal1 * 10; #for multiple choice options
+
+##### multiple choice
+# The options in the square brackets are the different radio button options
+# that will be available.
+# The next argument is the correct answer.
+# The arguments in the square brackets after last=> dictate which options
+# come last in the radio button list (left empty randomizes the order).
+$radioButtonsA = RadioButtons(
+  ["Null: The long-run proportion of times Hope will go to the correct object is 0.50,
+  Alt: The long-run proportion of times that Hope will go to the correct object is less than 0.50", 
+  "Null: The long-run proportion of times Hope will go to the incorrect object is 0.50,
+  Alt: The long-run proportion of times that Hope will go to the correct object is less than 0.50",
+  "Null: The long-run proportion of times Hope will go to the correct object is 0.50,
+  Alt: The long-run proportion of times that Hope will go to the incorrect object is more than 0.50",
+  "Null: The long-run proportion of times Hope will go to the correct object is 0.50,
+  Alt: The long-run proportion of times that Hope will go to the correct object is more than 0.50",
+  ],
+  "Null: The long-run proportion of times Hope will go to the correct object is 0.50,
+  Alt: The long-run proportion of times that Hope will go to the correct object is more than 0.50", #answer
+  last=>[""]); #left blank to randomize answer positions
+  
+$radioButtonsB = RadioButtons(
+  ["$pVal ($countAtOrAbove dots out of 100 are $numObserved or larger)",
+  "$wrongPVal1 ($countBelow dots out of 100 are less than $numObserved)",
+  "$wrongPVal2 ($countAtOrAbove dots out of 100 are $numObserved or larger)",
+  "$wrongPVal3 ($countBelow dots out of 100 are less than $numObserved)",
+  ],
+  "$pVal ($countAtOrAbove dots out of 100 are $numObserved or larger)", #answer
+  last=>[""]); #left blank to randomize answer positions
+
+
+#set multiple choice 3 depending on the strength of evidence
+if ($pVal > 0.1) { $MC3Answer = "The p-value does not provide much evidence against the null hypothesis; null is plausible" }
+elsif ($pVal > 0.05) { $MC3Answer = "The p-value provides moderate evidence against the null hypothesis" }
+elsif ($pVal > 0.01) { $MC3Answer = "The p-value provides strong evidence against the null hypothesis" }
+else { $MC3Answer = "The p-value provides very strong evidence against the null hypothesis" }
+
+$radioButtonsC = RadioButtons(
+  ["The p-value does not provide much evidence against the null hypothesis; null is plausible",
+  "The p-value provides moderate evidence against the null hypothesis",
+  "The p-value provides strong evidence against the null hypothesis",
+  "The p-value provides very strong evidence against the null hypothesis",
+  ],
+  $MC3Answer, #answer
+  last=>[""]); #left blank to randomize answer positions
+  
+$radioButtonsD = RadioButtons(
+  ["one possible value of the proportion of times Hope goes to the incorrect object out of 20 if she goes to the incorrect
+object 50% of the time in the long run",
+  "one possible value of the proportion of times Hope goes to the correct object out of 20 if she goes to the correct object
+less than 50% of the time in the long run",
+  "one possible value of the proportion of times Hope goes to the correct object out of 20 if she goes to the correct object
+50% of the time in the long run",
+  "one possible value of the proportion of times Hope goes to the correct object out of 20 if she goes to the correct object
+more than 50% of the time in the long run",
+  ],
+  "one possible value of the proportion of times Hope goes to the correct object out of 20 if she goes to the correct object
+50% of the time in the long run", #answer
+  last=>[""]); #left blank to randomize answer positions
+
+
+$popup = PopUp(["?", "Ho:pi = 0.5, Ha: pi < 0.5", "Ho:pi = 0.5, Ha: pi > 0.5", "Ho:pi < 0.5, Ha: pi = 0.5", "Ho:pi < 0.5, Ha: pi > 0.5"], "Ho:pi = 0.5, Ha: pi > 0.5");
+
+#################################################
+# How many data points are in the graph.
+$numPoints = 20;
+# Number of units above the x-axis the image is drawn.
+$yOffset = 2.5;
+# Height of the box.
+$yScale = 1.25;
+
+# Set the bounds of the graph.
+$minX = -1;
+$minY = -3;
+$maxX = 20.5; #$max + 2.5;
+$maxY = $maxHeight + 2.5;
+#-ENDULETH-#
+
+
+######################################
+# Create  link to applet:
+###################################
+# You can name your applet (anything reasonable :-) )
+# Adjust the height and width as desired
+# Paste the geogebra parameters in at the bottom of the page just above the
+# command end command so that they don't get in the way.
+# See the note down there for more information.
+###################################
+
+#-ULETH-#
+# Choose an appropriate name for your applet.  Can also leave as ggbfoo.
+$appletName = "ggbfoo";
+#-ENDULETH-#
+
+$applet =  GeogebraWebApplet(
+   code       => "geogebra.GeoGebraApplet",
+   archive    => "geogebra.jar",
+   codebase                 => findAppletCodebase("geogebra.jar"),
+   appletName              => $appletName,
+   appletId                    => $appletName,
+   submitActionAlias     => 'getAppletValues',  # default actionAlias
+   initializeActionAlias   => 'configure',  # default actionAlias
+   setStateAlias             => 'setXML',
+   getStateAlias             => 'getXML',
+   setConfigAlias           => '',
+   getConfigAlias           => '',
+   returnFieldName       => '',
+   #-ULETH-#
+   width                 => 900,              # may want to modify width
+   height                => 600,              # may want to modify height
+   #-ENDULETH-#
+   # mayscript             => "true",
+   #-ULETH-#
+   debugMode             => 0,   # set debugMode to 0 for no debug
+                                              # to 1 to make xml representation visible
+                                              # to 2 to add alerts detailing progression
+                                              # through the applet
+   #-ENDULETH-#
+   onInit                => 'ggbOnInit',
+   type                  => 'geogebraweb',
+   #submitActionScript    => qq{ getQE('answerBox').value = getAppletValues() },
+   submitActionScript => '',
+   selfLoading           => 1,
+
+   # Defined as a separate subroutine so the parameters can go at the bottom of
+   # the page.
+   params     => GEOGEBRA_PARAMS(),# paste parameters in
+
+);
+
+
+##################################
+# Setup GeogebraWebApplet --
+###################################
+
+###############################################
+#
+#  For persistence of GeoGebra applet state
+#  when answers are submitted or page is refreshed.
+#  Uses JavaScript interface to GeoGebra.
+#  This fetches the GeoGebra applet with $appletname.
+#  Note that this variable gets set in the "Create link to applet" section.
+
+HEADER_TEXT(
+qq!
+<script language="javascript">
+   function ggbOnInit(param) {
+       if (param == "$appletName") {
+           applet_loaded(param,1);  // report that applet is ready.
+           ww_applet_list[param].safe_applet_initialize(2);
+       }
+   }
+</script>
+<noscript>For this question to work properly,
+you must enable JavaScript, or use another browser
+(or computer) on which JavaScript works.</noscript>
+!);
+
+
+#######################################################
+#
+#  For setting initial values in GeoGebra from WeBWorK
+#  Uses JavaScript interface to GeoGebra.
+#  Note the area right under all the ///////////////.
+#  This is where you match up your variables from WeBWorK
+#  with your variables in GeoGebra.
+
+TEXT( MODES(TeX=>'', HTML=><<END_SCRIPT ) );
+<script language="javascript">
+function setAppletCoefficients() {
+   var applet=getApplet("$appletName");   // alert("Updating coefficients");
+   if (typeof(applet)!="undefined") {
+     if (typeof(applet.setValue)!="undefined") {
+
+     ////////////////////////////////////////////////////////////////
+     //  List the values of the parameters to be set in the applet here
+
+          // Set variables for GeoGebra from WebWork
+          applet.setValue("yOffset", $yOffset); // the number of units above the        x-axis the image is drawn
+          applet.setValue("yScale", $yScale); // the height of the box
+          // #-ULETH-#
+          // Raw data variables get set here.  Do not change values here!
+          // You can, however, comment/uncomment lines to match the number of
+          // data points you are passing in.
+          //applet.setListValue("xList",1,$dataSet[0]);
+          //applet.setListValue("xList",2,$dataSet[1]);
+          //applet.setListValue("xList",3,$dataSet[2]);
+          //applet.setListValue("xList",4,$dataSet[3]);
+          //applet.setListValue("xList",5,$dataSet[4]);
+          //applet.setListValue("xList",6,$dataSet[5]);
+          //applet.setListValue("xList",7,$dataSet[6]);
+          //applet.setListValue("xList",8,$dataSet[7]);
+          //applet.setListValue("xList",9,$dataSet[8]);
+          //applet.setListValue("xList",10,$dataSet[9]);
+          //applet.setListValue("xList",11,$dataSet[10]);
+          //applet.setListValue("xList",12,$dataSet[11]);
+          //applet.setListValue("xList",13,$dataSet[12]);
+          //applet.setListValue("xList",14,$dataSet[13]);
+          //applet.setListValue("xList",15,$dataSet[14]);
+          //applet.setListValue("xList",16,$dataSet[15]);
+          //applet.setListValue("xList",17,$dataSet[16]);
+          //applet.setListValue("xList",18,$dataSet[17]);
+          //applet.setListValue("xList",19,$dataSet[18]);
+          //applet.setListValue("xList",20,$dataSet[19]);
+          //applet.setListValue("xList",21,$dataSet[20]);
+          //applet.setListValue("xList",22,$dataSet[21]);
+          //applet.setListValue("xList",23,$dataSet[22]);
+          //applet.setListValue("xList",24,$dataSet[23]);
+          //applet.setListValue("xList",25,$dataSet[24]);
+          //applet.setValue("outliers",1); // To show outliers set to 1, otherwise set this to 0
+          // Changing the text value will change the label text on the graph, and
+          // the coordinates at the end represent the point on the graph's grid
+          // where the label will be placed.
+          applet.evalCommand("ZoomIn[$minX,$minY,$maxX,$maxY]");
+          applet.evalCommand("D = DotPlot[{$results}]");
+          //
+          // #-ENDULETH-#
+     } else {
+          setTimeout("setAppletCoefficients()", 1000);
+     }
+   } else {
+      setTimeout("setAppletCoefficients()",1000);
+   }
+}
+ww_applet_list["$appletName"].setConfig = function() {setAppletCoefficients()};
+</script>
+END_SCRIPT
+
+
+#######################################
+# TEXT
+#######################################
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+BEGIN_PGML
+
+Suppose you are testing to see if your dog, Hope, understands pointing towards an object. You put Hope through 20 trials and *[$numObserved] times* she goes to the correct object when given a choice between two objects. You then conduct a test of significance and generate the following 100 simulations using an applet.  
+Probability of heads: 0.5  
+Number of tosses: 20  
+Number of repetitions: 100  
+Total = 100  
+
+[@
+ColumnTable("",
+$BCENTER.
+$BBOLD."Simulation Results".$EBOLD.$PAR.
+MODES(HTML=>$applet->insertAll(debug=>0, includeAnswerBox=>0,), TeX=>$im)
+,
+$ECENTER
+,
+indent => 0, separation => 30, valign => "MIDDLE"
+);
+@]*
+
+Which of the following explains the null and alternative hypotheses?
+
+[@ $radioButtonsA->buttons() @]*
+
+represent the null and alternative hypotheses in symbols: [@ $popup->menu() @]*
+
+Which is the most valid p-value?
+
+[@ $radioButtonsB->buttons() @]*
+
+Which is the most appropriate statement about the p-value?
+
+[@ $radioButtonsC->buttons() @]*
+
+Which of the following best describes what a single dot represents in the null distribution shown?
+
+[@ $radioButtonsD->buttons() @]*
+
+END_PGML
+
+
+
+#########################################
+# ANSWER section
+#########################################
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+ANS($radioButtonsA->cmp());
+ANS($popup->cmp());
+ANS($radioButtonsB->cmp());
+ANS($radioButtonsC->cmp());
+ANS($radioButtonsD->cmp());
+
+
+#########################################
+# The applet as a base64 string
+#########################################
+
+sub GEOGEBRA_PARAMS {
+    my $result = {
+showResetIcon=>"false" ,
+enableRightClick=>"false" ,
+enableLabelDrags=>"false",
+showMenuBar=>"false" ,
+showToolBar=>"false",
+showAlgebraInput=>"false",
+useBrowserForJS=>"true",
+#-ULETH-#
+# In the GeoGebra desktop application, create your applet.  Once you are done,
+# press Ctrl + Shift + B.  This will copy the base64 string (like the one below)
+# to your clipboard.  Paste this string between the double quotes below.  Make
+# sure not to paste over the }; or $result lines that follow this section.
+# You should end up with (e.g. ggbbase64=>"skj8981519+!KJ!MSD!.....") as the
+# parameter below.
+ggbbase64=>"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"
+#-ENDULETH-#
+};
+
+$result;
+}
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+
+
+END_PGML_SOLUTION
+
+COMMENT('GeoGebra question reuqiring students to interpret a dotplot graph with 4 distributions (arranged vertically) and arrange the relative standard deviations using tiles. <BR>
+        Distributions are randomly arranged vertically, randomly assigned colors, are randomly assigned from 4 letters, and 3 of the distribtutions are randomly shifted although the shapes of all distributions are retained.
+        Graph may not render on editor screen, but renders for students. <BR>
+        Includes a solution set.<BR>
+        
+        Uses PGML. <BR>
+Uses GeoGebraWeb (JavaScript), so it should work on computers and tablets.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

@@ -1,0 +1,188 @@
+## DESCRIPTION
+## This is Problem 2.4.12 from the APEX Calculus text. It covers a basic application of the Quotient Rule.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Quotient rule (without trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.4')
+## Problem1('12')
+## MO(1)
+## Keywords('derivative', 'quotient rule', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Allows a single problem to contain multiple parts, where later
+  # parts aren't visible until the earlier ones are completed.
+  "scaffold.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Used to provide contextual help for how to type solutions.
+  "AnswerFormatHelp.pl",
+  "contextFraction.pl"
+);
+
+TEXT(beginproblem());
+
+
+###################################
+#  Setup
+
+#-ULETH-#
+Context("Numeric");
+
+$a = random(1,9,1)*random(-1,1,2);
+$b = random(2,10,1);
+
+$f = Formula("x^3 + $a*x^2")->reduce();
+$g = Formula("$b*x^2")->reduce();
+
+
+$dfu = $f->D('x')->reduce();
+$dgu = $g->D('x')->reduce();
+
+$df = Compute("$dfu")->reduce();
+$dg = Compute("$dgu")->reduce();
+
+$ans = Formula("1/$b");
+$hsimple = Formula("x/$b+$a/$b")->reduce();
+#-ENDULETH-#
+
+###################################
+#  Main Text
+
+#-ULETH-#
+# This applies to the PGML in each scaffolding section.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+# Initial problem text to explain the scaffolding setup.
+BEGIN_PGML
+
+Follow the steps to find the derivative of the given function in two different ways.
+
+>>[``h(x) = \frac{[$f]}{[$g]}``]<<
+
+This problem has three parts. You may only open the next part after correctly
+completing the previous part.
+END_PGML
+#-ENDULETH-#
+
+Scaffold::Begin();
+#-ULETH-#
+# For each part the answer or answer checker reference must appear in the curly 
+# braces immediately after the answer field.
+Section::Begin("Quotient Rule - Part 1");
+# Part 1 problem text.
+BEGIN_PGML
+Let [`f(x) = [$f]`] and [`g(x) = [$g]`] so that [`h(x) = f(x)/g(x)`]. 
+Their respective derivatives are  
+
+[`f'(x) = `][_____________]{Compute($df)} [@ AnswerFormatHelp("formulas") @]*  
+and  
+[`g'(x) = `][_____________]{Compute($dg)}.
+END_PGML
+Section::End();
+
+Section::Begin("Quotient Rule - Part 2");
+# Part 2 problem text.
+BEGIN_PGML
+Using the derivatives from Part 1 and the Quotient Rule,
+
+[``h'(x) = \left[\frac{f}{g}\right]' 
+= \frac{g\cdot f' - f \cdot g'}{g^2} = ``]
+[`\Big(`][_____]{Compute($g)}[`\cdot`][_____]{Compute($df)} [`-`] [_____]{Compute($f)}[`\cdot`][_____]{Compute($dg)}[`\Big)`] [`/`] [`\Big(`][_____]{Compute($g)}[`\Big)^2`].
+
+Simplifying, we find that
+[`h'(x) = `][_____]{Compute($ans)}.
+
+END_PGML
+Section::End();
+
+Section::Begin("Algebraic Manipulation");
+# Part 3 problem text.
+BEGIN_PGML
+You may use algebra to simplify [`h(x)`] before taking the derivative.  
+In this instance, [`h(x)`] simplifies to [__________]{Compute($hsimple)}. (_Hint: divide the terms in the numerator by [`[$g]`]_)
+
+Therefore, 
+
+[`h'(x) = `][_____]{Compute($ans)}.
+
+END_PGML
+Section::End();
+#-ENDULETH-#
+
+Scaffold::End();
+
+
+
+###################################
+#  Answer Evaluation 
+
+#evaluation must be completed in the problem text
+
+###################################
+#  Solution
+
+BEGIN_PGML_SOLUTION
+
+First, using the Quotient Rule,
+
+[``
+  \begin{array}{rcl}
+    h'(x) &=& \displaystyle
+    \frac{ ([$g])\frac{d}{dx}[ [$f] ] - ([$f]) \cdot \frac{d}{dx}[ [$g] ]
+    }{([$g])^2}\\
+    &&\\
+    &=&  \frac{ ([$g])([$df]) - ([$f])([$dg]) }{ ([$g])^2 }
+  \end{array}
+``]
+
+After simplifying the last line, we find [`h'(x) = [$ans] `].
+
+Next, simplify \(g\) first:
+
+[``
+  \begin{array}{rcl}
+    h(x) &=& \displaystyle \frac{[$f]}{[$g]} \\
+    &&\\
+    &=& \displaystyle\frac{x^3}{[$b]x^2} + \frac{[$a] x^2}{[$b] x^2} \\
+    &&\\
+    &=& \displaystyle\frac{1}{[$b]} x + \frac{[$a]}{[$b]}
+  \end{array}
+``]
+
+ Then, taking the derivative, [`h'(x) = \frac{1}{[$b]} = [$ans]`].
+
+END_PGML_SOLUTION
+
+COMMENT("This is a multi-part problem
+in which the next part is revealed only after the previous
+part is correct. <BR>
+Randomization provides 729 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+");
+#-ENDULETH-#
+
+ENDDOCUMENT();
+
+
+
+

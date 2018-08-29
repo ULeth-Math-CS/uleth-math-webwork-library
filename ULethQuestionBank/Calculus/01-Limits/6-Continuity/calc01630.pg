@@ -1,0 +1,111 @@
+## DESCRIPTION
+## This is Problem 1.6.30 in the ULETH APEX Calculus text (1.5.30 in the APEX text). It covers intervals on which a function is continuous.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Limits and continuity)
+## DBsection(Continuity - concept of)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('1.5')
+## Problem1('30')
+## MO(1)
+## Keywords('continuity', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+#############################
+#   Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  "PGML.pl"
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+
+# The Numeric context is used while defining the formula, as it only
+# requires numeric values.
+Context("Numeric");
+
+#-ULETH-#
+$a = random(1,10,1)*random(-1,1,2);
+$b = random(1,10,1)*random(-1,1,2);
+
+# $s is the formula used in the question.
+$s = Compute("$a*cos(x) + $b*sin(x)")->reduce();
+
+# Answers can only be entered as intervals.
+Context("Interval");
+
+# This ensures that the student's answer is kept in the form it is entered.
+# E.g. If a fraction is entered, it will not be reduced to a decimal.
+Context()->flags->set(formatStudentAnswer=>'parsed');
+
+# The following flag can be uncommented to allow open and closed intervals.
+# E.g. 1 < x < 2, 1 <= x < 2, 1 < x <= 2, and 1 <= x <= 2 would all be marked correct.
+# Context()->flags->set(ignoreEndpointTypes=>1);
+
+$domain = Compute("(-inf,inf)");
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+Give the interval(s) on which the function is continuous.
+
+>>[``s(x) = [$s]``]<<
+
+[____________________] [@ AnswerFormatHelp("intervals") @]*
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+Both [`\sin(x)`] and [`\cos(x)`] are continuous everywhere. Since [`s(x)`] is the sum of two functions which are continuous everywhere, [`s(x)`] is also continuous everywhere.
+
+END_PGML_SOLUTION
+
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS( $domain->cmp() );
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 100 possible versions of this question, but the solution is always the same.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    
+
+

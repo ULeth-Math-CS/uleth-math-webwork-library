@@ -1,0 +1,235 @@
+## DESCRIPTION
+## This is Problem 3.3.8 from the APEX Calculus text (3.3.9 in the ULETH APEX text). It covers graphical interpretation of the derivative tests for increasing/decreasing functions.  
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Increasing/decreasing functions and local extrema)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('3.3')
+## Problem1('8')
+## MO(1)
+## Keywords('first derivative test', 'increasing and decreasing functions', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+##############################
+#  Initialization
+
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  "PGchoicemacros.pl",
+  "PGanswermacros.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Needed to support graph generation.
+  "PGgraphmacros.pl",
+  # Allows the graph and text to be placed in side-by-side columns.
+  "unionTables.pl",
+  "niceTables.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  "parserRadioButtons.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+Context("Interval")->variables->are(x=>"Real");
+   Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,
+   );
+ Context()->flags->set(formatStudentAnswer=>'parsed');  
+# Refreshes the graph image every time the page is loaded, as opposed to
+# retrieving a cached version.
+$refreshCachedImages = 1;
+
+#establish the function to graph
+
+$a = random(2,9,1)*random(-1,1,2);
+
+
+$f = Formula("$a cos(x)")->reduce();
+
+$df = Formula("-$a sin(x)")->reduce();
+
+
+if ($a > 0) {
+  @answers1 = Compute("(-pi, 0) U (pi, 2*pi)");
+  @answers2 = Compute("(-2*pi, -pi) U (0, pi)");
+  $sol_str1 = "\((-\pi, 0) \cup (\pi, 2\pi)\)";
+  $sol_str2 = "\((-2\pi, -\pi) \cup (0, \pi)\)";
+} else {
+  @answers1 = Compute("(-2*pi, -pi) U (0, pi)");
+  @answers2 = Compute("(-pi, 0) U (pi, 2*pi)");
+  $sol_str1 = "\((-2\pi, -\pi) \cup (0, \pi)\)";
+  $sol_str2 = "\((-\pi, 0) \cup (\pi, 2\pi)\)";
+}
+
+
+########################################
+## Graphs
+
+$w = 300;  # graph size
+$tw = 300; # graph size in TeX
+
+$x1 = -2*pi;
+$x2 = 2*pi;
+
+
+$graph1 =  init_graph($x1,-5,$x2,5,'axes'=>[0,0],
+  'ticks'=>[8,10],'size'=>[300,300]);
+  $graph1->new_color("orange", 255,153,0);
+  $graph1->new_color("bl", 102, 153, 204); 
+  
+$graph2 =  init_graph($x1,-5,$x2,5,'axes'=>[0,0],
+  'ticks'=>[8,10],'size'=>[300,300]);
+    $graph2->new_color("orange", 255,153,0);
+    $graph2->new_color("bl", 102, 153, 204); 
+    
+$graph3 =  init_graph($x1,-5,$x2,5,'axes'=>[0,0],
+  'ticks'=>[8,10],'size'=>[300,300]);
+    $graph3->new_color("orange", 255,153,0);
+    $graph3->new_color("bl", 102, 153, 204);   
+    
+$graph4 =  init_graph($x1,-5,$x2,5,'axes'=>[0,0],
+  'ticks'=>[8,10],'size'=>[300,300]);
+    $graph4->new_color("orange", 255,153,0);
+    $graph4->new_color("bl", 102, 153, 204); 
+
+add_functions($graph1, "$f for x in [$x1,$x2] using color:black weight:2");
+add_functions($graph1, "-$df for x in [$x1,$x2] using color:orange weight:2");
+($graph1->fn)[1]->steps(200);
+
+add_functions($graph2, "$f for x in [$x1,$x2] using color:black weight:2");
+add_functions($graph2, "$df for x in [$x1,$x2] using color:orange weight:2");
+
+add_functions($graph3, "-$df for x in [$x1,$x2] using color:black weight:2");
+add_functions($graph3, "$f for x in [$x1,$x2] using color:orange weight:2");
+
+add_functions($graph4, "$df for x in [$x1,$x2] using color:black weight:2");
+add_functions($graph4, "-$f for x in [$x1,$x2] using color:orange weight:2");
+
+$r = random(1,4,1);
+if ($r==1) {
+   @graphs = ($graph1, $graph2, $graph3, $graph4);
+   $ans = RadioButtons(["A", "B", "C", "D"], "B",separator => ". ");
+} elsif ($r==2) {
+   @graphs = ($graph4, $graph1, $graph2, $graph3);
+   $ans = RadioButtons(["A", "B", "C", "D"], "C",separator => ". ");
+} elsif ($r==3) {
+   @graphs = ($graph3, $graph4, $graph1, $graph2);
+   $ans = RadioButtons(["A", "B", "C", "D"], "D",separator => ". ");
+} else {
+   @graphs = ($graph2, $graph3, $graph4, $graph1);
+   $ans = RadioButtons(["A", "B", "C", "D"], "A",separator => ". ");
+}
+
+#############################
+#  Main Text
+
+#-ULETH-#
+
+BEGIN_PGML
+Consider the function 
+
+[`
+  f(x) = [$f] \quad \textrm{on} \; (-2\pi, 2\pi).
+`]
+
+Its derivative is [`f'(x)`] = [_______________________]{Compute($df)} [@ AnswerFormatHelp("formulas") @]*
+----
+The graph that correctly displays [`f(x)`] (in black) and [`f'(x)`] (in orange) is
+
+[_]{$ans}.
+
+END_PGML
+
+BEGIN_TEXT
+A. \{image(insertGraph(@graphs[0]),width=>$w*0.6,
+height=>$w*0.6,tex_size=>$tw)\}
+$SPACE$SPACE$SPACE 
+B. \{image(insertGraph(@graphs[1]),width=>$w*0.6,
+height=>$w*0.6,tex_size=>$tw)\}
+$BR$BR$BR
+C. \{image(insertGraph(@graphs[2]),width=>$w*0.6,
+height=>$w*0.6,tex_size=>$tw)\}
+$SPACE$SPACE$SPACE 
+D. \{image(insertGraph(@graphs[3]),width=>$w*0.6,
+height=>$w*0.6,tex_size=>$tw)\}
+END_TEXT
+
+BEGIN_PGML
+----
+Using the graphs of [`f`] and [`f'`], indicate where [`f`] is increasing and decreasing. Enter *DNE* if such an interval does not exist.
+
+
+[`f`] is increasing on [__________________]{Compute(@answers1)}[@ AnswerFormatHelp("intervals") @]*.
+
+[`f`] is decreasing on [__________________]{Compute(@answers2)}.
+
+END_PGML
+
+
+#############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+
+# If you add additional questions, make sure you add answer checkers for them here!
+
+#-ENDULETH-#
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+The derivative is [`f'(x) = [$df]`]. 
+
+There are three critical numbers within the 
+interval, [`x = -\pi, 0, \pi`].
+
+The function [`f`] increases when [`f'(x) > 0`], which is in the interval
+[$sol_str1].
+Further, [`f`] decreases when [`f'(x) < 0`], which is in the interval
+[$sol_str2].
+END_PGML_SOLUTION
+
+COMMENT('
+    Randomization provides 14 different possible versions of this question. 
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+#-ENDULETH-#
+
+# Marks the end of the problem document.
+ENDDOCUMENT();  
+
+
+

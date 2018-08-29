@@ -1,0 +1,134 @@
+## DESCRIPTION
+## This is Problem 3.1.16 from the APEX Calculus text (3.1.18 in the ULETH APEX text). It covers finding extreme values on closed intervals.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Global extrema)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('3.1')
+## Problem1('16')
+## MO(1)
+## Keywords('extreme value', 'polynomial extreme value', 'maximum', 'minimum', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+   # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+$a1 = random(3,7,1);
+$coef2 =  2*$a1*$a1;
+$coef0 = random(1,11,1);
+$e1 = -$a1+1;
+$d1 = 2*$a1+1;
+
+$c2 = 2*$coef2;
+$c3 = $c2/4;
+$a2 = $a1**2;
+
+$y1 = $e1**4 - $coef2*$e1**2  + $coef0;
+$y2 = $coef0;
+
+$f = Compute("x^4-$coef2*x^2+$coef0")->reduce();
+
+
+$ansmin =  Compute($a1**4 - $coef2*$a1**2  + $coef0);
+$ansmax = Compute($d1**4 - $coef2*$d1**2  + $coef0);
+
+$y3 = $ansmin;
+$y4 = $ansmax;
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+Find the extreme values of the function 
+[``f(x) = [$f]``]
+on the interval [`[[$e1],[$d1]]`]. If an extreme value does not exist, enter *DNE*. 
+
+Absolute minimum value: [__________] [@ AnswerFormatHelp("numbers") @]*
+
+Absolute maximum value: [__________]
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+Set the derivative equal to zero to locate all critical numbers.  
+After factoring, we see that [` f'(x) = 4x^3 - [$c2] x = 0 `] when [`4x(x - [$a1])(x + [$a1]) = 0`]. Moreover, [`f'(x)`] is not undefined on [`[[$e1],[$d1]]`].  
+Thus, there are critical numbers at [`x = -[$a1],0, [$a1]`], but only [`0`] and [`[$a1]`] are inside the interval [`[[$e1],[$d1]]`].
+
+Find the value of [`f`] at the critical numbers and the endpoints:
+
+[``
+  \begin{array}{rcl}
+  f([$e1]) &=& [$y1]\\
+  f(0) &=& [$y2]\\
+  f([$a1]) &=& [$y3]\\
+  f([$d1]) &=& [$y4].
+  \end{array}
+``]
+
+From this list, we see that the absolute minimum value is [`[$ansmin]`], 
+and the absolute maximum value is [`[$ansmax]`].
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+ANS(Compute($ansmin)->cmp());
+
+ANS(Compute($ansmax)->cmp());
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 55 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    

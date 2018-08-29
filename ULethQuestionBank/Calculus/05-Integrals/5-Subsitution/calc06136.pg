@@ -1,0 +1,123 @@
+## DESCRIPTION
+## This is Problem 6.1.36 from the APEX Calculus text (5.5.38 from the ULETH APEX text). It covers indefinite integration using substitution.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Techniques of integration)
+## DBsection(Substitution (without trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('6.1')
+## Problem1('36')
+## MO(1)
+## Keywords('indefinite integral', 'substitution', ' antiderivatives ', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  	'contextFraction.pl',
+);
+
+sub str {
+        my $x = shift;
+        return ( $x > 0 ? '' : '-' )
+        . ( ($x)**2 == 1 ? '' : abs($x) )
+}
+
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+
+## (a) ##
+$a1 = non_zero_random(-9,9,1);
+$b1 = non_zero_random(-9,9,1);
+$c1 = non_zero_random(-9,9,1);
+$d1 = non_zero_random(-9,9,1);
+
+$aa = str($a1);
+$bb = str($b1);
+$cc = str($c1);
+
+$f1 = "\dfrac{$aa x^3 + $bb x^2 + $cc x + $d1}{x}";
+
+#### Answers ####
+Context("Fraction");
+$F1 = Formula("($a1/3)x^3 + ($b1/2)x^2 + $c1 x + $d1 ln(x)")->reduce;
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+Evaluate the indefinite integral (write your answer in terms of [`x`]). 
+
+[`\displaystyle\int [$f1] \, dx `] = [___________________________________]{$F1->cmp(upToConstant=>1)} [` + C`].
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+This problem does not require substitution.  Instead,
+use algebra to rewrite the integrand.
+
+>>[``
+    \begin{array}{rcl}
+    \displaystyle  \int [$f1] \, dx &=&
+    \displaystyle \int \left([$aa] x^2 + [$bb] x + [$cc] + \frac{[$d1]}{x}\right)
+    \, dx \\
+    &=& \dfrac{[$aa]}{3}x^3 + \dfrac{[$bb]}{2}x^2 + [$cc] x + [$d1] \ln |x| + C.
+  \end{array}
+``]<<
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answer checking is completed in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 104976 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+
+

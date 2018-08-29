@@ -1,0 +1,101 @@
+###################################################################
+## Description:
+##      Integer Arithmetic Subtraction Problems with two terms where   
+##       one term is a positive integer and another is a negative. Questions are 
+##      of the form: (positive number ) - (negative number)
+####################################################################
+
+####################################################################
+## Problem Classification:
+##      DBsubject('Arithmetic')
+##      DBchapter('Integers')
+##      DBsection('Addition/Subtraction')
+##      KEYWORDS('Integers', 'Subtraction', 'ULETH-0500')
+##      Level(1)
+###################################################################
+
+##################################################################
+## Date(2018-05-17)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+##################################################################
+
+#####################################################################
+#  Initialization
+#####################################################################
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "PGML.pl",
+  "AnswerFormatHelp.pl",
+  "contextLimitedNumeric.pl",
+);
+TEXT(beginproblem());
+
+####################################################################
+#   Setup
+###################################################################
+
+#-ULETH-#
+Context("LimitedNumeric");
+
+$a = random(6,25,1);
+$b = random(-25,-6);
+
+do{ $c=random(6,25,1);} until ($c!=$a);
+$d=random(-25,-6);
+
+do{ $e=random(6,25,1);} until ($e!=$a and $e!=$c);
+$f=random(-25,-6);
+
+$ans1 = $a - $b;
+$ans2 = $c - $d; 
+$ans3 = $e - $f;
+
+#-END_ULETH-#
+  
+##################################################################
+#   Problem Text
+#################################################################
+
+#-ULETH-#
+BEGIN_PGML
+
+Evaluate:
+
+`[$a] - ([$b]) =` [_____]     
+
+`[$c] - ([$d]) =` [_____]     
+
+`[$e] - ([$f]) =` [_____]
+
+END_PGML
+# END_ULETH-#
+
+###################################################################
+#   Answer Evaluation
+###################################################################
+
+ANS(strict_num_cmp($ans1));
+ANS(strict_num_cmp($ans2));
+ANS(strict_num_cmp($ans3));
+
+#################################################################
+#   Solution
+##################################################################
+
+#Solution Not Included
+
+##################################################################
+# Instructor Comments 
+#################################################################
+COMMENT('
+    Randomization provides 54,720,000 different possible versions of this question.<BR>
+    Does not include a solution set.<BR>
+   Three random differences are generated. The differences contain a positive integer term between 6 and 25 inclusive and a ngative bewteen -25 and -6. The integer being subtracted is negative. <BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();

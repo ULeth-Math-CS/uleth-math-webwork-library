@@ -1,0 +1,116 @@
+## DESCRIPTION
+## This is Problem 5.1.11-12 from the APEX Calculus text (12-13 from the ULETH APEX text). It covers indefinite integration using basic rules.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Integrals)
+## DBsection(Indefinite integrals (without trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.1')
+## Problem1('11')
+## MO(1)
+## Keywords('indefinite integral' ,' antiderivatives ', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+Context()->variables->add(y=>'Real',z=>'Real');
+
+$c = random(1,200,1);
+$d = random(1, 20,1);
+
+$anti1=Formula("x");
+$anti2=Formula("$c*y");
+$anti3=Formula("{pi^{$d}}*z");
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+Evaluate the given indefinite integrals.
+
+a) [`\displaystyle\int \, dx `] = [___________________________________]{$anti1->cmp(upToConstant=>1)} [` + C`].
+
+
+b) [`\displaystyle\int [$c] \, dy `]= [___________________________________]{$anti2->cmp(upToConstant=>1)} [` + C`].
+
+
+c) [`\displaystyle\int \pi^{[$d]} \, dz `] = [___________________________________]{$anti3->cmp(upToConstant=>1)} [` + C`].
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Each integrand is a constant. The variable you are integrating with respect to changes in each part, be careful! 
+
+[`
+  \int \, dx = x + C.
+`]
+
+[`
+  \int [$c] \, dy = [$c]y + C.
+`]
+
+[`
+  \int \pi^{[$d]} \, dz = \pi^{[$d]} z + C.
+`]
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answer checking is completed in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 4000 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+

@@ -1,0 +1,150 @@
+## DESCRIPTION
+## This is Problem 2.3.38 from the APEX Calculus text. It covers finding equations for the tangent and normal lines to the graph of a function.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Derivatives involving multiple rules (no product, quotient, or chain rule))
+## Level(4)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.3')
+## Problem1('38')
+## MO(1)
+## Keywords('derivative', 'slope tangent line', ' tangent line ',  'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Allows a single problem to contain multiple parts, where later
+  # parts aren't visible until the earlier ones are completed.
+  "scaffold.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Used to provide contextual help for how to type solutions.
+  "AnswerFormatHelp.pl",
+  "contextFraction.pl"
+);
+
+TEXT(beginproblem());
+
+
+###################################
+#  Setup
+
+#-ULETH-#
+Context("Fraction");
+
+$m = random(2,15,1)*random(-1,1,2);
+$b = random(1,15,1)*random(-1,1,2);
+$c = random(1,15,1)*random(-1,1,2);
+
+$y1 = $m*$c + $b;
+$d = $y1 + $c/$m;
+
+$f = Formula("$m*x + $b")->reduce;
+$df = $f->D('x')->reduce;
+
+$ans1 = $f->eval(x=>$c);
+$ans2 = Compute("$df")->reduce();
+$ans3 = $df->eval(x=>$c);
+$ans4 = Compute("$m*x + $b")->reduce();
+
+
+#-ENDULETH-#
+
+###################################
+#  Main Text
+
+#-ULETH-#
+# This applies to the PGML in each scaffolding section.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+# Initial problem text to explain the scaffolding setup.
+BEGIN_PGML
+
+Follow the steps to find the equation of the tangent line to the graph of the function [`f(x) = [$f]`] at [`x =[$c]`].
+
+This problem has three parts. You may only open the next part after correctly
+completing the previous part.
+END_PGML
+#-ENDULETH-#
+
+Scaffold::Begin();
+#-ULETH-#
+# For each part the answer or answer checker reference must appear in the curly 
+# braces immediately after the answer field.
+Section::Begin("Point");
+# Part 1 problem text.
+BEGIN_PGML
+The point ([`[$c]`], [______]{Compute($ans1)}) is on the tangent line. 
+END_PGML
+Section::End();
+
+Section::Begin("Slope");
+# Part 2 problem text.
+BEGIN_PGML
+What is the _derivative_ of [`f(x)`]? [_____________]{Compute($ans2)} [@ AnswerFormatHelp("formulas") @]*  
+What is the _slope_ of the tangent line to [`f(x)`] at [`x = [$c]`]? [_____________]{Compute($ans3)} [@ AnswerFormatHelp("numbers") @]* 
+END_PGML
+Section::End();
+
+Section::Begin("Tangent Line");
+# Part 3 problem text.
+BEGIN_PGML
+The formula for the tangent line is [`y = `] [_____________]{Compute($ans4)}.
+END_PGML
+Section::End();
+#-ENDULETH-#
+
+Scaffold::End();
+
+
+###################################
+#  Answer Evaluation 
+
+#evaluation must be completed in the problem text
+
+###################################
+#  Solution
+
+BEGIN_PGML_SOLUTION
+
+The line tangent to [`f(x)`] at [`x=[$c]`] meets the function at [`x = [$c]`] and therefore [`([$c], f([$c])`] is on the tangent line, where [`f([$c]) = [$m]([$c]) + ([$b]) = [$ans1]`]. 
+
+We use the Power Rule determine that [`f'(x) = [$ans2]`]. The slope of the tangent line at [`x = [$c]`] is [`f'([$c]) = [$ans3]`].
+
+Recall: (the _point-slope_ form of a line) a line with slope [`m`] which passes through the point [`(x_0, y_0)`] has the form [`y - y_0 = m(x-x_0)`].
+
+Therefore, the line tangent to the graph of [`f(x)`] at [`x = [$c]`] is [`y - ([$ans1]) = [$ans3](x - [$c]).`]
+
+Rearranging, we have  [`y = [$ans4].`]
+
+END_PGML_SOLUTION
+
+COMMENT("This is a multi-part problem
+in which the next part is revealed only after the previous
+part is correct. <BR>
+Randomization provides 25200 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Note that both limits will always exist.  <BR>
+    Made from a ULETH template.<BR>
+");
+#-ENDULETH-#
+
+ENDDOCUMENT();
+
+
+

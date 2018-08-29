@@ -1,0 +1,124 @@
+## DESCRIPTION
+## This is Problem 2.3.20 from the APEX Calculus text. It covers differentiation using basic rules.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Derivatives involving multiple rules (no product, quotient, or chain rule))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.3')
+## Problem1('20')
+## MO(1)
+## Keywords('derivative', 'definition of derivative', 'logarithm', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  "contextFraction.pl"  
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Fraction")->noreduce('(-x)-y','(-x)+y)');
+
+$a = random(2,10,1);
+$b = random(2,10,1);
+$c = random(2,10,1);
+
+$ans1 = "$b/x";
+$ans2 = "1/($c x)";
+
+$f = Formula("ln($a*x^$b)")->reduce();
+
+$g = Formula("ln(x^{1/$c})")->reduce();
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Compute the derivatives of the given functions.
+
+* [``f(x) = [$f].``]
+
+[`f'(x) = `] [_______________] [@ AnswerFormatHelp("formulas") @]*
+
+* [``g(x) = [$g].``]
+
+[`g'(x) = `] [_______________]
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Using the rules for manipulating logarithms, we have
+
+[``
+  f(x)  = [$f] = \ln ([$a]) + [$b] \ln x.
+``]
+
+Since [`(\ln(x))' = 1/x`], we have
+
+[``f'(x) = 0 + [$b]\cdot\frac{1}{x} = [$ans1].``]
+
+Likewise,
+
+[``
+  g(x) = [$g] = \frac{1}{[$c]} \ln(x),
+``]
+
+and therefore,
+
+[``g'(x) = \frac{1}{[$c]} \cdot \frac{1}{x} = [$ans2].``]
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+#-ENDULETH#
+ANS( Compute($ans1)->cmp() );
+ANS( Compute($ans2)->cmp() );
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 729 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();

@@ -1,0 +1,139 @@
+## DESCRIPTION
+## This is Problem 8.7.23 in the APEX calculus text (Problem 4.5.23 from the ULETH Calculus text). It covers approximating functions using Taylor polynomials. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Infinite sequences and series)
+## DBsection(Taylor polynomials)
+## Level(2)
+## Institution('University of Lethbridge')
+## Author('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('8.7')
+## Problem1('23')
+## MO(1)
+## Keywords('derivative', 'taylor polynomial', 'approximation', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  "contextFraction.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)+y') ;
+    Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,
+  );
+  
+ Context()->flags->set(
+  tolerance => 0.000001,
+  tolType => "absolute",
+);
+
+
+$s = random(0.2, 2.0,0.1)*random(-1,1,2);
+
+$c = 9;
+
+$a = $c + $s;
+
+
+$deg = 2;
+$f = Formula("sqrt(x)");
+$poly = Formula("3+(x-9)/6-(x-9)^2/108");
+
+$ansf = $poly->substitute(x=>"$a");
+
+$ans = Compute($poly->eval(x=>"$a"));
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Approximate [`\sqrt{[$a]}`] with a Taylor polynomial of degree [$deg] centered at [`x = [$c]`]. 
+(Enter either an exact answer or at least 6 decimal places.)
+
+[`\sqrt{[$a]} \approx`] [____________________________________________________]{Compute($ans)} [@ AnswerFormatHelp("numbers") @]*
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+First, we need to produce the degree [$deg] Taylor polynomial for [`f(x) = [$f]`] at [`x = [$c]`]. By definition, we want 
+
+>>[``p_[$deg](x) = f([$c]) + f'([$c])(x-[$c]) + \dfrac{f''(9)}{2!}(x-[$c])^{2}.``]<<
+
+Taking [`f(x)`] and its first [$deg] derivatives and evaluating each at [`x = [$c]`], we find that: 
+
+>>[``
+  \begin{array}{rcrcrcr}
+    f(x) &=& [$f] &\implies& f([$c]) &=& 1\\
+    &&\\
+    f'(x) &=& \dfrac{1}{2\sqrt{x}} &\implies& f'([$c]) &=& \dfrac{1}{6}\\
+    &&\\
+    f''(x) &=& \dfrac{-1}{4x^{\frac{3}{2}}} &\implies& f''([$c]) &=& \dfrac{-1}{108}.
+    \end{array}
+``]<<
+
+If we substitute these values into the definition of the degree [$deg] Maclaurin polynomial, we have
+
+>>[``p_{[$deg]}(x) = \displaystyle [$poly].``]<<
+
+Hence, we approximate
+
+>>[``\sqrt{[$a]} \approx p_{[$deg]}([$a]) = [$ansf] = [$ans].``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 38 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Tolerances are set to be more strict than normal for this question.
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    
+
+
+
+

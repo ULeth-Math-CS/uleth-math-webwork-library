@@ -1,0 +1,174 @@
+#######################################################################
+## DESCRIPTION 
+##
+## In this problem students will be given two points with positive integer
+## coordinates and asked to find the slope of the line that passes through
+## these two points. The slope that students find will be a positive integer.
+##
+## ENDDESCRIPTION
+#######################################################################
+
+#######################################################################
+## DBsubject(Algebra)
+## DBchapter(Linear Equations and Functions)
+## DBsection(Finding the Slope)
+## Date(2018-06-15)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+## KEYWORDS('Linear Equations', 'Lines', 'ULETH-MATH-0500')
+#######################################################################
+
+#######################################################################
+## Initialization 
+#######################################################################
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "scaffold.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "answerHints.pl",
+);
+TEXT(beginproblem());
+
+#######################################################################
+#  Setup
+#######################################################################
+
+
+# Allows student to enter x as a variable in their answer
+Context("Numeric")->variables->are(x=>"Real");
+
+#Randomly chooses the slope of a line between 2 and 5
+$slope = random(2,5,1); 
+
+
+#Randomly chooses a point P(x_1,y_2) that the the line will pass
+#All coordinates have absolute value between 1 and 7 inclusive. 
+# Loop ensures that the y-intercept is non-zero
+
+do{ 
+
+$x_1 = random (1,7);
+$y_1 = random (1,7);
+
+#Computes the y_intercept of the line using the random point
+$y_intercept = -$slope*$x_1 + $y_1;
+
+}
+until ($y_intercept!=0);
+
+#Computes the x_intercept of the line using the random point
+$x_intercept = -$y_intercept / $slope; 
+
+#Defines the line using slope-intercept form.
+$line = Formula("$slope*x + $y_intercept") -> reduce();
+
+# Generates a random Point Q(x_2, y_2) that falls on the line
+# described above
+
+do {
+$x_2 = random(1,7);
+$y_2 = $line->eval(x=>$x_2); 
+} until ($x_2 != $x_1 and $y_2 > 0);
+
+
+
+
+#######################################################################
+#  Main Text
+####################################################################### 
+
+BEGIN_PGML
+Determine the slope of a line that passes through the points [`([$x_1],[$y_1])`] and [`([$x_2],[$y_2])`].
+
+Slope = [__________].
+
+END_PGML
+
+#######################################################################
+#  Answer Evaluation
+#######################################################################
+
+$showPartialCorrectAnswers = 1;
+
+ANS(Compute($slope)->cmp()->withPostFilter(AnswerHints( 
+ [Compute(-$slope)] => "Make sure you subrtact the y-values and
+ corresponding x-values in the same order.",
+  [Compute(1/$slope)] => "Be sure that your numerator contains y-values
+  and your denominator contains x-values.", 
+   [Compute(-1/$slope)] => "Be sure that your numerator contains
+    y-values and your denomenator contains x-values.", 
+)));
+
+#######################################################################
+#  Solution
+#######################################################################
+
+BEGIN_PGML_SOLUTION
+
+[`\\`]
+
+[`\textbf{What is the slope of a line?}`]
+
+The slope of a line is a useful metric which tells us how steep the
+line is and whether the line is increasing or decreasing as we move
+rightwards along the x-axis. Mathematically, the slope ([`m`]) of a line that
+passes through two points [`P(x_1,y_1)`] and [`Q(x_2,y_2)`] is given by the formula
+
+>>[` m =\displaystyle \frac{y_2 - y_1}{x_2 - x_1}`].<<
+
+In other words, the slope of a line is the ratio between the difference
+in the [`y`] values of two points on that line and the difference in
+the corresponding [`x`] values of those same two points. Thus, the
+slope of a line tells us how much of a change in [`y`] occurs for a
+unit change in [`x .`]
+
+You may choose either to be the first and/or second point and you will
+get the exact same value for the slope of the line. To this end, we
+have calculated the slope both ways below:
+
+[`\textbf{Solution 1:}`]
+
+Let's use the first point we are given in the question as point one
+[`P(x_1,y_1)`] = [`([$x_1] , [$y_1]) .`] 
+Then, [`Q(x_2,y_2)`] = [`([$x_2] , [$y_2])`] and 
+
+>>[` m =\displaystyle \frac{y_2 - y_1}{x_2 - x_1} = \frac{[$y_2]-[$y_1]}{[$x_2] - [$x_1]} =
+\frac{[$y_2-$y_1]}{[$x_2 - $x_1]} = [$slope] . `] <<
+
+[`\textbf{Solution 2:}`]
+
+This time let's use the second point we are given as our first point 
+[`P(x_1,y_1)`] = [`([$x_2] , [$y_2]) .`] 
+Then, [`Q(x_2,y_2)`] = [`([$x_1] , [$y_1]) `] and
+
+
+>>[` m =\displaystyle \frac{y_2 - y_1}{x_2 - x_1} = \frac{[$y_1]-
+[$y_2]}{[$x_1] - [$x_2]} = \frac{[$y_1-$y_2]}{[$x_1 - $x_2]} = [$slope] . `] <<
+
+
+
+END_PGML_SOLUTION
+
+#######################################################################
+#  Comments for Instructors 
+#######################################################################
+
+COMMENT(
+"Randomization provides 1372 different possible versions of this question.<BR> 
+
+In this problem students will we given two distinct points  
+P(x_1 , y_1) and Q(x_2, y_2) and asked to determine the slope 
+of the line that passes through these points. <BR>
+
+In this variation of the problem, the calculated slope will be a positive
+integer and  all the points given to the student will have positive coordinates. <BR>
+  
+Made from a ULETH template.<BR>" 
+);
+
+ENDDOCUMENT();

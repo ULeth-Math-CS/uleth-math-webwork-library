@@ -1,0 +1,224 @@
+## DESCRIPTION
+## This is Problem 3.5.24 from the APEX Calculus text. It covers curve sketching.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Summary of curve sketching)
+## Level(4)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('3.5')
+## Problem1('24')
+## MO(1)
+## Keywords('curve sketching', 'critical numbers', 'points of inflection','ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+   # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+  Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0);
+     
+$h = random(1,15,1);
+$k = random(1,15,1)*random(-1,1,2);
+
+$f = "(x - $h)^{2/3} + $k";
+
+$df = "\dfrac{2}{3}(x - $h)^{-1/3}";
+
+$ddf = "-\dfrac{2}{9}(x - $h)^{-4/3}";
+
+Context("Interval");
+$I1 = Interval((-inf, inf));
+$I2 = Interval((-inf, $h));
+$I3 = Interval(($h, inf));
+
+@domain = $I1;
+
+$crit1 = $h;
+$crit = List($crit1);
+
+$infl = $h;
+$POI = List($infl);
+
+$va1 = "DNE";
+$VA = List($va1);
+
+$ha = "DNE";
+$HA = List($ha);
+
+@ans_inc = $I3;
+@ans_dec = $I2;
+
+@ans_cu = "DNE";
+@ans_cd = $I2+$I3;
+
+Context("Point");
+
+$y1 = $k;
+$p1 = Point(($crit1, $y1));
+
+$ans_points = List($p1);
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+BEGIN_PGML
+
+In the following questions, consider the function 
+
+>>[`f(x) = \displaystyle [$f].`]<<
+
+Enter *DNE* if an answer does not exist.
+----
+[`\text{1.}`]  Determine the domain of [`f`] (as an interval)  
+[____________________]{Compute(@domain)}  [@ AnswerFormatHelp("intervals") @]*
+
+
+
+[`\text{2.}`]  Find the critical values of [`f`].  
+[____________________]{Compute($crit)} (Separate multiple answers with commas.)
+
+
+
+[`\text{3.}`] List the [`x`]-values of any possible points of inflection of [`f`].  
+[____________________]{Compute($POI)}  (Separate multiple answers with commas.)
+
+
+
+[`\text{4.}`]  Find the vertical asymptotes.  
+[`x = `][____________________]{Compute($VA)}  (Separate multiple answers with commas.)
+
+
+
+[`\text{5.}`]  Find the horizontal aymptotes.  
+[`y = `][____________________]{Compute($HA)}  (Separate multiple answers with commas.)
+
+
+
+[`\text{6.}`]  Use a number line analysis to complete the following (enter answers as intervals).  
+[`f`] is increasing on: [______________________________]{Compute(@ans_inc)}  
+[`f`] is decreasing on: [______________________________]{Compute(@ans_dec)}  
+[`f`] is concave up on: [______________________________]{Compute(@ans_cu)}  
+[`f`] is concave down on: [______________________________]{Compute(@ans_cd)}  
+
+
+[`\text{7.}`] Evaluate [`f`] at each critical point and possible point
+of inflection.  List all such points below.
+Each point should be entered as an *ordered pair* (that is, in the form [`(x, y) `]).  
+[__________________________________________________]{Compute($ans_points)}  
+(Separate multiple answers with commas.)
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+[`\text{1.}`] The domain is all real numbers, [` (-\infty, \infty) `].
+
+
+[`\text{2.}`] The equation [`f'(x) = 0`] has no solutions, however since 
+
+[``
+  f'(x) = [$df],
+``]
+
+we see that [` f'([$h]) `]
+is undefined.  Since [`x = [$h]`] is part of the domain, this
+qualifies [`[$h]`] to be a critical number.
+
+
+[`\text{3.}`] The equation [`f''(x) = 0`] has no solutions, but [`x = [$h]`] is 
+the location of a possible point of inflection, since
+
+[``
+  f''(x) = [$ddf]
+``]
+
+is undefined at [`x = [$h]`].  (*Note:* There is not actually a point of inflection at [`x = [$h]`] because there is no change in concavity at this point.)
+
+
+[`\text{4.}`] There are no vertical asymptotes.
+
+
+[`\text{5.}`] There are no horizontal asymptote.
+
+
+[`\text{6.}`] Use a number line analysis. 
+Plug samples into [`f'`] to test
+for increase/decrease.  Plug samples into [`f''`] to test
+concavity.
+  
+[`f`] increases on [` ([$h], \infty) `].   
+[`f`] decreases on [` (-\infty, [$h]) `].   
+[`f''(x) < 0`] on either side of [` x = [$h] `], however
+the concavity is undefined at the cusp point itself.  Thus,
+[`f`] is concave down on [`(-\infty, [$h]) \cup ([$h], \infty)`],
+and never concave up.
+
+
+
+
+[`\text{7.}`]  Evaluate [`f`] at the single critical number:
+
+[``  
+  \begin{array}{rcl}
+    f([$crit1]) &=& [$y1]
+  \end{array}
+``]
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#Answers are evaluated in the problem text.
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 450 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();   
+

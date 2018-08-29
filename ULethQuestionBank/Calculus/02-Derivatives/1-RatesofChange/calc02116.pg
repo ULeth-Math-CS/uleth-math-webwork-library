@@ -1,0 +1,124 @@
+## DESCRIPTION
+## This is Problem 2.1.16 from the APEX Calculus text. It covers the differentiation using limit definitions and tangent/normal lines.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Definition of the derivative)
+## Level(3)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.1')
+## Problem1('16')
+## MO(1)
+## Keywords('derivative', 'definition of derivative', 'slope tangent line', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+$c = non_zero_random(-15,15,1);
+$c2 = 2*$c;
+$cs = $c**2;
+$d = $cs + 1/2;
+
+$ans1 = "$c2 x - $cs";
+$ans2 = "(1/(-$c2))*x + $d";
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Let [`f(x) = x^2 `].
+
+a. Find the tangent line to the graph of the function at [`x = [$c]`].
+
+    [`` y = ``] [__________________] [@ AnswerFormatHelp("formulas") @]*
+
+b. Find the normal line to the graph of the function at [`x = [$c] `].
+
+    [`` y = ``] [__________________] [@ AnswerFormatHelp("formulas") @]*
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+We use the limit definition of derivative to find [`f'(x)`].
+
+[`` \begin{array}{rcl}
+  f'(x) &=& \displaystyle\lim_{h \to 0} \frac{f(x+h) - f(x)}{h} \\	
+  && \\
+  &=& \displaystyle\lim_{h \to 0} \frac{ (x+h)^2 - x^2}{h} \\
+  && \\
+  &=& \displaystyle\lim_{h \to 0} \frac{ x^2 + 2xh + h^2 - x^2}{h}\\
+  && \\
+  &=& \displaystyle\lim_{h \to 0} \frac{h(2x + h)}{h}\\
+  && \\
+  &=& \displaystyle\lim_{h \to 0} (2x + h)\\
+  && \\
+  &=& 2x.
+\end{array} ``]
+
+Then plug in [` x = [$c] `] to find the slope of the tangent line:
+[`f'([$c]) = [$c2]`].  Using the point-slope form, with [`x_1 = [$c]`]
+and [`y_1 = f(x_1) = ([$c])^2 = [$cs]`], we obtain the _tangent line_: 
+
+[``  y - [$cs] = [$c2](x - [$c]) \;\Rightarrow\; y = [$c2] x - [$cs].``]
+
+The slope of the _normal line_ is the negative reciprocal
+of the slope of the tangent line.
+[`` y - [$cs] = -\frac{1}{[$c2]}(x - [$c]) \;\Rightarrow\; y = \frac{1}{-[$c2]}x
+  + [$d].``]
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+ANS( fun_cmp( $ans1, vars=>["x"] ) );
+ANS( fun_cmp( $ans2, vars=>["x"] ) );
+
+#############################
+#  Comments
+COMMENT('
+    Randomization provides 30 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    

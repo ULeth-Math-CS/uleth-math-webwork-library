@@ -1,0 +1,112 @@
+## DESCRIPTION
+## This is a multiple choice question intended to test student's ability to recognize the relevant observational units from a specific context. The order the answers are displayed in randomized but the question and the answers themselves do not vary. This question is similar to another question in the same DBsection (that asks instead for the variables).
+## ENDDESCRIPTION
+
+
+## DBsubject('Statistics')
+## DBchapter('Experimental design')
+## DBsection('Concepts')
+## Date(2018-05-08)
+## Institution(University of Lethbridge)
+## Author(Kyler Fisher)
+## MO(1)
+## KEYWORDS('pop-up menu', 'radio buttons', 'multiple choice', 'ULETH-STAT1770', 'observational units')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Following two used for multiple choice 
+  "parserRadioButtons.pl",
+  "PGchoicemacros.pl"
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+#-ULETH-#
+
+# The options in the square brackets are the different radio button options
+# that will be available.
+# The next argument is the correct answer.
+# The arguments in the square brackets after last=> dictate which options
+# come last in the radio button list (left empty randomizes the order).
+$radioButtons = RadioButtons(
+  ["grade point average", 
+  "college students",
+  "number of all-nighters",
+  "day of week all-nighter occured"],
+  "college students",#answer
+  last=>[""]);#randomize
+  
+#-ENDULETH-#
+
+
+###########################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+
+Identify the _observational units_ in this question: Do college students who pull all-nighters tend to have lower grade point averages than those who do not pull all-nighters?
+
+[@ $radioButtons->buttons() @]*
+END_PGML
+
+
+###########################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($radioButtons->cmp());
+#-ENDULETH-#
+
+
+###########################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+The _observational units_ in this question are college students, it is college students whose characteristics we are interested in measuring. The other  options are possible _characteristics_ that might be of interest in a different context.
+
+Observational units are not always individual people as they were in this case. In another context, laptops could be the observational units of the study and we could be making measurements on these laptops such as their memory space, computation speed, manufacturing year, and overall size, which are all possible variables for laptops.
+
+END_PGML_SOLUTION
+
+COMMENT('
+    Simple multiple choice format.<BR>
+    Includes a solution set.<BR>
+
+    Uses PGML.
+    '); 
+#-ENDULETH-#
+
+ENDDOCUMENT();

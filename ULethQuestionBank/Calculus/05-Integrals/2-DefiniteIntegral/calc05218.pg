@@ -1,0 +1,180 @@
+## DESCRIPTION
+## This is Problem 5.2.18-21 in the APEX Calculus text (5.2.19-22 in the ULETH APEX text). It covers an application of the properties of integrals. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Limits and continuity)
+## DBsection(Continuity - concept of)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.2')
+## Problem1('18-21')
+## MO(1)
+## Keywords('integration', 'linearity', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+$a = random(1,15,1)*random(-1,1,2);
+$b = random(1,15,1)*random(-1,1,2);
+$c = random(1,15,1)*random(-1,1,2);
+$d = random(1,15,1)*random(-1,1,2);
+
+$ans1 = $a + $c;
+
+$cd = $c + $d;
+$ans2 = $b - $cd;
+$ba = $b - $a;
+$ans3 = 3*$ba + 2*$d;
+$ans4 = -$cd/$b;
+
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+Let
+>>[``
+  \int_{0}^2 f(x) \, dx = [$a], \quad
+  \int_{0}^3 f(x) \, dx = [$b], \quad
+  \int_{0}^2 g(x) \, dx = [$c], \quad
+  \int_{2}^3 g(x) \, dx = [$d], \quad
+``]<<
+  
+Use these values to evaluate the given definite integrals.
+  
+a) [` \displaystyle  \int_{0}^2 
+  \left(f(x) + g(x)\right) \, dx = `]
+  [______________]{Compute($ans1)}  
+     
+b) [` \displaystyle  \int_{0}^3
+  \left(f(x) - g(x)\right) \, dx = `]
+[______________]{Compute($ans2)}  
+    
+c) [` \displaystyle  \int_{2}^3
+  \left(3f(x) + 2g(x)\right) \, dx = `]
+[______________]{Compute($ans3)}  
+    
+Find the value [`a`] such that[` \displaystyle  \int_{0}^3 
+  \left(a f(x) + g(x)\right) \, dx = 0`].
+      
+[` a = `][______________]{Compute($ans4)}
+   
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+$ans4 = sprintf("%0.3f", $ans4);
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+[`\text{a}`]) 
+>>[``
+  \int_0^2 \left(f(x) + g(x)\right) \, dx
+  =  \int_0^2 f(x) \, dx + \int_0^2 g(x) \, dx 
+  = [$a] + [$c] = [$ans1].
+``]<<
+
+[`\text{b}`])  First find the integral of [`g`] from 0 to 3.
+>>[``
+  \int_0^3 g(x) \, dx = \int_0^2 g(x) \, dx +
+  \int_2^3 g(x) \, dx = [$c] + [$d] = [$cd].
+``]<<
+Then
+>>[``
+  \int_0^3 \left(f(x) - g(x)\right) \, dx
+  =  \int_0^3 f(x) \, dx - \int_0^3 g(x) \, dx 
+  = [$b] - [$cd] = [$ans2].
+``]<<
+    
+[`\text{c}`])  First find the integral of [`f`] from 2 to 3.
+>>[``
+  \begin{array}{rcl}
+   \displaystyle\int_0^3 f(x) \, dx &=& 
+   \displaystyle\int_0^2 f(x) \, dx +
+   \int_2^3 f(x) \, dx \\
+   [$b] &=& [$a] + \displaystyle\int_2^3 f(x) \, dx \\
+   \displaystyle\int_2^3 f(x) \, dx &=& [$ba]
+  \end{array}
+``]<<
+
+Then
+>>[``
+  \int_{2}^3
+  \left(3f(x) + 2g(x)\right) \, dx =
+  3\int_{2}^3    
+  f(x)  \, dx + 2\int_{2}^3
+  g(x) \, dx 
+``]<<
+>>[``
+  = 3([$ba]) + 2([$d]) = [$ans3].
+``]<<
+
+For the last question, substitute known values for the integrals.
+>>[``
+  \begin{array}{rcl}
+   \displaystyle \int_{0}^3 
+  \left(a f(x) + g(x)\right) \, dx &=& 0 \\
+  a \displaystyle \int_0^3 f(x) \, dx
+  + \int_0^3 g(x) \, dx &=& 0\\
+  a([$b]) + [$cd] &=& 0 \\
+  a &=& [$ans4]
+  \end{array}
+``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 810,000 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    
+
+

@@ -1,0 +1,274 @@
+## DESCRIPTION
+## This is Problem 3.5.20 from the APEX Calculus text. It covers curve sketching.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Summary of curve sketching)
+## Level(4)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('3.5')
+## Problem1('20')
+## MO(1)
+## Keywords('curve sketching', 'critical numbers', 'points of inflection','ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+   # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+  Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0);
+     
+do {
+ $k = random(-10,10,1);
+ $h = random(-10,10,1);
+
+ $p0 = $h**2 + 2*$h + 1 + $k*$h**2 + 6*$k*$h + 8*$k;
+ $p1 = -2*$h - 2 - 2*$k*$h - 6*$k;
+ $p2 = 1 + $k;
+
+ $q0 = $h**2 + 6*$h + 8;
+ $q1 = -2*$h - 6;
+
+} while ($p0 == 0 || $p1 == 0 || $p2 == 0 || $q0 == 0 || $q1 == 0);
+
+$den = Formula("x^2 + $q1*x + $q0")->reduce();
+
+$f = Formula("{$p2*x^2 + $p1*x + $p0}/{$den}")->reduce();
+
+$h1 = $h + 1;
+$h2 = 2*$h + 5;
+$df = Formula("{2(x - $h1)(-2x + $h2)}/{($den)^2}")->reduce();
+
+$r2 = 2*(-12*$h - 21);
+$r1 = 2*(12*$h**2 + 42*$h + 30);
+$r0 = 2*(-4*$h**3 - 21*$h**2 - 30*$h - 4);
+$ddf_num = Formula("8x^3 + $r2 x^2 + $r1 x + $r0");
+
+$ddf = Formula("{$ddf_num}/{($den)^3}");
+
+
+##Non-interval Answers##
+$crit1 = $h1;
+$crit2 = $h + 2.5;
+$crit = List($crit1, $crit2);
+
+$infl = $h + 0.14829186650646764;
+$POI = List($infl);
+
+$va1 = 2 + $h;
+$va2 = 4 + $h;
+$VA = List($va1, $va2);
+
+$ha = 1 + $k;
+$HA = List($ha);
+
+##Interval Answers##
+Context("Interval");
+
+$I0 = Interval((-inf,$crit1));
+$I1 = Interval(($crit1, $va1));
+$I2 = Interval(($va1, $crit2));
+$I3 = Interval(($crit2, $va2));
+$I4 = Interval(($va2, inf));
+
+$C0 = Interval((-inf,$va1));
+$C1 = Interval((-inf,$infl));
+$C2 = Interval(($infl,$va1));
+$C3 = Interval(($va1,$va2));
+
+@domain = $C0 + $C3 + $I4;
+
+@ans_inc = $I1 + $I2;
+@ans_dec = $I0 + $I3 + $I4;
+
+@ans_cu = $C2 + $I4;
+@ans_cd = $C1 + $C3;
+
+##Point answers##
+Context("Point");
+
+$y1 = $k + 0.10170813349353233;
+$y2 = $k;
+$y3 = $k - 3;
+
+$p1 = Point(($infl, $y1));
+$p2 = Point(($crit1, $y2));
+$p3 = Point(($crit2, $y3));
+
+$ans_points = List($p1,$p2,$p3);
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+BEGIN_PGML
+
+In the following questions, consider the function 
+
+>>[`f(x) = \displaystyle [$f].`]<<
+
+Enter *DNE* if an answer does not exist.
+----
+[`\text{1.}`]  Determine the domain of [`f`] (as an interval)  
+[____________________]{Compute(@domain)}  [@ AnswerFormatHelp("intervals") @]*
+
+
+
+[`\text{2.}`]  Find the critical values of [`f`].  
+[____________________]{Compute($crit)} (Separate multiple answers with commas.)
+
+
+
+[`\text{3.}`] List the [`x`]-values of any possible points of inflection of [`f`].  
+[____________________]{Compute($POI)}  (Separate multiple answers with commas.)
+
+
+
+[`\text{4.}`]  Find the vertical asymptotes.  
+[`x = `][____________________]{Compute($VA)}  (Separate multiple answers with commas.)
+
+
+
+[`\text{5.}`]  Find the horizontal aymptotes.  
+[`y = `][____________________]{Compute($HA)}  (Separate multiple answers with commas.)
+
+
+
+[`\text{6.}`]  Use a number line analysis to complete the following (enter answers as intervals).  
+[`f`] is increasing on: [______________________________]{Compute(@ans_inc)}  
+[`f`] is decreasing on: [______________________________]{Compute(@ans_dec)}  
+[`f`] is concave up on: [______________________________]{Compute(@ans_cu)}  
+[`f`] is concave down on: [______________________________]{Compute(@ans_cd)}  
+
+
+[`\text{7.}`] Evaluate [`f`] at each critical point and possible point
+of inflection.  List all such points below.
+Each point should be entered as an *ordered pair* (that is, in the form [`(x, y) `]).  
+[__________________________________________________]{Compute($ans_points)}  
+(Separate multiple answers with commas.)
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+$infl = int($infl * 10**5)/10**5;
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+[`\text{1.}`]  The domain must exclude [`x`]-values where the 
+denominator is zero.
+Factor the denominator, [`[$den] = (x - [$va1])(x - [$va2])`].
+Thus, the domain of
+[`f`] is:
+
+[``
+  (-\infty, [$va1]) \cup ([$va1], [$va2]) \cup ([$va2], \infty) .
+``]
+
+
+[`\text{2.}`]  Find and simplify [`f'(x)`].  Then
+solve [`f'(x) = 0`] to find the critical numbers:
+
+[``
+  [$df] = 0 \;\Rightarrow\; x = [$crit1], [$crit2].
+``]
+
+
+[`\text{3.}`] Solve [`f''(x) = 0`] to find the possible
+points of inflection. A calculator may be required
+to find the approximate root:
+
+[``
+  [$ddf] = 0 \;\Rightarrow\; x \approx [$infl].
+``]
+
+
+[`\text{4.}`] There are vertical asymptotes at [`x = [$va1]`] and
+[`x = [$va2]`].
+
+[`\text{5.}`] Find the limits,
+
+[``
+  \lim_{x \to \pm \infty} [$f] = [$ha].
+``]
+
+This implies [`y= [$ha]`] is a horizontal asymptote.
+
+
+[`\text{6.}`] Use a number line analysis. Don't forget to include
+[`x = [$va1], [$va2]`] on the number line, but exclude them from
+your answer intervals.
+Plug samples into [`f'`] to test
+for increase/decrease.  Plug samples into [`f''`] to test
+concavity.
+  
+[`f`] increases on [` ([$crit1],[$va1]) \cup ([$va1], [$crit2])`].  
+[`f`] decreases on [`(-\infty,[$crit1]) \cup ([$crit2], [$va2]) \cup
+([$va2], \infty)`].  
+[`f`] is concave up on [`([$infl], [$va1]) \cup ([$va2], \infty)`].  
+[`f`] is concave down on [`(-\infty, [$infl]) \cup ([$va1], [$va2])`].
+
+
+[`\text{7.}`]  Evaluate [`f`] at each critical number and inflection point:
+
+[``  
+  \begin{array}{rcl}
+    f([$infl]) &=& [$y1] \\
+    f([$crit1]) &=& [$y2]\\
+    f([$crit2]) &=& [$y3] \\
+  \end{array}
+``]
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#Answers are evaluated in the problem text.
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides more than 100 versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();   
+
+

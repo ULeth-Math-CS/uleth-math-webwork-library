@@ -1,0 +1,200 @@
+#######################################################################
+## DESCRIPTION 
+##
+## In this problem students will be given the slope of a line and the 
+## coordinates of a point that the line passes through and asked for 
+## the equation of the line that meets this criteria. They will be asked
+## to find the coordinates of the point (c,c) on this line.
+## 
+## ENDDESCRIPTION
+#######################################################################
+
+#######################################################################
+## DBsubject(Algebra)
+## DBchapter(Linear Equations and Functions)
+## DBsection(Finding the Slope)
+## Date(2018-06-15)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+## KEYWORDS('Linear Equations', 'Lines', 'ULETH-MATH-0500')
+#######################################################################
+
+#######################################################################
+## Initialization 
+#######################################################################
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "scaffold.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "contextFraction.pl",
+  "answerHints.pl",
+);
+TEXT(beginproblem());
+
+
+#######################################################################
+#  Setup
+#######################################################################
+
+#Lets student enter x as a varaible in their answer 
+# Allows me to create fractions as a math object. 
+Context("Fraction")->variables->are(x=>"Real");
+
+#Randomly chooses the slope of a line between -5 and 5
+#Excludes -1, 0, and 1 as possible slopes 
+$slope = random(-1,1,2)*random(2,5,1); 
+$negSlope = -$slope;
+
+#Randomly chooses a quadrent in the cartestian plane and then 
+#Randomly chooses a point P(x_1,y_2) that the the line will pass
+#through that appears within that quadrent. 
+#All coordinates have absolute value between 1 and 7 inclusive. 
+
+$quadrentP = random(1,4); # This can also be set to a quadrent of your
+                            #choice to control whether the point has 
+                              #positive or negative coordinates.
+
+if ( $quadrentP == 1 )
+{
+$x_1 = random (1,7);
+$y_1 = random (1,7);
+}
+
+elsif ($quadrentP == 2)
+{
+$x_1 = random (-7,-1);
+$y_1 = random (1,7);
+}
+
+elsif($quadrentP == 3)
+{
+$x_1 = random (-7,-1);
+$y_1 = random (-7,-1);
+}
+
+else
+{
+$x_1 = random (1,7);
+$y_1 = random (-7,-1);
+} 
+
+#Computes the y_intercept of the line using the random point
+$y_intercept = -$slope*$x_1 + $y_1;
+
+#Computes the x_intercept of the line using the random point
+$x_intercept = Fraction( -$y_intercept, $slope)->reduce(); 
+
+#Defines the line using slope-intercept form.
+$line = Formula("$slope*x + $y_intercept") -> reduce();
+
+
+#######################################################################
+#  Main Text
+####################################################################### 
+
+BEGIN_PGML
+Find the equation of a line with a slope of [`[$slope]`] that passes through
+the point [`([$x_1],[$y_1])`]
+
+y = [__________]{$line}.
+
+If the point [`(c, c)`] is on this line what is the value of [`c`]?
+
+[`c = `] [_____]{$y_intercept/($slope*(-1)+1)} 
+
+END_PGML
+
+#######################################################################
+#  Answer Evaluation
+#######################################################################
+
+$showPartialCorrectAnswers = 1;
+#answer evaluation has been built into the question.
+
+#######################################################################
+#  Solution
+#######################################################################
+
+BEGIN_PGML_SOLUTION
+
+When you are given the slope and y-intercept of a line the quickest way
+to find the equation of that line is to use the slope intercept form of
+a line: 
+
+>>[`y= mx + b`]<<
+
+where [`m`] is the slope of the line and [`b`] is the y-intercept of
+the line; however, here we are not given the line's y-intercept, but
+told instead it passes through the point [`([$x_1],[$y_1])`]. There are 
+two methods to determine the y-intercept
+
+[`\textbf{Approach 1: Using the Point-Slope Equation of a Line}`]
+
+The point-slope form of a line is given by the equation: 
+
+>> [` y - y_0 = m (x - x_0)`]<<
+
+where [`m`] is the line's slope and [`P(x_0,y_0)`] is a point that we
+know falls on the line. In this problem, we know [` m = [$slope]`] 
+and that the line passes through the point [`(x_0,y_0 ) = ([$x_1],[$y_1])`].
+If we plug these values into the point-slope equation we get: 
+
+>>[` y - y_0 = m (x - x_0)`]<<
+
+>> [`y - [$y_1] = [$slope] (x - \left([$x_1]\right))`]<<
+
+>>[` y  = [$slope]x +[$y_intercept] `].<<
+
+[`\textbf{Approach 2: Assume y=mx+b and solve for b}`]
+
+Alternatively, let's assume that we have the equation of the line
+[`y=mx+b`]. We know that the slope is [`m = [$slope]`], but we don't 
+know the y-intercept. We find it by plugging in the point 
+[`(x_0,y_0 ) = ([$x_1],[$y_1])`].
+
+>>[` y  = mx + b`]<<
+
+>>[` [$y_1] = [$slope] ([$x_1]) + b`]<<
+
+>>[` b  = [$y_intercept] `].<<
+
+Thus, the equation of the line is
+
+>>[` y  = [$slope]x +[$y_intercept] `].<<
+
+
+Since the point [`(c, c)`] falls on the line to determine the value of [`c`]
+we plug [`x=c`] and [`y=c`] into our equation for this line and solve for [`c`]:
+
+>>[` y  = [$slope]x +[$y_intercept] `].<<
+
+>>[` c  = [$slope]c +[$y_intercept] `].<<
+
+>>[` c - [$slope]c = [$y_intercept] `].<<
+
+>>[`[$slope*(-1)+1]c = [$y_intercept] `].<<
+
+>>[` c  = \frac{[$y_intercept]}{[$slope*(-1)+1]} `].<<
+
+END_PGML_SOLUTION
+
+#######################################################################
+#  Comments for Instructors 
+#######################################################################
+
+COMMENT(
+"Randomization provides 1344 different possible versions of this question.<BR> 
+
+In this problem students will we given a point on a line and its slope and
+asked to find the equation of that line. They are then asked for the 
+coordinates of the point (c,c).
+
+Made from a ULETH template.<BR>" 
+);
+
+ENDDOCUMENT();

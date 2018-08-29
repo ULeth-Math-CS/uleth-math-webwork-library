@@ -1,0 +1,212 @@
+## DESCRIPTION
+## This is Problem 3.5.9 from the APEX Calculus text. It covers curve sketching.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Summary of curve sketching)
+## Level(4)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('3.5')
+## Problem1('9')
+## MO(1)
+## Keywords('curve sketching', 'critical numbers', 'points of inflection','ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+   # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+  Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,);
+     
+$a = random(0.5,20.5,0.5)*random(-1,1,2);
+
+$f = Formula("$a e^x")->reduce();
+$df = Formula("$a e^x")->reduce();
+$ddf = Formula("$a e^x")->reduce();
+
+$crit1 = "DNE";
+
+Context("Interval");
+
+@domain = Interval((-inf, inf));
+
+$crit = List("$crit1");
+
+$POI = List("DNE");
+
+$VA = List("DNE");
+
+$HA = List("0");
+
+if ($a > 0) {
+  @ans_inc = Interval((-inf, inf));
+  @ans_dec = "DNE";
+
+  $inc_str = "(-\infty, \infty)";
+  $dec_str = "\textbf{DNE}";
+
+  @ans_cu = Interval((-inf, inf));
+  @ans_cd = "DNE";
+
+  $cu_str = "(-\infty, \infty)";
+  $cd_str = "\textbf{DNE}";
+} else {
+  @ans_inc = "DNE";
+  @ans_dec = Interval((-inf, inf));
+
+  $inc_str = "\textbf{DNE}";
+  $dec_str = "(-\infty, \infty)";
+
+  @ans_cu = "DNE";
+  @ans_cd = Interval((-inf, inf));
+
+  $cu_str = "\textbf{DNE}";
+  $cd_str = "(-\infty, \infty)";
+}
+
+Context("Point");
+$ans_points = "DNE";
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+BEGIN_PGML
+
+In the following questions, consider the function 
+
+>>[`f(x) = \displaystyle [$f].`]<<
+
+Enter *DNE* if an answer does not exist.
+----
+[`\text{1.}`]  Determine the domain of [`f`] (as an interval)  
+[____________________]{Compute(@domain)}  [@ AnswerFormatHelp("intervals") @]*
+
+
+
+[`\text{2.}`]  Find the critical values of [`f`].  
+[____________________]{Compute($crit)} (Separate multiple answers with commas.)
+
+
+
+[`\text{3.}`] List the [`x`]-values of any possible points of inflection of [`f`].  
+[____________________]{Compute($POI)}  (Separate multiple answers with commas.)
+
+
+
+[`\text{4.}`]  Find the vertical asymptotes.  
+[`x = `][____________________]{Compute($VA)}  (Separate multiple answers with commas.)
+
+
+
+[`\text{5.}`]  Find the horizontal aymptotes.  
+[`y = `][____________________]{Compute($HA)}  (Separate multiple answers with commas.)
+
+
+
+[`\text{6.}`]  Use a number line analysis to complete the following (enter answers as intervals).  
+[`f`] is increasing on: [______________________________]{Compute(@ans_inc)}  
+[`f`] is decreasing on: [______________________________]{Compute(@ans_dec)}  
+[`f`] is concave up on: [______________________________]{Compute(@ans_cu)}  
+[`f`] is concave down on: [______________________________]{Compute(@ans_cd)}  
+
+
+[`\text{7.}`] Evaluate [`f`] at each critical point and possible point
+of inflection.  List all such points below.
+Each point should be entered as an *ordered pair* (that is, in the form [`(x, y) `]).  
+[__________________________________________________]{Compute($ans_points)}  
+(Separate multiple answers with commas.)
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+$sign = ($a > 0) ? "positive" : "negative";
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+[`\text{1.}`] The domain of [`[$f]`] is all real numbers, 
+[`(-\infty, \infty)`].
+
+
+[`\text{2.}`] Since [`f'(x) = [$df]`] is never 0, there are no
+critical numbers.
+
+
+[`\text{3.}`] Since [`f''(x) = [$ddf]`] is never 0, there are no possible
+points of inflection.
+
+
+[`\text{4.}`] Since [`f`] is continuous on [`(-\infty, \infty)`], there
+are no vertical asymptotes.
+
+
+[`\text{5.}`] There is a horizontal asymptote at [` y = 0`] since   
+[``
+  \lim_{x \to -\infty} [$f] = 0.
+``]
+
+
+[`\text{6.}`] Both [`f'`] and [`f''`] are always [$sign].  Therefore,
+  
+[`f`] increases on [`[$inc_str]`].  
+[`f`] decreases on [`[$dec_str]`].  
+[`f`] is concave up on [`[$cu_str]`].  
+[`f`] is concave down on [`[$cd_str]`].  
+
+
+[`\text{7.}`] There is no critical points or points of inflection,
+so this answer is "DNE".
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#Answers are evaluated in the problem text.
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 80 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();   

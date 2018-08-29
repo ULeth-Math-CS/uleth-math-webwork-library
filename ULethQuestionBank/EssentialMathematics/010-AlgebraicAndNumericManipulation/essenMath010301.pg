@@ -1,0 +1,93 @@
+###################################################################
+## Description:
+##      Integer Arithmetic Multuplication Problems with two terms where   
+##      both terms are positive. 
+####################################################################
+
+####################################################################
+## Problem Classification:
+##      DBsubject('Arithmetic')
+##      DBchapter('Integers')
+##      DBsection('Multiplication')
+##      KEYWORDS('Integers', 'Multiplication', 'ULETH-0500')
+##      Level(1)
+###################################################################
+
+##################################################################
+## Date(2018-05-19)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+##################################################################
+
+#####################################################################
+#  Initialization
+#####################################################################
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "PGML.pl",
+  "AnswerFormatHelp.pl",
+  "contextLimitedNumeric.pl",
+);
+TEXT(beginproblem());
+
+###############################################################################
+#   Setup
+##################################################################################
+
+$a = random(2,12,1);
+$b = random (2,12);
+do{$c = random (2,12);} until ($c != $a);
+$d = random (2,12);
+do{$e = random (2,12);} until ($e != $a and $e!=$c);
+do{$f = random (2,12);} until ($f != $d);
+
+
+
+$ans1 = ($a)*($b);
+$ans2 = ($c)*($d); 
+$ans3 = ($e)*($f); 
+
+
+
+###################################################################
+#   Problem Text
+###################################################################
+BEGIN_PGML
+
+Copute the following products:
+
+`([$a]) ([$b]) =` [_____]     
+
+`([$c])([$d]) =` [_____]     
+
+`([$e])([$f]) =` [_____]
+
+END_PGML
+
+
+
+#############################
+#   Answer Evaluation
+
+ANS(strict_num_cmp($ans1));
+ANS(strict_num_cmp($ans2));
+ANS(strict_num_cmp($ans3));
+
+#############################
+#   Solution
+
+# NO SOLUTION 
+
+#######################################################################
+COMMENT('
+    Randomization provides 1,197,900 different possible versions of this question.<BR>
+    Does not include a solution set.<BR>
+    The values in products are randomly determined and fall between 2 and 12 inclusive. <BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();

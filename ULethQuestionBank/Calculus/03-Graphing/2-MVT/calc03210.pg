@@ -1,0 +1,112 @@
+## DESCRIPTION
+## This is Problem 3.2.10 from the APEX Calculus text. It covers Rolle's Theorem.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Mean value theorem)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('3.2')
+## Problem1('10')
+## MO(1)
+## Keywords('rolles theorem', 'mean value theorem', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+   # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+$c = random(1,9,1)*random(-1,1,2);
+$a = random(1,5,1);
+$p1 = $c - $a;
+$p2 = $c + $a;
+
+$c2 = 2*$c;
+$cs = $c**2;
+
+$f = Formula("{1}/{x^2 - $c2 x + $cs}")->reduce();
+
+$crit = "DNE";
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+
+Check if Rolle's Theorem can be applied to [`f(x) = \displaystyle [$f]`] on [`[[$p1],[$p2]]`].
+If so, find all values [`c`] in  [`[[$p1],[$p2]]`] such that [`f'(c) = 0`].
+
+Separate multiple answers with commas. If Rolle's Theorem does not apply, enter *DNE*.
+
+[`c=`] [__________________] [@ AnswerFormatHelp("numbers") @]*
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+The function [`f(x) =\displaystyle [$f]`] is not continuous at [`x = [$c]`], as 
+there is division by zero at that point since
+
+[``
+  [$f] = \dfrac{1}{(x - [$c])^2}.
+``]
+
+Since [`f(x)`] is not continuous on the interval [`[[$p1], [$p2]]`],
+Rolle's Theorem does not apply.
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+ANS( Compute($crit)->cmp() );
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 405 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    

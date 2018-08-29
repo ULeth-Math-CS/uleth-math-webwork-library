@@ -1,0 +1,111 @@
+## DESCRIPTION
+## In this problem students are given a function rule f(x) and 
+## asked to find the difference quotient
+## ENDDESCRIPTION
+
+
+## DBsubject('Algebra')
+## DBchapter('Functions')
+## DBsection('Definition, Concept')
+## Date(2018-07-21)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+## Level(3)
+## KEYWORDS('ULETH-MATH-0500', 'Function Notation')
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "parserAssignment.pl",
+  "AnswerFormatHelp.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "niceTables.pl"
+);
+
+TEXT(beginproblem());
+
+##########################
+#  Setup
+
+#-ULETH-#
+Context("Numeric")->variables->are(x=>"Real",y=>"Real",a=>"Real",h=>"Real");
+$a = non_zero_random(2,10,1);
+$b = non_zero_random(-10,10,1);
+$c = non_zero_random(-10,10);
+$f = Formula("$a x^2 + $b x + $c ")->reduce();
+$difference = Formula("2*$a*a+$b+$a*h");
+#-ENDULETH-#
+
+
+#################################
+#  Main text
+
+#-ULETH-#
+BEGIN_PGML
+Suppose that [` f(x) = [$f]`]
+
+Compute 
+
+>>[`\displaystyle \frac{f(a+h)-f(a)}{h}`] = 
+[________________________]{$difference}
+[@ AnswerFormatHelp("formula") @]*.<<
+
+The quantity you computed is called the difference quotient.
+
+
+
+
+END_PGML
+#-ENDULETH-#
+
+
+#################################
+#  Answer Evaluation
+
+#################################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+To evaluate the difference quotient we first find [`f(a+h)`]: 
+
+[`f(a+h) = [$a](a+h)^2 + [$b](a+h) + [$c] `]
+
+[`f(a+h) = [$a] (a^2 +2ah +h^2) +[$b](a+h) + [$c]`]
+
+[`f(a+h) = [$a]a^2 + [$a*2]ah + [$a]h^2 + [$b]a + [$b]h + [$c]`]
+
+
+
+Now we subtract [`f(a)`]:
+
+[`f(a+h) - f(a) = ([$a]a^2 + [$a*2]ah + [$a]h^2 + [$b]a + [$b]h + [$c]) -
+([$a]a^2 + [$b]a +[$c])  `]
+
+[`f(a+h) - f(a) = [$a]a^2 + [$a*2]ah + [$a]h^2 + [$b]a + [$b]h + [$c]
+-[$a]a^2 - [$b]a - [$c]  `]
+
+[`f(a+h) - f(a) =  [$a*2]ah + [$a]h^2 + [$b]h `]
+
+and, finally, divide by [`h`]:
+
+[`\displaystyle\frac{f(a+h) - f(a)}{h} = \frac{[$a*2]ah + [$a]h^2 + [$b]h }{h} =  [$a*2]a + [$a]h + [$b]`]
+END_PGML_SOLUTION
+
+COMMENT("Randomization provides 3600 different possible versions of this question.<BR> 
+Made from a ULETH template.<BR>" 
+);
+#-ENDULETH-#
+
+ENDDOCUMENT();

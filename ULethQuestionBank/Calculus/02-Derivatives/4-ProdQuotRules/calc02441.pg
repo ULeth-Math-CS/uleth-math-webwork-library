@@ -1,0 +1,102 @@
+## DESCRIPTION
+## This is Problem 2.4.41 from the APEX Calculus text. It covers higher order applications of Power Rule
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Derivatives of polynomials and power functions)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.4')
+## Problem1('41')
+## MO(1)
+## Keywords('derivative', 'power rule', ' higher order derivatives', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+
+$a1 = random(1,9,1);
+$b1 = random(1,9,1)*random(-1,1,2);
+$c1 = random(1,15,1)*random(-1,1,2);
+$a2 = random(1,9,1);
+$b2 = random(1,9,1)*random(-1,1,2);
+$c2 = random(1,15,1)*random(-1,1,2);
+
+$f = Formula("($a1 x^3 + $b1 x + $c1)($a2 x^4 + $b2 x^3 + $c2)")->reduce();
+$r = random(8,13,1);
+
+$ans = "0";
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Compute the [$r]th derivative of [`f(x) = [$f]`].
+
+[`f^{([$r])}(x) = `] [_______________] [@ AnswerFormatHelp("formulas") @]*  
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+The function is a polynomial of degree 7, which we may observe
+without multiplying the factors out. Since [$r] is greater than 7, the [$r]th derivative will be 0.
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+ANS( Compute($ans)->cmp() );
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 141,717,600 possible versions of this question, but the answer will always be 0.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+    
+ENDDOCUMENT();    

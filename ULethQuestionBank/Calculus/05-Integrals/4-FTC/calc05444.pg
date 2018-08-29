@@ -1,0 +1,127 @@
+## DESCRIPTION
+## This is Problem 5.4.44 in the APEX Calculus text (5.4.46 in the ULETH APEX text). It covers an integration word problem involving velocity and displacement.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of integration)
+## DBsection(Distance, velocity, acceleration)
+## Level(5)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.4')
+## Problem1('44')
+## MO(1)
+## Keywords('integration', 'velocity', 'calculus,definite integrals,distance,velocity,area', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for dropdown menus
+  "parserPopUp.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+$r = random(3,6,1);
+$b = random(10,20, 2);
+$c = random(2,5,1);
+
+$r1 = $r + 1;
+$rb = $r*$b;
+$pos = Formula("$rb x^{$r1/$r} / $r1");
+
+## a)
+$a1 = 0;
+$b1 = $c ** $r;
+
+$ans1 = $rb*$b1*$b1**(1/$r)/$r1;
+
+$units = PopUp(["?", "m", "s", "m/s"], "m");
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+The velocity (in m/s) of an object moving along a straight
+line is given by
+[`
+   v(t) = [$b] \sqrt[[$r]]{t}.
+`]
+
+Find the displacement of the object over the given time
+interval.
+
+Displacement on [` [[$a1], [$b1]] `]: [__________]{Compute($ans1)} [__]{$units}
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+$ans1 = sprintf('%.3f', $ans1);
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+The displacement on an interval [` [a, b] `] is
+found by a definite integral,
+ [` \int_{a}^b v(t) \, dt`]. 
+ 
+>>[``
+    \begin{array}{rcl}
+    \displaystyle \int_{[$a1]}^{[$b1]} \left( [$b] t^{1/[$r]} \right) \, dt &=&
+    \left( \dfrac{[$rb] t^{[$r1]/[$r]}}{[$r1]} \right) \Big|_{[$a1]}^{[$b1]} \\
+    &=& \left( \dfrac{[$rb] ([$b1])^{[$r1]/[$r]}}{[$r1]} \right) \\
+    &=& [$ans1]
+    \end{array}
+``]<<
+
+Displacement is a measure of total change in position. The units in this case are meters. 
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 96 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    feet
+
+

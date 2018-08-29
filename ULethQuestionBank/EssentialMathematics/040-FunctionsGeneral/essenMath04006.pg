@@ -1,0 +1,173 @@
+## DESCRIPTION
+## In this problem students are given a function rule in a table, told it is an
+## absolute value function and asked to find the function
+## ENDDESCRIPTION
+
+
+## DBsubject('Algebra')
+## DBchapter('Functions')
+## DBsection('Definition, Concept')
+## Date(2018-07-21)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+## KEYWORDS('ULETH-MATH-0500', 'Function Notation')
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "parserAssignment.pl",
+  "AnswerFormatHelp.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "niceTables.pl"
+);
+
+TEXT(beginproblem());
+
+##########################
+#  Setup
+
+#-ULETH-#
+Context("Numeric")->variables->are(x=>"Real",y=>"Real");
+$a = non_zero_random(1,5,1);
+$b = non_zero_random(-15,-8,1);
+$f = Formula("|$a x - $b|")->reduce();
+$f_0=$f->eval(x=>0);
+$f_1=$f->eval(x=>1);
+$f_2=$f->eval(x=>2);
+$f_3=$f->eval(x=>3);
+$f_4=$f->eval(x=>4);
+$f_5=$f->eval(x=>5);
+$table = begintable(4) .
+row( "\( \ \  x \ \   \)", "0", "1", "2", "3", "4", "5" ) .
+row( "\( \ \  f(x) \ \  \)", "$f_0" , "$f_1", "$f_2", "$f_3",
+"$f_4", "$f_5" ) .
+endtable();
+#-ENDULETH-#
+
+
+#################################
+#  Main text
+
+#-ULETH-#
+BEGIN_PGML
+The linear absolute value function [`f(x)=|Ax+B|`] can be described using the
+table of values below:
+
+>>[@ $table @]***<<
+
+
+Use this table to express [`f(x)`] using function notation:
+
+>> [`f(x)=`][_____________________________][@ AnswerFormatHelp("formula") @]*<<
+
+
+END_PGML
+#-ENDULETH-#
+
+
+#################################
+#  Answer Evaluation
+
+#-ULETH-#
+$showPartialCorrectAnswers = 1;
+ANS($f->cmp());
+#-ENDULETH-#
+
+
+#################################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+Since [`f(x)=|Ax+B|`] we can solve for [`A`] and [`B`] by subsituting in pairs 
+of values [`(x,y)`] from the the table. Since we have two unknowns to solve for
+we will need to use pairs of values from the table:
+
+To this end, we will use the points [`(0,[$f_0])`] and [`(1,[$f_1])`] to solve
+for [`A`] and [`B`]:
+
+Plugging in [`(0,[$f_0])`] gives: 
+
+>> [`f(x)=|Ax+B|`] <<
+
+>> [`f(0)=|A(0)+B|`] <<
+
+>> [`[$f_0] = |B|`] <<
+
+Thus, [`B`] is either [`\pm [$f_0]`]
+
+Therefore, the function is either [`f(x)=|Ax + [$f_0]|`] or 
+[`f(x)= |Ax - [$f_0]|`]
+
+[`\textbf{CASE 1:}`] [`f(x) = |Ax + [$f_0]|`]
+
+Plugging in [`(1,[$f_1])`] gives: 
+
+>> [`f(x)=|Ax + [$f_0]|`] <<
+
+>> [`f(1)=|A(1)+ [$f_0]|`] <<
+
+>> [`[$f_1] = |A + [$f_0]|`] <<
+
+Therefore, in this case [`A`] will be either [`[$f_1 - $f_0]`] or
+[`[$f_1*(-1) - $f_0]`] 
+
+[`\textbf{CASE 2:}`] [`f(x) = |Ax - [$f_0]|`]
+
+Plugging in [`(1,[$f_1])`] gives: 
+
+>> [`f(x)=|Ax - [$f_0]|`] <<
+
+>> [`f(1)=|A(1) - [$f_0]|`] <<
+
+>> [`[$f_1] = |A - [$f_0]|`] <<
+
+Therefore, in this case [`A`] will be either [`[$f_1 + $f_0]`] or
+[`[$f_1*(-1) + $f_0]`] 
+
+These four possible values of [`A`] give us four possible functions; however,
+only two of them will be distinct:
+
+[`y_1 = | [$f_1 - $f_0]x +  [$f_0] |`]
+
+[`y_2 = | [$f_1*(-1) - $f_0]x +  [$f_0]|`]
+
+[`y_3 = | [$f_1 + $f_0]x - [$f_0] | = | (-1)([$f_1*(-1) - $f_0]x +  [$f_0])|
+= | [$f_1*(-1) - $f_0]x +  [$f_0]| = y_2 `]
+
+[`y_4 = | [$f_1*(-1) + $f_0]x - [$f_0]| = |(-1)([$f_1 - $f_0]x +  [$f_0] |)
+= | [$f_1 - $f_0]x +  [$f_0] | = y_1`]
+
+We will need to use one more point from the table to determine whether
+[`y_1`] or [`y_2`] is the function that satisfies this table of values:
+
+To this end, we will plug in [`x=3`] and see which of these two functions 
+gives [`y= [$f_3]`] as a result:
+
+[`y_1 (3) = | [$f_1 - $f_0](3) +  [$f_0] | = | [$f_1*3- $f_0*3 + $f_0] |`]
+
+[`y_2 (3) = | [$f_1*(-1) - $f_0](3) +  [$f_0]| = |[$f_1*(-3) - $f_0*3 + $f_0]|`]
+
+Therefore, the function that satisfies this table of values is [`f(x) = [$f]`].
+
+END_PGML_SOLUTION
+
+COMMENT(
+"Randomization provides 115 different possible versions of this question.<BR> 
+Made from a ULETH template.<BR>" 
+);
+#-ENDULETH-#
+
+ENDDOCUMENT();

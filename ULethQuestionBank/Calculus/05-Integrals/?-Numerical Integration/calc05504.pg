@@ -1,0 +1,170 @@
+## DESCRIPTION
+## This is Problem 5.5.4 from the APEX Calculus text (5.5.5 from the ULETH Math 1565 ebook). It covers numerical integration.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Indeterminate forms and L'Hopital's rule)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.5')
+## Problem1('4')
+## MO(1)
+## Keywords('numerical integration', 'trapezoidal rule', ' simpsons rule ', 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+
+$a = random(1,10,1)*random(-1,1,2);
+$b = $a + 2;
+
+$n = 4;
+
+$c = random(2,25,1);
+$f = "$c x^2";
+$ff = Formula("$f");
+
+$Deltax = ($b-$a)/$n;
+$x0 = $a;
+$x1 = $a + $Deltax;
+$x2 = $a + 2*$Deltax;
+$x3 = $a + 3*$Deltax;
+$x4 = $b;
+
+$y0 = $ff->eval(x=>$x0);
+$y1 = $ff->eval(x=>$x1);
+$y2 = $ff->eval(x=>$x2);
+$y3 = $ff->eval(x=>$x3);
+$y4 = $ff->eval(x=>$x4);
+
+$ans1 = ($Deltax/2)*($y0 + 2*($y1 + $y2 + $y3) + $y4);
+$ans2 = ($Deltax/3)*($y0 + 4*$y1 + 2*$y2 + 4*$y3 + $y4);
+$ans3 = $c*($b**3 - $a**3)/3;
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+Consider the definite integral:
+
+>>[`` \int_{[$a]}^{[$b]} [$f] \, dx``]<<
+
+a) Approximate the definite integral with the Trapezoidal Rule 
+and [`n = [$n]`].  
+[___________]{Compute($ans1)} [@ AnswerFormatHelp("numbers") @]*
+
+b) Approximate the definite integral with Simpson's Rule
+and [`n = [$n]`].  
+[___________]{Compute($ans2)}
+
+c) Find the exact value of the integral.  
+[___________]{Compute($ans3)}
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+[`\Delta x = \dfrac{b-a}{n} = \dfrac{[$b] - ([$a])}{4} = [$Deltax]`].
+Find the values of [`x_i`] and [`f(x_i)`].
+>>[``
+  \begin{array}{l|l|l}
+  i & x_i & y_i = f(x_i) = [$c] x_i^2 \\
+   \hline
+  1 & [$x0] & [$y0] \\
+  2 & [$x1] & [$y1] \\
+  3 & [$x2] & [$y2] \\
+  4 & [$x3] & [$y3] \\
+  5 & [$x4] & [$y4] \\
+  \end{array}
+``]<<
+    
+Trapezoidal Rule:
+>>[``
+  \dfrac{\Delta x}{2}\left[ y_1 + 2(y_2 + y_3 + y_4) + y_5\right]
+``]<<
+>>[``
+  = \dfrac{[$Deltax]}{2}\left[ [$y0] + 2([$y1] + [$y2] + [$y3]) + [$y4]\right]
+``]<<
+>>[``
+  = [$ans1]
+``]<<
+    
+Simpson's Rule:
+>>[``
+  \dfrac{\Delta x}{3}\left[ y_1 + 4y_2 + 2y_3 + 4y_4 + y_5\right]
+``]<<
+>>[``
+  = \dfrac{[$Deltax]}{3}\left[ [$y0] + 4([$y1]) + 2([$y2]) + 4([$y3]) + [$y4]\right]
+``]<<
+>>[``
+  = [$ans2]
+``]<<
+    
+The exact value is found using the Fundamental Theorem
+of Calculus:
+>>[``
+  \int_{[$a]}^{[$b]} [$f] \, dx = 
+  \left(\dfrac{[$c] x^3}{3}\right)\Big|_{[$a]}^{[$b]} = 
+  [$ans3].
+``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 480 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    
+

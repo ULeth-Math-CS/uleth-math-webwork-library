@@ -1,0 +1,125 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject('statistics')
+## DBchapter('Preliminaries')
+## DBsection('6 step method')
+## Date(2018-05-08)
+## Institution(University of Lethbridge)
+## Author(Olivia Henders & Nicole Wilson & Kyler Fisher)
+## MO(1)
+## KEYWORDS('pop-up menu', 'radio buttons', 'multiple choice')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "parserRadioButtons.pl",
+  "PGchoicemacros.pl"
+  # for drop down multiple choice
+  "parserPopUp.pl",
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+#-ULETH-#
+
+# The options in the square brackets are the different radio button options
+# that will be available.
+# The next argument is the correct answer.
+# The arguments in the square brackets after last=> dictate which options
+# come last in the radio button list (left empty randomizes the order).
+$radioButtons = RadioButtons(
+  ["Null: The proportion of all couples where the female said 'I love you' first is 0.50.
+Alt: The proportion of all couples where the male said 'I love you' first is less than 0.50",
+   "Null: The proportion of all couples where the male said 'I love you' first is 0.50.
+Alt: The proportion of all couples where the male said 'I love you' first is less than 0.50",
+   "Null: The proportion of all couples where the male said 'I love you' first is 0.50.
+Alt: The proportion of all couples where the male said 'I love you' first is greater than 0.50",
+   "Null: The proportion of all couples where the female said 'I love you' first is 0.50.
+Alt: The proportion of all couples where the female said 'I love you' first is greater than 0.50",
+   ],
+   "Null: The proportion of all couples where the male said 'I love you' first is 0.50.
+Alt: The proportion of all couples where the male said 'I love you' first is greater than 0.50",
+  last=>[""]); 
+  
+$popup = PopUp(["?", "categorical", "quantitative"], "categorical");
+  
+#-ENDULETH-#
+
+
+###########################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+BEGIN_PGML
+
+Suppose some researchers are interested in the expressions of commitment between two partners in a heterosexual committed romantic relationship. To learn more about the expressions of commitment in these relationships, suppose the researchers devise a study involving 47 heterosexual couples who are part of an online pool of people willing to participate in surveys. These 47 couples are asked about which person was the first to say 'I love you.' For 7 of those couples, the two people disagreed about the answer to this question. But both people agreed for the other 40 couples, so those 40 responses were included in the analysis.  
+Suppose that the researchers are aware that previous studies have suggested that males tend to say 'I love you' first.  
+
+The 40 heterosexual couples who agreed on their response to which person was the first to say 'I love you' are the
+observational units. Whether the man or woman said 'I love you' first is a [@ $popup->menu() @]* variable.
+
+Which of the following describes the best null and alternative hypotheses regarding if males are more likely to say 'I love you'
+first?
+
+[@ $radioButtons->buttons() @]*
+
+END_PGML
+
+
+###########################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+ANS($popup->cmp());
+ANS($radioButtons->cmp());
+
+
+#-ENDULETH-#
+
+
+###########################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+
+
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

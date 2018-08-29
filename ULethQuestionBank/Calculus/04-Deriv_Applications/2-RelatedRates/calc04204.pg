@@ -1,0 +1,127 @@
+## DESCRIPTION
+## This is Problem 4.2.4 from the APEX Calculus text. It covers related rates. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Related rates)
+## Level(5)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('4.2')
+## Problem1('4')
+## MO(1)
+## Keywords('derivative related rates', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+ );
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+#############################
+#   Setup
+#-ULETH-#
+#Randomize the question parameters. 
+Context("Numeric");
+   Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,
+   );
+$pi = Formula("pi");
+   
+$rate = random(10,40,0.5);
+
+$x1 = $rate/(4*$pi);
+$x2 = $rate/(400*$pi);
+$x3 = $rate/(40000*$pi);
+
+$cmps3 = "\(\text{cm}^3/\text{s}\)";
+$cmps = "\(\text{cm}/\text{s}\)";
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+A spherical balloon is inflated with air flowing
+at a rate of [$rate] [$cmps3].
+How fast is the radius of the balloon increasing
+when the radius is:
+
+
+a. 1 cm? [_________________________]{Compute($x1)} [$cmps] [@ AnswerFormatHelp("numbers") @]*  
+b. 10 cm? [_________________________]{Compute($x2)} [$cmps]  
+c. 100 cm? [_________________________]{Compute($x3)} [$cmps]  
+
+END_PGML
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Start with the volume formula for a sphere, 
+[`V = \frac{4}{3}\pi r^3`].
+
+Taking time-derivatives (i.e, derivatives with respect to [`t`]) of both sides, we find that 
+
+>>[``  \dfrac{dV}{dt} = \frac{4}{3}\pi (3r^2) \dfrac{dr}{dt}.``]<<
+
+We know that [`\frac{dV}{dt} = [$rate]`], so plug it in and solve for [`\frac{dr}{dt}`]:
+
+>>[``
+  \begin{array}{rcl}
+   [$rate] &=& 4\pi r^2 \dfrac{dr}{dt} \\
+  &&\\
+ \implies \dfrac{dr}{dt} &=& \dfrac{[$rate]}{4\pi r^2}.
+  \end{array}
+``]<<
+
+When [`r = 1`], [`\displaystyle \frac{dr}{dt} =  [$x1] `].  
+
+When [`r = 10`], [`\displaystyle  \frac{dr}{dt} = [$x2] `].  
+
+When [`r = 100`], [`\displaystyle  \frac{dr}{dt} = [$x3] `].  
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+COMMENT('
+    Randomization provides 61 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+
+

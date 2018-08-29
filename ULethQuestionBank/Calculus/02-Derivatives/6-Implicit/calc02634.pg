@@ -1,0 +1,158 @@
+## DESCRIPTION
+## This is Problem 2.6.34 from the APEX Calculus text. It covers implicit differentiation. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Implicit differentiation)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.6')
+## Problem1('34')
+## MO(1)
+## Keywords('derivative', 'implicit', 'trig functions', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+Context()->variables->add(y=>'Real');
+
+$a1 = random(2,7,1);
+$b1 = random(2,7,1);
+$b2 = 2*$b1;
+$c1 = random(2,7,1);
+
+$f = "$a1 \sin x  + $b1 \cos y";
+$g = "$c1";
+
+$b1_s = $b1**2;
+$b1a1 = $b1 * $a1;
+
+$ans1 = Compute("$a1 cos(x) / ($b1 sin(y))")->reduce;; 
+$ans2 = Compute("[-$a1( sin(x)sin(y) +
+      ($a1/$b1) cos(x)^2 cot(y))]/ [$b1 sin(y)^2] ")->reduce;;
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Let
+
+>>[``
+  [$f] = [$g].
+``]<<
+
+Find the following derivatives. 
+
+[` \dfrac{dy}{dx} = `] [_____________________________________________________]{Compute($ans1)} [@ AnswerFormatHelp("formulas") @]*
+
+[` \dfrac{d^2y}{dx^2} = `] [_____________________________________________________]{Compute($ans2)}
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Starting with
+>>[``
+  [$f] = [$g],
+``]<<
+take the derivative with respect to [`x`] of both sides (when taking derivatives of [`y`] terms, remember to multiply by [`\dfrac{dy}{dx}`]):
+>>[``
+   \begin{array}{rcl}
+   \dfrac{d}{dx}[[$f]] &=& \dfrac{d}{dx}[[$g]]\\
+   &&\\
+   [$a1] \cos x - [$b1] \sin y \dfrac{dy}{dx} &=& 0.
+   \end{array}
+``]<<
+Now, solve for [`\dfrac{dy}{dx}`]:
+>>[``
+   \dfrac{dy}{dx} = \dfrac{[$a1] \cos x}{[$b1] \sin y}.
+``]<<
+
+Take the derivative with respect to [`x`] again:
+
+>>[``
+   \begin{array}{rcl}
+    \dfrac{d^2y}{dx^2} &=& 
+    \dfrac{d}{dx}\left[  \dfrac{[$a1] \cos x}{[$b1] \sin y} \right] \\
+    &&\\
+    &=& \dfrac{  [$b1] \sin y(-[$a1] \sin x) - ([$a1] \cos x)([$b1] \cos y \cdot \dfrac{dy}{dx})}
+    {[$b1_s] \sin^2 y} \\
+    &&\\
+    &=& \dfrac{-[$b1a1]( \sin x \sin y + \cos x \cos y \cdot \dfrac{dy}{dx})}
+    {[$b1_s] \sin^2 y} \\
+    &=& \dfrac{-[$a1]( \sin x \sin y + \cos x \cos y \cdot \dfrac{dy}{dx})}
+    {[$b1] \sin^2 y} \\
+  \end{array}
+``]<<
+
+For the final answer, substitute 
+[`\dfrac{dy}{dx} = \dfrac{[$a1] \cos x}{[$b1] \sin y}`]:
+>>[``
+     \begin{array}{rcl}
+   \frac{d^2y}{dx^2} &=& \dfrac{-[$a1]\left( \sin x \sin y +
+   \cos x \cos y \cdot \dfrac{[$a1] \cos x}{[$b1] \sin y}\right)}
+    {[$b1] \sin^2 y}\\
+    &&\\
+    &=& \dfrac{-[$a1]\left( \sin x \sin y + 
+    \frac{[$a1]}{[$b1]} \cos^2 x \cot y\right)}
+    {[$b1] \sin^2 y}.\\
+  \end{array}
+``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 216 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    
+
+

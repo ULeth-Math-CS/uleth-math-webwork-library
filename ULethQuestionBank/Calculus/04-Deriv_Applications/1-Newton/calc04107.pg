@@ -1,0 +1,139 @@
+## DESCRIPTION
+## This is Problem 4.1.7 from the APEX Calculus text (4.1.7 from the ULETH Calculus text). It covers Newton's Method.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Newton's method)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('4.1')
+## Problem1('7')
+## MO(1)
+## Keywords('Newton's Method', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+Context()->flags->set(
+  tolerance => 0.00001,
+  tolType => "absolute",
+);
+
+$x0 = random(1.2,2.6,0.1);
+
+$f = Formula("ln(x)");
+$df=$f->D('x');
+
+$x1 = $x0 - ($f->eval(x=>$x0))/($df->eval(x=>$x0));
+$x2 = $x1 - ($f->eval(x=>$x1))/($df->eval(x=>$x1));
+$x3 = $x2 - ($f->eval(x=>$x2))/($df->eval(x=>$x2));
+$x4 = $x3 - ($f->eval(x=>$x3))/($df->eval(x=>$x3));
+$x5 = $x4 - ($f->eval(x=>$x4))/($df->eval(x=>$x4));
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+Use 5 iterations of Newton's Method 
+with the given initial approximation to approximate
+the root of the function.  All answers should be given
+to 5 decimal digits of accuracy.
+
+>>[`  
+   f(x) = \ln x, \qquad x_0 = [$x0]
+`]<<  
+[`x_1 =`] [___________]{Compute($x1)} [@ AnswerFormatHelp("numbers") @]*  
+[`x_2 =`] [___________]{Compute($x2)}  
+[`x_3 =`] [___________]{Compute($x3)}  
+[`x_4 =`] [___________]{Compute($x4)}  
+[`x_5 =`] [___________]{Compute($x5)}  
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Set up the iterative formula for Newton's Method:
+
+>>[``
+  x_{n+1} = x_n - \dfrac{f(x_n)}{f'(x_n)} 
+  = x_n - \dfrac{\ln x_n}{\frac{1}{x_n}} 
+  = x_n - x_n \ln x_n
+``]<<
+
+Iterate using the formula and the provided initial approximation:
+>>[``
+  \begin{array}{rcl}
+        x_0 &=& [$x0] \\
+    &&\\
+    x_1 &=& [$x0] - ([$x0])\ln([$x0]) \approx [$x1] \\
+    &&\\
+    x_2 &=& [$x1] - ([$x1])\ln([$x1]) \approx [$x2] \\
+    &&\\
+    x_3 &=& [$x2] - ([$x2])\ln([$x2]) \approx [$x3] \\
+    &&\\
+    x_4 &=& [$x3] - ([$x3])\ln([$x3]) \approx [$x4] \\
+    &&\\
+    x_5 &=& [$x4] - ([$x4])\ln([$x4]) \approx [$x5] \\
+  \end{array}
+``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answers are evaluated in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 15 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    
+

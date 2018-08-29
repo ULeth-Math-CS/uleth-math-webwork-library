@@ -1,0 +1,117 @@
+## DESCRIPTION
+## This is Problem 3.2.6 from the APEX Calculus text. It tests students' ability to check the conditions of Rolle's Theorem.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Mean value theorem)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('3.2')
+## Problem1('6')
+## MO(1)
+## Keywords('derivative, rolles theorem, mean value theorem','ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  # Used for dropdown menus
+  "parserPopUp.pl"
+);
+
+#############################
+#   Setup
+#-ULETH-#
+$a1 = random(1,90,1);
+$b = random( 1,50, 1);
+$b2 = 2*$b;
+$f = Formula("x^2 - $b2 x + $a1")->reduce();
+
+$ans1 = PopUp(["?", "continuous", "differentiable"], "continuous");
+$ans2 = PopUp(["?", "continuous", "differentiable"], "differentiable"); 
+
+
+TEXT(beginproblem());
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+BEGIN_PGML
+
+Consider the function  [`f(x) = [$f]`] on the interval [`[ 0 , [$b2]]`].
+Verify that this function satisfies the three hypotheses of Rolle's
+Theorem on the interval.
+
+Since [`f(x)`] is a polynomial,
+[`f(x)`] is [__________]{$ans1} on [`[0, [$b2]]`],
+[`f(x)`] is [__________]{$ans2} on [`(0, [$b2])`],
+and [`f(0)=f([$b2])=`] [__________]{$a1}.
+
+Therefore, by Rolle's theorem, there exists a [`c`] in [`( 0 , [$b2])`] such that [`f'(c)=0`].
+
+Find the value(s) [`c`].
+
+[`c=`] [________]{$b}
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+Since [`f(x)`] is a polynomial, it is continuous and
+differentiable on any interval.  We verify that [`f(0) = f([$b2]) = [$a1]`],
+so Rolle's Theorem implies there must be at least one
+value [`c`] in [` (0, [$b2]) `] such that [`f'(c) = 0`].
+
+Set [`f'(x) = 0 `] to find the value(s):
+
+[``
+  f'(x) = 2x - [$b2] = 0 \;\Rightarrow\; x = [$b].
+``] 
+
+That is, [`c = [$b]`].
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#Answers are evaluated in the question text.
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+#-ENDULETH#
+
+
+#############################
+#  Comments
+COMMENT('
+    Randomization provides 4500 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+
+ENDDOCUMENT();

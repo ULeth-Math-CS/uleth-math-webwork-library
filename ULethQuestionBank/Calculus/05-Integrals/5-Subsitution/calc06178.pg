@@ -1,0 +1,109 @@
+## DESCRIPTION
+## This is Problem 6.1.78 from the APEX Calculus text (5.5.81 from the ULETH APEX text). It covers indefinite integration using substitution.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Techniques of integration)
+## DBsection(Substitution (with trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('6.1')
+## Problem1('76')
+## MO(1)
+## Keywords('definite integral', 'substitution', 'trig functions', ' antiderivatives ', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  	'contextFraction.pl',
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+
+## (a) ##
+$e1 = random(2,22,2);
+
+$f1 = "\sin^{$e1}(x) \cos(x)";
+
+#### Answers ####
+$e1p = $e1 + 1;
+$ans = 2/$e1p;
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+Evaluate the definite integral.
+
+[`\displaystyle\int_{-\frac{\pi}{2}}^{\frac{\pi}{2}} [$f1] \, dx `] = [____________]{$ans} [` + C`]. [@ AnswerFormatHelp("numbers") @]*
+
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Substitute [`u = g(x) = \sin(x)`].  Then [`du = \cos(x)\,dx`] and the lower/upper limits of integration are [`\sin(-\frac{\pi}{2}) = -1`] and [`\sin(\frac{\pi}{2}) = 1`], respectively. The definite integral is evaluated as follows: 
+>>[``
+  \begin{array}{rcl}
+    \displaystyle  \int_{-\pi/2}^{\pi/2} [$f1] \, dx &=&
+    \displaystyle \int_{\sin(-\pi/2)}^{\sin(\pi/2)} u^{[$e1]} \, du \\
+    &=& \dfrac{u^{[$e1p]}}{[$e1p]} \Big|_{-1}^{1}\\
+    &=& \dfrac{1}{[$e1p]} - \dfrac{-1}{[$e1p]} = \dfrac{2}{[$e1p]}.
+  \end{array}
+``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answer checking is completed in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 11 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+
+

@@ -1,0 +1,417 @@
+## DESCRIPTION
+#  This is a question that shows a GeoGebra graph with a dotplot for two distributions (of football durations). The student is asked to report what proportion of games from the first group took longer than some duration, where this duration ranges from 180 minutes to 220 in increments of 10 minutes (all the durations range from 165-240 minutes). Then the student is asked which group the longest duration game belongs to. Each distribution has 28 randomly generated durations (data) that are generated in segments to preserve a similar overall spread. The proportion questions have tolerance set to 0.001 and the question reflects this fact by asking the student to report their decimal anwsers to 3 places. 
+## ENDDESCRIPTION
+
+## DBsubject('Statistics')
+## DBchapter('Experimental Design')
+## DBsection('Concepts')
+## Date(2017-05-11)
+## Institution(University of Lethbridge)
+## Author(Kyler Fisher, Adopted from template by Olivia Henders & Nicole Wilson)
+## MO(1)
+## KEYWORDS('multiple choice', 'ULETH-STAT1770', 'dot plot', 'dot-plot', 'proportion', 'maximum')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to support the GeoGebra applet.
+  "AppletObjects.pl",
+  # Formats problem data into two layout columns.
+  "unionTables.pl",
+  # Provides course-specific initializations.
+  "PGcourse.pl",
+  "PGML.pl",
+  # Used for drop down responses.
+  "parserPopUp.pl",
+  # context limited point
+  "contextLimitedPoint.pl",
+  # for anwser help
+  "AnswerFormatHelp.pl",
+);
+
+TEXT(beginproblem());
+
+
+##########################################
+#  Setup
+
+#-ULETH-#
+
+#####Create data for the regular refs
+do{
+@regular;
+#add points for lower section 
+for ($i = 0; $i < 15; $i++){
+    $regular[$i] = random(166,186,2);
+}
+#add points for mid section 
+@regular;
+for ($i = 15; $i < 25; $i++){
+    $regular[$i] = random(185,218,2);
+}
+#add points for upper section 
+@regular;
+for ($i = 25; $i < 28; $i++){
+    $regular[$i] = random(220,224,2);
+}
+$regularString = "{".join(",", @regular)."}";
+
+#check if any columns have more than 6 scores (would not not fit inside the plot boundaries drawn)
+$tooMany = 0;
+for ($i = 165; $i < 219; $i++) { # for each number 165-218
+    $count = 0;
+    for ($j = 0; $j < 28; $j++) { # count how many times it appears, if count is more than 6, tooMany = true
+        if ($regular[$j] == $i) { $count = $count + 1; }
+    }
+    if ($count > 6) { $tooMany = 1 }
+}
+} while ($tooMany == 1); #keep looping until no columns have more than 6 data points
+
+
+#####Create data for the replacement refs
+do{
+@replacement;
+#add points for lower section 
+for ($i = 0; $i < 10; $i++){
+    $replacement[$i] = random(170,198,2);
+}
+#add points for mid section 
+@replacement;
+for ($i = 10; $i < 20; $i++){
+    $replacement[$i] = random(190,218,2);
+}
+for ($i = 20; $i < 25; $i++){
+    $replacement[$i] = random(202,218,2);
+}
+#add points for upper section 
+@replacement;
+for ($i = 25; $i < 28; $i++){
+    $replacement[$i] = random(228,242,2);
+}
+$replacementString = "{".join(",", @replacement)."}";
+
+#check if any columns have more than 6 scores (would not not fit inside the plot boundaries drawn)
+$tooMany = 0;
+for ($i = 165; $i < 219; $i++) { # for each number 165-218
+    $count = 0;
+    for ($j = 0; $j < 28; $j++) { # count how many times it appears, if count is more than 6, tooMany = true
+        if ($replacement[$j] == $i) { $count = $count + 1; }
+    }
+    if ($count > 6) { $tooMany = 1 }
+}
+} while ($tooMany == 1); #keep looping until no columns have more than 6 data points
+
+
+#determine what game duration to use for question:
+$minutes = random(180,220,10);
+
+####determine what proportion of the games lasted at least [$minutes] minutes
+#for regular refs --
+$regularCount = 0.0;
+for ($i = 0; $i < 28; $i++){
+    if ($regular[$i] >= $minutes) {
+        $regularCount = $regularCount + 1.0;
+    }
+}
+#for replacement refs --
+$replacementCount = 0.0;
+$maxDuration = 0; #also, record the maximum duration for the replacement refs (which is the max overall and mentioned in solution)
+for ($i = 0; $i < 28; $i++){
+    if ( $replacement[$i] >= $minutes ) { $replacementCount = $replacementCount + 1.0; }
+    if ( $replacement[$i] >= $maxDuration ) { $maxDuration = $replacement[$i] }
+}
+
+#Calculate the proportions for both groups (to many decimals and to 3 decimals for showing in solution)
+$regularProp = $regularCount / 28.0;
+$replacementProp = $replacementCount / 28.0;
+$solutionRegularProp = floor($regularProp * 1000) / 1000.0;
+$solutionReplacementProp = floor($replacementProp * 1000) / 1000.0;
+
+#for question that aks which group of referees had the longest game length (it is always replacement refs)
+$popup = PopUp(["?", "regular", "replacement"], "replacement");
+
+#################################################
+# How many data points are in the graph.
+$numPoints = 20;
+# Number of units above the x-axis the image is drawn.
+$yOffset = 2.5;
+# Height of the box.
+$yScale = 1.25;
+
+# Set the bounds of the graph.
+$minX = 145;
+$minY = -5;
+$maxX = 250;
+$maxY = 13.5;
+#-ENDULETH-#
+
+
+######################################
+# Create  link to applet:
+###################################
+# You can name your applet (anything reasonable :-) )
+# Adjust the height and width as desired
+# Paste the geogebra parameters in at the bottom of the page just above the
+# command end command so that they don't get in the way.
+# See the note down there for more information.
+###################################
+
+#-ULETH-#
+# Choose an appropriate name for your applet.  Can also leave as ggbfoo.
+$appletName = "ggbfoo";
+#-ENDULETH-#
+
+$applet =  GeogebraWebApplet(
+   code       => "geogebra.GeoGebraApplet",
+   archive    => "geogebra.jar",
+   codebase                 => findAppletCodebase("geogebra.jar"),
+   appletName              => $appletName,
+   appletId                    => $appletName,
+   submitActionAlias     => 'getAppletValues',  # default actionAlias
+   initializeActionAlias   => 'configure',  # default actionAlias
+   setStateAlias             => 'setXML',
+   getStateAlias             => 'getXML',
+   setConfigAlias           => '',
+   getConfigAlias           => '',
+   returnFieldName       => '',
+   #-ULETH-#
+   width                 => 900,              # may want to modify width
+   height                => 300,              # may want to modify height
+   #-ENDULETH-#
+   # mayscript             => "true",
+   #-ULETH-#
+   debugMode             => 0,   # set debugMode to 0 for no debug
+                                              # to 1 to make xml representation visible
+                                              # to 2 to add alerts detailing progression
+                                              # through the applet
+   #-ENDULETH-#
+   onInit                => 'ggbOnInit',
+   type                  => 'geogebraweb',
+   #submitActionScript    => qq{ getQE('answerBox').value = getAppletValues() },
+   submitActionScript => '',
+   selfLoading           => 1,
+
+   # Defined as a separate subroutine so the parameters can go at the bottom of
+   # the page.
+   params     => GEOGEBRA_PARAMS(),# paste parameters in
+
+);
+
+
+##################################
+# Setup GeogebraWebApplet --
+###################################
+
+###############################################
+#
+#  For persistence of GeoGebra applet state
+#  when answers are submitted or page is refreshed.
+#  Uses JavaScript interface to GeoGebra.
+#  This fetches the GeoGebra applet with $appletname.
+#  Note that this variable gets set in the "Create link to applet" section.
+
+HEADER_TEXT(
+qq!
+<script language="javascript">
+   function ggbOnInit(param) {
+       if (param == "$appletName") {
+           applet_loaded(param,1);  // report that applet is ready.
+           ww_applet_list[param].safe_applet_initialize(2);
+       }
+   }
+</script>
+<noscript>For this question to work properly,
+you must enable JavaScript, or use another browser
+(or computer) on which JavaScript works.</noscript>
+!);
+
+
+#######################################################
+#
+#  For setting initial values in GeoGebra from WeBWorK
+#  Uses JavaScript interface to GeoGebra.
+#  Note the area right under all the ///////////////.
+#  This is where you match up your variables from WeBWorK
+#  with your variables in GeoGebra.
+
+TEXT( MODES(TeX=>'', HTML=><<END_SCRIPT ) );
+<script language="javascript">
+function setAppletCoefficients() {
+   var applet=getApplet("$appletName");   // alert("Updating coefficients");
+   if (typeof(applet)!="undefined") {
+     if (typeof(applet.setValue)!="undefined") {
+
+     ////////////////////////////////////////////////////////////////
+     //  List the values of the parameters to be set in the applet here
+
+          // Set variables for GeoGebra from WebWork
+          applet.setValue("yOffset", $yOffset); // the number of units above the        x-axis the image is drawn
+          applet.setValue("yScale", $yScale); // the height of the box
+          // #-ULETH-#
+          // Raw data variables get set here.  Do not change values here!
+          // You can, however, comment/uncomment lines to match the number of
+          // data points you are passing in.
+          //applet.setListValue("xList",1,$dataSet[0]);
+          //applet.setListValue("xList",2,$dataSet[1]);
+          //applet.setListValue("xList",3,$dataSet[2]);
+          //applet.setListValue("xList",4,$dataSet[3]);
+          //applet.setListValue("xList",5,$dataSet[4]);
+          //applet.setListValue("xList",6,$dataSet[5]);
+          //applet.setListValue("xList",7,$dataSet[6]);
+          //applet.setListValue("xList",8,$dataSet[7]);
+          //applet.setListValue("xList",9,$dataSet[8]);
+          //applet.setListValue("xList",10,$dataSet[9]);
+          //applet.setListValue("xList",11,$dataSet[10]);
+          //applet.setListValue("xList",12,$dataSet[11]);
+          //applet.setListValue("xList",13,$dataSet[12]);
+          //applet.setListValue("xList",14,$dataSet[13]);
+          //applet.setListValue("xList",15,$dataSet[14]);
+          //applet.setListValue("xList",16,$dataSet[15]);
+          //applet.setListValue("xList",17,$dataSet[16]);
+          //applet.setListValue("xList",18,$dataSet[17]);
+          //applet.setListValue("xList",19,$dataSet[18]);
+          //applet.setListValue("xList",20,$dataSet[19]);
+          //applet.setListValue("xList",21,$dataSet[20]);
+          //applet.setListValue("xList",22,$dataSet[21]);
+          //applet.setListValue("xList",23,$dataSet[22]);
+          //applet.setListValue("xList",24,$dataSet[23]);
+          //applet.setListValue("xList",25,$dataSet[24]);
+          //applet.setValue("outliers",1); // To show outliers set to 1, otherwise set this to 0
+          // Changing the text value will change the label text on the graph, and
+          // the coordinates at the end represent the point on the graph's grid
+          // where the label will be placed.
+          applet.evalCommand("ZoomIn[$minX,$minY,$maxX,$maxY]");
+          // next two commands assign data for replacement and regular refs.
+          applet.evalCommand("replacementRefs = DotPlot[$replacementString] + (0, -0.5)");
+          applet.evalCommand("regularRefs = DotPlot[$regularString] + (0, 5.5)");
+          //
+          // #-ENDULETH-#
+     } else {
+          setTimeout("setAppletCoefficients()", 1000);
+     }
+   } else {
+      setTimeout("setAppletCoefficients()",1000);
+   }
+}
+ww_applet_list["$appletName"].setConfig = function() {setAppletCoefficients()};
+</script>
+END_SCRIPT
+
+
+#######################################
+# TEXT
+#######################################
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+Context("LimitedPoint");
+
+BEGIN_PGML
+
+In the 2012 National Football League (NFL) season, the first three weeks' games were played with replacement referees because of
+a labor dispute between the NFL and its regular referees. Imagine that the data in the dotplot below represented the duration of games for the first three weeks officiated by replacement referees and the durations for the next three weeks officiated by regular referees.
+
+[@
+ColumnTable("",
+$BCENTER.
+$BBOLD."Football Game Duration by Regular and Replacement Referees".$EBOLD.$PAR.
+MODES(HTML=>$applet->insertAll(debug=>0, includeAnswerBox=>0,), TeX=>$im).
+"(all games durations are in increments of 2 minutes)".
+$ECENTER
+,
+indent => 0, separation => 30, valign => "MIDDLE"
+);
+@]*
+
+What _proportion_ of the 28 games officiated by *replacement referees* lasted for at least [$minutes] minutes? (Round your answer to 3 decimal places, ex. 0.923)
+
+Proportion: [______][@AnswerFormatHelp("decimal")@]*
+
+What _proportion_ of the 28 games officiated by *regular referees* lasted for this long? (Round your answer to 3 decimal places, ex. 0.923)
+
+Proportion: [_______][@AnswerFormatHelp("decimal")@]*
+
+The game with the *longest duration* in this dataset was refereed by [@ $popup->menu() @]* referees.
+
+END_PGML
+
+
+
+#########################################
+# ANSWER section
+#########################################
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+
+ANS(Compute($replacementProp)->cmp(tolType=>"absolute", tolerance=>0.001));
+ANS(Compute($regularProp)->cmp(tolType=>"absolute", tolerance=>0.001));
+ANS($popup->cmp());
+
+#########################################
+# The applet as a base64 string
+#########################################
+
+sub GEOGEBRA_PARAMS {
+    my $result = {
+showResetIcon=>"false" ,
+enableRightClick=>"false" ,
+enableLabelDrags=>"false",
+showMenuBar=>"false" ,
+showToolBar=>"false",
+showAlgebraInput=>"false",
+useBrowserForJS=>"true",
+#-ULETH-#
+# In the GeoGebra desktop application, create your applet.  Once you are done,
+# press Ctrl + Shift + B.  This will copy the base64 string (like the one below)
+# to your clipboard.  Paste this string between the double quotes below.  Make
+# sure not to paste over the }; or $result lines that follow this section.
+# You should end up with (e.g. ggbbase64=>"skj8981519+!KJ!MSD!.....") as the
+# parameter below.
+ggbbase64=>"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"
+#-ENDULETH-#
+};
+
+$result;
+}
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+The graph above shows a dotplot representation of fictional data. The upper portion of the graph depicts durations for 28 games officiated by regular referees and the lower portion shows durations for 28 games officiated by replacement referees. In a dotpot representation, each dot represents a single datum, in this case, a single game. Therefore, we can easily make observations such as determining how many replacement referee games took _at least_ [$minutes] minutes. To determine this count, we simply add-up the dots at or above [$minutes]. There are [$replacementCount] games with replacement referees that took [$minutes] minutes or longer.
+
+We are asked to determine what proportion of regular and replacement referee games had a duration of at least [$minutes] minutes. To determine a proportion, we divide the part by the whole. In this case, to determine what proportion of replacement games had a duration of [$minutes] minutes or longer, we divide the number of games with that range of durations ([$replacementCount] games) by the total number of replacement games (28 games). So the proportion is [$replacementCount] / 28 = [$solutionReplacementProp].
+
+Similarly, for the regular referee games, the proportion of games that lasted at least [$minutes] minutes is [$regularCount] / 28 = [$solutionRegularProp].
+
+The game with the longest duration was a game officiated by replacement referees because the dot with the greatest duration (that is positioned farthest to the right) at [$maxDuration] minutes was officiated by replacement referees.
+
+END_PGML_SOLUTION
+
+COMMENT('GeoGebra question reuqiring students to interpret a dotplot graph with 4 distributions (arranged vertically) and arrange the relative standard deviations using tiles. <BR>
+        Distributions are randomly arranged vertically, randomly assigned colors, are randomly assigned from 4 letters, and 3 of the distribtutions are randomly shifted although the shapes of all distributions are retained.
+        Graph may not render on editor screen, but renders for students. <BR>
+        Includes a solution set.<BR>
+        
+        Uses PGML. <BR>
+Uses GeoGebraWeb (JavaScript), so it should work on computers and tablets.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

@@ -1,0 +1,122 @@
+#######################################################################
+## DESCRIPTION 
+##
+## In this problem students will be for the equation of a line that passes 
+## through the origin.
+## 
+## ENDDESCRIPTION
+#######################################################################
+
+#######################################################################
+## DBsubject(Algebra)
+## DBchapter(Linear Equations and Functions)
+## DBsection(Equations of lines: point-slope form)
+## Date(2018-06-15)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+## KEYWORDS('Linear Equations', 'Lines', 'ULETH-MATH-0500')
+#######################################################################
+
+#######################################################################
+## Initialization 
+#######################################################################
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "scaffold.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "contextFraction.pl",
+  "answerHints.pl",
+);
+TEXT(beginproblem());
+
+
+#######################################################################
+#  Setup
+#######################################################################
+
+Context("Fraction")->variables->are(x=>"Real");
+
+#Randomly chooses the slope of a line between -5 and 5
+#Excludes -1, 0, and 1 as possible slopes 
+$slope = random(-1,1,2)*random(2,25,1); 
+$negSlope = -$slope;
+
+#Defines the origin which this line passes through
+$x_1 = 0;
+$y_1=0;
+
+
+#Computes the y_intercept of the line using the random point
+$y_intercept = -$slope*$x_1 + $y_1;
+
+#Computes the x_intercept of the line using the random point
+$x_intercept = Fraction( -$y_intercept, $slope)->reduce(); 
+
+#Defines the line using slope-intercept form.
+$line = Formula("$slope*x + $y_intercept") -> reduce();
+
+
+#######################################################################
+#  Main Text
+####################################################################### 
+
+BEGIN_PGML
+Determine the equation of a line that passes through the origin with a slope of
+[`[$slope]`].
+
+y = [__________]{$line}.
+
+END_PGML
+
+#######################################################################
+#  Answer Evaluation
+#######################################################################
+
+$showPartialCorrectAnswers = 1;
+#answer evaluation has been built into the question.
+
+#######################################################################
+#  Solution
+#######################################################################
+
+BEGIN_PGML_SOLUTION
+
+When you are given the slope and y-intercept of a line the quickest way
+to find the equation of that line is to use the slope intercept form of
+a line: 
+
+>>[`y= mx + b`]<<
+
+where [`m`] is the slope of the line and [`b`] is the y-intercept of
+the line; in this problem we are given both of these quantities. The slope is 
+[`m = [$slope]`] and the y-intercept is [`b=0`] because the line passes through 
+the origin which is the point [`(0,0)`]. Thus the equation of this line is: 
+
+
+>>[`y= mx + b`]<<
+
+>> [`y = [$slope]x + [$y_intercept] `]<<
+
+>> [` y = [$slope]x`] <<
+
+END_PGML_SOLUTION
+
+#######################################################################
+#  Comments for Instructors 
+#######################################################################
+
+COMMENT(
+"Randomization provides 576 different possible versions of this question.<BR> 
+
+Students find the equation of a line that passes through the origin. The 
+slope of the line is nozero,non-unit, and between -25 and 25. 
+
+Made from a ULETH template.<BR>" 
+);
+
+ENDDOCUMENT();

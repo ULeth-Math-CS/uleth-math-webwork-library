@@ -1,0 +1,124 @@
+## DESCRIPTION
+## In this problem students are given a function rule expressed as a table, told
+## the function is linear, and asked to express the function in function notation
+## ENDDESCRIPTION
+
+## DBsubject('Algebra')
+## DBchapter('Functions')
+## DBsection('Definition, Concept')
+## Date(2018-07-21)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+#Level(2)
+## KEYWORDS('ULETH-MATH-0500', 'Function Notation')
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "parserAssignment.pl",
+  "AnswerFormatHelp.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "niceTables.pl"
+);
+
+TEXT(beginproblem());
+
+##########################
+#  Setup
+
+#-ULETH-#
+Context("Numeric")->variables->are(x=>"Real",y=>"Real");
+$a = non_zero_random(1,10,1);
+$b = non_zero_random(1,10,1);
+$f = Formula("$a x + $b")->reduce;
+$f_0=$f->eval(x=>0);
+$f_1=$f->eval(x=>1);
+$f_2=$f->eval(x=>2);
+$f_3=$f->eval(x=>3);
+$f_4=$f->eval(x=>4);
+$f_5=$f->eval(x=>5);
+$table = begintable(4) .
+row( "\( \ \  x \ \   \)", " 0 ", "1", "2", "3", "4", "5" ) .
+row( "\( \ \  f(x) \ \  \)", " $f_0 ", "$f_1", "$f_2", "$f_3",
+"$f_4", "$f_5" ) .
+endtable();
+#-ENDULETH-#
+
+
+#################################
+#  Main text
+
+#-ULETH-#
+BEGIN_PGML
+The linear function [`f(x)`] can be described using the table of values below:
+
+
+>>[@ $table @]***<<
+
+
+Use this table to express [`f(x)`] using function notation:
+
+>> [`f(x)=`][_____________________________][@ AnswerFormatHelp("formula") @]*<<
+
+
+END_PGML
+#-ENDULETH-#
+
+
+#################################
+#  Answer Evaluation
+
+#-ULETH-#
+$showPartialCorrectAnswers = 1;
+ANS($f->cmp());
+#-ENDULETH-#
+
+
+#################################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Since we are told that [`f(x)`] is a linear function we know that there are some
+numbers [`A`] and [`B`] such that [`f(x) = Ax + B`]. To solve for these
+constants we can use any pair of values from the table that we wish.So, let's
+use [`(0,[$f_0])`] and [`(1,[$f_1])`]:
+
+When we plug in [`x=0`] and [`y=[$f_0]`] we get:
+
+>>[`[$f_0] = A(0) + B`] <<
+
+>>[`[$f_0] =  B`] <<
+
+So the function is of the form [`f(x) = Ax + [$f_0]`]. We can now solve for
+[`A`] by plugging in [`x=1`] and [`y=[$f_1]`]:
+
+>>[`f(x) = Ax + [$f_0]`]<<
+
+>>[`[$f_1] = A(1) + [$f_0]`]<<
+
+>>[`[$f_1 - $f_0] = A`]<<
+
+Thus, the linear function that satisfies this table of values is: 
+>>[`f(x) = [$f]`]<<
+
+END_PGML_SOLUTION
+
+COMMENT(
+"Randomization provides 100 different possible versions of this question.<BR> 
+Made from a ULETH template.<BR>" 
+);
+#-ENDULETH-#
+
+ENDDOCUMENT();

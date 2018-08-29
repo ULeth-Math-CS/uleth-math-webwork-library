@@ -1,0 +1,131 @@
+## DESCRIPTION
+## This is Problem 4.2.3 from the APEX Calculus text. It covers related rates. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Related rates)
+## Level(5)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('4.2')
+## Problem1('3')
+## MO(1)
+## Keywords('derivative related rates', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+ );
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+#############################
+#   Setup
+#-ULETH-#
+#Randomize the question parameters. 
+Context("Numeric");
+   Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,
+   );
+   
+$r = random(3,20,0.5);
+
+$pi = Formula("pi");
+
+$x1 = $r/(2*$pi);
+$x2 = $r/(20*$pi);
+$x3 = $r/(200*$pi);
+
+$cmps3 = "\(\text{cm}^3/\text{s}\)";
+$cmps = "\(\text{cm}/\text{s}\)";
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+Water flows onto a flat surface at a rate of
+[$r] [$cmps3] forming a circular puddle
+10 mm deep.  How fast is the radius growing
+when the radius is:  
+
+a. 1 cm? [_________________________]{Compute($x1)} [$cmps]  [@ AnswerFormatHelp("numbers") @]*  
+b. 10 cm? [_________________________]{Compute($x2)} [$cmps]  
+c. 100 cm? [_________________________]{Compute($x3)} [$cmps]  
+
+
+
+END_PGML
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+#-ULETH-#
+$cmps = "\(\text{cm}^2/\text{s}\)";
+BEGIN_PGML_SOLUTION
+
+Since the puddle is uniformly 10 mm (i.e., 1 cm) deep, the
+area of the circle is increasing at a rate of [$r] [$cmps3].  
+Start with the area formula for a circle, [`A = \pi r^2`].
+Taking time-derivatives (i.e, derivatives with respect to [`t`]) of both sides, we find that 
+
+>>[``\dfrac{dA}{dt} = 2\pi r \dfrac{dr}{dt}.``]<<
+
+We know that [`\frac{dA}{dt} = [$r]`], so plug it in and solve for [`\frac{dr}{dt}`]:
+
+>>[``
+  \begin{array}{rcl}
+  [$r] &=& 2\pi r \dfrac{dr}{dt} \\
+  &&\\
+  \implies \dfrac{dr}{dt} &=& \dfrac{[$r]}{2\pi r}.
+  \end{array}
+``]<<
+
+When [`r = 1`], [`\displaystyle \frac{dr}{dt} =  [$x1] `].  
+
+When [`r = 10`], [`\displaystyle  \frac{dr}{dt} = [$x2] `].  
+
+When [`r = 100`], [`\displaystyle  \frac{dr}{dt} = [$x3] `].  
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+COMMENT('
+    Randomization provides 35 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+
+
+
+

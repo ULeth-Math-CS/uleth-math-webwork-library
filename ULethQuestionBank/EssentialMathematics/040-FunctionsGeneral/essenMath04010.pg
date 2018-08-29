@@ -1,0 +1,112 @@
+## DESCRIPTION
+## In this problem students are given a function rule in words and asked to
+## perform some function operations
+## ENDDESCRIPTION
+
+
+## DBsubject('Algebra')
+## DBchapter('Functions')
+## DBsection('Definition, Concept')
+## Date(2018-07-21)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+##Level(2)
+## KEYWORDS('ULETH-MATH-0500', 'Function Notation')
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "parserAssignment.pl",
+  "AnswerFormatHelp.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "niceTables.pl"
+);
+
+TEXT(beginproblem());
+
+##########################
+#  Setup
+
+#-ULETH-#
+Context("Numeric")->variables->are(x=>"Real",y=>"Real");
+$a = non_zero_random(2,5,1);
+$b = random(-1,1,2)*non_zero_random(-4,-2,1);
+$c = non_zero_random(1,9);
+$f = Formula("$a|x|/$b x")->reduce();
+$r = random (3,7);
+$f_r2 =$f->eval(x=>$r*$r);
+$f_ra =$f->eval(x=>$r+$a);
+$f_0=$f->eval(x=>0);
+$f_1=$f->eval(x=>1);
+$f_2=$f->eval(x=>2);
+$f_3=$f->eval(x=>3);
+$f_4=$f->eval(x=>4);
+$f_5=$f->eval(x=>5);
+endtable();
+#-ENDULETH-#
+
+
+#################################
+#  Main text
+
+#-ULETH-#
+BEGIN_PGML
+Suppose that 
+
+>>[` \displaystyle f(x) = [$f]`]<<
+
+Compute the following values:
+
+>>[`f([$r*$b]) = `]  [____________________________]{$f->eval(x=>$b*$r);}<<
+
+>>[`f(x)f(y) =`] [____________________________]{$f*$f->substitute(x => "y");}<<
+
+>>[`f(xy) =`] [____________________________]{$f->substitute(x => "xy");}<<
+
+For help entering formulas click here: [@ AnswerFormatHelp("formula") @]*.
+
+
+END_PGML
+#-ENDULETH-#
+
+
+#################################
+#  Answer Evaluation
+
+#################################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+To evaluate a function, we substitute the input for the function's variable.
+In this case, this input may be either a number or an expression and is found in
+brackets beside the function's name. In this case, [`f`] The functions variable
+is [`x`].
+
+>>[` f([$b*$r]) = \frac{[$a]|[$b*$r]|}{[$b]} ([$b*$r]) = [$f->eval(x=>$b*$r)]`]<<
+
+>>[` f(x)f(y) = \frac{[$a]|x|}{[$b]} x  \frac{[$a]|y|}{[$b]} y = 
+\frac{[$a*$a] |xy|}{[$b*$b]}xy `]<<
+
+>>[` f(xy) = \frac{[$a]|xy|}{[$b]} xy `]<<
+
+END_PGML_SOLUTION
+
+COMMENT("Randomization provides 1080 different possible versions of this question.<BR> 
+Made from a ULETH template.<BR>" 
+);
+#-ENDULETH-#
+
+ENDDOCUMENT();

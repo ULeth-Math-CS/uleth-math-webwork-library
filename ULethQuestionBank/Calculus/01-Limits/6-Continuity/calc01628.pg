@@ -1,0 +1,113 @@
+## DESCRIPTION
+## This is Problem 1.6.28-29 in the ULETH APEX Calculus text (1.5.28-29 in the APEX text). It covers intervals on which a function is continuous.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Limits and continuity)
+## DBsection(Continuity - concept of)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('1.5')
+## Problem1('28')
+## MO(1)
+## Keywords('continuity', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+#############################
+#   Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  "PGML.pl"
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+
+# The Numeric context is used while defining the formula, as it only
+# requires numeric values.
+Context("Numeric")->variables->are(x=>"Real");
+
+#-ULETH-#
+
+$a = random(1,10,1);
+$k = random(1,99,1);
+
+# $f is the formula used in the question.
+$f = Compute("e^{$k*x}-ln(x-$a)")->reduce();
+
+# Answers can only be entered as intervals.
+Context("Interval")->variables->are(x=>"Real");
+
+# This ensures that the student's answer is kept in the form it is entered.
+# E.g. If a fraction is entered, it will not be reduced to a decimal.
+Context()->flags->set(formatStudentAnswer=>'parsed');
+
+# The following flag can be uncommented to allow open and closed intervals.
+# E.g. 1 < x < 2, 1 <= x < 2, 1 < x <= 2, and 1 <= x <= 2 would all be marked correct.
+# Context()->flags->set(ignoreEndpointTypes=>1);
+
+$domain = Compute("($a, inf)");
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+Give the interval(s) on which the function is continuous.
+
+>>[``f(x) = [$f]``]<<
+
+[____________________] [@ AnswerFormatHelp("intervals") @]*
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+The exponential [`e^{[$k] x} `] is continuous on all real numbers,
+however the logarithm [` \ln(x - [$a]) `] must have positive
+input, which occurs when [`x`] is greater than [`[$a]`].  Therefore the domain of [`f(x)`] is [`([$a], \infty)`].
+
+END_PGML_SOLUTION
+
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS( $domain->cmp() );
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 990 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    
+

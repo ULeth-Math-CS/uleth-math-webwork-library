@@ -1,0 +1,158 @@
+#######################################################################
+## DESCRIPTION 
+##
+## In this problem students are told a story about three lines and must find
+## the equations of all three.
+## 
+## ENDDESCRIPTION
+#######################################################################
+
+#######################################################################
+## DBsubject(Algebra)
+## DBchapter(Linear Equations and Functions)
+## DBsection(Finding the Slope)
+## Date(2018-06-15)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+## KEYWORDS('Linear Equations', 'Lines', 'parallel lines', 'intersection' 'ULETH-MATH-0500')
+#######################################################################
+
+#######################################################################
+## Initialization 
+#######################################################################
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "scaffold.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "answerHints.pl",
+  "contextFraction.pl",
+);
+TEXT(beginproblem());
+
+#######################################################################
+#  Setup
+#######################################################################
+
+# Let's student enter x as a variable in their answer
+Context("Fraction")->variables->are(x=>"Real");
+
+#Define Line 1:
+$x_1 = non_zero_random(-10,10);
+$y_1 = non_zero_random(-10,10); 
+
+do {$x_2 = non_zero_random(-10,10);} until ($x_2!= $x_1);
+do {$y_2 = non_zero_random(-10,10);} until ($y_2!= $y_1); 
+
+$slope_line_1 = Fraction($y_2-$y_1, $x_2-$x_1)->reduce();
+$y_intercept_1 = Fraction($y_1*($x_2-$x_1) - ($y_2-$y_1)*($x_1),
+$x_2-$x_1)->reduce();
+
+$line_1 = Formula("$slope_line_1*x+$y_intercept_1");
+
+#Define Line 2, passes through the origin and (x_1, y_1):
+ $slope_line_2 = Fraction($y_1, $x_1)->reduce(); 
+ $line_2 = Formula ("$slope_line_2*x");
+
+#Defines line three, passes through (x_2, y_2), is parallel to line 2:
+$slope_line_3 = $slope_line_2; 
+$y_intercept_3 = Fraction($y_2*$x_1 - $y_1*$x_2, $x_1);
+$line_3 = Formula("$slope_line_3*x+$y_intercept_3");
+
+
+
+
+#######################################################################
+#  Main Text
+####################################################################### 
+
+BEGIN_PGML
+Suppose that you know the following information about three lines in the 
+coordinate plane:
+
+        1) Lines 1 and 2 intersect at the point [`([$x_1],[$y_1])`]
+
+        2) Lines 1 and 3 intersect at the point [`([$x_2],[$y_2])`]
+
+        3) Line 2 passes through the origin.
+
+        4) Lines 2 and 3 are parallel lines.
+
+Given this information, 
+
+        The equation of the first line is 
+                [`y = `] [_________]{$line_1}.
+
+        The equation of the second line is 
+                [`y = `] [_________]{$line_2}.
+
+        The equation of the third line is 
+                [`y = `] [_________]{$line_3}.
+
+END_PGML
+
+#######################################################################
+#  Answer Evaluation
+#######################################################################
+
+$showPartialCorrectAnswers = 1;
+#Answer Evaluation included in the problem
+
+#######################################################################
+#  Solution
+#######################################################################
+
+BEGIN_PGML_SOLUTION
+
+Since Lines 1 and 2 intersect at the point [`([$x_1],[$y_1])`] and Lines 1 and 3 intersect at the point [`([$x_2],[$y_2])`] we know two points on Line 1 and can find this lines slope: 
+
+>>[`m_{line1} = \frac{[$y_2]-([$y_1])}{[$x_2]-([$x_1])} = [$slope_line_1]`]<<
+
+Now assume that we know the equation of line 1 is
+[`y=mx+b`]. We know that the slope is [`m = [$slope_line_1]`], but we don't 
+know the y-intercept. We find it by plugging in the point 
+[`(x_0,y_0 ) = ([$x_1],[$y_1])`].
+
+>>[` y  = mx + b`]<<
+
+>>[` [$y_1] = [$slope_line_1] ([$x_1]) + b`]<<
+
+>>[` b  = [$y_intercept_1] `].<<
+
+Thus, the equation of the first line is
+
+>>[` y  = [$slope_line_1]x +[$y_intercept_1] `].<<
+
+
+Since Lines 1 and 2 intersect at the point [`([$x_1],[$y_1])`] and Lines 2 passes through the origin we know two points on Line 2 and can find this line's slope: 
+
+>>[`m_{line2} = \frac{[$y_1]-0}{[$x_1]- 0} = [$slope_line_2]`]<<
+
+ We know that the slope is [`m = [$slope_line_1]`] and it's y-intercept is at the
+ origin so the equation of the second line is
+
+>>[` y  = [$slope_line_2]x `].<<
+
+Since line 3 is parallel to line 2; these lines have the same slope. We can also
+use the point that line 1 and 3 intersect at to determine that the equation of the third line is
+
+>>[` y  = [$slope_line_3]x +[$y_intercept_3] `].<<
+
+END_PGML_SOLUTION
+
+
+#######################################################################
+#  Comments for Instructors 
+#######################################################################
+
+COMMENT(
+"Randomization provides 13,440 different possible versions of this question.<BR> 
+  
+Made from a ULETH template.<BR>" 
+);
+
+ENDDOCUMENT();

@@ -1,0 +1,116 @@
+## DESCRIPTION
+## This is Problem 6.1.76 from the APEX Calculus text (5.5.79 from the ULETH APEX text). It covers indefinite integration using substitution.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Techniques of integration)
+## DBsection(Substitution (without trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('6.1')
+## Problem1('76')
+## MO(1)
+## Keywords('definite integral', 'substitution', ' antiderivatives ', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  	'contextFraction.pl',
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+
+## (a) ##
+$b1 = non_zero_random(-9,9);
+$u1 = "x + $b1";
+
+$a = random(-$b1 + 2, -$b1 + 5, 1);
+$b = $a + random(2,9);
+
+$f1 = "\dfrac{1}{$u1}";
+
+#### Answers ####
+$aa = $a + $b1;
+$bb = $b + $b1;
+$ans = Compute(ln($bb/$aa));
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+Evaluate the definite integral.
+
+[`\displaystyle\int_{[$a]}^{[$b]} [$f1] \, dx `] = [____________]{$ans} [` + C`]. [@ AnswerFormatHelp("numbers") @]*
+
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+Context('Fraction');
+$frac = Fraction($bb, $aa)->reduce;
+
+BEGIN_PGML_SOLUTION
+
+Substitute [`u = g(x) = [$u1]`].  Then [`du = [$du1]\,dx`] and the lower/upper limits of integration are [`g([$a]) = [$a] + [$b1]`] and [`g([$b]) = [$b] + [$b1]`], respectively. The definite integral is evaluated as follows: 
+>>[``
+  \begin{array}{rcl}
+    \displaystyle  \int_{[$a]}^{[$b]} [$f1] \, dx &=&
+    \displaystyle \int_{[$a] + [$b1]}^{[$b] + [$b1]} \dfrac{1}{u} \, du \\
+    &=& \ln |u| \Big|_{[$aa]}^{[$bb]}\\
+    &=& \ln([$bb]) - \ln([$aa]) = \ln [$frac].
+  \end{array}
+``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answer checking is completed in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 144 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+
+

@@ -1,0 +1,154 @@
+## DESCRIPTION
+## This is Problem 2.4.28 from the APEX Calculus text. It covers differentiation of trig functions and product rule.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Product rule (with trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.4')
+## Problem1('28')
+## MO(1)
+## Keywords('derivative', 'product rule', 'trig functions', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+$a = random(2,12,1)*random(-1,1,2);
+$a1 = $a - 1;
+
+$f = Formula("x^{$a}");
+$fp = Formula("$a x^{$a1}")->reduce();
+
+$g = Formula("e^x");
+$gp = $g;
+
+$h = "x";
+$r = random(1,6,1);
+if ($r==1) {
+   $h = Formula("sin x");
+   $h_ans = Formula("sin(x)");
+   $hp = Formula("cos x");
+   $hp_ans = Formula("cos(x)");
+} elsif($r==2) {
+   $h = Formula("cos x");
+   $h_ans = Formula("cos(x)");
+   $hp = Formula("-sin x");
+   $hp_ans = Formula("-sin(x)");
+} elsif($r==3) {
+   $h = Formula("tan x");
+   $h_ans = Formula("tan(x)");
+   $hp = Formula("sec^2 x");
+   $hp_ans = Formula("(sec(x))^2");
+} elsif($r==4) {
+   $h = Formula("cot x");
+   $h_ans = Formula("cot(x)");
+   $hp = Formula("-csc^2 x");
+   $hp_ans = Formula("-(csc(x))^2");
+} elsif($r==5) {
+   $h = Formula("sec x");
+   $h_ans = Formula("sec(x)");
+   $hp = Formula("sec x tan x");
+   $hp_ans = Formula("sec(x)*tan(x)");
+} else {
+   $h = Formula("csc x");
+   $h_ans = Formula("csc(x)");
+   $hp = Formula("-csc x cot x");
+   $hp_ans = Formula("-csc(x)*cot(x)");
+}
+
+$ans = Formula("$fp*$g*$h_ans + $f*$gp*$h_ans + $f*$g*$hp_ans")->reduce();
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Compute the derivative of the given function.
+
+>>[``f(x) = [$f*$g*$h]``]<<
+
+[`f'(x) = `] [__________________________________________________] [@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+Use the Product Rule twice.
+
+[``
+  \begin{array}{rcl}
+    f'(x) &=& [$f] \cdot \frac{d}{dx}[ [$g] [$h]]
+    + \frac{d}{dx}[ [$f] ] \cdot ([$g] [$h]) \\
+    &=& [$f]\left( [$g] \frac{d}{dx}[ [$h] ] + \frac{d}{dx}[ [$g] ] [$h] \right)
+        + [$fp] ([$g] [$h]) \\
+    &=& [$f] ([$g]( [$hp]) + [$gp] [$h]) + [$fp] [$g] [$h] \\
+    &=& \left([$f] [$g]( [$hp])\right) + \left([$f] [$gp] [$h]\right) + \left([$fp] [$g] [$h]\right) \\
+    &=& [$ans].
+  \end{array}
+``]
+
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+ANS( $ans->cmp() );
+
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 132 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    
+
+
+
+
+
+

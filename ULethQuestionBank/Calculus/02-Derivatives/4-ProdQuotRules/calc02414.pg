@@ -1,0 +1,186 @@
+## DESCRIPTION
+## This is Problem 2.4.14 from the APEX Calculus text. It covers a basic application of the Quotient Rule.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Quotient rule (without trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.4')
+## Problem1('14')
+## MO(1)
+## Keywords('derivative', 'quotient rule', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Allows a single problem to contain multiple parts, where later
+  # parts aren't visible until the earlier ones are completed.
+  "scaffold.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  # Used to provide contextual help for how to type solutions.
+  "AnswerFormatHelp.pl"
+);
+
+TEXT(beginproblem());
+
+
+###################################
+#  Setup
+
+#-ULETH-#
+Context("Numeric")->variables->add(t => 'Real');
+
+$a = random(1,12,1);
+$a2 = $a**2;
+$b = 2*$a;
+
+$f = Formula("t^2 - $a^2")->reduce();
+$g = Formula("t+$a")->reduce();
+
+
+$df = $f->D('t')->reduce();
+$dg = $g->D('t')->reduce();
+
+$one = Formula(1/1);
+$hsimple = Formula("t - $a")->reduce();
+#-ENDULETH-#
+
+###################################
+#  Main Text
+
+#-ULETH-#
+# This applies to the PGML in each scaffolding section.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+# Initial problem text to explain the scaffolding setup.
+BEGIN_PGML
+
+Follow the steps to find the derivative of the given function in two different ways.
+
+>>[``h(t) = \frac{[$f]}{[$g]}``]<<
+
+This problem has three parts. You may only open the next part after correctly
+completing the previous part.
+END_PGML
+#-ENDULETH-#
+
+Scaffold::Begin();
+#-ULETH-#
+# For each part the answer or answer checker reference must appear in the curly 
+# braces immediately after the answer field.
+Section::Begin("Quotient Rule - Part 1");
+# Part 1 problem text.
+BEGIN_PGML
+Let [`f(t) = [$f]`] and [`g(t) = [$g]`] so that [`h(t) = f(t)/g(t)`]. 
+Their respective derivatives are  
+
+[`f'(t) = `][_____________]{Compute($df)} [@ AnswerFormatHelp("formulas") @]*  
+and  
+[`g'(t) = `][_____________]{Compute($dg)}.
+END_PGML
+Section::End();
+
+Section::Begin("Quotient Rule - Part 2");
+# Part 2 problem text.
+BEGIN_PGML
+Using the derivatives from Part 1 and the Quotient Rule,
+
+[``h'(t) = \left[\frac{f}{g}\right]' 
+= \frac{g\cdot f' - f \cdot g'}{g^2} = ``]
+[`\Big(`][_____]{Compute($g)}[`\cdot`][_____]{Compute($df)} [`-`] [_____]{Compute($f)}[`\cdot`][_____]{Compute($dg)}[`\Big)`] [`/`] [`\Big(`][_____]{Compute($g)}[`\Big)^2`].
+
+Simplifying, we find that
+[`h'(t) = `][_____]{$one}.
+
+END_PGML
+Section::End();
+
+Section::Begin("Algebraic Manipulation");
+# Part 3 problem text.
+BEGIN_PGML
+
+You may use algebra to simplify [`h(t)`] before taking the derivative. In this instance, [`h(t)`] simplifies to [__________]{Compute($hsimple)}. (_Hint: difference of squares_)
+
+Therefore, 
+
+[`h'(t) = `][_____]{Compute($one)}.
+
+END_PGML
+Section::End();
+#-ENDULETH-#
+
+Scaffold::End();
+
+
+
+###################################
+#  Answer Evaluation 
+
+#evaluation must be completed in the problem text
+
+###################################
+#  Solution
+
+BEGIN_PGML_SOLUTION
+
+First, using the Quotient Rule,
+
+[``
+  \begin{array}{rcl}
+    h'(t) &=& \displaystyle
+    \frac{ ([$g])\frac{d}{dx}[ [$f] ] - ([$f]) \cdot \frac{d}{dx}[ [$g] ]
+    }{([$g])^2}\\
+    &&\\
+    &=& \displaystyle \frac{ ([$g])([$df]) - ([$f])([$dg]) }{ ([$g])^2 }\\
+    &=& \displaystyle \frac{ t^2 + [$b] t + [$a2] }{([$g])^2} \\
+    &=& \displaystyle \frac{([$g])^2}{([$g])^2}
+  \end{array}
+``]
+
+After simplifying the last line, we find [`h'(t) = [$one] `].
+
+Next, observe that [`[$f]`] is a difference of squares to simplify [`h(t)`]: 
+
+[``
+  \begin{array}{rcl}
+    h(t) &=& \displaystyle \frac{[$f]}{[$g]} \\
+    &&\\
+    &=& \displaystyle\frac{(t - [$a])(t+[$a])}{t + [$a]} \\
+    &&\\
+    &=& t - [$a].
+  \end{array}
+``]
+
+ Then, taking the derivative, [`h'(t) = [$one]`].
+
+END_PGML_SOLUTION
+
+COMMENT("This is a multi-part problem
+in which the next part is revealed only after the previous
+part is correct. <BR>
+Randomization provides 12 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+");
+#-ENDULETH-#
+
+ENDDOCUMENT();
+
+
+

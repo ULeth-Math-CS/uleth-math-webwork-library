@@ -1,0 +1,108 @@
+#######################################################################
+## DESCRIPTION 
+##
+## In this problem students are asked to find the equation of a horizontal line.
+## 
+## ENDDESCRIPTION
+#######################################################################
+
+#######################################################################
+## DBsubject(Algebra)
+## DBchapter(Linear Equations and Functions)
+## DBsection(Linear Equations)
+## Date(2018-06-15)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+## KEYWORDS('Linear Equations', 'Horizontal Lines', 'ULETH-MATH-0500')
+#######################################################################
+
+#######################################################################
+## Initialization 
+#######################################################################
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "scaffold.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "contextFraction.pl",
+  "answerHints.pl",
+);
+TEXT(beginproblem());
+
+
+#######################################################################
+#  Setup
+#######################################################################
+
+Context("Fraction")->variables->are(y=>"Real");
+
+$x_1 = non_zero_random(-25, 25);
+$y_1 = non_zero_random(-25, 25);
+
+
+#######################################################################
+#  Main Text
+####################################################################### 
+
+BEGIN_PGML
+Determine the equation of the horizontal line that passes through the 
+the point [`([$x_1],[$y_1])`]:
+
+[`y = `] [___________________]{$y_1}
+END_PGML
+
+#######################################################################
+#  Answer Evaluation
+#######################################################################
+
+$showPartialCorrectAnswers = 1;
+#answer evaluation has been built into the question.
+
+#######################################################################
+#  Solution
+#######################################################################
+
+BEGIN_PGML_SOLUTION
+
+Recall that the slope of a line tells us how steep a line is and whether the line
+is increasing or decreasing as we move rightwards along the x-axis.
+
+A horizontal line does not increase or decerease as me move rightward and,
+therefore, has a slope of zero. We can also verify this mathematically:
+
+The slope ([`m`]) of a line that passes through two points [`P(x_1,y_1)`] and
+[`Q(x_2,y_2)`] is given by the formula
+
+>>[` m =\displaystyle \frac{y_2 - y_1}{x_2 - x_1}`].<<
+
+We know that [`([$x_1],[$y_1])`] falls on this line and, because the line 
+is horizontal, we also know it will pass through [`(0, [$y_1])`]. So,
+
+>>[` m =\displaystyle \frac{[$y_1] - [$y_1]}{[$x_1] - 0} = 0.`]<<
+
+Given this slope and that the y-intercept will be [`(0, [$y_1])`] we 
+know that the equation of this lie is: 
+
+>>[` y = mx + b = 0x + [$y_1] = [$y_1]`]<<
+
+END_PGML_SOLUTION
+
+#######################################################################
+#  Comments for Instructors 
+#######################################################################
+
+COMMENT(
+"Randomization provides 2500 different possible versions of this question.<BR> 
+
+In this problem students will we given a point 
+P(x_1 , y_1) and asked to determine the equation of 
+the line that passes through this point. <BR>
+
+Made from a ULETH template.<BR>" 
+);
+
+ENDDOCUMENT();

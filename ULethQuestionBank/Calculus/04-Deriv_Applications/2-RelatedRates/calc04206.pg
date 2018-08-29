@@ -1,0 +1,166 @@
+## DESCRIPTION
+## This is Problem 4.2.6 from the APEX Calculus text. It covers related rates. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Related rates)
+## Level(5)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('4.2')
+## Problem1('6')
+## MO(1)
+## Keywords('derivative related rates', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+ );
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+#############################
+#   Setup
+#-ULETH-#
+#Randomize the question parameters. 
+Context("Numeric");
+
+ do {
+  $Va = random(20,60,5);
+  $Vc = random(15,45,5);
+
+  $ans1 = $Vc * sqrt(2) + $Va;
+  $ans2 = -$Vc * sqrt(2) + $Va;
+} until ($ans2 > 0);
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+[@ image("http://www.cs.uleth.ca/graphics/WeBWorK_images/ApexCalc04206.jpg", height=>300, width=> 400)@]*
+
+Suppose a police officer is 1/2 mile south of an intersection, driving
+north towards the intersection at [$Va] mph. At the same time,
+another car is 1/2 mile east of the intersection, 
+driving east (away from the intersection) at an unknown speed.  The officer's
+radar gun indicates [$Vc] mph when pointed at the other
+car (that is, the straight-line distance between the officer
+and the other car is increasing at a rate of [$Vc] mph).
+What is the speed of the other car?
+
+Speed = [____________]{Compute($ans1)} mph. [@ AnswerFormatHelp("numbers") @]*  
+
+Now suppose that the officer's radar gun indicates -[$Vc] mph
+instead
+(that is, the straight-line distance is decreasing at
+a rate of [$Vc] mph).  What is the speed of the other
+car this time?
+
+Speed = [____________]{Compute($ans2)} mph.
+
+END_PGML
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+#-ULETH-#
+
+$ans1 = int($ans1*10**3)/10**3;
+$ans2 = int($ans2*10**3)/10**3;
+BEGIN_PGML_SOLUTION
+
+The two cars and the intersection form a right triangle.
+Let [`a`] be the distance from the officer's car to the
+intersection (along the north-south street), 
+and [`b`] be the distance from the intersection
+to the other car (along the west-east street).  Let
+[`c`] be the straight-line distance from the officer's car to the
+other car.  Then by the Pythagorean Theorem,
+[` a^2 + b^2 = c^2`].
+Take deratives with respect to [`t`] of both sides of this
+equation:
+
+>>[``
+  \begin{array}{rcl}
+    \dfrac{d}{dt}\left[ a^2 + b^2 \right] &=&
+    \dfrac{d}{dt}\left[ c^2 \right] \\
+    &&\\
+    \implies 2a\dfrac{da}{dt} + 2b\dfrac{db}{dt} &=& 2c\dfrac{dc}{dt}\\
+  \end{array}
+``]<<
+
+Then plug in
+the known information and solve.
+We have [` \dfrac{da}{dt} = -[$Va] `], which is negative
+because the distance from the officer to the intersection
+is decreasing.  We also have [` \dfrac{dc}{dt} = [$Vc]`].
+We can find the distance between the cars at this
+specific moment: [` c = \sqrt{(1/2)^2 + (1/2)^2}
+= \frac{\sqrt{2}}{2}`].  
+Therefore,
+
+>>[``
+  \begin{array}{rcl}
+    2\left(\frac{1}{2}\right)\left(-[$Va]\right) + 
+    2\left(\frac{1}{2}\right)\dfrac{db}{dt} &=& 
+    2\left(\frac{\sqrt{2}}{2}\right)([$Vc])\\
+    &&\\
+   \implies \dfrac{db}{dt} &=& [$Vc] \sqrt{2} + [$Va] \approx [$ans1].
+  \end{array}
+``]<<
+
+
+For the second part, [`\dfrac{dc}{dt} =  -[$Vc]`]. We have
+
+>>[``
+  \begin{array}{rcl}
+    2\left(\frac{1}{2}\right)\left(-[$Va]\right) + 
+    2\left(\frac{1}{2}\right)\dfrac{db}{dt} &=& 
+    2\left(\frac{\sqrt{2}}{2}\right)(-[$Vc])\\
+    &&\\
+   \implies \dfrac{db}{dt} &=& -[$Vc] \sqrt{2} + [$Va] \approx [$ans2].
+  \end{array}
+``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answers are evaluated in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+COMMENT('
+    Randomization provides 50 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+
+

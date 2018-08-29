@@ -1,0 +1,144 @@
+## DESCRIPTION
+## This is Problem 3.2.8 from the APEX Calculus text. It covers Rolle's Theorem.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Mean value theorem)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('3.2')
+## Problem1('8')
+## MO(1)
+## Keywords('rolles theorem', 'mean value theorem', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+   # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric");
+
+$a = random(2,9,1) * random(-1,1,2);
+$b = random(2,9,1);
+$b2 = 2 * $b;
+$c = random(1,9,1)*random(-1,1,2);
+
+$p1 = Formula("pi/$b");
+$p2 = Formula("4*pi/$b");
+
+## Adjustments if $b is even:
+if ($b == 2) {
+   $p2 = Formula("2*pi");
+}
+if ($b == 4) {
+   $p2 = Formula("pi");
+}
+if ($b == 6) {
+   $p2 = Formula("2*pi/3");
+}
+if ($b == 8) {
+   $p2 = Formula("pi/2");
+}
+
+$ab = $a*$b;
+
+$f = Formula("$c + $a sin($b*x)")->reduce();
+$y1 = $c;
+
+$c1 = Formula("3*pi/$b2");
+$c2 = Formula("5*pi/$b2");
+$c3 = Formula("7*pi/$b2");
+
+$crit = List( $c1, $c2, $c3 );
+
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+
+Check if Rolle's Theorem can be applied to [`f(x) = [$f]`] on [`[[$p1],[$p2]]`].
+If so, find all values [`c`] in  [`[[$p1],[$p2]]`] such that [`f'(c) = 0`].
+
+Separate multiple answers with commas. If Rolle's Theorem does not apply, enter *DNE*.
+
+[`c=`] [__________________] [@ AnswerFormatHelp("numbers") @]*
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+Since [`\sin{x}`] is continuous and differentiable on any interval,
+[`f(x) = [$f]`] is continuous and differentiable on any interval.  
+
+We verify that
+[`f([$p1]) = f([$p2]) = [$y1]`],
+so Rolle's Theorem implies there must be at least one
+value [`c`] in [` ([$p1], [$p2]) `] such that [`f'(c) = 0`].
+
+Set [`f'(x) = 0 `] to find the value(s):
+
+[``
+  f'(x) = [$ab] \cos([$b]x) = 0 \;\iff\; \cos([$b]x) = 0.
+``]
+
+There are three solutions in [` ([$p1], [$p2]) `]:
+
+[``
+  x = \frac{3\pi}{[$b2]},\; \frac{5\pi}{[$b2]},\; \frac{7\pi}{[$b2]}.
+``]
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+ANS( $crit->cmp() );
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 41472 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    

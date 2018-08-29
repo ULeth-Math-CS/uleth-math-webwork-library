@@ -1,0 +1,201 @@
+## DESCRIPTION
+## This is Problem 5.4.50 from the APEX Calculus text. It covers area between curves. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of integration)
+## DBsection(Areas between curves)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.4')
+## Problem1('50')
+## MO(1)
+## Keywords('integral', 'signed area', 'area between curves', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+## Adapted from "Utah/Quantitative_Analysis/set10_Definite_Integrals_Techniques_of_Integration/pr_6.pg"
+
+
+##############################
+#  Initialization
+
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Needed to support graph generation.
+  "PGgraphmacros.pl",
+  # Allows the graph and text to be placed in side-by-side columns.
+  "unionTables.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+#############################
+#   Setup
+
+# Refreshes the graph image every time the page is loaded, as opposed to
+# retrieving a cached version.
+$refreshCachedImages = 1;
+
+#-ULETH-#
+# Random values for the function/graph.
+Context("Numeric");
+
+#Here are the parameters that will be varied.
+$a = random(2,10,1);
+$b = random(2,8,1);
+$c = random(-8,-2,1);
+$d = random(.1,.95,.05);
+
+#With $bound* we ensure that the graph of the function will always be in view.
+$boundx1 = $c-3;
+$boundy1 = $c-8;
+$boundx2 = $b +2;
+$boundy2 = $d*8.2**2 +$a;
+
+#Here we create start and stop points for the x=lines which will be drawn later.
+$line1_finish_y = $d*$c**2 +$a ;
+$line2_finish_y = $d*$b**2 +$a ;
+
+@line1_start = ($c, $c);
+@line1_finish = ($c,$line1_finish_y,'black');
+@line2_start = ($b,$b);
+@line2_finish = ($b,$line2_finish_y,'black');
+
+#We put the functions here to keep plot_functions' entries simple
+$fun1 = FEQ("$d*x^2 ? {$a} for x in 
+[$boundx1,$boundx2] using color:blue and weight:2");
+$fun2 = FEQ("x for x in [$boundx1,$boundx2] using color:red and weight:2");
+
+$graph = init_graph($boundx1,$boundy1,$boundx2,$boundy2,'axes' => [0,0],
+	'height' => 500,
+        'width'  => 500
+	);
+
+($fun1_ref,$fun2_ref) = plot_functions ($graph,
+	$fun1, $fun2
+			);
+
+$temp = new Fun (sub {$c;},
+		 sub {my $x = shift;
+		 	 $c+($x)*($line1_finish_y - $c);},
+		 $graph);
+$temp ->color('black');
+$temp -> domain(0,1);
+$temp -> weight(2);
+
+$graph->moveTo(@line2_start);
+$graph->lineTo(@line2_finish);
+
+$labelx = -5 ;
+$y1 = $d*$c**2 ;
+$y2 = $d*$b**2 ;
+$label_fun1 = new Label 
+	    ($labelx,&{$fun1_ref->rule}($labelx),"f(x)",'blue','right');
+$label_fun2 = new Label 
+	    ($labelx,&{$fun2_ref->rule}($labelx),"g(x)",'red','left');
+
+$label_line1 = new Label ($c,$y1,"x=$c",'black','center');
+$label_line2 = new Label ($b,$y2,"x=$b",'black','center');
+
+#Prints the labels
+$graph->lb($label_fun1,$label_fun2 ,$label_line1 ,$label_line2 );
+
+#Answers
+$ans = Compute(($d /3)*($b**3 -$c**3) + .5*($c**2 -$b**2) + $a*($b -$c));
+
+#-ENDULETH-#
+
+#############################
+#  Main Text
+
+#-ULETH-#
+# Places the following information in column1 (the leftmost) of the layout table.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+$column2 = PGML::Format2(<<'END_PGML');
+Find the area  of the region enclosed between 
+ [` f(x) = [$d] x^2 ? {[$a]} `],
+ [` g(x) = x `], 
+ [`x= [$c]  `], and
+[`x= [$b]`]. 
+
+Area = [____________________] [@ AnswerFormatHelp("numbers") @]*
+   
+END_PGML
+
+# Places the graph image in column1 (the leftmost) of the layout table.
+# The additional arguments after insertGraph($gr) specify the width and height
+# of the image when it's on-screen, while the tex_size is a percentage multiplier
+# determining what size the image will print at in a hard copy version.
+$column1 = image(insertGraph($graph), width=>400, height=>400, tex_size=>600).
+$BR.$BCENTER.$BR."The enclosed region.".$ECENTER;
+#-ENDULETH-#
+
+TEXT(ColumnTable($column1, $column2, indent => 0, separation => 30, valign => "TOP"));
+
+
+#############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS( Compute($ans)->cmp );
+
+#-ENDULETH-#
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+BEGIN_PGML_SOLUTION
+
+The area between curves is found using the 
+definite integral [` \int_{a}^b \left( f(x) - g(x) \right) \, dx`].
+>>[``
+  \begin{array}{rcl}
+    \displaystyle \int_{[$c]}^{[$b]} \left( ([$d] x^2 + [$a]) - (x) \right) \, dx
+     &=& \left( \dfrac{[$d] x^3}{3} + [$a] x - \dfrac{x^2}{2} \right)
+     \Big|_{[$c]}^{[$b]}  \\
+    &=& [$ans]
+  \end{array}
+``]<<
+
+END_PGML_SOLUTION
+
+COMMENT('
+    Randomization provides 7938 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+#-ENDULETH-#
+
+# Marks the end of the problem document.
+ENDDOCUMENT();

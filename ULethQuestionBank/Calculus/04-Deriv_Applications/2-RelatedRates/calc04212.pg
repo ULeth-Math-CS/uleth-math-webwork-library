@@ -1,0 +1,166 @@
+## DESCRIPTION
+## This is Problem 4.2.12 from the APEX Calculus text. It covers related rates. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Applications of differentiation)
+## DBsection(Related rates)
+## Level(5)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('4.2')
+## Problem1('12')
+## MO(1)
+## Keywords('derivative related rates', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+ );
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+#############################
+#   Setup
+#-ULETH-#
+#Randomize the question parameters. 
+Context("Numeric");
+
+$h0 = random(25,95,5);
+$rate = random(2,5,1);
+
+$rope = 2*$h0;
+
+$a1 = 100 + $h0**2;
+$a2 = 900 + $h0**2;
+
+$num1 = $rate * 10;
+$num2 = $rate * 30;
+
+$r1 = $num1/sqrt($a1);
+$r2 = $num2/sqrt($a2);
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+[@ image("http://www.cs.uleth.ca/graphics/WeBWorK_images/ApexCalc04212.jpg", height=>300, width=> 400)@]*
+
+A rope, attached to a weight, goes up through a pulley
+at the ceiling and back down to a worker.  The worker
+holds the rope at the same height as the connection
+point between the rope and weight.  
+The distance from the connection point to the ceiling is [$h0] feet.  
+Suppose the worker
+stands directly next to the weight (i.e., a total rope
+length of [$rope] feet) and begins to walk away at a constant rate
+of [$rate] ft/s.   
+
+How fast is the weight rising
+when the worker has walked
+
+10 feet? [____________]{Compute($r1)} [@ AnswerFormatHelp("numbers") @]*  
+
+30 feet? [____________]{Compute($r2)}
+
+END_PGML
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+The worker, weight and pulley form a right
+triangle with height [$h0], base length [`x`],
+and hypotenuse [`z`].
+The speed at which the weight rises is the
+same as the speed the rope is being pulled.
+This means the rate we are looking for
+is [`\dfrac{dz}{dt}`].
+
+By the Pythagorean Theorem,
+
+>>[``
+  x^2 + [$h0]^2 = z^2
+``]<<
+
+Take time-derivatives of both sides of the
+equation. We have  
+
+>>[``
+  2x\dfrac{dx}{dt} = 2z\dfrac{dz}{dt}.
+``]<<
+   
+Then plug in [` \dfrac{dx}{dt} = [$rate]`] and solve for
+the unknown rate:
+
+>>[``
+  \dfrac{dz}{dt} = \dfrac{[$rate] x}{z}.
+``]<<
+   
+When [`x = 10`],
+
+>>[``
+  10^2 + [$h0]^2 = z^2 \;\Rightarrow\; z = \sqrt{[$a1]}.
+``]<<
+
+>>[``
+  \Rightarrow \dfrac{dz}{dt} = \dfrac{[$num1]}{\sqrt{[$a1]}}
+  \approx [$r1].
+``]<<
+   
+When [`x = 30`],
+
+>>[``
+  30^2 + [$h0]^2 = z^2 \;\Rightarrow\; z = \sqrt{[$a2]}.
+``]<<
+
+>>[``
+  \Rightarrow \dfrac{dz}{dt} = \dfrac{[$num2]}{\sqrt{[$a2]}}
+  \approx [$r2].
+``]<<
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answers are evaluated in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+COMMENT('
+    Randomization provides 60 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+
+

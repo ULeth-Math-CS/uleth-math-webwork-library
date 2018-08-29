@@ -1,0 +1,122 @@
+## DESCRIPTION
+## This is Problem 5.4.56 from the APEX Calculus text (Problem 5.4.58 in the ULETH text). It involves an application of the Fundamental theorem of Calculus to a definite integral whose bounds are a variable. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Integrals)
+## DBsection(Fundamental theorem of calculus)
+## Level(4)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.4')
+## Problem1('56')
+## MO(1)
+## Keywords('integral', 'fundamental theorem of calculus', 'chain rule', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)+y','(-x)-y');
+Context()->variables->add(t => 'Real');
+
+$a = random(2,31,1)*random(-1,1,2);
+$f = "$a \sin t";
+
+## c)
+$u = "\ln x";
+$v = "e^x";
+
+$ans = Formula("$a sin(e^x) e^x - $a sin(ln(x))/x")->reduce();
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+If [`\displaystyle F(x) = \int_{[$u]}^{[$v]} [$f] \, dt `],
+then 
+
+[` F'(x) = `] [____________________________________]{Compute($ans)}. [@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+We want to get [`F(x)`] into a form where we can use the Fundamental Theorem of Calculus (Part 1). First, as a consequence of the properties of definite integrals, we may write
+
+>>[``
+  \begin{array}{rcl}
+  \displaystyle
+ F(x) = \int_{[$u]}^{[$v]} [$f] \, dt &=&
+   \displaystyle
+ \int_{a}^{[$v]} [$f] \, dt - \int_{a}^{[$u]} [$f] \, dt 
+   \end{array}
+``]<<
+
+for any real number [`a`]. Notice that we apply the chain rule to the FToC (Part 1) to observe that, for some function [`u(x)`],
+
+>>[`` \dfrac{d}{dx} \int_{a}^{u(x)} f(t) \, dt = f(u(x)) \cdot u'(x). ``]<<
+
+Applying this rule to the difference of integrals above, using [`u(x) = [$v]`] in the first integral and [`u(x) = [$u]`] in the second integral, we discover that
+
+>>[``
+  \begin{array}{rcl}
+  \displaystyle
+  F'(x) &=& \dfrac{d}{dx} \left( \int_{a}^{[$v]} [$f] \, dt - \int_{a}^{[$u]} [$f] \, dt \right) \\
+ &=& [$a]\sin([$v]) \cdot ([$v])' - [$a]\sin([$u]) \cdot ([$u])' \\
+ &=& \displaystyle [$ans].
+ \end{array}
+``]<<
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 60 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    
+

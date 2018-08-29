@@ -1,0 +1,317 @@
+## DESCRIPTION
+## This is Problem 5.2.9 from the APEX Calculus text. It covers graphical evaluation of integrals. 
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Integrals)
+## DBsection(Conceptual understanding of integration)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.2')
+## Problem1('9')
+## MO(1)
+## Keywords('integral', 'signed area', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+##############################
+#  Initialization
+
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Needed to support graph generation.
+  "PGgraphmacros.pl",
+  # Allows the graph and text to be placed in side-by-side columns.
+  "unionTables.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+
+# Refreshes the graph image every time the page is loaded, as opposed to
+# retrieving a cached version.
+$refreshCachedImages = 1;
+
+# Assumptions for the graph and values:
+# 1. The origin is always visible in the graph image and is at (0,0).
+# 2. Every integer value on each axis should be labelled.
+# 3. The graph is in terms of x & y.
+# 4. The desired x & y limits will be within the horizontal
+#    and vertical range of the graph, but may not be at the
+#    edge of the graph.
+
+#-ULETH-#
+# Random values for the function/graph.
+$a = random(1,10,1);
+$as = $a**2;
+$b = random(2,10,1)*random(-1,1,2);
+
+$x1 = $a;
+$x2 = 2*$a;
+
+# Functions to graph.
+$f1 = Formula("sqrt($as - (x-$a)^2)");
+
+# Used to define the graph's size.
+$desiredMinX = 0;
+$desiredMaxX = 2*$a;
+$desiredMinY = 0;
+$desiredMaxY = 2*$a;
+# The display size for the graph when the student clicks it to enlarge it.
+$graphImageWidth=400;
+$graphImageHeight=400;
+#-ENDULETH-#
+
+Context("Numeric");
+
+# Set up the min and max values based on the user-provided values.
+$minX = $desiredMinX;
+$maxX = $desiredMaxX;
+$minY = $desiredMinY;
+$maxY = $desiredMaxY;
+# Swaps the min and max values if they end up in the wrong places.
+if ($minX > $maxX)
+{
+  $hold = $maxX;
+  $maxX = $maxX;
+  $minX = $hold;
+}
+if ($minY > $maxY)
+{
+  $hold = $maxY;
+  $maxY = $minY;
+  $minY = $hold;
+}
+
+# Position of the y-axis.
+$originX = 0;
+# Position of the x-axis.
+$originY = 0;
+
+if ($minX < 0)
+{
+  $minX = $originX + $minX - 2;
+}
+else
+{
+  $minX = $originX - $minX - 2;
+}
+
+if ($maxX < 0)
+{
+  $maxX = $originX - $maxX + 2;
+}
+else
+{
+  $maxX = $originX + $maxX + 2;
+}
+
+if ($minY < 0)
+{
+  $minY = $originY + $minY - 2;
+}
+else
+{
+  $minY = $originY - $minY - 2;
+}
+
+if ($maxY < 0)
+{
+  $maxY = $originY - $maxY + 2;
+}
+else
+{
+  $maxY = $originY + $maxY + 2;
+}
+
+$gridHoriz = $maxX-$minX;
+$gridVert = $maxY-$minY;
+
+# init_graph arguments: minX, minY, maxX, maxY, origin, gridSize, graphSize
+$gr = init_graph($minX,$minY,$maxX,$maxY,axes=>[$originX,$originY],grid=>[$gridHoriz,$gridVert]);
+# Resets all the graph labels.
+$gr -> lb('reset');
+
+#-ULETH-#
+#  Graph labels and functions
+#
+# Label arguments: xPosition, yPosition, labelText, colour, xJustification, yJustification
+$gr -> lb(new Label ( $maxX-0.5,$originY+0.15,'x','black','left','bottom'));
+$gr -> lb(new Label ( $originX+0.15,$maxY-1.5,'y','black','left','bottom'));
+#$gr -> lb(new Label ( $a,0.25,'y = f(x)','black','left','bottom'));
+
+# Initializes the x-axis positive and negative number labels.
+for(my $i = $minX; $i < $maxX; $i++) {
+  if ($i != 0)
+  {
+    $gr -> lb(new Label ( $i,$originY-0.25, "$i",'black','center','middle'));
+  }
+}
+# foreach my $i (1..-$minX-1) {
+#   $gr -> lb(new Label (-$i,$originY-0.25,-$i,'black','center','middle'));
+# }
+
+# Initializes the y-axis positive and negative number labels.
+for(my $i = $minY; $i < $maxY; $i++) {
+  if ($i != 0)
+  {
+    $gr -> lb(new Label ($originX-0.25,$i,"$i",'black','center','middle'));
+  }
+}
+
+#Insert a graph of the listed functions (up to 4).
+#-ULETH-#
+# The line is drawn in orange with a weight of 2.
+# If you want to change the colour, change the RGB code following the colour name.
+# If you change the name of the colour, you will have to also change it in the
+# add_functions line below.
+$gr->new_color("orange", 255,153,51);
+
+# Adds the function to the graph using x values between $minX and $maxX.
+add_functions($gr, "$f1 for x in [0,$x2] using color:orange weight:2");
+($gr->fn)[0]->steps(300);
+
+#-ENDULETH-#
+
+#Answers
+   Context()->flags->set(
+     reduceConstants => 0,
+     reduceConstantFunctions => 0,
+   );
+$pi = Formula('pi');
+
+$ab = $a**2*$b;
+
+$ans1 = ($a**2)*$pi/4;
+$ans2 = $ans1;
+$ans3 = ($a**2)*$pi/2;
+$ans4 = $ab*$pi/2;
+
+#############################
+#  Main Text
+
+#-ULETH-#
+# Places the following information in column1 (the leftmost) of the layout table.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+$column2 = PGML::Format2(<<'END_PGML');
+A graph of [`f(x) = \sqrt{[$as] - (x - [$a])^2}`] is shown.  
+Using the geometry of the graph, evaluate the definite
+integrals.
+   
+a) [`\displaystyle\int_0^{[$x1]} f(x)
+ \, dx `] = [____________________] [@ AnswerFormatHelp("numbers") @]*
+   
+b) [`\displaystyle\int_{[$x1]}^{[$x2]} f(x)
+ \, dx `] = [____________________]
+   
+c) [`\displaystyle\int_0^{[$x2]} f(x)
+ \, dx `] = [____________________]
+   
+d) [`\displaystyle\int_{[$x2]}^{[$x3]} [$b] f(x)
+ \, dx `] = [____________________]
+   
+
+
+END_PGML
+
+# Places the graph image in column1 (the leftmost) of the layout table.
+# The additional arguments after insertGraph($gr) specify the width and height
+# of the image when it's on-screen, while the tex_size is a percentage multiplier
+# determining what size the image will print at in a hard copy version.
+$column1 = image(insertGraph($gr), width=>$graphImageWidth, height=>$graphImageHeight, tex_size=>600).
+$BR.$BCENTER.$BR."Graph of \( y = f(x) \)".$ECENTER;
+#-ENDULETH-#
+
+TEXT(ColumnTable($column1, $column2, indent => 0, separation => 30, valign => "TOP"));
+
+
+#############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS( Compute($ans1)->cmp );
+ANS( Compute($ans2)->cmp );
+ANS( Compute($ans3)->cmp );
+ANS( Compute($ans4)->cmp );
+
+#-ENDULETH-#
+
+
+#############################
+#   Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+BEGIN_PGML_SOLUTION
+Find the signed area, using the graph.
+   
+[`\text{a}`]) Between [`x = 0`] and [`x = [$x1]`], find the area of the
+quarter-circle with radius [`r = [$a]`].
+
+>>[``
+  \int_0^{[$x1]} f(x) \, dx = \frac{1}{4} \pi ([$a])^2 =
+  \dfrac{[$as] \pi}{4}.
+``]<<
+   
+[`\text{b}`]) Between [`x = [$x1]`] and [`x = [$x2]`], the area under the
+graph is again a quarter circle of radius [`r = [$a]`], so
+
+>>[``
+  \int_{[$x1]}^{[$x2]} f(x) \, dx = \dfrac{[$as] \pi}{4}.
+``]<<
+   
+[`\text{c}`]) This is the area of the semi-circle:
+
+>>[``
+  \int_{0}^{[$x2]} f(x) \, dx = \dfrac{[$as] \pi}{2}.
+``]<<
+   
+[`\text{d}`]) Pull out the constant multiple.
+
+>>[``
+  \int_{0}^{[$x2]} [$b] f(x) \, dx = [$b]
+  \int_{0}^{[$x2]} f(x) \, dx = [$b]\left(
+  \dfrac{[$as] \pi}{2}\right).
+``]<<
+
+END_PGML_SOLUTION
+
+COMMENT('
+    Randomization provides 180 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+#-ENDULETH-#
+
+# Marks the end of the problem document.
+ENDDOCUMENT();

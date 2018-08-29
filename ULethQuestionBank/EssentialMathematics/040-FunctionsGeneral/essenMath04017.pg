@@ -1,0 +1,97 @@
+## DESCRIPTION
+## Function Composition
+## ENDDESCRIPTION
+
+## DBsubject(Algebra)
+## DBchapter(Functions)
+## DBsection(Compositions and combinations of functions)
+## Date(26/08/2018)
+##MO(1)
+## Level(2)
+## KEYWORDS('function', 'composition','functions', 'polynomials', 'composition',
+##'ULETH-MATH0500')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "parserAssignment.pl",
+  "AnswerFormatHelp.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+);
+TEXT(beginproblem());
+$showPartialCorrectAnswers = 1;
+##########################
+#  Setup
+Context("Numeric")->variables->are(x=>"Real",y=>"Real");
+#-ULETH-#
+$a = random(-1,1,2)*non_zero_random(2,9,1);
+$b = random(-1,1,2)*non_zero_random(2,9,1);
+$c = random(-1,1,2)*non_zero_random(2,9,1);
+$d = random(-1,1,2)*non_zero_random(2,9,1);
+$ans1 = Formula("$a*(x^2-$c*x+$d)-$b");
+$ans2 = Formula("($a*x-$b)^2-$c($a*x-$b)+$d");
+#-ENDULETH-#
+
+#################################
+#  Main text
+
+#-ULETH-#
+BEGIN_PGML
+Let [`f(x) = [$a] x-[$b] `] and [`g(x) = x^2 - [$c] x + [$d] `] and evaluate the 
+following compositions:
+
+[`(f\circ g)(x) =`] [_______________________]
+
+[`(g \circ f)(x ) = `] [_______________________]
+
+END_PGML
+
+#################################
+#  Answer Evaluation
+
+#-ULETH-#
+$showPartialCorrectAnswers = 1;
+
+ANS(fun_cmp($ans1));
+ANS(fun_cmp($ans2));
+
+#################################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+
+BEGIN_PGML_SOLUTION
+When teo functions are composed it means that one of the functions is evaluated 
+using the second function as its input. More precisely, [`f \circ g`] means the 
+function [`f(x)`] is evaluated using the function [`g(x)`] as input:
+
+[`f \circ g = f \left ( g(x) \right )`]
+
+Therefore,
+
+[`(f\circ g)(x) = f \left ( g(x) \right ) =
+f \left (x^2 - [$c] x + [$d] \right) = [$ans1] `]
+
+and 
+
+[`(g\circ f)(x) = g \left ( f(x) \right ) =
+g \left ([$a] x-[$b] \right) = [$ans2] `]
+
+END_PGML_SOLUTION
+COMMENT(
+"Randomization provides 589,032 different possible versions of this question.<BR> 
+Made from a ULETH template.<BR>" 
+);
+#-ENDULETH-#
+
+
+ENDDOCUMENT();   #End of Problem

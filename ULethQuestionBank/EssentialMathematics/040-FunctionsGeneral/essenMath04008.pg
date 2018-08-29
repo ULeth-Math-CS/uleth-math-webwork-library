@@ -1,0 +1,118 @@
+## DESCRIPTION
+## In this problem students are given a function f(x) and asked to do some
+## basic substitutions / function operations
+## ENDDESCRIPTION
+
+
+## DBsubject('Algebra')
+## DBchapter('Functions')
+## DBsection('Definition, Concept')
+## Date(2018-07-21)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+## Level(2)
+## KEYWORDS('ULETH-MATH-0500', 'Function Notation')
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "parserAssignment.pl",
+  "AnswerFormatHelp.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "niceTables.pl"
+);
+
+TEXT(beginproblem());
+
+##########################
+#  Setup
+
+#-ULETH-#
+Context("Numeric")->variables->are(x=>"Real",y=>"Real");
+$a = non_zero_random(1,5,1);
+$b = non_zero_random(-4,4,1);
+$c = non_zero_random(1,9);
+$f = Formula("($a - x ) / ($a + x)")->reduce();
+do{$r = random (3,7);} until($r!=$a);
+$f_r =$f->eval(x=>$r);
+$f_ra =$f->eval(x=>$r+$a);
+$f_0=$f->eval(x=>0);
+$f_1=$f->eval(x=>1);
+$f_2=$f->eval(x=>2);
+$f_3=$f->eval(x=>3);
+$f_4=$f->eval(x=>4);
+$f_5=$f->eval(x=>5);
+endtable();
+#-ENDULETH-#
+
+
+#################################
+#  Main text
+
+#-ULETH-#
+BEGIN_PGML
+Suppose that 
+
+>>[` \displaystyle f(x) = \frac{[$a] - x}{[$a]+x}`]<<
+
+Compute the following (Enter your answer as a fraction):
+
+>>[`f([$r]) = `]  [____________________________]{$f_r}<<
+
+>>[`f([$a]) =`]  [____________________________]{0}<<
+
+>>[`f([$r]+[$a]) =`] [____________________________]{$f_ra}<<
+
+>>[`f([$r])+f([$a]) =`] [____________________________]{$f_r}<<
+
+For help entering formulas click here: [@ AnswerFormatHelp("formula") @]*.
+
+END_PGML
+#-ENDULETH-#
+
+
+#################################
+#  Answer Evaluation
+
+#################################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+To evaluate a function, we substitute the input for the function's variable.
+In this case, this input may be either a number or an expression and is found in 
+brackets beside the function's name. In this case, [`f(x) = \frac{[$a] - x} {[$a] + x}`]. The functions variable
+is [`x`]. 
+
+>>[`f([$r]) = \frac{[$a] - [$r] }{[$a] + [$r]} =  \frac{[$a - $r] }{[$a + $r]} `]<<
+
+>>[`f([$a]) = \frac{[$a] - [$a] }{[$a] + [$a]} =  \frac{0}{[$a + $a]} = 0 `]<<
+
+>>[`f([$r]+[$a]) = f([$r + $a]) = \frac{[$a] - [$r+$a] }{[$a] + [$r+$a]} 
+= \frac{[$a-$r-$a] }{[$a + $r+$a]}`]<<
+
+>>[`f([$r])+f([$a]) = \frac{[$a - $r] }{[$a + $r]} + 0 
+= \frac{[$a - $r] }{[$a + $r]}`]<<
+END_PGML_SOLUTION
+
+## In this problem students are given a function f(x) and asked to do some
+## basic substitutions / function operations
+COMMENT(
+"Randomization provides 1800 different possible versions of this question.<BR> 
+Made from a ULETH template.<BR>" 
+);
+#-ENDULETH-#
+
+ENDDOCUMENT();

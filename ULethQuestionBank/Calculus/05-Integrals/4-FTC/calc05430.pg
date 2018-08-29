@@ -1,0 +1,140 @@
+## DESCRIPTION
+## This is Problem 5.4.30 from the APEX Calculus text (5.4.31 in the ULETH text). It covers the Mean Value Theorem for Integration.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Integrals)
+## DBsection(Definite integrals (without trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.4')
+## Problem1('30')
+## MO(1)
+## Keywords('definite integral' ,'fundamental theorem of calculus', 'mean value theorem', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+Context()->flags->set(
+  tolerance => 0.001,
+  tolType => "absolute",
+);
+
+
+## a)
+$a1 = 0;
+$b1 = random(2,91,1);
+
+$ans1 = $b1 / sqrt(3);
+
+## b)
+$a2 = random(-9,-2,1);
+$b2 = -$a2 + random(1,8,1);
+
+$ans2 = sqrt($b2**2 + $a2*$b2 + $a2**2) / sqrt(3);
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+For each definite integral, find a value [`c`] which is guaranteed by the Mean
+Value Theorem of Integration.
+
+a) [`\displaystyle\int_{[$a1]}^{[$b1]} x^2 \, dx, \text{  }`] [` c = `][_______________]{Compute($ans1)} [@ AnswerFormatHelp("numbers") @]*
+
+b) [`\displaystyle\int_{[$a2]}^{[$b2]} x^2 \, dx, \text{  }`] [` c = `][_______________]{Compute($ans2)}
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+$c2 = $b2 - $a2;
+$num = $b2**3 - $a2**3;
+$den = 3 * $c2;
+
+$ans2 = sprintf('%.5f', $ans2);
+BEGIN_PGML_SOLUTION
+
+By the MVT of Integration, if [`f`] is continuous on [`[a, b]`], then there exists a value [`c`] in [`[a, b]`]
+such that [` \int_{a}^b f(x) \, dx = f(c)(b-a)`]. In each part, evaluate both sides of this equation and solve for [`c`] to answer the question. 
+
+>>[``
+  \begin{array}{rcl}
+    \displaystyle \int_{[$a1]}^{[$b1]} x^2 \, dx &=& c^2 ([$b1] - [$a1]) \\
+    \left( \dfrac{x^3}{3}\right) \Big|_{[$a1]}^{[$b1]}
+    &=& [$b1] c^2 \\
+    &&\\
+    \dfrac{([$b1])^3}{3} &=& [$b1] c^2 \\
+    &&\\
+    c &=& \dfrac{[$b1]}{\sqrt{3}}
+  \end{array}
+``]<<
+----
+>>[``
+  \begin{array}{rcl}
+    \displaystyle \int_{[$a2]}^{[$b2]} x^2 \, dx &=& c^2([$b2] - [$a2]) \\
+    \left( \dfrac{x^3}{3}\right) \Big|_{[$a2]}^{[$b2]}
+    &=& [$c2] c^2 \\
+    &&\\
+    \dfrac{([$b2])^3 - ([$a2])^3}{3} &=& [$c2] c^2 \\
+    &&\\
+    c &=& \sqrt{\dfrac{[$num]}{[$den]}}\\
+    &\approx& [$ans2]
+  \end{array}
+``]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answer checking is completed in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 5760 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+

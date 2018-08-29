@@ -1,0 +1,91 @@
+###################################################################### 
+## Description:
+##      Word problem requiring arithmetic addition
+######################################################################
+
+####################################################################
+## Problem Classification:
+##      DBsubject('Arithmetic')
+##      DBchapter('Integers')
+##      DBsection('Addition/Subtraction')
+##      KEYWORDS('Integers', 'Addition', 'ULETH-0500')
+##      Level(5)
+###################################################################
+
+##################################################################
+## Date(2018-05-10)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+##################################################################
+
+#####################################################################
+#  Initialization
+#####################################################################
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "PGML.pl",
+  "AnswerFormatHelp.pl",
+  "contextLimitedNumeric.pl",
+);
+TEXT(beginproblem());
+
+####################################################################
+#   Setup
+###################################################################
+
+#-ULETH-#
+
+Context("Numeric");
+
+$a = random(5,20);
+$b = random(7,31,1);
+$c = random (12, 28); 
+
+$ans = $a + $b + $c;
+
+#-END_ULETH-#
+  
+##################################################################
+#   Problem Text
+#################################################################
+
+#-ULETH-#
+BEGIN_PGML
+
+All her life Lily has been an avid flower collector. During her travels she found [$a] daisies, [$b] petunias, and [$c] daffodils.
+
+How many flowers, in total, does Lily have in her collection? [______] 
+
+END_PGML
+# END_ULETH-#
+
+
+###################################################################
+#   Answer Evaluation
+###################################################################
+
+ANS(num_cmp($ans));
+
+#################################################################
+#   Solution
+##################################################################
+
+BEGIN_PGML_SOLUTION
+
+The total number of flowers that Lily has will be the sum of how many daisies, petunias, daffodils she found on her travels. Thus, Lily has [$a]+[$b]+[$c] = [$a+$b+$c] flowers in total.
+
+END_PGML_SOLUTION
+
+##################################################################
+# Instrucotor Comments 
+#################################################################
+COMMENT('
+    Randomization provides 6800 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();

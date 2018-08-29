@@ -1,0 +1,147 @@
+## DESCRIPTION
+## This is Problem 1.2.6 from the APEX Calculus text. It covers the varepsilon-delta definition of a limit.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Definition of the derivative)
+## Level(6)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('1.2')
+## Problem1('6')
+## MO(1)
+## Keywords('limit', 'limits', 'proof', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  # Used for dropdown menus
+  "parserRadioButtons.pl"
+);
+
+#############################
+#   Setup
+#-ULETH-#
+$solutionexits=1;
+$a=random(1,10);
+
+$c=random(3,8);
+$cmin = $c-1;
+$cmax = $c+1;
+$c1 = $cmin + $c;
+$c2 = $cmax + $c;
+$L = $c**2 - $a;
+$b = $a + $L;
+
+$eps = RadioButtons(["\(\varepsilon\)", "\(\delta\)"], "\(\varepsilon\)", separator => " ", labels => ["~~N{U+03b5}", "~~N{U+1D6FF}"], displayLabels => 0);
+$del = RadioButtons(["\(\varepsilon\)", "\(\delta\)"], "\(\delta\)", separator => " ", labels => ["~~N{U+03b5}", "~~N{U+1D6FF}"], displayLabels => 0);
+
+$m = 1/$c2;
+
+TEXT(beginproblem());
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+BEGIN_PGML
+
+Prove the limit statement below using the formal [`\varepsilon, \delta`] definition of the limit. 
+
+[``\lim\limits_{x \to [$c]} (x^2 - [$a]) = [$L].``]
+
+(Fill in all the blanks to complete the proof).
+
+Let [@ $eps->buttons() @]* [`\, > 0`] be given. Then with [`\delta = `]
+[____][`\varepsilon`], and with [`x`] satisfying
+[`\lvert x - `]([____])[`\rvert <  \,`] [@ $del->buttons() @]*, (after some algebra), we arrive at:
+
+[`\lvert f(x) - `]([____])[`\rvert <  \,`] [@ $eps->buttons() @]*,
+which is what we wanted to prove.
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+First, we should do some scratch work. 
+With [`f(x) = x^2 - [$a]`], and limiting value [`L=[$L]`], we must solve the
+inequality:
+
+[`` |f(x) - [$L]| = |x^2 - [$a] - [$L]| = |x^2 - [$b]| < \varepsilon. ``]
+
+Factoring, we get [` |x - [$c]|\cdot|x + [$c]| < \varepsilon`].
+
+We know that we can make [`|x-[$c]|<\delta`], so it remains to get control over [`|x+[$c]|`].
+
+By assuming that [`\delta`] is at most 1, the inequality [`|x-[$c]|<\delta\leq 1`] gives us [`-1<x-[$c]<1`], which implies that [`[$cmin] < x < [$cmax]`]. Thus [` [$c1] < x + [$c] < [$c2]`], which shows that
+
+[``|x-[$c]|\cdot|x+[$c]|<\delta\cdot [$c2],``]
+
+and thus we can let [`\delta = \frac{1}{[$c2]} \varepsilon`].  Now, we put together the formal proof.
+
+
+*Proof of the limit:*
+
+Let [`f(x) = x^2 - [$a]`], and let [`L=[$L]`].
+
+Let [`\varepsilon > 0`] be given, let [`\delta = \text{min}\{1,\frac{\varepsilon}{[$c2]}\}`] and suppose that [`x`] satisfies [`0<|x - [$c]| < \delta`]. 
+
+Since [`\delta\leq 1`], we have [`|x-[$c]|<1`], which implies that [` [$c1] < x + [$c] < [$c2]`]. From this, we find that
+
+[``\begin{aligned}
+\lvert f(x) - L\rvert & = \lvert x^2 - [$a] - [$L]\rvert = \lvert x^2 - [$b]\rvert\\
+& = \lvert x-[$c]\rvert \cdot\lvert x+[$c]\rvert\\
+& < \delta \cdot [$c2] \leq \varepsilon,
+\end{aligned}``]
+
+(since [`\delta \leq \frac{\varepsilon}{[$c2]}`]) which is what we needed to show.
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+#-ENDULETH#
+ANS( $eps->cmp() );
+ANS( num_cmp( $m ) );
+ANS( num_cmp( $c ) );
+ANS( $del->cmp()  );
+ANS( num_cmp( $L ) );
+ANS( $eps->cmp()  );
+
+#############################
+#  Comments
+COMMENT('
+    Randomization provides 60 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+
+ENDDOCUMENT();
+
+

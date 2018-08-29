@@ -1,0 +1,179 @@
+## DESCRIPTION
+## This is Problem 5.4.5-7 from the APEX Calculus text. It covers a basic definite integration problem.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Integrals)
+## DBsection(Definite integrals (without trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('5.4')
+## Problem1('5-7')
+## MO(1)
+## Keywords('definite integral' ,'fundamental theorem of calculus',  'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
+Context()->flags->set(
+  tolerance => 0.01,
+  tolType => "absolute",
+);
+
+## a)
+
+$a = 3*random(1,9,1);
+$b = random(1,6,1)*random(-2,2,4);
+$c = random(1,20,1)*random(-1,1,2);
+
+$a1 = random(1,9,1);
+$b1 = $a1 + random(2,5,1);
+
+$f = Formula("($a x^2 + $b x + $c)")->reduce();
+
+$fI = Formula("$a x^3/3 + $b x^2/2 + $c x");
+$ans1 = $fI->eval(x=>$b1) - $fI->eval(x=>$a1);
+
+## b)
+$d = random(1,9,1)*random(-1,1,2);
+
+$a2 = random(0,9,1);
+$b2 = $a2 + random(1,6,1);
+
+$g = Formula("(x + $d)^2")->reduce();
+
+$gI = Formula("x^3/3 + $d x^2 + ($d)^2 x");
+$ans2 = $gI->eval(x=>$b2) - $gI->eval(x=>$a2);
+
+## c)
+$e1 = random(3,5,1);
+$e2 = $e1 + random(1,5,1);
+
+$a3 = -1;
+$b3 = 1;
+
+$h = Formula("(x^{$e1} - x^{$e2})")->reduce();
+
+$hI = Formula("x^{$e1 + 1}/($e1 + 1) - x^{$e2 + 1}/($e2 + 1)");
+$ans3 = $hI->eval(x=>$b3) - $hI->eval(x=>$a3);
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+
+Evaluate the definite integrals
+  
+a) [`\displaystyle\int_{[$a1]}^{[$b1]} [$f] \, dx = `] 
+[_______________]{Compute($ans1)} [@ AnswerFormatHelp("numbers") @]*
+  
+b) [`\displaystyle\int_{[$a2]}^{[$b2]} [$g] \, dx = `] 
+[_______________]{Compute($ans2)}
+  
+c) [`\displaystyle\int_{[$a3]}^{[$b3]} [$h] \, dx = `] 
+[_______________]{Compute($ans3)}
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+$aa = $a/3;
+$bb = $b/2;
+$d2 = 2*$d;
+$ds = $d**2;
+$e11 = $e1 + 1;
+$e21 = $e2 + 1;
+
+
+BEGIN_PGML_SOLUTION
+
+Use the Fundamental Theorem of Calculus.
+>>[``
+  \begin{array}{rcl}
+    \displaystyle \int_{[$a1]}^{[$b1]} [$f] \, dx &=&
+    \left([$a]\cdot \dfrac{x^3}{3} +
+    [$b]\cdot \dfrac{x^2}{2} +
+    [$c] x \right) \Big|_{[$a1]}^{[$b1]}\\
+    &=& \left( [$aa] x^3 + [$bb] x^2 + [$c] x\right) \Big|_{[$a1]}^{[$b1]}\\
+    &=& \left( [$aa] ([$b1])^3 + [$bb] ([$b1])^2 + [$c] ([$b1])\right)- 
+    \left( [$aa] ([$a1])^3 + [$bb] ([$a1])^2 + [$c] ([$a1])\right)\\
+    &=& [$ans1]
+  \end{array}
+``]<<
+----
+>>[``
+  \begin{array}{rcl}
+    \displaystyle \int_{[$a2]}^{[$b2]} [$g] \, dx &=&
+    \displaystyle \int_{[$a2]}^{[$b2]} \left(x^2 + [$d2] x + [$ds] \right) \, dx\\
+    &=& \left( \dfrac{x^3}{3} + [$d] x^2 + [$ds] x\right) \Big|_{[$a2]}^{[$b2]}\\
+    &=& [$ans2]
+  \end{array}
+``]<<
+----
+>>[``
+  \begin{array}{rcl}
+    \displaystyle \int_{[$a3]}^{[$b3]} [$h] \, dx &=&
+    \left(\dfrac{x^{[$e11]}}{[$e11]} - \dfrac{x^{[$e21]}}{[$e21]}
+    \right) \Big|_{[$a3]}^{[$b3]}\\
+    &=& \left(\dfrac{(1)^{[$e11]}}{[$e11]} - \dfrac{(1)^{[$e21]}}{[$e21]}
+    \right) - \left(\dfrac{(-1)^{[$e11]}}{[$e11]} - \dfrac{(-1)^{[$e21]}}{[$e21]}
+    \right)\\
+    &=& [$ans3]
+  \end{array}
+``]<<
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#answer checking is completed in the problem text
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+#-ENDULETH#
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides more than a billion different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();
+

@@ -1,0 +1,133 @@
+## DESCRIPTION
+## This is Problem 1.4.18 from the APEX Calculus text. It covers one-sided limits for a piecewise function.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Limits and continuity)
+## DBsection(One-sided limits - concept of)
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('1.4')
+## Problem1('18')
+## MO(1)
+## Keywords('limit', 'limits', 'left,right,one-sided', 'piecewise function', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for Piecewise Functions
+  "contextPiecewiseFunction.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("PiecewiseFunction");
+
+$a = random(2,10,1)*random(-1,1,2);
+$b = random(2,10,1)*random(-1,1,2);
+$c = random(-10,10,1);
+$d = $a*$c;
+
+$f = Compute("$a*x + $b if x < $c else $d if x = $c else $a*x - $b if x > $c")->reduce();
+
+$ans1 = $a*$c + $b;
+$ans2 = $a*$c - $b;
+$ans3 = "DNE";
+$ans4 = $d;
+
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+
+#-ULETH-#
+BEGIN_PGML
+
+Let
+[``f(x) = [$f->with(final_period=>1)]``]
+
+Evaluate the following:
+
+[``\lim_{x \to [$c]^-} \, f(x) =``] [___________] [@ AnswerFormatHelp("numbers") @]*
+
+[``\lim_{x \to [$c]^+} \, f(x) = ``] [___________] 
+
+[``\lim_{x \to [$c]} \, f(x) = ``] [___________]
+
+[`` f([$c]) =``] [___________] 
+
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+The left-hand limit of [`f(x)`] at [`[$c]`] is
+
+[``
+ \lim_{x \to [$c]^-} f(x) = \lim_{x \to [$c]} \, ([$a] x + [$b]) = 
+  [$a]([$c]) + [$b] = [$ans1].
+``]
+
+The right-hand limit of [`f(x)`] at -1 is
+
+[``
+ \lim_{x \to [$c]^+} f(x) = \lim_{x \to [$c]} \, ([$a] x - [$b]) = [$a]([$c]) - [$b] = [$ans2].
+``]
+
+Since the left and right hand limits are not equal, [`\displaystyle \lim_{x \to -1} f(x) `] does not exist.
+
+However, [`f(x)`] is defined at [`[$c]`] by [`[$d]`], so 
+[``f([$c]) = [$ans4].``]
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+ANS(num_cmp($ans1, strings=>["DNE"]));
+ANS(num_cmp($ans2, strings=>["DNE"]));
+ANS(num_cmp($ans3, strings=>["DNE"]));
+ANS(num_cmp($ans4, strings=>["DNE"]));
+
+
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 6804 possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+
+ENDDOCUMENT();    
+

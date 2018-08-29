@@ -1,0 +1,116 @@
+## DESCRIPTION
+## This is Problem 2.4.24 from the APEX Calculus text. It covers differentiation of basic trig functions and the Quotient Rule.
+## ENDDESCRIPTION
+
+## DBsubject(Calculus - single variable)
+## DBchapter(Differentiation)
+## DBsection(Quotient rule (with trigonometric functions))
+## Level(2)
+## Institution('Valdosta State University')
+## Author('S. V. Ault')
+## RevisedBy('F. J. Francis')
+## TitleText1('APEX Calculus')
+## AuthorText1('Hartman')
+## EditionText1('3.0')
+## Section1('2.4')
+## Problem1('24')
+## MO(1)
+## Keywords('derivative', 'quotient rule', 'trig functions', 'ULETH-MATH1560', 'ULETH-MATH1565')
+
+###########################
+#  Initialization
+DOCUMENT();
+
+# Load whatever macros you need for the problem
+loadMacros(
+  # REQUIRED: Used for basic question and answer operations.
+  "PGstandard.pl",
+  # REQUIRED: Used for expression parsing.
+  "MathObjects.pl",
+  # Usually required for proper text formatting.
+  "PGML.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl"
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#   Setup
+#-ULETH-#
+Context("Numeric")->noreduce('(-x)-y','(-x)+y');;
+
+$a = random(2,10,1)*random(-1,1,2);
+$b = random(1,10,1)*random(-1,1,2);
+$c = random(1,10,1)*random(-1,1,2);
+
+$f = Formula("$a*sin(x)")->reduce();
+$df = $f->D('x');
+
+$g = Formula("$b*cos(x)+$c")->reduce();
+$dgu = $g->D('x');
+$dg = Compute("$dgu")->reduce();
+
+
+$func = Formula($f/$g)->reduce();
+$ans = $func->D('x');
+#-ENDULETH-#
+
+#############################
+#   Problem Text
+#-ULETH-#
+
+BEGIN_PGML
+Compute the derivative of the given function.
+
+>>[``f(x) = \frac{[$f]}{[$g]}.``]<<
+
+[`f'(x) = `] [___________________________________________] [@ AnswerFormatHelp("formulas") @]*
+END_PGML
+#-ENDULETH-#
+
+#############################
+#  Solution
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+You may compute this derivative using the Quotient Rule.
+
+[``
+  \begin{array}{rcl}
+    f'(x) &=& \displaystyle
+    \frac{ ([$g])\frac{d}{dx}[ [$f] ] - ([$f]) \cdot \frac{d}{dx}[ [$g] ]
+    }{([$g])^2}\\
+    &&\\
+    &=& \displaystyle \frac{ ([$g])([$df]) - ([$f])([$dg]) }{ ([$g])^2 }.
+  \end{array}
+``]
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 0;
+#-ENDULETH#
+ANS( $ans->cmp() );
+
+
+#############################
+#  Comments
+    COMMENT('
+    Randomization provides 7200 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+ENDDOCUMENT();    
+
+
+
+
