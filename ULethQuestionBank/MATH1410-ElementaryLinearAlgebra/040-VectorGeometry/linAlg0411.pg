@@ -1,0 +1,109 @@
+## DESCRIPTION
+##  Find the length of a vector in R3
+## ENDDESCRIPTION
+
+
+## DBsubject(Geometry)
+## DBchapter(Vector geometry)
+## DBsection(Dot product, length, and unit vectors)
+## Date(2018-07-19)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## MO(1)
+## KEYWORDS('ULETH-1410', 'Vector', 'Length', 'Norm')
+
+
+##################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+# Used for handling matrix problems.
+Context("Matrix");
+
+#-ULETH-#
+
+$M = Matrix([
+[random(2,9)*non_zero_random(-1, 1),],
+[random(2,9)*non_zero_random(-1, 1),],
+[random(2,9)*non_zero_random(-1, 1),],
+]);
+
+$mLength = (($M->element(1,1)**(2) +  $M->element(2,1)**(2) + $M->element(3,1)**(2) )**(1/2));
+
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_PGML
+Find the length of vector [`\vec{V} = [$M]`].
+
+[`\|\vec{V}\| = `] [_____]{$mLength}
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+
+$showPartialCorrectAnswers = 1;
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+We can calculate the length of a vector using the following formula,
+
+[``\|\vec{V}\| = \sqrt{V_1^2 + V_2^2 + V_3^2}``]
+
+By substituting the values from [`\vec{V}`] into the formula we get,
+
+[``\|\vec{V}\| = \sqrt{([$M->element(1,1)])^2 + ([$M->element(2,1)])^2 + ([$M->element(3,1)])^2}``]  
+
+[``\|\vec{V}\| = \sqrt{[$M->element(1,1)**2] + [$M->element(2,1)**2] + [$M->element(3,1)**2]}``]  
+
+[``\|\vec{V}\| = \sqrt{[$mLength**2]}``]  
+
+[``\|\vec{V}\| = [$mLength]``]  
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+COMMENT('
+    Randomization provides 343 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 2<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>
+    ' );
+ENDDOCUMENT();

@@ -1,0 +1,118 @@
+## DESCRIPTION
+##      Step by step question which guides the student through the process of inverting a 2x2 matrix
+## ENDDESCRIPTION
+
+
+## DBsubject(Linear algebra)
+## DBchapter(Matrices)
+## DBsection(Matrix algebra)
+## Date(2018-06-12)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## MO(1)
+## KEYWORDS('inverse', 'adjugate', 'determinant', 'matrix', 'ULETH-1410')
+## Level(2)
+
+
+##################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "scaffold.pl",
+  "PGunion.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+
+#-ULETH-#
+
+Context("Matrix");
+do{
+$A = Matrix([
+[non_zero_random(-7, 7), non_zero_random(-7, 7),],
+[non_zero_random(-7, 7), non_zero_random(-7, 7),],
+]);
+}until($A->det != 0);
+
+
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_PGML
+###Let [`A`] be the following 2x2 matrix.
+
+>>[`A = [$A]`].<<   
+
+
+If we want to find the inverse of [`A`] (i.e [`A^{-1}`]) we can use the following formula:  
+
+>>###[`A^{-1} = \frac{1}{det(A)} adj(A)`].<<
+
+END_PGML
+Scaffold::Begin();
+
+Section::Begin("Part 1");
+BEGIN_PGML
+
+First we need to compute the *determinant* of [`A`].
+>>[`det(A) =`][_____]{$A->det}<<
+END_PGML
+Section::End();
+
+$Aadj = Matrix([
+[$A->element(2,2), -$A->element(2,1),],
+[-$A->element(1,2), $A->element(1,1),],
+]);
+Section::Begin("Part 2");
+BEGIN_PGML
+
+Next we need to compute the *adjugate* of [`A`].
+>>[`adj(A) =`][_____]*{$Aadj}[@ AnswerFormatHelp("matrices") @]*<<
+END_PGML
+Section::End();
+
+Section::Begin("Part 3");
+BEGIN_PGML
+
+Finally lets plug our calculations back into the formula
+>>###[`A^{-1} = \frac{1}{det(A)} adj(A)`].<<
+
+>>[`A^{-1}=`][____]*{$A->inverse}[@ AnswerFormatHelp("matrices") @]*<<
+END_PGML
+Section::End();
+
+Scaffold::End();
+$showPartialCorrectAnswers = 0;
+
+#-ENDULETH-#
+
+
+COMMENT('
+    Randomization provides more than 50 different possible versions of this question.<BR>
+    Does not include a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 2<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>
+    ' );
+ENDDOCUMENT();

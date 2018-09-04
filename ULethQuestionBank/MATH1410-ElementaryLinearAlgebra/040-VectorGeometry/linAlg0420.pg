@@ -1,0 +1,146 @@
+## DESCRIPTION
+##  Linear Algebra
+##  Find the angle between two non-zero vectors in R3.
+## ENDDESCRIPTION
+
+
+## DBsubject(Linear algebra)
+## DBchapter(Inner products)
+## DBsection(Computing with dot products)
+## Date(2018-07-11)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## MO(1)
+## Level(3)
+## KEYWORDS('MATH-1410', 'vector', 'angle', 'dot product')
+
+
+##################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+Context("Vector");
+
+#-ULETH-#
+
+do{
+$v11 = random(2,9)*non_zero_random(-1, 1);
+$v21 = random(2,9)*non_zero_random(-1, 1); 
+$v31 = random(2,9)*non_zero_random(-1, 1); 
+$u11 = random(2,9)*non_zero_random(-1, 1); 
+$u21 = random(2,9)*non_zero_random(-1, 1); 
+$u31 = $v31; 
+$v = ColumnVector($v11, $v21, $v31);
+$u = ColumnVector($u11, $u21, $u31);
+
+}
+until($v11 != $v21 && $v21 != $v31 && $u11 != $u21 && $u21 != $u31 && $u11 != $v11 && $u21 != $v21 && $v->norm != 0 && $u->norm != 0);
+
+$v->{ColumnVector};
+$u->{ColumnVector};
+$angle = ($v->dot($u))/(($v->norm)*($u->norm));
+$theta = arccos($angle);
+$angle = sprintf("%0.3f", $angle);
+$theta = sprintf("%0.3f", $theta);
+
+#-ENDULETH-#
+#############################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_PGML
+Let [`\vec{v} = [$v]`] and [`\vec{u} = [$u]`].  
+
+Find the angle [`\theta`] between [`\vec{v}`] and [`\vec{u}`] in radians .
+  
+  
+[`\theta =`][____]{$theta}
+(Please round your answer to three decimal places).
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+
+$showPartialCorrectAnswers = 1;
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+To solve this problem we are going to use the formula:  
+>>[``cos(\theta) = \frac{\vec{v}\:\vec{u}}{\|\vec{v}\|\:\|\vec{u}\|}``]<<  
+
+###Step One: Calculate [``\|\vec{v}\|\:\|\vec{u}\|``].  
+
+Using the vector length formula: [`\|\vec{x}\| = \sqrt{(x_{11})^2 + (x_{21})^2 +\,...\,+ (x_{n1})^2}`],  
+
+we know that [`\|\vec{v}\| = [$v->norm]`] and [`\|\vec{u}\| = [$u->norm]`].  
+
+>>Thus [``\|\vec{v}\|\:\|\vec{u}\| = [$v->norm] * [$u->norm] = [$v->norm*$u->norm]``]<<
+  
+###Step Two: Calculate [``\vec{v}\:\vec{u}``].  
+
+Take the dot product of [`\vec{v}`] and [`\vec{u}`].  
+>>This gives us [`\vec{v}\:\vec{u}\,= [$v->dot($u)]`].<<  
+
+###Step Three: Subsituite and solve.  
+
+Now we substitute these values into the formula above.  
+>>[``cos(\theta) = \frac{[$v->dot($u)]}{[$v->norm*$u->norm]} = [$angle]``] (rounded to three decimals)<<  
+
+Now recall that [`cos(\theta)`] and [`sin(\theta)`] are defined so that ([`cos(\theta)`], [`sin(\theta)`]) is the point on the unit circle determined by the angle [`\theta`].  
+
+Since [`cos(\theta) = [$angle] \:`] we can calculate [`\theta`] using two methods.  
+
+1. Using the unit circle:
+    
+    This method works best when [`cos(\theta)`] equals some fraction  which is on the unit circle (i.e [`\frac{1}{2} \:, \frac{-\sqrt{2}}{2}`]).  
+        
+2. By calculating [`cos^{-1}([$angle])`]:
+    
+    We use this method when [`cos(\theta)`] is not a fraction on the unit circle. (you may be more familiar with the notation [`arccos([$angle])`] instead of [`cos^{-1}([$angle])`]).  
+
+By using either method to calculate [`\theta`] we get that  
+
+>>[`\theta = [$theta]`] (rounded to three decimals).<<  
+END_PGML_SOLUTION
+#-ENDULETH-#
+COMMENT('
+    Randomization provides more than 100 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 2<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>
+    ' );
+
+ENDDOCUMENT();

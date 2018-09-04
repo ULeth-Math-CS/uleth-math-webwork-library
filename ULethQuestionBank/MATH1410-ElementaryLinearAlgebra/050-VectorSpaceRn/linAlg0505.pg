@@ -1,0 +1,126 @@
+#-ULETH-#
+## DESCRIPTION
+## This is a template for a question usting draggable tiles. 
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2018-05-14)
+## Institution(University of Lethbridge)
+## RevisedBy(Mainul Polash & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'Draggable Proof', 'Proof Tiles')
+#-ENDULETH-#
+
+#############################
+#  Initialization
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+# REQUIRED: Used for basic question and answer operations.
+"PGstandard.pl",
+# REQUIRED: If used for expression parsing.
+"MathObjects.pl",
+"draggableProof.pl",
+# Required for proper text formatting.
+"PGML.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+# Here is where the setup for the problem is done.
+# In general, this will include setting up any variables that are being
+# used in the question, including those that are equal to constants and formulas
+
+
+#-ULETH-#
+
+# Here we prepare the correct answer set.
+# We have two lists of strings that appear on tiles
+# The first is the list of strings that form the correct answer they must be 
+# given in the correct order.
+# The second is a list of strings that are not in the correct answer.
+$CorrectProof = DraggableProof([
+"Assume that \(AA^{T}=I\).",
+"Take the determinant of both sides: \(\det(AA^{T})=\det(I)\). ",
+"The determinant of the identity matrix is 1, thus:\(\det(AA^{T})= 1\). ",
+"Since the determinant of a product is the product of the determinants: \(\det(A)\det(A^{T})= 1\).",
+"Since \(\det(A)=\det(A^{T})\), this can be rewritten:\(\det(A)^2 = 1\). ",
+"Thus, taking square roots of both sides, we get \(\det(A) = \pm 1\)."
+],
+
+[
+"Assume that \(\det(A) = \pm 1\).",
+"The determinant of the identity matrix is \(\pm 1\), so:\(\det(AA^{T})= \pm 1\) ",
+"Since the determinant of a product is the product of the determinants: \(\det(A)\det(A^{T})= \pm 1\).",
+],
+#Put all the entries under the left column and specify these as SourceLabel
+#TargetLabel is the column after ordering all the entries 
+SourceLabel => "Choose from these steps:",
+TargetLabel => "Place the steps of the proof in correct order here:",
+);
+
+Context()->texStrings;
+
+#############################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_TEXT
+In this problem you will prove that if \(AA^{T}=I\) then \(\det(A) = \pm 1\). All the steps required in the proof of this fact are given below on draggable tiles; your task is to place the tiles in the correct logical order. Note that you don't need to use all the tiles; in fact, some of the tiles should NOT be used.
+
+$BR$BR
+NOTE: You must drag the tile to the top of the right column then move it down into place.
+$PAR
+\{ $CorrectProof->Print \}
+
+END_TEXT
+
+Context()->normalStrings;
+#-ENDULETH-#
+
+
+#############################
+#  Answer evaluation
+
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answer is correct. All they will be told is that it is incorrect or correct.
+$showPartialCorrectAnswers = 1;
+
+# Checks each entered answer against its associated solution.
+ANS($CorrectProof->cmp);
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+# Any latex code must be between [` and `] to render properly.
+BEGIN_PGML_SOLUTION
+Solution text goes here.   
+
+For Example:
+
+Since "This is not a number" and "Apple pie" are not numbers we do not use those tiles.   
+
+Since [`\sqrt{2} \approx 1.4`], [`\pi \approx 3.14`], and [`4^2 = 16`] 
+
+clearly [`1 < \sqrt{2} < \pi < 4 < 4^2`].
+END_PGML_SOLUTION
+
+COMMENT('ULeth template. The solution uses PGML.'); 
+
+#-ENDULETH-#
+ENDDOCUMENT();

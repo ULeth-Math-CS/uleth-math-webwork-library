@@ -1,0 +1,117 @@
+## DESCRIPTION
+##      Compute the difference of two 3x3 matrices
+## ENDDESCRIPTION
+
+
+## DBsubject(Linear algebra)
+## DBchapter(Matrices)
+## DBsection(Matrix algebra)
+## Date(2018-06-12)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## MO(1)
+## KEYWORDS('Subtraction', 'matrix', 'ULETH-1410')
+## Level(2)
+
+
+##################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+
+#-ULETH-#
+
+Context("Matrix");
+
+$A = Matrix([
+[non_zero_random(-15, 15), non_zero_random(-15, 15),],
+[non_zero_random(-15, 15), non_zero_random(-15, 15),],
+]);
+
+$B = Matrix([
+[non_zero_random(-15, 15), non_zero_random(-15, 15),],
+[non_zero_random(-15, 15), non_zero_random(-15, 15),],
+]);
+
+
+$C = $A - $B;
+
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_PGML
+###Compute [`A - B`] where
+
+>>[`A = [$A]\quad`] [`B = [$B]`].<<
+
+>>[`A - B = `] [__]*{$C}[@ AnswerFormatHelp("matrices") @]*<<
+
+
+END_PGML
+
+$showPartialCorrectAnswers = 0;
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+
+my $ctr = 0;
+for (my $i = 1; $i < 3; $i++){
+    for (my $j = 1; $j < 3; $j++){
+        $a1[$ctr] = $A->element($i, $j);
+        $b1[$ctr] = $B->element($i, $j);
+        $ctr = $ctr + 1;
+    }
+}
+$slnMtx = "\begin{bmatrix}(".$a1[0]." - ".$b1[0].") & (".$a1[1]." - ".$b1[1].") \\ (".$a1[2]." - ".$b1[2].") & (".$a1[3]." - ".$b1[3].")\end{bmatrix}";
+
+$showPartialCorrectAnswers = 0;
+BEGIN_PGML_SOLUTION
+We compute the difference of two matrices by using componet-wise subtraction; that
+is, we subtract the corresponding entries in each matrix as follows:  
+
+>>[` A - B = [$A] - [$B] `]<<
+
+>>[`A - B = [$slnMtx]`]<<
+
+>>[`A - B = [$C]`]<<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+COMMENT('
+    Randomization provides more than 50 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 2<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>
+    ' );
+
+ENDDOCUMENT();

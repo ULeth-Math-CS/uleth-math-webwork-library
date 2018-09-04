@@ -1,0 +1,109 @@
+## DESCRIPTION
+##  Asks the student to enter an invertable 3x3 matrix
+## ENDDESCRIPTION
+
+
+## DBsubject(Linear Algebra)
+## DBchapter(Matrices)
+## DBsection(Inverses)
+## Date(2018-05-09)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## MO(1)
+## KEYWORDS('ULETH-MATH1410', 'matrix', 'inverse')
+
+
+##################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+Context("Matrix");
+
+#-ULETH-#
+do{
+$a11 = random(2, 9)*non_zero_random(-1, 1);
+$a22 = random(2, 9)*non_zero_random(-1, 1);
+$a33 = random(2, 9)*non_zero_random(-1, 1);
+$M = Matrix([
+[$a11, random(2, 9)*non_zero_random(-1, 1), random(2, 9)*non_zero_random(-1, 1),],
+[random(2, 9)*non_zero_random(-1, 1), $a22, random(2, 9)*non_zero_random(-1, 1),],
+[random(2, 9)*non_zero_random(-1, 1), random(2, 9)*non_zero_random(-1, 1), $a33,],]);
+}until($M->det != 0 && $a11 != $a22 && $a22 != $a33 && $a11 != $a33);
+
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_PGML
+###Enter a non-zero non-diagonal 3x3 matrix which is invertible.
+
+[`A = `] [@ $M->ans_array(5) @]* [@ AnswerFormatHelp("matrices") @]*
+
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+$showPartialCorrectAnswers = 1;
+ANS( $M->cmp(
+     checker => sub {
+       my ($M,$student,$ansHash) = @_; 
+       my ($sdet)=$student->det();
+       if ($student->isZero || $student->isOne){return 0;}
+       elsif ($sdet == 0){return 0;}
+       else{return 1;}
+       }
+));
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+The simplest way to solve this problem is to first create any 3x3 matrix filled with random numbers of your choice, but remember it must not be diagonal.  
+
+Next take the determinant of your chosen matrix, if its determinant is equal to zero then it is not invertible.  
+
+Another method you could attempt is to write out the formula for the determinant of a 3x3 matrix and subsitute in random values into this formula to see how they effect the results.  
+END_PGML_SOLUTION
+
+COMMENT('
+    Randomization provides lots of different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 1<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>
+    ');
+#-ENDULETH-#
+
+ENDDOCUMENT();

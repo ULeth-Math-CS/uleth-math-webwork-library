@@ -1,0 +1,98 @@
+## DESCRIPTION
+##      Student enters a matrix which has a specific eigenvalue
+## ENDDESCRIPTION
+
+
+## DBsubject(Linear Algebra)
+## DBchapter(Complex eigenvalues and eigenvectors)
+## DBsection(Computing eigenvalues and eigenvectors)
+## Date(2018-05-09)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## Level(2)
+## MO(1)
+## KEYWORDS('ULETH-1410', 'matrix', 'eigenvalues')
+
+
+##################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+# Used for handling matrix problems.
+Context("Matrix");
+
+#-ULETH-#
+#setup
+$val = non_zero_random(2, 25, 1);
+$M = Matrix([
+[1, 1, 1],
+[1, 1, 1],
+[1, 1, 1],
+]);
+
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_PGML
+###Enter a non-diagonal 3x3 matrix which has an eigenvalue of [$val].
+
+[`A =`] [@ $M->ans_array(5) @]* [@ AnswerFormatHelp("matrices") @]*
+
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+$showPartialCorrectAnswers = 1;
+ANS( $M->cmp(
+     checker => sub {
+       my ($M,$student,$ansHash) = @_; 
+       my ($I) = Value::Matrix->I(3);
+       my ($sM)= $student - ($val * $I);
+       my ($sEV)=$sM->det();
+       return ($sEV == 0 ? 1 : 0);
+       }
+));
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+To check if the matrix [`A`] has an eigenvalue of [`[$val]`] use the following formula where [`\lambda = [$val]`],
+
+>>[`det(A - \lambda I)`]<<
+
+If the [``det( A - \lambda I) = 0``], then [`[$val]`] is an eigenvalue of matrix [`A`].
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+ENDDOCUMENT();

@@ -1,0 +1,172 @@
+## DESCRIPTION
+##      Calculate the eigenvalues for a 3x3 matrix.
+## ENDDESCRIPTION
+
+
+## DBsubject(Linear algebra)
+## DBchapter(Eigenvalues and eigenvectors)
+## DBsection(Computing eigenvalues and eigenvectors)
+## Date(2018-06-12)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin & Dakota Duffy)
+## MO(1)
+## KEYWORDS('Eigenvalues', 'matrix', 'ULETH-1410')
+## Level(3)
+
+
+##################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "unorderedAnswer.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+#-ULETH-#
+
+Context("Matrix");
+
+do{
+    $i = non_zero_random(-10, 10);
+    $a = 0; 
+    $b = non_zero_random(-8, 8);
+    $c = non_zero_random(-8, 8);
+    $d = non_zero_random(1, 8);
+    $g = non_zero_random(-8, 8);
+    if (random(0,1) == 1) 
+        { $h = 1; $f = (-$g)*$c-($b*$d);}
+    else 
+        {$h = (-$g)*$c-($b*$d); $f = 1;}
+    $e = -$i; 
+    $M = Matrix([
+        [$a, $b, $c,],
+        [$d, $e, $f,],
+        [$g, $h, $i,],
+]);}
+until($M->det == 0 && $d != $i && $d != $a && $d != $e);
+
+if ($M ->element(1,2) < 0) 
+{$pm1 = "+";
+$m12 = -$M ->element(1,2); }
+else 
+{$pm1 = "-";
+$m12 = $M ->element(1,2); }
+
+if ($M ->element(1,3) > 0) 
+{$pm2 = "+";
+$m13 = $M ->element(1,3); }
+else 
+{$pm2 = "-";
+$m13 = -$M ->element(1,3); }
+
+$ans1 = Compute($i);
+$ans2 = Compute(-$i);
+$ans3 = Compute(0);
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_PGML
+###Find the Eigenvalues for the following 3x3 matrix.  
+
+[`A = [$M]`]  
+
+[`\lambda_1`] = [___]  
+[`\lambda_2`] = [___]  
+[`\lambda_3`] = [___]
+
+END_PGML
+
+$showPartialCorrectAnswers = 0;
+UNORDERED_ANS(
+    $ans1->cmp(),
+    $ans2->cmp(),
+    $ans3->cmp(),
+);
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+   $I = Value::Matrix->I(3);
+#-ULETH-#
+$lambdaI = "{\left[\begin{array}{rrr} \lambda & 0 & 0 \\ 0 & \lambda & 0 \\ 0 & 0 & \lambda \end{array}\right]}";
+
+$lambdaM = "{\left[\begin{array}{rrr}"."-\lambda &".$M->element(1,2)."&".$M->element(1,3)."\\".$M->element(2,1)."&".$M->element(2,2)."-\lambda &".$M->element(2,3)."\\".$M->element(3,1)."&".$M->element(3,2)."&".$M->element(3,3)."-\lambda \\\end{array}\right]}";
+
+$detlambdaM = "{\left|\begin{array}{rrr}"."-\lambda &".$M->element(1,2)."&".$M->element(1,3)."\\".$M->element(2,1)."&".$M->element(2,2)."-\lambda &".$M->element(2,3)."\\".$M->element(3,1)."&".$M->element(3,2)."&".$M->element(3,3)."-\lambda \\\end{array}\right|}";
+
+$cof1 = "{\left|\begin{array}{rr}" .$M->element(2,2)."-\lambda &".$M->element(2,3)."\\".$M->element(3,2)."&".$M->element(3,3)."-\lambda\\\end{array}\right|}";
+
+$cof2 = "{\left|\begin{array}{rr}" .$M->element(2,1)." &".$M->element(2,3)."\\".$M->element(3,1)."&".$M->element(3,3)."-\lambda\\\end{array}\right|}";
+
+$cof3 = "{\left|\begin{array}{rr}" .$M->element(2,1)." &".$M->element(2,2)."-\lambda \\".$M->element(3,1)."&".$M->element(3,2)."\\\end{array}\right|}";
+
+
+BEGIN_PGML_SOLUTION
+
+To find the eigenvalues of a matrix we need to find the roots of the polynomial
+[`p( \lambda ) = \det (A- \lambda I)`]. More, precisely the eigenvalues of this
+matrix will be all the values of [`\lambda`] such that [`p( \lambda ) = 0 `].
+First, we will determine [`A-\lambda I`] and find its determinant
+
+[` \begin{align*}
+A - \lambda I &= [$M] - \lambda [$I] \\[2pt]
+&= [$M] - [$lambdaI] \\[2pt]
+&= [$lambdaM]
+\end{align*}`]
+
+Now let's find the determinant of this matrix. To do this we will perform
+cofactor expansion along the first row:
+
+[`\begin{align*} \det (A - \lambda I) &= [$detlambdaM]\\[2pt]
+&= \left(-\lambda\right)[$cof1] [$pm1][$m12] [$cof2] [$pm2][$m13] [$cof3]\\[2pt]
+&= \left(-\lambda\right) \bigg(([$M->element(2,2)]-\lambda )([$M->element(3,3)]-\lambda) -([$M->element(2,3)])([$M->element(3,2)]) \bigg)[$pm1][$m12]\bigg(([$M->element(2,1)])([$M->element(3,3)]-\lambda) -([$M->element(2,3)])([$M->element(3,1)]) \bigg)[$pm2][$m13] \bigg(([$M->element(2,1)])([$M->element(3,2)]) -([$M->element(2,2)]- \lambda)([$M->element(3,1)]) \bigg) \\
+&= \lambda^3 - [$i*$i] \lambda
+\end{align*}`]
+
+Now, to find the eigenvalues, we need to find the roots of this polynomial; that is, we must solve the equation [`p( \lambda ) = 0 `] for [`\lambda`]:
+
+>>[`p( \lambda ) = 0 `]<<
+
+>>[`\lambda^3 - [$i*$i] \lambda = 0 `]<<
+
+>>[` \lambda ( \lambda - [$i])(\lambda + [$i]) = 0`]<<
+
+
+Therefore, we know that the eigenvalues are [`\lambda = 0, [$i], `] and
+[`[$e]`]
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+COMMENT('
+    Randomization provides 19 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 1<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>
+    ' );
+ENDDOCUMENT();

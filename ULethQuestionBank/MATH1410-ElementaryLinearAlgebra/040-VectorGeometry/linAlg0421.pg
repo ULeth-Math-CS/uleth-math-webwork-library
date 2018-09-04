@@ -1,0 +1,89 @@
+## DESCRIPTION
+##   Dot Product and Angle between Vectors
+## ENDDESCRIPTION
+
+## DBsubject(Geometry)
+## DBchapter(Vector geometry)
+## DBsection(Dot product, length, and unit vectors)
+## Date(2018-07-19)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## Static(1)
+## MO(1)
+## Level(3)
+## KEYWORDS('ULETH-1410', 'Dot Product', 'Angle', 'Norm', 'Length')
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "AnswerFormatHelp.pl",
+);
+
+TEXT(beginproblem());
+
+
+#-ULETH-#
+do{
+$u = random(1, 10);
+$v = random(1, 10);
+}until($u != $v);
+$n = non_zero_random(-10, 10);
+$sign = $n < 0 ? "-" : "";
+$angle = cos(($PI / $n));
+$n = abs($n);
+$angle = sprintf("%0.3f", $angle);
+$ans = $u * $v * $angle;
+$ans = sprintf("%0.3f", $ans);
+
+BEGIN_PGML
+###Find [`\vec{u} \cdot \vec{v}`]  
+
+Where [`\|\vec{u}\| = [$u]`] and [`\|\vec{v}\| = [$v]`], and the angle [`\theta`] between [`\vec{u}`] and [`\vec{v}`] is [`[$sign]\frac{\pi}{[$n]}`] in radians.
+
+[`\vec{u} \cdot \vec{v} = `] [_____] (to three decimals)
+END_PGML
+#-ENDULETH-#
+
+
+#-ULETH-#
+$showPartialCorrectAnswers = 1;
+ANS(num_cmp($ans));
+#-ENDULETH-#
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+Since we are given the length of both [`\vec{u}`] and [`\vec{v}`] as well as the angle [`(\theta)`] between the two lines, we can use the following formula to calculate [`\vec{u} \cdot \vec{v}`].  
+
+>>[``\vec{u} \cdot \vec{v} = \|\vec{u}\| * \|\vec{v}\| * cos(\theta)``]<<
+
+Let us plug in the values which were given to us.  
+
+>>[``\vec{u} \cdot \vec{v} = [$u] * [$v] * cos([$sign]\frac{\pi}{[$n]})``]<<  
+
+>>[``\vec{u} \cdot \vec{v} = [$u * $v] * [$angle]``]<<  
+
+>>[``\vec{u} \cdot \vec{v} = [$ans]``]<<  
+
+Therefore, the dot product of [`\vec{u}`] and [`\vec{v}`] is equal to [`[$ans]`]. 
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+
+COMMENT('
+    Randomization provides 2401 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 2<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>
+    ' );
+
+ENDDOCUMENT();

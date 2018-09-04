@@ -1,0 +1,75 @@
+## DESCRIPTION
+##   Dot Product and Angle between Vectors
+## ENDDESCRIPTION
+
+## DBsubject(Geometry)
+## DBchapter(Vector geometry)
+## DBsection(Lines)
+## Date(2018-07-30)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## Static(1)
+## MO(1)
+## Level(3)
+## KEYWORDS('ULETH-1410', 'Lines')
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "AnswerFormatHelp.pl",
+);
+
+TEXT(beginproblem());
+
+Context("Vector");
+#-ULETH-#
+for($i=0; $i<2; $i++){
+    do{
+        $p1[$i] = random(2, 9)*non_zero_random(-1, 1);
+        $p2[$i] = random(2, 9)*non_zero_random(-1, 1);
+    }until($p1[$i] != $p2[$i]);
+}
+$P = Point(@p1);
+$Q = Point(@p2);
+$PQ = Vector($Q - $P);
+BEGIN_PGML
+Find the direction vector [`\vec{PQ}`] for the points, 
+>>[`P = [$P]`], [`\quad Q = [$Q]`]<<
+
+>>[`\vec{PQ} = `][_______]*{$PQ}<<
+END_PGML
+#-ENDULETH-#
+
+
+#-ULETH-#
+$showPartialCorrectAnswers = 1;
+
+#-ENDULETH-#
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+To find the direction vector [`\vec{PQ}`] we subtract the points [`Q`] and [`P`] component-wise.  
+
+>>[`\vec{PQ} = Q - P = [$Q] - [$P] = [$PQ]`]<<
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+
+COMMENT('
+    Randomization provides 2401 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 2<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>
+    ' );
+
+ENDDOCUMENT();

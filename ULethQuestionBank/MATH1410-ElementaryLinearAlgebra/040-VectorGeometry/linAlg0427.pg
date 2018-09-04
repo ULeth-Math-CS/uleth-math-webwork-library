@@ -1,0 +1,116 @@
+## DESCRIPTION
+##      Compute the dot product of the specified rows of two distinct matrices 
+##      and the product of the two matrices
+## ENDDESCRIPTION
+
+
+## DBsubject(Linear algebra)
+## DBchapter(Matrices)
+## DBsection(Matrix algebra)
+## Date(2018-06-12)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## MO(1)
+## KEYWORDS('dot product', 'product', 'matrix', 'ULETH-1410')
+## Level(3)
+
+
+##################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+
+#-ULETH-#
+
+Context("Matrix");
+do {$rowB1 = random(1, 4); $rowB2 = random(1, 4);}until($rowB1 != $rowB2);
+
+$M1 = Matrix([
+[non_zero_random(-5, 5), non_zero_random(-5, 5), non_zero_random(-5, 5),],
+[non_zero_random(-5, 5), non_zero_random(-5, 5), non_zero_random(-5, 5),],
+]);
+
+$M2 = Matrix([
+[non_zero_random(-5, 5), non_zero_random(-5, 5), non_zero_random(-5, 5), non_zero_random(-5, 5),],
+[non_zero_random(-5, 5), non_zero_random(-5, 5), non_zero_random(-5, 5), non_zero_random(-5, 5),],
+[non_zero_random(-5, 5), non_zero_random(-5, 5), non_zero_random(-5, 5), non_zero_random(-5, 5),],
+]);
+
+$ans1 = ($M1->row(1) * $M2->column($rowB1))->element(1, 1);
+$ans2 = ($M1->row(2) * $M2->column($rowB2))->element(1, 1);
+$M12 = $M1 * $M2;
+
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_PGML
+###Compute the [`(1, [$rowB1])`]- and [`(2, [$rowB2])`]- entries of [`AB`] and then compute the product [`AB`].
+
+Where [`A = [$M1]`] and [`B = [$M2]`].
+
+Entry [`(1, [$rowB1]) =`] [____]{$ans1}   
+
+Entry [`(2, [$rowB2]) =`] [____]{$ans2}   
+
+
+>>[`AB=`] [__]*{$M12}[@ AnswerFormatHelp("matrices") @]*<<
+
+END_PGML
+
+$showPartialCorrectAnswers = 0;
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+To compute the entry-[`(1, [$rowB1])`] we multiply row 1 in matrix [`A`] by column [$rowB1] of matrix [`B`].  
+
+This will give us [`[$M1->row(1)]`] * [`[$M2->column($rowB1)]`] which multiplies out to the 1x1 matrix [`[$M1->row(1) * $M2->column($rowB1)]`]. This value is the entry-[`(1, [$rowB1])`] in [`AB`].  
+
+To compute the entry-[`(2, [$rowB2])`] we multiply row 2 in matrix [`A`] by column [$rowB2] of matrix [`B`].  
+
+This will give us [`[$M1->row(2)]`] * [`[$M2->column($rowB2)]`] which multiplies out to the matrix 1x1 [`[$M1->row(2) * $M2->column($rowB2)]`]. This value is the entry-[`(2, [$rowB2])`] in [`AB`].  
+
+Lastly we need to compute [`AB`] and to do this we just repeat the process above for each (row, column) pair for [`A`] and [`B`].  
+
+>>[`[$M1]`] * [`[$M2]`] = [`[$M1 * $M2]`].<<
+END_PGML_SOLUTION
+#-ENDULETH-#
+COMMENT('
+    Randomization provides many different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 2<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>
+    ' );
+
+ENDDOCUMENT();

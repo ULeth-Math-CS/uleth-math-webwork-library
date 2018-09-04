@@ -1,0 +1,144 @@
+## DESCRIPTION
+##  Linear Algebra
+##  Determine if three points make up a right triangle.
+## ENDDESCRIPTION
+
+
+## DBsubject(Linear algebra)
+## DBchapter(Inner products)
+## DBsection(Computing with dot products)
+## Date(2018-07-11)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## MO(1)
+## Level(3)
+## KEYWORDS('MATH-1410', 'vector', 'angle', 'dot product', 'point', 'cross product')
+
+
+##################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "PGchoicemacros.pl",
+  "parserPopUp.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+Context("Vector");
+
+#-ULETH-#
+@p = ();
+@q = ();
+@r = ();
+$count = 0;
+do{
+    for($i = 0; $i < 3; $i++)
+    {
+        do{
+        $p[$i] = random(2, 9)*non_zero_random(-1, 1);
+        $q[$i] = random(2, 9)*non_zero_random(-1, 1);
+        $r[$i] = random(2, 9)*non_zero_random(-1, 1);
+        }until(abs($p[$i]) != abs($q[$i]) && abs($q[$i]) != abs($r[$i]) && abs($p[$i]) != abs($r[$i]));
+    }
+    $P = Vector($p[0], $p[1], $p[2]);
+    $Q = Vector($q[0], $q[1], $q[2]);
+    $R = Vector($r[0], $r[1], $r[2]);
+    $PQ = ColumnVector($P - $Q);
+    $PR = ColumnVector($P - $R);
+    $QR = ColumnVector($Q - $R);
+    $count = $count + 1;
+}until($PQ.$PR == 0 ^ $PR.$QR == 0 ^ $PQ.$QR == 0 ^ $count >= 40);
+
+
+
+if($PQ.$PR == 0) {$ans = "PQ and PR are orthogonal with a right angle at point P";}
+elsif($PR.$QR == 0) {$ans = "PR and QR are orthogonal with a right angle at point R";}
+elsif($PQ.$QR == 0) {$ans = "PQ and QR are orthogonal with a right angle at point Q";}
+else{$ans = "This is not a right triangle.";}
+
+$popup = PopUp(["?", "PQ and PR are orthogonal with a right angle at point P", "PR and QR are orthogonal with a right angle at point R", "PQ and QR are orthogonal with a right angle at point Q", "This is not a right triangle."], $ans);
+
+
+#-ENDULETH-#
+#############################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_PGML
+Show whether or not the three points [`P = [$P]`], [`Q = [$Q]`] and [`R = [$R]`] are the vertices in a right triangle.  
+Start by calculating the dot products of the following lines.  
+
+>>[`\vec{PQ} \:\cdot\: \vec{PR} =`][___]{$PQ->dot($PR)}<<  
+>>[`\vec{PR} \:\cdot\: \vec{QR} =`][___]{$PR->dot($QR)}<<  
+>>[`\vec{PQ} \:\cdot\: \vec{QR} =`][___]{$PQ->dot($QR)}<<  
+
+From these vectors we can conclude that:
+[@ $popup->menu() @]*  
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+ANS($popup->cmp());
+$showPartialCorrectAnswers = 0;
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+First we need to find the vectors for the lines [`\vec{PQ}`], [`\vec{PR}`] and [`\vec{QR}`]. This is done by subtracting the given points. For instance, 
+
+>>[`\vec{PQ} = [$Q] - [$P] = [$PQ]`]<<  
+
+>>[`\vec{PR} = [$R] - [$P] = [$PR]`]<<  
+
+>>[`\vec{QR} = [$R] - [$Q] = [$QR]`]<<  
+
+Next take the dot product of each of the pairs listed above.  
+>>[`\vec{PQ} \:\cdot\: \vec{PR} =[$PQ->dot($PR)]`]<<  
+
+>>[`\vec{PR} \:\cdot\: \vec{QR} =[$PR->dot($QR)]`]<<  
+
+>>[`\vec{PQ} \:\cdot\: \vec{QR} =[$PQ->dot($QR)]`]<<  
+
+Now if points [`P`], [`Q`] and [`R`] are the verticies in a right triangle then there must be one pair of orthogonal lines.  
+We know two lines are othogonal when there dot product equals 0.  
+
+In this given case we can determine [$ans]  
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+COMMENT('
+    Randomization provides plenty of different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 2<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>
+    ' );
+ENDDOCUMENT();
