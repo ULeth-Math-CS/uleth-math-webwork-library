@@ -1,0 +1,129 @@
+## DESCRIPTION
+##   Projection of two vectors. 
+## ENDDESCRIPTION
+
+## DBsubject(Geometry)
+## DBchapter(Vector geometry)
+## DBsection(Dot product, length, and unit vectors)
+## Date(2018-07-19)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## Static(1)
+## MO(1)
+## Level(3)
+## KEYWORDS('ULETH-1410', 'Dot Product', 'Projection', 'Scalar', 'Vector', 'Orthogonal')
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "AnswerFormatHelp.pl",
+);
+
+TEXT(beginproblem());
+
+#############################
+#  Setup
+Context("Matrix");
+
+
+#-ULETH-#
+do{
+    $U = ColumnVector(random(1, 10)*non_zero_random(-1, 1), random(1, 10)*non_zero_random(-1, 1), random(1, 10)*non_zero_random(-1, 1));
+    
+    $V = ColumnVector(random(1, 10)*non_zero_random(-1, 1), random(1, 10)*non_zero_random(-1, 1), random(1, 10)*non_zero_random(-1, 1));
+}until($U.$V != 0 && $U->norm != 0 && $V->norm != 0);
+
+$sclr = sprintf("%0.3f", ($U->dot($V))/($U->norm));
+$para = $sclr*$U;
+$orth = $V - $para;
+#-ENDULETH-#
+
+#############################
+#  Main text
+
+#-ULETH-#
+BEGIN_PGML
+Let vectors [`\vec{U} = [$U]`] and [`\;\vec{V} = [$V]`].
+
+(A)  Find the *scalar projection* of [`\vec{V}`] onto [`\vec{U}`].  
+
+    *Scalar Projection:* [______]{$sclr}
+(round to three decimals)
+
+(B)  Decompose the vector [`\vec{V}`] into  a component *parallel* to [`\vec{U}`] and then into the component *orthogonal* component.  
+
+    *Vector Parallel to [`\vec{V}`]:* [`\quad\,`][___]*{$para}
+
+    *Vector Orthogonal to [`\vec{V}`]:* [___]*{$orth}
+
+END_PGML
+
+$showPartialCorrectAnswers = 1;
+#-ENDULETH-#
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+###(A) Scalar projection.  
+
+    Let [`t`] be some scalar, then to find the scalar projection of [`\vec{V}`] onto [`\vec{U}`] we can use the following formula.  
+    
+>>[``t = \frac{\vec{V} \cdot \vec{U}}{\|\vec{U}\|^2}``]<<  
+
+    By substituting in the appropriate values we get, 
+
+>>[``t = \frac{[$U.$V]}{\sqrt{[$U->norm]}^2}``]<<  
+
+>>[``t = \frac{[$U.$V]}{[$U->norm]}``]<<  
+
+>>[``t = [$sclr]``]<<
+
+###(B) Decomposition.  
+
+*Parallel component:*
+    In order to find the vector [`\vec{U_1}`] which is parallel to [`\vec{V}`] we will use the projection formula.  
+>>[``\vec{U_1} = proj_{\,\vec{V}}\;\vec{U} = \frac{\vec{V} \cdot \vec{U}}{\|\vec{U}\|^2}\,\vec{U}``]<<
+
+    Notice that the formula to calculate [`t`] from part (A) is a portion of the projection formula.  
+    Therefore we can use the answer from part (A) to calculate [`\vec{U_1}`].  
+>>[``\vec{U_1} = proj_{\,\vec{V}}\;\vec{U} = t\,\vec{U}``]<<  
+
+>>[``\vec{U_1} = [$sclr][$U]``]<<  
+
+>>[``\vec{U_1} = [$para]``]<<  
+
+*Orthgonal component:*
+    To find the vector [`\vec{U_2}`] which is othogonal to [`\vec{V}`] we use the formula,  
+    
+>>[``\vec{U_2} = \vec{U} - proj_{\,\vec{V}}\;\vec{U}``]<<
+
+    By subsituting in the values we calculated in previous steps we get,  
+
+>>[``\vec{U_2} = [$U] - [$para]``]<<  
+
+>>[``\vec{U_2} = [$orth]``]<<
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+COMMENT('
+    Uses PGML.<BR>
+    Randomization provides 60 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 2<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>
+    ' );
+
+ENDDOCUMENT();
+

@@ -1,0 +1,131 @@
+## DESCRIPTION
+## Linear Algebra
+## ENDDESCRIPTION
+
+## Tagged by cmd6a 4/30/06
+
+## DBsubject(Linear algebra)
+## DBchapter(Eigenvalues and eigenvectors)
+## DBsection(Computing eigenvalues and eigenvectors)
+## Date(July 2013)
+## Institution(Rochester and Hope College)
+## Author(Paul Pearson)
+## Level(3)
+## MO(1)
+## TitleText1('Linear Algebra with Applications')
+## AuthorText1('Jeffrey Holt')
+## EditionText1('1')
+## Section1('6.1')
+## Problem1('')
+
+## Revised(Mitchell Sulz-Martin)
+## RevisedDate(2018-08-07)
+# Question revised and updated to PGML
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "AnswerFormatHelp.pl",
+  "answerHints.pl",
+  "MatrixCheckers.pl",
+);
+TEXT(beginproblem());
+
+
+Context("Matrix");
+
+# create an invertible matrix with det either 1  or -1
+
+$a11 = random(-1,1,1);
+$a21 = random(-1,1,2);
+$a31 = random(-1,1,2);
+
+$b1 = random(-1,1,2);
+$a12 = $b1 * $a11;
+$m = random(-1,1,2);
+$a22 = $b1 * $a21 + $m;
+$a32 = $b1 * $a31;
+
+$c = random(-1,1,1);
+$d = random(-1,1,2);
+$n = random(-1,1,2);
+$a13 = $c * $a11 + $d * $a12 + $n;
+$a23 = $c * $a21 + $d * $a22;
+$a33 = $c * $a31 + $d * $a32;
+
+$det = - $a31 * $m * $n;
+
+# define matrix
+
+$a = Matrix([[$a11, $a12, $a13],[$a21, $a22, $a23],[$a31,$a32,$a33]]);
+
+
+# define inverse matrix
+    $b = $a->inverse();
+
+# define eigenvalues
+$e = Matrix([[random(-5,-2,1),0,0],[0,random(-1,1,1),0],[0,0,random(2,5,1)]]);
+
+
+# define final matrix
+	$matrix = $a * $e *$b;
+
+
+#################################
+
+$lambda[1] = $e->element(1,1);
+$lambda[2] = $e->element(2,2);
+$lambda[3] = $e->element(3,3);
+
+$v[1] = Matrix([ [$a11], [$a21], [$a31] ]);
+$v[2] = Matrix([ [$a12], [$a22], [$a32] ]);
+$v[3] = Matrix([ [$a13], [$a23], [$a33] ]);
+
+$M = $matrix;
+
+#-ULETH-#
+BEGIN_PGML
+Find the eigenvalues and eigenvectors of the matrix [`[$matrix]`]
+
+From smallest to largest, the eigenvalues are [`\lambda_1 \lt \lambda_2 \lt \lambda_3 `] where  
+
+[` \lambda_1 = `][______]{$lambda[1]}
+has an eigenvector [_____]*{$v[1]}  
+
+[` \lambda_2 = `][______]{$lambda[2]}
+has an eigenvector [_____]*{$v[2]}  
+
+[` \lambda_3 = `][______]{$lambda[3]}
+has an eigenvector [_____]*{$v[3]}  
+
+END_PGML
+#-ENDULETH-#
+
+#-ULETH-#
+$showPartialCorrectAnswers = 1;
+#-ENDULETH-#
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+COMMENT('
+    Randomization provides 150+ different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 2<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Revised by Mitchell Sulz-Martin<BR>
+    Original Author: Paul Pearson<BR>
+    ' );
+ENDDOCUMENT();

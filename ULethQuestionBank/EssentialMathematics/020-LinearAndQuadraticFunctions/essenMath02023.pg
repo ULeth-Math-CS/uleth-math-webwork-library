@@ -1,0 +1,104 @@
+#######################################################################
+## DESCRIPTION 
+##  Finding parallel lines
+## ENDDESCRIPTION
+#######################################################################
+
+#######################################################################
+## DBsubject(Algebra)
+## DBchapter(Linear Equations and Functions)
+## DBsection(Finding the Slope)
+## Date(2018-06-15)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+## KEYWORDS('Linear Equations', 'Lines', "Parallel Lines' 'ULETH-MATH-0500')
+#######################################################################
+
+#######################################################################
+## Initialization 
+#######################################################################
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "scaffold.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "answerHints.pl",
+  "contextFraction.pl",
+);
+TEXT(beginproblem());
+
+#######################################################################
+#  Setup
+#######################################################################
+
+# Let's student enter x as a variable in their answer
+Context("Fraction")->variables->are(x=>"Real");
+
+#Define Line:
+$x_1 = non_zero_random(-10,10);
+$y_1 = non_zero_random(-10,10); 
+
+do {$x_2 = non_zero_random(-10,10);} until ($x_2!= $x_1);
+do {$y_2 = non_zero_random(-10,10);} until ($y_2!= $y_1); 
+
+$slope = Fraction($y_2-$y_1, $x_2-$x_1)->reduce();
+$y_intercept= Fraction($y_1*($x_2-$x_1) - ($y_2-$y_1)*($x_1),
+$x_2-$x_1)->reduce();
+
+$line = Formula("$slope*x+$y_intercept");
+
+
+#######################################################################
+#  Main Text
+####################################################################### 
+
+BEGIN_PGML
+Find the equation of a line that passes through the point [`([$x_1],[$y_1])`]
+that is parallel to a line with a slope of [`[$slope]`]
+
+[`y=`] [____________________]{$line}
+
+END_PGML
+
+#######################################################################
+#  Answer Evaluation
+#######################################################################
+
+$showPartialCorrectAnswers = 1;
+#Answer Evaluation included in the problem
+
+#######################################################################
+#  Solution
+#######################################################################
+
+BEGIN_PGML_SOLUTION
+Assume that we have the equation of the line
+[`y=mx+b`]. We know that the slope is [`m = [$slope]`] (since parallel lines have equal slope), but we don't 
+know the y-intercept. We find it by plugging in the point 
+[`(x,y) = ([$x_1],[$y_1])`] and solving for [`b`]:
+
+>>[` y  = mx + b`]<<
+
+>>[` [$y_1] = [$slope] ([$x_1]) + b`]<<
+
+>>[` b  = [$y_intercept] `].<<
+
+Thus, the equation of the line is 
+
+>>[` y  = [$slope]x +[$y_intercept] `].<<
+END_PGML_SOLUTION
+
+#######################################################################
+#  Comments for Instructors 
+#######################################################################
+
+COMMENT(
+"Randomization provides 160,000 different possible versions of this question.<BR> 
+Made from a ULETH template.<BR>" 
+);
+
+ENDDOCUMENT();

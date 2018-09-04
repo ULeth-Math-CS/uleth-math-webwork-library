@@ -1,0 +1,149 @@
+## DESCRIPTION
+##      Calculate the eigenvalues for a 4x4 matrix
+## ENDDESCRIPTION
+
+## DBsubject(Linear algebra)
+## DBchapter(Eigenvalues and eigenvectors)
+## DBsection(Computing eigenvalues and eigenvectors)
+## Date(2018-06-12)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin & Dakota Duffy)
+## MO(1)
+## KEYWORDS('Eigenvalues', 'matrix', 'ULETH-1410')
+## Level(4)
+
+
+##################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "unorderedAnswer.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+#-ULETH-#
+Context("Matrix"); #->variables->add(x => "Real");
+
+$I = Value::Matrix->I(4);
+$a = non_zero_random(-3, 3); $c = random(1, 10);
+$d = random(10, 20); $e = random(10, 20); $j = random(10, 20);
+
+do{ $k = random(-5, 5); $b = non_zero_random(-3, 3); $f = random(-10, 10);}
+until($k!= $b && $b != $f && $k != $f && (-$b + $c + $a*$b) != $f && (-$b + $c + $a*$b) != $b && (-$b + $c + $a*$b) != $k );
+
+$M = Matrix([
+[($a*$b), $b, 0, 0,],
+[(1-$a)*($b-$c), $c, 0, 0,],
+[$d, $e, $f, $j,],
+[0, 0, 0, $k,],]);
+
+$ans1 = Compute($k);
+$ans2 = Compute($f);
+$ans3 = Compute($b);
+$ans4 = Compute(-$b + $c + $a*$b);
+
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_PGML
+###Find the Eigenvalues for the following 4x4 matrix.  
+
+[`A = [$M]`]  
+
+[`\lambda_1`] = [___]  
+[`\lambda_2`] = [___]  
+[`\lambda_3`] = [___]  
+[`\lambda_4`] = [___]  
+END_PGML
+
+$showPartialCorrectAnswers = 1;
+UNORDERED_ANS(
+$ans1->cmp(),
+$ans2->cmp(),
+$ans3->cmp(),
+$ans4->cmp(),
+);
+#-ENDULETH-#
+
+#-ULETH-#
+
+$lambdaI = "{\left[\begin{array}{rrrr} \lambda & 0 & 0 & 0 \\ 0 & \lambda & 0 & 0 \\ 0 & 0 & \lambda & 0 \\ 0 & 0 & 0 & \lambda \end{array}\right]}";
+
+$lambdaM = "{\left[\begin{array}{rrrr}".$M->element(1,1)."-\lambda &".$M->element(1,2)."&".$M->element(1,3)."&".$M->element(1,4)."\\".$M->element(2,1)."&".$M->element(2,2)."-\lambda &".$M->element(2,3)."&".$M->element(2,4)."\\".$M->element(3,1)."&".$M->element(3,2)."&".$M->element(3,3)."-\lambda &".$M->element(3,4)."\\".$M->element(4,1)."&".$M->element(4,2)."&".$M->element(4,3)."&".$M->element(4,4)."-\lambda \\\end{array}\right]}";
+
+$detlambdaM = "{\left|\begin{array}{rrrr}".$M->element(1,1)."-\lambda &".$M->element(1,2)."&".$M->element(1,3)."&".$M->element(1,4)."\\".$M->element(2,1)."&".$M->element(2,2)."-\lambda &".$M->element(2,3)."&".$M->element(2,4)."\\".$M->element(3,1)."&".$M->element(3,2)."&".$M->element(3,3)."-\lambda &".$M->element(3,4)."\\".$M->element(4,1)."&".$M->element(4,2)."&".$M->element(4,3)."&".$M->element(4,4)."-\lambda \\\end{array}\right|}";
+
+$step1 = "{\left|\begin{array}{rrr}".$M->element(1,1)."-\lambda &".$M->element(1,2)."&".$M->element(1,3)."\\".$M->element(2,1)."&".$M->element(2,2)."-\lambda &".$M->element(2,3)."\\".$M->element(3,1)."&".$M->element(3,2)."&".$M->element(3,3)."-\lambda \\\end{array}\right|}";
+
+$step2 = "{\left|\begin{array}{rr}".$M->element(1,1)."-\lambda &".$M->element(1,2)."\\".$M->element(2,1)."&".$M->element(2,2)."-\lambda \\\end{array}\right|}";
+
+BEGIN_PGML_SOLUTION
+
+To find the eigenvalues of a matrix we need to find the roots of the polynomial
+[`p( \lambda ) = \det (A- \lambda I)`]. More, precisely the eigenvalues of this
+matrix will be all the values of [`\lambda`] such that [`p( \lambda ) = 0 `].
+First, we will determine [`A-\lambda I`] and find its determinant
+
+[` \begin{align*}
+A - \lambda I &= [$M] - \lambda [$I] \\[2pt]
+&= [$M] - [$lambdaI] \\[2pt]
+&= [$lambdaM]
+\end{align*}`]
+
+Now let's find the determinant of this matrix. Note that the simplist row or column
+to peform cofactor expansion along is the fourth row followed by the 
+third column:
+
+[`\begin{align*} \det (A - \lambda I) &= [$detlambdaM]\\[2pt]
+&= \left([$k]-\lambda\right)[$step1] \\[2pt]
+&= \left([$k]-\lambda\right)\left([$f]-\lambda\right)[$step2] \\[2pt]
+&=\left([$k]-\lambda\right)\left([$f]-\lambda\right)\bigg( ([$M->element(1,1)] - \lambda)([$c]- \lambda) - ([$M->element(1,2)])([$M->element(2,1)]) \bigg) \\[2pt]
+&=\left([$k]-\lambda\right)\left([$f]-\lambda\right)\left( \lambda^2 - [$a*$b+$c]\lambda - [$b*$b - $b*$c - $a*$b*$b] \right )
+\end{align*}`]
+
+Now, to find the eigenvalues, we need to find the roots of this polynomial; that is, we must solve the equation [`p( \lambda ) = 0 `] for [`\lambda`]:
+
+>>[`p( \lambda ) = 0 `]<<
+
+>>[`\left([$k]-\lambda\right)\left([$f]-\lambda\right)\left( \lambda^2 - [$a*$b+$c]\lambda - [$b*$b - $b*$c - $a*$b*$b] \right) = 0 `]<<
+
+>>[`\left([$k]-\lambda\right)\left([$f]-\lambda\right)\left(\lambda - [$b]\right)
+\left(\lambda -[$c - $b + $a*$b]\right) = 0`]<<
+
+
+Therefore, we know that the eigenvalues are [`\lambda = [$k], [$f],[$b],`] and
+[`[$c - $b + $a*$b]`]
+
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+COMMENT('
+    Randomization provides many different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 2<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>
+    ' );
+ENDDOCUMENT();

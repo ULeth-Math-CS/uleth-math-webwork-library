@@ -1,0 +1,128 @@
+## DESCRIPTION
+##   Dot Product and Angle between Vectors
+## ENDDESCRIPTION
+
+## DBsubject(Geometry)
+## DBchapter(Vector geometry)
+## DBsection(Dot product, length, and unit vectors)
+## Date(2018-07-19)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## Static(1)
+## MO(1)
+## Level(3)
+## KEYWORDS('ULETH-1410', 'Dot Product', 'Angle', 'Norm', 'Length')
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "AnswerFormatHelp.pl",
+);
+
+TEXT(beginproblem());
+
+Context("Vector");
+#-ULETH-#
+for($i=0; $i<3; $i++){
+    do{
+        $p1[$i] = random(2, 9)*non_zero_random(-1, 1);
+        $p2[$i] = random(2, 9)*non_zero_random(-1, 1);
+        $p3[$i] = random(2, 9)*non_zero_random(-1, 1);  
+    }until($p1[$i] != $p2[$i] && $p1[$i] != $p3[$i] && $p2[$i] != $p3[$i]);
+}
+$P = ColumnVector(@p1);
+$Q = ColumnVector(@p2);
+$R = ColumnVector(@p3);
+$cross = $Q x $R;
+$ans = abs($P . ($Q x $R));
+
+BEGIN_PGML
+Find the volume of a parallelepiped which is defined by the vectors [`\vec{P} = [$P]`], [`\vec{Q} = [$Q]`] and [`\vec{R} = [$R]`].  
+
+Volume = [_______]{$ans}
+
+END_PGML
+
+#-ENDULETH-#
+
+
+#-ULETH-#
+$showPartialCorrectAnswers = 1;
+
+#-ENDULETH-#
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+The volume of a parallelepiped which is defined by the vectors 
+[`\vec{P}, \vec{Q},`] and [`\vec{R}`] is given by the formula:
+
+>>[`Volume = \left | \vec{P} \cdot ( \vec{Q} \times \vec{R} )\right |`]<<
+
+To use this formula we must first evaluate the cross product 
+[`\vec{Q} \times \vec{R}`] as follows: 
+
+>>[`\vec{Q} \times \vec{R}
+= \left | \begin{matrix}
+    \hat{\imath}
+    & \hat{\jmath}
+    & \hat{k} \\
+    [$p2[0]]  
+    & [$p2[1]]    
+    & [$p2[2]] \\
+   [$p3[0]]     
+    & [$p3[1]]    
+    & [$p3[2]]  
+\end{matrix}\right| = \hat{\imath} \left | \begin{matrix}
+    [$p2[1]]    
+    & [$p2[2]] \\
+    [$p3[1]]    
+    & [$p3[2]]  
+\end{matrix}\right| - 
+\hat{\jmath} \left | \begin{matrix}
+    [$p2[0]]    
+    & [$p2[2]] \\
+    [$p3[0]]    
+    & [$p3[2]]  
+\end{matrix}\right| + 
+\hat{k} \left | \begin{matrix}
+    [$p2[0]]    
+    & [$p2[1]] \\
+    [$p3[0]]    
+    & [$p3[1]]  
+\end{matrix}\right| `]<<
+
+>> [`= \hat{\imath}\bigg(([$p2[1]])([$p3[2]]) - ([$p2[2]])([$p3[1]]) \bigg) - \hat{\jmath}\bigg(([$p2[0]])([$p3[2]]) - ([$p2[2]])([$p3[0]]) \bigg) +\hat{k}\bigg(([$p2[0]])([$p3[1]]) - ([$p2[1]])([$p3[0]]) \bigg)  `]<<
+
+>> [`= [$p2[1]*$p3[2] - $p2[2]*$p3[1]] \hat{\imath} - [$p2[0]*$p3[2] - $p2[2]*$p3[0]] \hat{\jmath} + [$p2[0]*$p3[1] - $p2[1]*$p3[0]]  \hat{k} `]<<
+
+Now, we take the dot product with the vector [`\vec{P}`] and then the absolute 
+value to get the volume:
+
+>>[`Volume = \left | \vec{P} \cdot ( \vec{Q} \times \vec{R} )\right |`]<<
+
+>>[`Volume = \left | [$P] \cdot [$cross]\right |`]<<
+
+>>[`Volume = [$ans]`]<<
+ 
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+
+COMMENT('
+    Randomization provides 2401 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 2<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>
+    ' );
+
+ENDDOCUMENT();

@@ -1,0 +1,94 @@
+## DESCRIPTION
+##       
+##      
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2018-06-12)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## Static(1)
+## MO(1)
+## Level(2)
+## KEYWORDS('ULETH-0500')
+
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "DisplayEquations.pl",
+);
+
+TEXT(beginproblem());
+
+
+###################################
+#  Setup
+
+#-ULETH-#
+Context("Matrix");
+# f(x) = k(ax + b + cx) = m(dx + e)
+do{
+$k = 1;
+$a = random(3, 15)*non_zero_random(-1, 1);
+$b = random(3, 15)*non_zero_random(-1, 1);
+$c = 0;
+$m = 1;
+$d = 0;
+$e = random(3, 15)*non_zero_random(-1, 1);
+$x = random(3, 15)*non_zero_random(-1, 1);
+}until(
+((($k*$a)+($k*$c)-($m*$d))*$x - ($m * $e) + ($k*$b))==0
+&& $a != $c && ((($k*$a)+($k*$c)) != ($m*$d))
+);
+
+
+$mtxLHS = Matrix([ [$a, $b, $c,],]);
+$mtxRHS = Matrix([ [$e, $d,   0],]);
+$ceoLHS = List($k, 1);
+$ceoRHS = List($m, 1);
+$varLHS = "x,_,x";
+$varRHS = "_,x,_";
+
+$ds = displayEquations($mtxLHS, $mtxRHS, $ceoLHS, $ceoRHS, $varLHS, $varRHS);
+
+#-ENDULETH-#
+
+###################################
+#  Main Text
+
+#-ULETH-#
+BEGIN_PGML
+##Solve for x.   
+
+[$ds]
+
+>>[`x = `][______]{$x}<<
+
+END_PGML
+
+#-ENDULETH-#
+
+
+###################################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT("This is a multi-part problem
+in which the next part is revealed only after the previous
+part is correct. Uses PGML.");
+#-ENDULETH-#
+
+ENDDOCUMENT();

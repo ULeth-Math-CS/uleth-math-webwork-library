@@ -1,0 +1,109 @@
+## DESCRIPTION
+##       
+##      
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2018-06-12)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## Static(1)
+## MO(1)
+## Level(2)
+## KEYWORDS('ULETH-0500')
+
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "DisplayEquations.pl",
+);
+
+TEXT(beginproblem());
+
+
+###################################
+#  Setup
+
+#-ULETH-#
+Context("Matrix");
+# ax+y = c and y=dx+e
+# ax + by = c & -dx + ey = f
+#   b = 1, e = 1, d = -d
+do{
+$a = random(3, 15)*non_zero_random(-1, 1);
+$b = 1;
+$c = random(3, 15)*non_zero_random(-1, 1);
+$d = random(3, 15)*non_zero_random(-1, 1);
+$d = -$d;
+$e = 1;
+$f = random(3, 15)*non_zero_random(-1, 1);
+
+$x = random(3, 15, 0.5)*non_zero_random(-1, 1);
+$y = random(3, 15, 0.5)*non_zero_random(-1, 1);
+
+}until(
+(($a*$e) - ($b*$d)) != 0 && 
+((( ($b*$f) - ($c*$e) ) / ( ($b*$d) - ($a*$e) )) - $x) == 0 &&
+(((1/$b)*($c - ($a * $x))) - $y) == 0 
+&& $c != $x && $f != $y
+);
+
+
+$mtxLHS = Matrix([[$a, $b,]]);
+$mtxRHS = Matrix([ [$c, 0]]);
+$varLHS = "x,y";
+$varRHS = "_,_";
+
+$mtxRHS2= Matrix([[-$d, $f,]]);
+$mtxLHS2 = Matrix([[$e, 0]]);
+$varLHS2 = "y,_";
+$varRHS2 = "x,_";
+$ceoLHS = List(1, 1);
+$ceoRHS = List(1, 1);
+
+
+$ds = displayEquations($mtxLHS, $mtxRHS, $ceoLHS, $ceoRHS, $varLHS, $varRHS);
+$ds2 = displayEquations($mtxLHS2, $mtxRHS2, $ceoLHS, $ceoRHS, $varLHS2, $varRHS2);
+
+#-ENDULETH-#
+
+###################################
+#  Main Text
+
+#-ULETH-#
+BEGIN_PGML
+##Solve the linear equation.   
+
+[$ds][$ds2]
+
+>>[`x = `][______]{$x}<<   
+>>[`y = `][______]{$y}<<
+
+END_PGML
+
+#-ENDULETH-#
+
+
+###################################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT("This is a multi-part problem
+in which the next part is revealed only after the previous
+part is correct. Uses PGML.");
+#-ENDULETH-#
+
+ENDDOCUMENT();

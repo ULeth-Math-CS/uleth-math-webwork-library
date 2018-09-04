@@ -1,0 +1,93 @@
+#######################################################################
+## DESCRIPTION 
+##
+## In this problem students are asked to find the equation of a vertical line.
+## 
+## ENDDESCRIPTION
+#######################################################################
+
+#######################################################################
+## DBsubject(Algebra)
+## DBchapter(Linear Equations and Functions)
+## DBsection(Finding the Slope)
+## Date(2018-06-15)
+## Institution(University of Lethbridge)
+## Author(Dakota Duffy)
+## MO(1)
+## KEYWORDS('Linear Equations', 'Vertical Lines', 'ULETH-MATH-0500')
+#######################################################################
+
+#######################################################################
+## Initialization 
+#######################################################################
+
+DOCUMENT();
+loadMacros(
+    "PGstandard.pl",
+    "MathObjects.pl",
+    "PGML.pl",
+    "PGcourse.pl",
+    "answerHints.pl",
+    "contextLimitedPolynomial.pl",
+    "contextPolynomialFactors.pl",
+    "contextLimitedPowers.pl",
+);
+TEXT(beginproblem());
+
+#######################################################################
+#  Setup 
+#######################################################################
+
+Context ("Numeric");
+
+do{
+$root2 = non_zero_random(1,10);
+$root1 = non_zero_random(1,10); 
+$A = random(2,5);
+$B = -($root1 + $A*$root2);
+$C = $root1*$root2;
+}until(gcd($A, $B*$C)==1 && $root1!=$root2);
+
+$factoredForm = Formula ("($A*x + $root1)(x + $root2)");
+
+Context("LimitedPolynomial-Strict");
+$expandedForm = Formula ("$A*x^2 - $B x + $C ")->reduce;
+
+#######################################################################
+#  Main Text
+####################################################################### 
+
+BEGIN_PGML
+
+Expand and simplify [`[$factoredForm]`].  
+
+[___________________]{$expandedForm}
+
+END_PGML
+
+#######################################################################
+#  Answer Evaluation
+#######################################################################
+
+$showPartialCorrectAnswers = 1;
+#answer evaluation has been built into the question.
+
+#######################################################################
+#  Solution
+#######################################################################
+
+BEGIN_PGML_SOLUTION
+
+END_PGML_SOLUTION
+
+#######################################################################
+#  Comments for Instructors 
+#######################################################################
+
+COMMENT(
+"Randomization provides 2500 different possible versions of this question.<BR> 
+
+Made from a ULETH template.<BR>" 
+);
+
+ENDDOCUMENT();

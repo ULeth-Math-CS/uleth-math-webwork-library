@@ -1,0 +1,102 @@
+## DESCRIPTION
+##   Dot Product and Angle between Vectors
+## ENDDESCRIPTION
+
+## DBsubject(Geometry)
+## DBchapter(Vector geometry)
+## DBsection(Dot product, length, and unit vectors)
+## Date(2018-07-19)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## Static(1)
+## MO(1)
+## Level(3)
+## KEYWORDS('ULETH-1410', 'Dot Product', 'Angle', 'Norm', 'Length')
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "AnswerFormatHelp.pl",
+);
+
+TEXT(beginproblem());
+
+Context("Vector");
+#-ULETH-#
+for($i=0; $i<2; $i++){
+    do{
+        $p1[$i] = random(2, 9)*non_zero_random(-1, 1);
+        $p2[$i] = random(2, 9)*non_zero_random(-1, 1);
+        $p3[$i] = random(2, 9)*non_zero_random(-1, 1);
+    }until($p1[$i] != $p2[$i]);
+}
+$P1 = Point(@p1);
+$P2 = Point(@p2);
+$P3 = Point(@p3);
+
+$U = ColumnVector($P3 - $P1);
+$V = ColumnVector($P3 - $P2);
+BEGIN_PGML
+Find the area of the parallelogram which is defined by vectors [`\vec{U} = [$U]`] and [`\vec{V} = [$V]`].
+
+END_PGML
+
+$p1[2] = 0;
+$p2[2] = 0;
+$p3[2] = 0;
+
+$P1 = Point(@p1);
+$P2 = Point(@p2);
+$P3 = Point(@p3);
+
+$U = ColumnVector($P3 - $P1);
+$V = ColumnVector($P3 - $P2);
+
+$ans = sprintf("%0.3f", ($U x $V)->norm);
+
+BEGIN_PGML
+Area = [_______]{$ans}
+(round to three decimals).
+END_PGML
+#-ENDULETH-#
+
+
+#-ULETH-#
+$showPartialCorrectAnswers = 1;
+
+#-ENDULETH-#
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+To solve for the area of a parallelogram we will use the following formula:
+>> [`` A = \|\vec U \| \|\vec V \| sin(\theta) = \|\vec U \times \vec V\|``]<<
+
+However, cross product is not defined for vectors in [`R^2`]. Since cross product is only defined in [`R^3`] we must redefine our vectors [`\vec U`] and [`\vec V`] in [`R^3`]. Thus we rewrite them as [`\vec U = [$U]`] and [`\vec V = [$V]`]. This allows us to take the cross product of [`\vec U`] and [`\vec V`] to get:
+
+>>[`\vec U \times \vec V = [$U] \times [$V] = [$U x $V]`]<<
+
+Now we will take the length (norm) of the resulting vector to get the area of the parallelogram: 
+
+>>[`\| \vec U \times \vec V \| = \| [$U x $V] \| = [$ans]`] (rounded to three decimal places)<<
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+
+COMMENT('
+    Randomization provides 2401 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 2<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>
+    ' );
+
+ENDDOCUMENT();

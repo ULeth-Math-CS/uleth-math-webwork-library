@@ -1,0 +1,89 @@
+## DESCRIPTION
+##   Find the distance between two points (rounded to three decimals). 
+## ENDDESCRIPTION
+
+## DBsubject(Geometry)
+## DBchapter(Vector geometry)
+## DBsection(Dot product, length, and unit vectors)
+## Date(2018-07-19)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## Static(1)
+## MO(1)
+## Level(3)
+## KEYWORDS('ULETH-1410', 'Points', 'Length', 'Norm')
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "AnswerFormatHelp.pl",
+);
+
+TEXT(beginproblem());
+
+Context("Vector");
+#-ULETH-#
+for($i=0; $i<3; $i++){
+    do{
+        $p1[$i] = random(2, 15)*non_zero_random(-1, 1);
+        $p2[$i] = random(2, 15)*non_zero_random(-1, 1);
+    }until($p1[$i] != $p2[$i]);
+}
+$P = Point(@p1);
+$Q = Point(@p2);
+$v = Vector($Q - $P);
+$ans = $v->norm;
+$ans = sprintf("%0.3f", $ans);
+
+BEGIN_PGML
+For the points [`P = [$P]`] and [`Q = [$Q]`], find the distance between [`P`] and [`Q`].  
+
+>>[`\|\vec{PQ}\| = `][________]{$ans}<<
+>>(round to three decimals).<<
+END_PGML
+#-ENDULETH-#
+
+
+#-ULETH-#
+$showPartialCorrectAnswers = 1;
+
+#-ENDULETH-#
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+First we need to find the vector which corresponds to the line [`\vec{PQ}`]. 
+This is done by subtracting point [`Q`] from point [`P`] which gives us,  
+
+[`Q - P = [$Q] - [$P]`]  
+
+[`\quad\,\vec{PQ} = [$v]`]
+
+Since we want to find the distance from [`P`] to [`Q`] and we have the line [`\vec{PQ}`] we can take the length (also known as the norm of a vector) of this vector [`\vec{PQ}`] by using the following formula,  
+>>[`\|\vec{PQ}\| = \sqrt{x^2 + y^2 + z^2}`]<<
+
+When we plug our values into the formula above we get,  
+>>[`\|\vec{PQ}\| = [$ans]\;\text{(here we rounded to three decimals.)}`]<<
+
+The result from this formula is the distance from point [`P`] to point [`Q`]. 
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+
+COMMENT('
+    Randomization provides 630 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 2<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>
+    ' );
+
+ENDDOCUMENT();

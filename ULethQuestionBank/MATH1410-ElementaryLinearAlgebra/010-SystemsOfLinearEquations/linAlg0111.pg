@@ -1,0 +1,244 @@
+## DESCRIPTION
+##      Solving a system of equations where the resulting matrix will have a row of zeros in the third row. 
+## ENDDESCRIPTION
+
+## DBsubject(Linear algebra)
+## DBchapter(Matrices)
+## DBsection(Row operations)
+## Date(2018-06-12)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## Static(1)
+## MO(1)
+## Level(3)
+## KEYWORDS('ULETH-1410', 'Gaussian Elimination', 'Row Operations')
+
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Allows a single problem to contain multiple parts, where later
+  # parts aren't visible until the earlier ones are completed.
+  "scaffold.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "AnswerFormatHelp.pl",
+);
+
+TEXT(beginproblem());
+
+
+###################################
+#  Setup
+
+#-ULETH-#
+Context("Matrix");
+
+sub disSYS{
+    $M = shift;
+    @dim = $M->dimensions;
+    @d = @_;
+    $data = "\[ \left\lbrace\begin{array}{";
+    @var = ("x", "y", "z");
+
+    for (my $i = 0; $i < $dim[1]; $i++) { $data = $data."r"; }
+    $data = $data."}";
+    
+    for(my $i = 0; $i < $dim[0]; $i++){   
+        my $nonzero = 0;
+        for (my $j = 0; $j < $dim[1]-1; $j++){
+            $m = $M->element($i+1,$j+1);
+            if($j == 0){
+                if ($m == 1) {$data = $data."$var[$j]"; $nonzero = 1;}
+                elsif ($m == -1) {$data = $data." - $var[$j]"; $nonzero = 1;}
+                elsif ($m != 0) {$data = $data."$m $var[$j]"; $nonzero = 1;}
+                else {$data = $data." & ";}}
+            else{
+                $sign = ($m > 0) ? "+" : "-";
+                $sign = ($m > 0 && $nonzero == 0)? " ":$sign;
+                if ($m == 0) {$data = $data." & & ";}
+                elsif (abs($m) == 1 && $nonzero) {$data = $data."& $sign &  $var[$j]";}
+                elsif ($nonzero) {$a = abs($m); $data = $data."& $sign & $a $var[$j]";}
+                else {$data = $data."& $m $var[$j]";}
+                $nonzero = 1;
+				if ($j == $dim[1] - 2 && $i != $dim[0] - 1) {$data = $data." & = & ".$M->element($i+1,$j+2)." \\";} 
+				elsif ($j == $dim[1] - 2 && $i == $dim[0] - 1) {$data = $data." & = & ".$M->element($i+1,$j+2);}}}}
+    $data = $data."\end{array}\right. \]";
+	return $data;}
+    
+do { $H = non_zero_random(-4, 4); $D = non_zero_random(0, 3); $F = non_zero_random(-3, 3);
+     $E = non_zero_random( 0, 4); $G = non_zero_random(-3, 5); $C = non_zero_random( 0, 5);
+     $A = non_zero_random( 0, 3); $N = non_zero_random( 0, 2); $B = non_zero_random( 0, 3);} 
+until($H != 1 && $H != -1 && $E != 1 && $F != $G && $D != $C);
+
+$lambda = $A + ($D*$B);
+$x1 = $H;
+$y1 = $H * $D;
+$z1 = $H * $D * $N;
+$s1 = $H * $lambda;
+
+$x2 = $F;
+$y2 = $E + ($F * $D);
+$z2 = ($E * $N) + ($F * $D * $N);
+$s2 = ($E * $B) + ($F * $lambda);
+
+
+$x3 = $G;
+$y3 = $C + ($G * $D);
+$z3 = ($C * $N) + ($G * $D * $N);
+$s3 = ($C * $D) + ($G * $lambda);
+
+$M = Matrix([[$x1, $y1, $z1, $s1,],[$x2, $y2, $z2, $s2,],[$x3, $y3, $z3, $s3,],]);
+$ds = disSYS($M);
+
+#-ENDULETH-#
+
+###################################
+#  Main Text
+
+#-ULETH-#
+BEGIN_PGML
+###Reduce the following matrix to its Reduced Row-Echelon Form by following the instructions stated in each step.
+[$ds].
+END_PGML
+#-ENDULETH-#
+
+Scaffold::Begin();
+#-ULETH-#
+
+Section::Begin("Part 1");
+BEGIN_PGML
+####Enter the corresponding augmented matrix:  
+    
+>>[____]*{$M}[@ AnswerFormatHelp("matrices") @]*<<
+    
+END_PGML
+Section::End();
+
+Section::Begin("Part 2");
+BEGIN_PGML
+####Start by performing the row operation:  
+
+[``\frac{1}{[$H]} R_1 \to R_1``]
+END_PGML
+$x1 = $x1/$H;
+$y1 = $y1/$H;
+$z1 = $z1/$H;
+$s1 = $s1/$H;
+$M = Matrix([[$x1, $y1, $z1, $s1,],[$x2, $y2, $z2, $s2,],[$x3, $y3, $z3, $s3,],]);
+BEGIN_PGML
+>>[____]*{$M}<<
+END_PGML
+Section::End();
+
+Section::Begin("Part 3");
+BEGIN_PGML
+####Next, perform the row operation:  
+
+[``-[$F] R_1 + R_2 \to R_2``]
+END_PGML
+$x2 = -$F * $x1 + $x2;
+$y2 = -$F * $y1 + $y2;
+$z2 = -$F * $z1 + $z2;
+$s2 = -$F * $s1 + $s2;
+$M = Matrix([[$x1, $y1, $z1, $s1,],[$x2, $y2, $z2, $s2,],[$x3, $y3, $z3, $s3,],]);
+BEGIN_PGML
+>>[____]*{$M}<<
+END_PGML
+Section::End();
+
+Section::Begin("Part 4");
+BEGIN_PGML
+####Next, perform the row operation:  
+
+[``-[$G] R_1 + R_3 \to R_3``]
+END_PGML
+$x3 = -$G * $x1 + $x3;
+$y3 = -$G * $y1 + $y3;
+$z3 = -$G * $z1 + $z3;
+$s3 = -$G * $s1 + $s3;
+$M = Matrix([[$x1, $y1, $z1, $s1,],[$x2, $y2, $z2, $s2,],[$x3, $y3, $z3, $s3,],]);
+BEGIN_PGML
+>>[____]*{$M}<<
+END_PGML
+Section::End();
+
+Section::Begin("Part 5");
+BEGIN_PGML
+####Next, perform the row operation:  
+
+[``\frac{1}{[$E]} R_2 \to R_2``]
+END_PGML
+$x2 = $x2/$E;
+$y2 = $y2/$E;
+$z2 = $z2/$E;
+$s2 = $s2/$E;
+$M = Matrix([[$x1, $y1, $z1, $s1,],[$x2, $y2, $z2, $s2,],[$x3, $y3, $z3, $s3,],]);
+BEGIN_PGML
+>>[____]*{$M}<<
+END_PGML
+Section::End();
+
+Section::Begin("Part 6");
+BEGIN_PGML
+####Next, perform the row operation:  
+
+[``-[$D] R_2 + R_1 \to R_1``]
+END_PGML
+$x1 = -$D*$x2 + $x1;
+$y1 = -$D*$y2 + $y1;
+$z1 = -$D*$z2 + $z1;
+$s1 = -$D*$s2 + $s1;
+$M = Matrix([[$x1, $y1, $z1, $s1,],[$x2, $y2, $z2, $s2,],[$x3, $y3, $z3, $s3,],]);
+BEGIN_PGML
+>>[____]*{$M}<<
+END_PGML
+Section::End();
+
+Section::Begin("Part 7");
+BEGIN_PGML
+####Lastly, perform the row operation:  
+
+[``-[$C] R_2 + R_3 \to R_3``]
+END_PGML
+$x3= -$C*$x2 + $x3;
+$y3= -$C*$y2 + $y3;
+$z3= -$C*$z2 + $z3;
+$s3= -$C*$s2 + $s3;
+$M = Matrix([[$x1, $y1, $z1, $s1,],[$x2, $y2, $z2, $s2,],[$x3, $y3, $z3, $s3,],]);
+BEGIN_PGML
+>>[____]*{$M}<<
+END_PGML
+Section::End();
+
+Section::Begin("Part 8");
+BEGIN_PGML
+####Finish simplifying the matrix.  
+The resulting matrix is:
+
+>>[____]*{$M}<<
+END_PGML
+Section::End();
+#-ENDULETH-#
+
+Scaffold::End();
+
+
+COMMENT("This is a multi-part problem
+in which the next part is revealed only after the previous
+part is correct. Uses PGML.
+Randomization provides many different possible versions of this question.<BR>
+    Does NOT include a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 2<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>");
+#-ENDULETH-#
+
+ENDDOCUMENT();

@@ -1,0 +1,139 @@
+## DESCRIPTION
+##      Compute the product of a 2x3 and a 3x2 matrix
+## ENDDESCRIPTION
+
+
+## DBsubject(Linear algebra)
+## DBchapter(Matrices)
+## DBsection(Matrix algebra)
+## Date(2018-06-12)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## MO(1)
+## KEYWORDS('product', 'matrix', 'ULETH-1410')
+## Level(2)
+
+
+##################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+
+#-ULETH-#
+
+Context("Matrix");
+
+$A = Matrix([
+[random(2, 7)*non_zero_random(-1,1), random(2, 7)*non_zero_random(-1,1), random(2, 7)*non_zero_random(-1,1),],
+[random(2, 7)*non_zero_random(-1,1), random(2, 7)*non_zero_random(-1,1), random(2, 7)*non_zero_random(-1,1),],
+]);
+
+$B = Matrix([
+[random(2, 7)*non_zero_random(-1,1), random(2, 7)*non_zero_random(-1,1),],
+[random(2, 7)*non_zero_random(-1,1), random(2, 7)*non_zero_random(-1,1),],
+[random(2, 7)*non_zero_random(-1,1), random(2, 7)*non_zero_random(-1,1),],
+]);
+
+$a11=$A->element(1,1);
+$a12=$A->element(1,2);
+
+$a13=$A->element(1,3);
+$a21=$A->element(2,1);
+
+$a22=$A->element(2,2);
+$a23=$A->element(2,3);
+
+
+$b11=$B->element(1,1);
+$b12=$B->element(1,2);
+
+$b21=$B->element(2,1);
+$b22=$B->element(2,2);
+
+$b31=$B->element(3,1);
+$b32=$B->element(3,2);
+
+
+$C = $A * $B;
+
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_PGML
+###Compute the product of [`AB`] where.
+
+>>[`A = [$A]`] and [`B = [$B]`].<<
+
+>>[`AB = `] [__]*{$C}[@ AnswerFormatHelp("matrices") @]*<<
+
+END_PGML
+
+$showPartialCorrectAnswers = 0;
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+SOLUTION:
+Since matrix [`A`] has dimensions [`3 \times 3`] and matrix [`B`] has dimensions
+[`3 \times 3`], the matrix [`AB`] is defined and is also a [`3 \times 3`]
+matrix.
+
+When multiplying matrices, you donât multiply the corresponding components;
+instead, to get the [`(n,m)-`] entry of [`AB`] is obtained by taking the
+dot product of the [`n^{th}`] row of [`A`] with the [`m^{th}`] column of [`B`].
+
+
+Therefore,
+
+>> [`AB`] =  [`[$A][$B]`] <<
+
+>>[`AB = \scriptstyle\begin{bmatrix}
+    ([$a11])([$b11])+([$a12])([$b21])+([$a13])([$b31])     
+    & ([$a11])([$b12])+([$a12])([$b22])+([$a13])([$b32]) \\
+    ([$a21])([$b11])+([$a22])([$b21])+([$a23])([$b31])       
+    & ([$a21])([$b12])+([$a22])([$b22])+([$a23])([$b32])
+\end{bmatrix} `]<<
+
+
+>> [`AB = [$C]`] <<
+
+END_PGML_SOLUTION
+#-ENDULETH-#
+COMMENT('
+    Randomization provides more than 50 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 2<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>
+    ' );
+ENDDOCUMENT();

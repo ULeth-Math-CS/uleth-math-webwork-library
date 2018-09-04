@@ -1,0 +1,108 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject(Linear Algebra)
+## DBchapter(Determinants)
+## DBsection(Properties)
+## Date(2018-05-09)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## MO(1)
+## KEYWORDS('ULETH-MATH1410', 'matrix', 'determinant')
+
+
+##################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+# Used for handling matrix problems.
+Context("Matrix");
+
+#-ULETH-#
+# ans : the random value of the determinant for the question.
+# M : A solution matrix used to verify a student answer or act as a solution set.
+
+$ans = non_zero_random(-10,10,1);
+$M = Matrix([
+[$ans,6,1,9],
+[0,1,3,4],
+[0,0,1,6],
+[0,0,0,1],
+]);
+#-ENDULETH-#
+
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_PGML
+###Enter a non-diagonal 4x4 matrix with a determinant of [$ans].
+
+[`A =`] [@ $M->ans_array(5) @]* [@ AnswerFormatHelp("matrices") @]*
+
+END_PGML
+#-ENDULETH-#
+
+
+#-ULETH-#
+$showPartialCorrectAnswers = 0;
+ANS( $M->cmp(
+     checker => sub {
+       my ($M,$student,$ansHash) = @_; 
+       my ($sdet)=$student->det();
+       return ($sdet != $ans or $student->is_symmetric ? 0 : 1);
+       }
+));
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+SOLUTION:
+
+One possible solution is [`A = [$M]`].
+
+We know that the determinant of any upper triangular matrix is the product of the element along the diagonal. So by placing [`[$ans]`] anywhere on the diagonal and filling the upper half of the matrix with any numbers (since they do not effect the determinant).
+
+END_PGML_SOLUTION
+
+COMMENT('
+    Randomization provides 19 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 2<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>
+    ');
+#-ENDULETH-#
+
+ENDDOCUMENT();

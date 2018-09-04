@@ -1,0 +1,100 @@
+## DESCRIPTION
+##   Calculate the area of a triangle using three given points. 
+## ENDDESCRIPTION
+
+## DBsubject(Trigonometry)
+## DBchapter(Triangle trigonometry)
+## DBsection(Area of a triangle)
+## Date(2018-07-19)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## Static(1)
+## MO(1)
+## Level(3)
+## KEYWORDS('ULETH-1410', 'Cross product', 'Area', 'Triangles', 'Points')
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "AnswerFormatHelp.pl",
+);
+
+TEXT(beginproblem());
+
+Context("Vector");
+#-ULETH-#
+for($i=0; $i<2; $i++){
+    do{
+        $p1[$i] = random(2, 9)*non_zero_random(-1, 1);
+        $p2[$i] = random(2, 9)*non_zero_random(-1, 1);
+        $p3[$i] = random(2, 9)*non_zero_random(-1, 1);  
+    }until($p1[$i] != $p2[$i] && $p1[$i] != $p3[$i] && $p2[$i] != $p3[$i]);
+}
+$P = Point(@p1);
+$Q = Point(@p2);
+$R = Point(@p3);
+
+BEGIN_PGML
+Find the area of the triangle which has vertices [`P = [$P]`], [`Q = [$Q]`] and [`R = [$R]`].  
+
+
+END_PGML
+
+$p1[2] = 0;
+$p2[2] = 0;
+$p3[2] = 0;
+$P = Point(@p1);
+$Q = Point(@p2);
+$R = Point(@p3);
+$PQ = Vector($Q - $P);
+$PR = Vector($R - $P);
+$ans = 0.5*(($PQ x $PR)->norm);
+
+BEGIN_PGML
+>>Area = [_______]{$ans}<<
+END_PGML
+#-ENDULETH-#
+
+
+#-ULETH-#
+$showPartialCorrectAnswers = 1;
+
+#-ENDULETH-#
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+Finding the area of a triangle can be inconvenient using the  [``\frac{b*h}{2}``] formula since we would need to find the length of each side of the triangle and then calculate it's inner angles. However there is a much simplier solution which lets us use cross products to compute the area of a triangle.
+
+We can choose any two sides of the triangle to use to form vectors. We choose [`\vec{PQ} = [$PQ]`] and [`\vec{PR} = [$PR]`]. You will notice that I have added zeros in the [`z`] coordinate of [`\vec{PQ}`] and [`\vec{PR}`], we need to do this in order to take the cross product of these two vectors. The area of the triangle is, 
+
+>>[`area = \frac{1}{2} * \|(\vec{PQ} \;\text{x}\; \vec{PR})\|`]<<  
+
+>>[`area = \frac{1}{2} * \|[$PQ] \;\text{x}\; [$PR]\|`]<<  
+
+>>[`area = \frac{1}{2} * \|[$PQ x $PR]\|`]<<  
+
+>>[`area = \frac{1}{2} * [$ans*2]`]<<  
+
+>>[`area = [$ans]`]<<  
+END_PGML_SOLUTION
+#-ENDULETH-#
+
+
+COMMENT('
+    Randomization provides 2401 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 2<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>
+    ' );
+
+ENDDOCUMENT();

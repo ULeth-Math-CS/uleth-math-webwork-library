@@ -1,0 +1,156 @@
+## DESCRIPTION
+##      Compute the sum and difference of two 3x3 matrices
+## ENDDESCRIPTION
+
+
+## DBsubject(Linear algebra)
+## DBchapter(Matrices)
+## DBsection(Matrix algebra)
+## Date(2018-06-12)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## MO(1)
+## KEYWORDS('Addition', 'Subtraction', 'matrix', 'ULETH-1410')
+## Level(2)
+
+
+##################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+
+#-ULETH-#
+
+Context("Matrix");
+
+$A = Matrix([
+[non_zero_random(-5, 5), non_zero_random(-5, 5), non_zero_random(-5, 5),],
+[non_zero_random(-5, 5), non_zero_random(-5, 5), non_zero_random(-5, 5),],
+[non_zero_random(-5, 5), non_zero_random(-5, 5), non_zero_random(-5, 5),],
+]);
+
+$B = Matrix([
+[non_zero_random(-5, 5), non_zero_random(-5, 5), non_zero_random(-5, 5),],
+[non_zero_random(-5, 5), non_zero_random(-5, 5), non_zero_random(-5, 5),],
+[non_zero_random(-5, 5), non_zero_random(-5, 5), non_zero_random(-5, 5),],
+]);
+
+$a11=$A->element(1,1);
+$a12=$A->element(1,2);
+$a13=$A->element(1,3);
+$a21=$A->element(2,1);
+$a22=$A->element(2,2);
+$a23=$A->element(2,3);
+$a31=$A->element(3,1);
+$a32=$A->element(3,2);
+$a33=$A->element(3,3);
+
+$b11=$B->element(1,1);
+$b12=$B->element(1,2);
+$b13=$B->element(1,3);
+$b21=$B->element(2,1);
+$b22=$B->element(2,2);
+$b23=$B->element(2,3);
+$b31=$B->element(3,1);
+$b32=$B->element(3,2);
+$b33=$B->element(3,3);
+
+$C = $A + $B;
+$D = $A - $B;
+
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_PGML
+###Compute [`A + B`] and [`A - B`] where
+
+>>[`A = [$A]`] [`B = [$B]`].<<
+
+>>[`A + B = `] [__]*{$C}[@ AnswerFormatHelp("matrices") @]*<<
+
+>>[`A - B = `] [__]*{$D}[@ AnswerFormatHelp("matrices") @]*<<
+
+END_PGML
+
+$showPartialCorrectAnswers = 0;
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+
+We compute the addition of two matrices by using componet-wise addition; that
+is, we add the corresponding entries in each matrix as follows: 
+
+>>[` A + B = [$A] + [$B] `]<<
+
+>>[`A + B = \scriptstyle\begin{bmatrix}
+    ([$a11])+([$b11])   
+    & ([$a12])+([$b12])
+    & ([$a13])+([$b13]) \\
+    ([$a21])+([$b21])
+    & ([$a22])+([$b22])
+    & ([$a23])+([$b23]) \\
+    ([$a31])+([$b31])   
+    &([$a32])+([$b32])
+    &([$a33])+([$b33])
+\end{bmatrix} `]<<
+
+>>[` A + B = [$C] `]<<
+
+The difference between two matrices is similarly computed:
+>>[` A - B = [$A] - [$B] `]<<
+
+>>[`A - B = \scriptstyle\begin{bmatrix}
+    ([$a11])-([$b11])   
+    & ([$a12])-([$b12])
+    & ([$a13])-([$b13]) \\
+    ([$a21])-([$b21])
+    & ([$a22])-([$b22])
+    & ([$a23])-([$b23]) \\
+    ([$a31])-([$b31])   
+    &([$a32])-([$b32])
+    &([$a33])-([$b33])
+\end{bmatrix} `]<<
+
+>>[` A - B = [$D] `]<<
+END_PGML_SOLUTION
+#-ENDULETH-#
+COMMENT('
+    Randomization provides more than 50 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 2<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>
+    ' );
+
+ENDDOCUMENT();

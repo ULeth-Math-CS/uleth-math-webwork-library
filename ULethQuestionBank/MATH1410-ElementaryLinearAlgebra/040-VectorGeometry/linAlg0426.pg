@@ -1,0 +1,94 @@
+## DESCRIPTION
+##   Dot Product and Angle between Vectors
+## ENDDESCRIPTION
+
+## DBsubject(Geometry)
+## DBchapter(Vector geometry)
+## DBsection(Planes)
+## Date(2018-07-23)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## Static(1)
+## MO(1)
+## Level(3)
+## KEYWORDS('ULETH-1410', 'Scalar Equation', 'Plane', 'Planes', 'Normal')
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "AnswerFormatHelp.pl",
+  "answerHints.pl",
+  "parserImplicitPlane.pl",
+  "parserVectorUtils.pl",
+);
+
+TEXT(beginproblem());
+Context("ImplicitPlane");
+#-ULETH-#
+
+do{
+$AB = ColumnVector(random(2,5)*non_zero_random(-1, 1), random(2,5)*non_zero_random(-1, 1), random(2,5)*non_zero_random(-1, 1)); 
+$AC = ColumnVector(random(2,5)*non_zero_random(-1, 1), random(2,5)*non_zero_random(-1, 1), random(2,5)*non_zero_random(-1, 1)); 
+}until(!$AB->isParallel($AC));
+
+$Norm = $AB x $AC;
+$A = non_zero_point3D();
+$B = non_zero_point3D();
+$Plane = ImplicitPlane($A, $Norm);
+$Plane2 = ImplicitPlane($B, $Norm);
+$NormDot = $Norm . $A;
+
+BEGIN_PGML
+Find an equation of the plane through [`P_0 = [$A]`] that is parallel to the plane with equation [`[$Plane2]`].  
+
+>>Scalar equation for [`P_0`]:[___________________]{$Plane}<<
+
+END_PGML
+#-ENDULETH-#
+
+
+#-ULETH-#
+$showPartialCorrectAnswers = 1;
+#-ENDULETH-#
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+*Note:* The scalar equation for a given plane has the general form:  
+
+>>[``a(x - x_0) + b(y - y_0) + c(z - z_0) = 0``]<<  
+
+Where [`P_0 = (x_0, y_0, z_0)`] and [`n = [ a \quad b \quad c ]`]  
+
+We can reduce the scalar equation to:  
+>>[``ax + by + cz = d``]<<  
+
+By expanding and rearranging the equation so that  
+>>[`d = a*x_0 + b*y_0 + c*z_0`].<<  
+
+Now if we subsitute our values into both sides of the equation we get,  
+
+>>[``[$Plane]``]<<
+END_PGML_SOLUTION
+
+#-ENDULETH-#
+
+
+COMMENT('
+    Randomization provides plenty of different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Provides a hint to the student when the formula is not fully reduced. <BR>
+    Recommended Settings:<BR>
+    - Weight: 2<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>
+    ' );
+
+ENDDOCUMENT();

@@ -1,0 +1,198 @@
+## DESCRIPTION
+##      Solve for x using Cramer's rule. 
+## ENDDESCRIPTION
+
+
+## DBsubject(Linear algebra)
+## DBchapter(Determinants)
+## DBsection(Applications)
+## Date(2018-07-24)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## MO(1)
+## KEYWORDS('Determinants', 'Cramers Rule', 'Matrix', 'ULETH-1410', 'Matricies')
+## Level(3)
+
+
+##################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "answerHints.pl",
+  # Used for simple vector initialization. 
+  "parserVectorUtils.pl",
+  "scaffold.pl",
+  "PGunion.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+
+#-ULETH-#
+
+Context("Matrix");
+
+do{
+$A = Matrix([
+[non_zero_random(-5, 5), non_zero_random(-5, 5), non_zero_random(-5, 5),],
+[non_zero_random(-5, 5), non_zero_random(-5, 5), non_zero_random(-5, 5),],
+[non_zero_random(-5, 5), non_zero_random(-5, 5), 0,],]);
+
+$B = Matrix([
+[non_zero_random(15, 30)*non_zero_random(-1, 1),],
+[non_zero_random(8, 15)*non_zero_random(-1, 1),],
+[non_zero_random(2, 9)*non_zero_random(-1, 1),],,]);
+
+
+$A1b = Matrix([
+[$B->element(1,1), $A->element(1,2), $A->element(1,3),],
+[$B->element(2,1), $A->element(2,2), $A->element(2,3),],
+[$B->element(3,1), $A->element(3,2), $A->element(3,3),],]);
+$A1b->{open}="|";
+$A1b->{close}="|";
+
+$A2b = Matrix([
+[$A->element(1,1), $B->element(1,1), $A->element(1,3),],
+[$A->element(2,1), $B->element(2,1), $A->element(2,3),],
+[$A->element(3,1), $B->element(3,1), $A->element(3,3),],]);
+$A2b->{open}="|";
+$A2b->{close}="|";
+
+$A3b = Matrix([
+[$A->element(1,1), $A->element(1,2), $B->element(1,1),],
+[$A->element(2,1), $A->element(2,2), $B->element(2,1),],
+[$A->element(3,1), $A->element(3,2), $B->element(3,1),],]);
+$A3b->{open}="|";
+$A3b->{close}="|";
+}until($A->det != 0 && $A1b->det % $A->det == 0 && $A2b->det % $A->det == 0 && $A3b->det % $A->det == 0);
+$x = Matrix([
+[($A1b->det / $A->det),],
+[($A2b->det / $A->det),],
+[($A3b->det / $A->det),],]);
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_PGML
+###Use Cramer's rule to solve the linear system [`A\vec{x} = \vec{b}`] where,  
+
+>>[`A = [$A] \qquad\text{and}\qquad B = [$B]`].<<  
+
+END_PGML
+
+Scaffold::Begin();
+
+Section::Begin("Part 1");
+$A->{open} = "|";
+$A->{close} = "|";
+BEGIN_PGML
+###Calculate the determinant of [`A`]:  
+
+>>[`det(A) = [$A] =`] [_____]{$A->det}<<  
+END_PGML
+Section::End();
+
+Section::Begin("Part 2");
+BEGIN_PGML
+###Calculate the determinant of [`A_1(\vec{b})`]:  
+>>[`det(A_1(\vec{b})) = [$A1b] =`] [_____]{$A1b->det}<<  
+
+END_PGML
+Section::End();
+
+Section::Begin("Part 3");
+BEGIN_PGML
+###Calculate the determinant of [`A_2(\vec{b})`]:  
+>>[` det(A_2(\vec{b})) = [$A2b] =`] [_____]{$A2b->det}<<  
+
+END_PGML
+Section::End();
+
+Section::Begin("Part 4");
+BEGIN_PGML
+###Calculate the determinant of [`A_3(\vec{b})`]:  
+>>[`det(A_3(\vec{b})) = [$A3b] =`] [_____]{$A3b->det}<<  
+
+END_PGML
+Section::End();
+
+Section::Begin("Part 5");
+BEGIN_PGML
+###Now solve for x.  
+
+>>[`\vec{x} = \begin{bmatrix} x_1 \\ x_2 \\ x_3 \\ \end{bmatrix} = \begin{bmatrix} \frac{det(A_1(\vec{b}))}{det(A)} \\ \frac{det(A_2(\vec{b}))}{det(A)} \\ \frac{det(A_3(\vec{b}))}{det(A)} \\ \end{bmatrix} = `][_______]*{$x}<<
+
+END_PGML
+Section::End();
+
+
+Scaffold::End();
+$showPartialCorrectAnswers = 0;
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+$pipe = "|";
+#-ULETH-#
+$A->{open} = "[";
+$A->{close} = "]";
+BEGIN_PGML_SOLUTION
+*Cramer's rule states:*  
+Let [`A`] be an [`n × n`] matrix with [`det(A)\neq 0`] and let [`\vec{b}`] be an [`n × 1`] column vector. 
+Then the linear system  
+>>[`A\vec{x} = \vec{b}`]<<  
+
+has the solution  
+>>[`x_i = \frac{det(A_i(\vec{b}))}{det(A)},`]<<  
+
+where [`A_i(\vec{b})`] is the matrix formed by replacing the [`i^{th}`] column of [`A`] with [`\vec{b}`].
+
+For example let,  
+>>[`A = [$A]`] and [`\;\vec{b} = [$B]`].<<
+
+Then by subsituting [`\vec{b}`] into the first column of [`A`] we get,
+
+>>[`x_1 = \frac{det(A_1(\vec{b}))}{det(A)} = \frac{[$A1b]}{det[$A]} = \frac{[$A1b->det]}{[$A->det]} = [$A1b->det / $A->det]`]<<
+
+Then repeat for both [`x_2`] and [`x_3`].  
+
+>>[`x_2 = \frac{det(A_2(\vec{b}))}{det(A)} = \frac{[$A2b]}{det[$A]} = \frac{[$A2b->det]}{[$A->det]} = [$A2b->det / $A->det]`]<<  
+
+
+>>[`x_3 = \frac{det(A_3(\vec{b}))}{det(A)} = \frac{[$A3b]}{det[$A]} = \frac{[$A3b->det]}{[$A->det]} = [$A3b->det / $A->det]`]<<
+
+Therefore, 
+
+>>[`\vec{x} = \begin{bmatrix} x_1 \\ x_2 \\ x_3 \\ \end{bmatrix} = [$x]`]<<
+END_PGML_SOLUTION
+#-ENDULETH-#
+COMMENT('
+    Randomization provides more than 50 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 2<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>
+    ' );
+
+ENDDOCUMENT();

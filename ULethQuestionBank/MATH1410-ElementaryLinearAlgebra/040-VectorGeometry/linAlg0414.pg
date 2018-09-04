@@ -1,0 +1,129 @@
+## DESCRIPTION
+##  Find the length of a vector with a scalar in R3 and its direction, following from the scalar multiple law.
+## ENDDESCRIPTION
+
+
+## DBsubject(Geometry)
+## DBchapter(Vector geometry)
+## DBsection(Dot product, length, and unit vectors)
+## Date(2018-07-19)
+## Institution(University of Lethbridge)
+## Author(Mitchell Sulz-Martin)
+## MO(1)
+## Level(2)
+## KEYWORDS('MATH-1410', 'vector', 'length', 'direction', 'scalar')
+
+
+##################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "PGchoicemacros.pl",
+  "parserPopUp.pl",
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+# Used for handling matrix problems.
+Context("Matrix");
+
+#-ULETH-#
+$a = random(2,9)*non_zero_random(-1, 1); #Scalar for vector
+$aABS = abs($a);
+
+$m11 = random(2,9)*non_zero_random(-1, 1); #vector element at M(1,1)
+$m21 = random(2,9)*non_zero_random(-1, 1); #vector element at M(2,1)
+$m31 = random(2,9)*non_zero_random(-1, 1); #vector element at M(3,1)
+$M = Matrix([[$m11,], [$m21,], [$m31,],]); #Vector M
+
+$mLength = (($m11**(2) +  $m21**(2) + $m31**(2) )**(1/2)); #length of vector
+$amLength = $aABS * $mLength; #Length of scaled vector
+$ans2 = sprintf("%0.3f", $mLength); #used to reduce the number of decimals
+$ans3 = sprintf("%0.3f", $amLength); #used to reduce the number of decimals
+
+$cnd = "\left\lbrace\begin{array}{11}\text{The same as vector V if a > 0,}\\\text{The opposite of vector V if a < 0.}\end{array}\right ."; #Used only in displaying the solution as a function.
+
+#answer for popup
+if ($a > 0){$ans1 = "The same as vector V because a > 0";}
+else{$ans1 = "The opposite of vector V because a < 0";}
+
+$popup = PopUp(["?", "The same as vector V because a > 0", "The opposite of vector V because a > 0", "The same as vector V because a < 0", "The opposite of vector V because a < 0"], $ans1);
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_PGML
+Let [`a`] be a scalar such that [`a = [$a]`] and vector [`\vec{V} = [$M]`].  
+Find the length of [`a\vec{V}`] (to three decimial places):
+
+[`\|a\vec{V}\| = `] [_____]{$ans3}
+
+The direction of [`a\vec{V}`] is:
+[@ $popup->menu() @]* 
+END_PGML
+#-ENDULETH-#
+
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+ANS($popup->cmp());
+$showPartialCorrectAnswers = 1;
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+
+BEGIN_PGML_SOLUTION
+To calculate the length of the vector we use the formula:
+>>[`\|\vec{V}\| = \sqrt{x^2 + y^2 + z^2}`]<<  
+
+From the scalar multiple law, we know that as long as [`\vec{V} \neq \vec{0}`] and [`a`] is a real number then,  
+
+>>[``\|a\vec{V}\| \equiv |a|\:\|\vec{V}\|``]<<
+Therefore,
+>>[``\|a\vec{V}\| = |[$a]|\:\|[$M]\| = [$aABS] \sqrt{([$m11])^2 + ([$m21])^2 + ([$m31])^2}``] <<  
+>>[``\|a\vec{V}\| = [$aABS]\sqrt{[$m11**2 + $m21**2 + $m31**2]} = [$aABS]([$ans2]) = [$ans3]``]<<
+
+
+Lastly, we need to evaluate the direction of [`a\vec{V}`]. We can use the scalar multiple law to do this.  
+
+The law states that if [`\|a\vec{V}\| \neq \vec{0}`] the direction of [`a\vec{V}`] is [`[$cnd]`].  
+
+Since [`a = ([$a])`] the direction of [`a\vec{V}`] is [$ans1].
+END_PGML_SOLUTION
+#-ENDULETH-#
+COMMENT('
+    Randomization provides 2401 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Recommended Settings:<BR>
+    - Weight: 2<BR>
+    - Max attempts: Unlimited<BR>
+    - Show me another: -2<BR>
+    - Rerandomize after: Default<BR>
+    Made from a ULETH template.<BR>
+    ' );
+ENDDOCUMENT();
