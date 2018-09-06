@@ -42,8 +42,8 @@ Context("LimitedNumeric");
 $a = random(2,12,1);
 $b = random(2*$a,12*$a,$a);
 
-$ans1 = $a;
-$ans2 = -$a;
+$ans1 = $b/$a;
+$ans2 = -$b/$a;
 
 #-END_ULETH-#
   
