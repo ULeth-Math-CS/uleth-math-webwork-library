@@ -58,7 +58,7 @@ $ans3 = -($e)*($f);
 ###################################################################
 BEGIN_PGML
 
-Copute the following products:
+Compute the following products:
 
 `(-[$a]) ([$b]) =` [_____]     
 

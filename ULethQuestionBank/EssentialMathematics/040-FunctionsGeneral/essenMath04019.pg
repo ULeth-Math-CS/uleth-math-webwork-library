@@ -63,7 +63,7 @@ ANS(fun_cmp($ans1));
 ANS(num_cmp($ans2));
 
 BEGIN_PGML_SOLUTION
-When teo functions are composed it means that one of the functions is evaluated 
+When two functions are composed it means that one of the functions is evaluated 
 using the second function as its input. More precisely, [`f \circ g`] means the 
 function [`f(x)`] is evaluated using the function [`g(x)`] as input:
 

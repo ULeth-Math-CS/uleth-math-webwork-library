@@ -138,6 +138,8 @@ Determine the slope of a line that passes through the points [`([$x_1] , [$y_1])
 
 Slope = [__________]{$slope}.
 
+Hit enter, or click on the Preview Answer button, to move on to Part B.
+[@ MODES(HTML=>"<style> a.btn.codeshard-btn {display:none; } .codeshard {border-radius:4px !important;}</style>", TeX=>"") @]*
 END_PGML
 Section::End();
 
@@ -148,7 +150,7 @@ Use your answer from part [`A`] to express the equation of this line in the slop
 
 [`y=`] [___]{$slope} [` x \ [$pm]  `] [___]{abs($y_intercept)}
 
-
+Hit enter, or click on the Preview Answer button, to move on to Part C.
 END_PGML
 Section::End();
 
@@ -160,6 +162,7 @@ The x-intercept of the line described above is [`x=`][___]{$x_intercept}
 
 The y-intercept of the line described above is [`y=`][___]{$y_intercept}
 
+Hit enter, or click on the Preview Answer button, to move on to Part D.
 END_PGML
 
 Section::End();
@@ -173,7 +176,7 @@ Suppose that the points [`([$x_3], r)`] and [`(s, [$y_4])`] are also on the line
 
 [`s`] = [___]{$x_4}.
 
-
+When you're ready, click Submit Answer to check your work!
 END_PGML
 Section::End();
 

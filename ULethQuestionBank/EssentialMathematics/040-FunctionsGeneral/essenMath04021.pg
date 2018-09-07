@@ -63,7 +63,7 @@ Let [`f(x) = \sqrt{[$c] - x} `] and [`g(x) = x^2 - x `].
 Then, in interval notation, the domain of [` f\circ g`] is equal to [` [a,b] `] where:
 
 [` [a,b] = \bigg[ `][_],[_]  [`\bigg]`]
-
+[@ MODES(HTML=>"<style> a.btn.codeshard-btn {display:none; } .codeshard {border-radius:4px !important;}</style>", TeX=>"") @]*
 END_PGML
 
 ###################
