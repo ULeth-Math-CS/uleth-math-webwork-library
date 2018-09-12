@@ -75,7 +75,7 @@ Separate multiple answers by commas.
 Enter *DNE* if an asymptote does not exist.
 
 a) Horizontal asymptote(s): [`y =`] [___________] [@ AnswerFormatHelp("numbers") @]*
-b) Vertical asymptote(s): [`y =`] [___________] 
+b) Vertical asymptote(s): [`x =`] [___________] 
 
 
 END_PGML
