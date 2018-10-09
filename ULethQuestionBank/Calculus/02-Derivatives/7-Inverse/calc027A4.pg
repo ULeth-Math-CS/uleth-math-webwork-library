@@ -42,7 +42,7 @@ $r = random(1,2,1);
 
 $x1 = -1;
 $x2 = 1;
-
+Context()->flags->set(limits=>[$x1,$x2]);
 if ( $r == 1 ) {
     $f = Formula("tan(x)");
     $g = Formula("sin(x)");

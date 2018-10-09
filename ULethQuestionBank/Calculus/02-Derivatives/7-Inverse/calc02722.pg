@@ -43,6 +43,7 @@ TEXT(beginproblem());
 Context("Numeric");
 
 $r = random(2,4,1);
+Context()->flags->set(limits=>[-0.95,0.95]);
 if ($r==2) {
   $g = "\sqrt{x}";
   $g_a = "sqrt(x)";

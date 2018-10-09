@@ -107,6 +107,7 @@ $ds = disSYS($M);
 
 #-ULETH-#
 BEGIN_PGML
+[@ MODES(HTML=>"<style> a.btn.codeshard-btn {display:none; } .codeshard {border-radius:4px !important;}</style>", TeX=>"") @]*
 ###Reduce the following matrix to its Reduced Row-Echelon Form by following the instructions in each step.
 [$ds] 
 END_PGML
@@ -120,7 +121,9 @@ BEGIN_PGML
 ####Enter the corresponding augmented matrix:  
     
 >>[____]*{$M}[@ AnswerFormatHelp("matrices") @]*<<
-    
+
+Hit enter or click the Preview Answer button to continue to the next step.
+If nothing happens, your answer is probably incorrect.    
 END_PGML
 Section::End();
 

@@ -50,7 +50,7 @@ $fa = $fin->substitute(x=>"x-$a");
 $ans = Formula("2*(x-$a)*sqrt(1-(x-$a)**2)");
 
 $h = $f->substitute(x=>2*$fa);
-
+Context()->flags->set(limits=>[$x1,$x2]);
 $ident = Formula("2*x/(1+x^2)");
 $identan = $ident->substitute(x=>"tan(t)");
 #-ENDULETH-#
@@ -68,9 +68,9 @@ Provide an expression for [`[$h]`] (in terms of [`x`]) which does not involve an
 [`[$h] = `][_________________________________]{Compute($ans)} [@ AnswerFormatHelp("formulas") @]*
 
 
-*Hint:* It may be useful to apply the following double angle identity:
+*Hint:* It may be useful to apply one of the following double angle identities:
 
-[`\sin(2t) =\displaystyle [$identan]`].
+[`\sin(2t) =\displaystyle [$identan], \quad \text{ or } \quad \sin(2t)= 2\sin(t)\cos(t)`].
 END_PGML
 #-ENDULETH-#
 

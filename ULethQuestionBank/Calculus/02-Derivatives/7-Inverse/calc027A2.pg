@@ -57,8 +57,9 @@ else {
 }
 
 $h = $f->substitute(x=>$fa);
-
+Context()->flags->set(limits=>[$x1,$x2]);
 $ans = Formula("sqrt(1-(x-$a)**2)");
+
 #-ENDULETH-#
 
 #############################

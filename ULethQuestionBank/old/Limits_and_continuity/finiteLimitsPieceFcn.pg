@@ -71,7 +71,7 @@ for (my $i = 0; $i < $numConst; $i++)
 $funCx = "0";
 $funGx = "(x+5)(x+3)";
 $funHx = "2-x";
-$funIx = "1/x";
+$funIx = "x-3";
 
 # The points that will be drawn along the piece-wise function line.
 # Formula($funGx)->eval(x=>$limits[0]) is equivalent to (x+5)(x+3) where x=$limits[0].
@@ -107,9 +107,9 @@ $function ="f(x) =".
 "If[".
   "x < $limits[1], $constant[0]+$funGx,".
   "$limits[1] <= x < $limits[2], $constant[1]+$funHx,".
-  "$limits[2] <= x <= $limits[2], $constant[2]*$funCx,".
+  "$limits[2] <= x <= $limits[2], $constant[2]+$funCx,".
   "$limits[2] < x < $limits[3], $constant[3]+$funIx,".
-  "$limits[3] <= x <= $limits[3], $constant[4]*$funCx,".
+  "$limits[3] <= x <= $limits[3], $constant[4]+$funCx,".
   "$constant[3]+$funIx".
 "]";
 
@@ -156,7 +156,7 @@ else
 # Answers for the third limit.
 $answerI = Formula("$constant[1]+$funHx")->eval(x=>$limits[2]);
 $answerJ = Formula("$constant[3]+$funIx")->eval(x=>$limits[2]);
-$answerK = Formula("$constant[2]*$funCx")->eval(x=>$limits[2]);
+$answerK = Formula("$constant[2]+$funCx")->eval(x=>$limits[2]);
 if ($answerI == $answerJ)
 {
   $answerL = $answerI;
@@ -168,8 +168,8 @@ else
 
 # Answers for the fourth limit.
 $answerM = Formula("$constant[3]+$funIx")->eval(x=>$limits[3]);
-$answerN = Formula("$constant[4]*$funCx")->eval(x=>$limits[3]);
-$answerO = Formula("$constant[4]*$funCx")->eval(x=>$limits[3]);
+$answerN = Formula("$constant[3]+$funIx")->eval(x=>$limits[3]);
+$answerO = Formula("$constant[4]+$funCx")->eval(x=>$limits[3]);
 if ($answerM == $answerN)
 {
   $answerP = $answerM;
