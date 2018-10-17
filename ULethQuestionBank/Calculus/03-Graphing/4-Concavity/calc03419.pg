@@ -92,7 +92,6 @@ $min1 = List("$crit");
 
 #############################
 #   Problem Text
-Context("Interval");
 #-ULETH-#
 BEGIN_PGML
 

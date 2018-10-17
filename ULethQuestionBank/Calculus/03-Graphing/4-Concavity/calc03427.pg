@@ -77,7 +77,7 @@ $min = List("$m");
 
 #############################
 #   Problem Text
-Context("Interval");
+
 #-ULETH-#
 BEGIN_PGML
 

@@ -70,6 +70,7 @@ to accurately track the aircraft when the plane is:
 
 100 feet away? [____________]{Compute($x2)}
 
+Note: the distances above are measured along the ground (the value [`x`] in the diagram.)
 END_PGML
 
 #-ENDULETH-#

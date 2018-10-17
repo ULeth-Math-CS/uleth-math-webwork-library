@@ -85,7 +85,7 @@ $min1 = List("$b2");
 
 #############################
 #   Problem Text
-Context("Interval");
+
 #-ULETH-#
 BEGIN_PGML
 
