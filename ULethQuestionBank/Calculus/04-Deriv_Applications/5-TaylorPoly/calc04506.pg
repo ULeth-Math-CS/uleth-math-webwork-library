@@ -71,9 +71,9 @@ $ans = Formula("$a x - ($a^3 x^3)/6 + ($a^5 x^5)/120 - ($a^7 x^7)/5040")->reduce
 BEGIN_PGML
 Find the Maclaurin polynomial of degree [$deg] for the given function. 
 
->>[``f(t) =  [$f]``]<<
+>>[``f(x) =  [$f]``]<<
 
-[`p_{[$deg]}(t) = `] [____________________________]{Compute($ans)} [@ AnswerFormatHelp("formulas") @]*
+[`p_{[$deg]}(x) = `] [____________________________]{Compute($ans)} [@ AnswerFormatHelp("formulas") @]*
 END_PGML
 #-ENDULETH-#
 

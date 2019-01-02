@@ -61,7 +61,7 @@ $a = $c + $s;
 
 $deg = 2;
 $f = Formula("sqrt(x)");
-$poly = Formula("3+(x-9)/6-(x-9)^2/108");
+$poly = Formula("3+(x-9)/6-(x-9)^2/216");
 
 $ansf = $poly->substitute(x=>"$a");
 
@@ -95,11 +95,11 @@ Taking [`f(x)`] and its first [$deg] derivatives and evaluating each at [`x = [$
 
 >>[``
   \begin{array}{rcrcrcr}
-    f(x) &=& [$f] &\implies& f([$c]) &=& 1\\
+    f(x) &=& [$f] &\implies& f([$c]) &=& 3\\
     &&\\
     f'(x) &=& \dfrac{1}{2\sqrt{x}} &\implies& f'([$c]) &=& \dfrac{1}{6}\\
     &&\\
-    f''(x) &=& \dfrac{-1}{4x^{\frac{3}{2}}} &\implies& f''([$c]) &=& \dfrac{-1}{108}.
+    f''(x) &=& \dfrac{-1}{4x^{\frac{3}{2}}} &\implies& f''([$c]) &=& \dfrac{-1}{216}.
     \end{array}
 ``]<<
 

@@ -62,11 +62,11 @@ $ans = $b*$ansreduced;
 #-ULETH-#
 
 BEGIN_PGML
-Find the Taylor polynomial of degree [$deg] at [`x = [$c]`] for the given function . 
+Find the Taylor polynomial of degree [$deg] at [`a = [$c]`] for the given function . 
 
 >>[``f(x) =  [$f]``]<<
 
-[`p_{[$deg]}(t) = `] [____________________________________________________]{Compute($ans)} [@ AnswerFormatHelp("formulas") @]*
+[`p_{[$deg]}(x) = `] [____________________________________________________]{Compute($ans)} [@ AnswerFormatHelp("formulas") @]*
 END_PGML
 #-ENDULETH-#
 

@@ -81,7 +81,7 @@ $antiderivb=Formula("($ce/6)x^6 + $mid/4 x^4 - ($df/2)x^2");
 
 BEGIN_PGML
 
-Evaluate the given indefinite integrals.
+Evaluate the given indefinite integrals. You may find it useful to expand the integrand before proceeding.
 
 a) [` \displaystyle\int [$integranda] \, dx `]= [___________________________________]{$antideriva->cmp(upToConstant=>1)} [` + C`].
 

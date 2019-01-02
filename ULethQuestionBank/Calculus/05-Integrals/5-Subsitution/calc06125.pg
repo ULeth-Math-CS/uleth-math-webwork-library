@@ -44,7 +44,7 @@ TEXT(beginproblem());
 Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
 
 ## (a) ##
-$e1 = random(3,9,1);
+$e1 = random(3,9,2);
 $exp = $e1 - 1;
 
 $u1 = "x^{$e1}";

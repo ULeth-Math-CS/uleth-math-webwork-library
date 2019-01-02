@@ -51,7 +51,7 @@ Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
 
 
 ## (a) ##
-$c1 = non_zero_random(-9,9);
+$c1 = random(1,19);
 $e1 = random(3,8,1);
 $d1 = $e1 - 1;
 

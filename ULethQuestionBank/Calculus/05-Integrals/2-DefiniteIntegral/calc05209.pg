@@ -228,7 +228,7 @@ b) [`\displaystyle\int_{[$x1]}^{[$x2]} f(x)
 c) [`\displaystyle\int_0^{[$x2]} f(x)
  \, dx `] = [____________________]
    
-d) [`\displaystyle\int_{[$x2]}^{[$x3]} [$b] f(x)
+d) [`\displaystyle\int_{0}^{[$x2]} [$b] f(x)
  \, dx `] = [____________________]
    
 

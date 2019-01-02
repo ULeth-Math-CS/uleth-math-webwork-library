@@ -63,11 +63,11 @@ $ans = Formula("$a0 + (x - $c)/$c1 - (x-$c)^2/(2*$c1^2) + (x - $c)^3/(3*$c1^3) -
 #-ULETH-#
 
 BEGIN_PGML
-Find the Taylor polynomial of degree [$deg] at [`x = [$c]`] for the given function . 
+Find the Taylor polynomial of degree [$deg] at [`a = [$c]`] for the given function . 
 
 >>[``f(x) =  [$f]``]<<
 
-[`p_{[$deg]}(t) = `] [____________________________________________________]{Compute($ans)} [@ AnswerFormatHelp("formulas") @]*
+[`p_{[$deg]}(x) = `] [____________________________________________________]{Compute($ans)} [@ AnswerFormatHelp("formulas") @]*
 END_PGML
 #-ENDULETH-#
 

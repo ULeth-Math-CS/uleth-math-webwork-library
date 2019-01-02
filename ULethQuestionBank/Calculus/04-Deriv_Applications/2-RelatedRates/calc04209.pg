@@ -56,9 +56,9 @@ $a1 = Formula("$ladder**2 - 1");
 $a2 = Formula("$ladder**2 - 25");
 $a3 = Formula("$ladder**2 - $m**2");
 
-$x1 = $spd / (sqrt($a1));
-$x2 = $spd*5 / (sqrt($a2));
-$x3 = $spd*$m / (sqrt($a3));
+$x1 = -$spd / (sqrt($a1));
+$x2 = -$spd*5 / (sqrt($a2));
+$x3 = -$spd*$m / (sqrt($a3));
 
 if ($ladder == 11){$art = "An"}
 else {$art = "A"};
