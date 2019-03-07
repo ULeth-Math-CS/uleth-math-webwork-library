@@ -1,0 +1,45 @@
+DOCUMENT();
+loadMacros(
+"PGstandard.pl",
+"MathObjects.pl",
+"draggableProof.pl",
+);
+
+TEXT(beginproblem());
+
+$CorrectProof = DraggableProof([
+"1",
+"\(\sqrt{2}\)",
+"\(\pi\)",
+"4",
+"\(4^2\)"
+],
+
+[
+"This is not a number",
+"Apple pie"
+],
+
+SourceLabel => "Choose from these:",
+TargetLabel =>  "Place the numbers in increasing order here:",
+);
+
+Context()->texStrings;
+
+BEGIN_TEXT
+
+Place the numbers in increasing order by dragging them from the left 
+column to the right column. Don't use tiles that don't contain numbers.
+
+$PAR
+\{ $CorrectProof->Print \}
+
+END_TEXT
+Context()->normalStrings;
+
+# Answer Evaluation
+
+ANS($CorrectProof->cmp);
+
+
+ENDDOCUMENT();

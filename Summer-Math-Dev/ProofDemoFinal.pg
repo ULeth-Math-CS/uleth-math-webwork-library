@@ -1,0 +1,114 @@
+#-ULETH-#
+## DESCRIPTION
+## This is a template to set the questions regarding proof tiles. It's a basic #template.
+## ENDDESCRIPTION
+
+## DBsubject(Discrete Math)
+## DBchapter()
+## DBsection()
+## Date(2018-05-14)
+## Institution(University of Lethbridge)
+## Author(Mainul Polash & Nicole Wilson)
+## MO(0)
+## KEYWORDS('ULeth Template', 'ULETH-CPSC1820', 'Draggable Proof', 'Proof Tiles')
+#-ENDULETH-#
+
+#############################
+#  Initialization
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+# REQUIRED: Used for basic question and answer operations.
+"PGstandard.pl",
+# REQUIRED: Used for expression parsing.
+"MathObjects.pl",
+"draggableProof.pl",
+ # Required for proper text formatting.
+ "PGML.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+# Here is where the setup for the problem is done.
+# In general, this will include setting up any variables that are being
+# used in the question, including those that are equal to constants and formulas
+
+
+#-ULETH-#
+
+# Here we prepare the correct answer set.
+# We have two lists
+# One strings in the answer given in the correct order
+# followed by a list of strings that are not in the correct answer.
+$CorrectProof = DraggableProof([
+"1",
+"\(\sqrt{2}\)",
+"\(\pi\)",
+"4",
+"\(4^2\)"
+],
+
+[
+"This is not a number",
+"Apple pie"
+],
+#Put all the entries under the left column and specify these as SourceLabel
+#TargetLabel is the column after ordering all the entries 
+SourceLabel => "Choose from these:",
+TargetLabel =>  "Place the numbers in increasing order here:",
+);
+
+Context()->texStrings;
+
+#############################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_TEXT
+Enter question text here, for example:
+Place the numbers in increasing order by dragging them from the left column to the right column. Don't use tiles that don't contain numbers.
+$BR$BR
+NOTE: You must drag the tile to the top of the right column then move it down into place.
+$PAR
+\{ $CorrectProof->Print \}
+
+END_TEXT
+
+Context()->normalStrings;
+#-ENDULETH-#
+
+
+#############################
+#  Answer evaluation
+
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# Checks each entered answer against its associated solution.
+ANS($CorrectProof->cmp);
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+Solution text goes here.
+END_PGML_SOLUTION
+
+COMMENT(' '); 
+
+#-ENDULETH-#
+ENDDOCUMENT();

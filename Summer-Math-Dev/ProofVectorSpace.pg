@@ -1,0 +1,72 @@
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "draggableProof.pl",
+);
+
+TEXT(beginproblem());
+
+$CorrectProof = DraggableProof([
+  "Let \(p(x) = a_3x^3+a_2x^2+a_1x+a_0\) and \(q(x) = b_3x^3+b_2x^2+b_1x+b_0\) be polynomials, and let \(k\) be a scalar.",
+  "We have \(k(p(x) + q(x))\)",
+  "\(= k((a_3x^3+a_2x^2+a_1x+a_0)\) \(+(b_3x^3+b_2x^2+b_1x+b_0))\)",
+  "\(= k((a_3+b_3)x^3+(a_2+b_2)x^2\) \(+(a_1+b_1)x+(a_0+b_0))\)",
+  "\(= k(a_3+b_3)x^3+k(a_2+b_2)x^2\) \(+k(a_1+b_1)x+k(a_0+b_0)\)",
+  "\(= (ka_3+kb_3)x^3+(ka_2+kb_2)x^2\) \(+(ka_1+kb_1)x+(ka_0+kb_0)\)",
+  "\(= (ka_3x^3+ka_2x^2+ka_1x+ka_0)\) \(+(kb_3x^3+kb_2x^2+kb_1x+kb_0)\)",
+  "\(= k(a_3x^3+a_2x^2+a_1x+a_0)\) \(+k(b_3x^3+b_2x^2+b_1x+b_0)\)",
+  "\(= kp(x) + kq(x)\)"
+],
+
+[
+  "\(= kq(x) + kp(x)\)",
+  "\(= k(p(x) + q(x))\)",
+  "\(= k(q(x) + p(x))\)",
+  "Let \(p(x) = a_3x^3+a_2x^2+a_1x+a_0\) and \(q(x) = b_3x^3+b_2x^2+b_1x+b_0\) and \(r(x) = c_3x^3+c_2x^2+c_1x+c_0\) be polynomials."
+],
+
+SourceLabel => "Choose from these:",
+TargetLabel =>  "Proof of (SM1):",
+);
+
+Context()->texStrings;
+
+BEGIN_TEXT
+
+  Consider the set 
+  \[
+    \mathbf{P}_3 = $LBRACE ax^3 + bx^2 + cx + d \mid a,b,c,d\in\mathbb{R} $RBRACE
+  \] 
+  of polynomials of degree at most 3 with real coefficients. 
+  Addition and scalar multiplication of polynomials are defined as usual, 
+  i.e.,
+  \[ \begin{array}{l}
+       (ax^3 + bx^2 + cx + d) + (a'x^3 + b'x^2 + c'x + d') \\ 
+       = (a+a')x^3 + (b+b')x^2 + (c+c')x + (d+d'), \\
+       \\
+       k(ax^3 + bx^2 + cx + d) = kax^3 + kbx^2 + kcx + kd.
+     \end{array}
+  \]
+  $PAR
+  Our goal is to prove that \(\mathbf{P}_3\), with these operations, 
+  is a vector space. 
+  $PAR
+
+  In this problem, you are asked to prove axiom (SM1).
+  Put \{ $CorrectProof->numNeeded \} of the following sentence fragments 
+  in order to form a logically correct proof of (SM1). 
+  There is only one correct answer, so be sure not to skip any steps.
+
+$PAR
+\{ $CorrectProof->Print \}
+
+END_TEXT
+Context()->normalStrings;
+
+# Answer Evaluation
+
+ANS($CorrectProof->cmp);
+
+
+ENDDOCUMENT();

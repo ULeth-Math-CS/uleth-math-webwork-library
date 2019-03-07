@@ -1,0 +1,83 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject(Discrete Math)
+## DBchapter(06- Rosen Book)
+## DBsection(6.3)
+## Date(2018-06-16)
+## Institution(University of Lethbridge)
+## Author(Mainul Polash & Nicole Wilson)
+## KEYWORDS('ULETH-CPSC1820','Permutation', 'Combination')
+
+#################################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#################################
+#  Setup
+
+#-ULETH-#
+$totalBits=random(6,15,1);
+$totalOnes=4;
+$adjacent=3;
+$p=$totalBits-1-($totalOnes-$adjacent);
+#$answer=C($totalBits,$totalOnes) - C($p,1)+C(5+1);
+$answe=10;
+
+
+#-ENDULETH-#
+
+
+#####################################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+BEGIN_PGML
+An 8-bit string is an 8 digit binary number.
+
+a. How many [$totalBits]-bit strings, that contain exactly [$totalOnes] ones, do not contain [$adjacent] adjacent ones? [_______]{$answer}[@ AnswerFormatHelp("numbers") @]*
+
+END_PGML
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+#$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+
+
+
+ COMMENT('
+    Randomization provides different possible versions of this question.<BR>
+    This question has 3 parts. <BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    '); 
+#-ENDULETH-#
+
+ENDDOCUMENT();
+
