@@ -1,0 +1,159 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject(Discrete Math)
+## DBchapter(04- Rosen Book)
+## DBsection()
+## Date(2018-06-11)
+## Institution(University of Lethbridge)
+## Author(Mainul Polash & Nicole Wilson)
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Makes it easier to add a named function to the context.
+  "parserFunction.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+Context("Numeric");
+#-ULETH-#
+# Defines the variable t as being a real number within the context.
+# Thus, when t is included in the question or answer, it will be
+# recognized as a real number variable instead of a letter.
+Context()->variables->are(t=>"Real");
+#-ENDULETH-#
+
+# Defines four random variables for this problem
+# According to the defination of the problem the remainder can't be 0.
+# That's why i use a do until loop to take random numbers until the remainder
+# not equal to 0.
+$n = random(100,500,1);
+do { $d = random(1,$n-1,1) ;}
+until ( ($n-(int($n/$d)*$d)) !=0);
+
+$n1 = random(-500,-100,1);
+$q= abs($n1);
+
+do { $d1 = random(1,$q-1,1) ;}
+until( $q-(int($q/$d1)* $d1) !=0);
+
+
+# Here I do the calculation to find the quotinet and remainder.
+$quotient=int($n/$d);
+$remainder=$n-($quotient*$d);
+$quotient1=int($n1/$d1)-1;
+$p=abs($quotient1)-1;
+$remainder1=$q-($p*$d1);
+
+###########################
+#  Main Text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+Determine the quotient and the remainder when
+
+1) [`[$n]`] is divided by [`[$d]`].
+
+Quotient
+[________________][@ AnswerFormatHelp("numbers") @]*
+
+Remainder
+[________________][@ AnswerFormatHelp("numbers") @]*
+
+2) [`[$n1]`] is divided by [`[$d1]`].
+
+Quotient
+[________________][@ AnswerFormatHelp("numbers") @]*
+
+Remainder
+[________________][@ AnswerFormatHelp("numbers") @]*
+
+END_PGML
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+
+ANS(Compute($quotient)->cmp());
+ANS(Compute($remainder)->cmp());
+ANS(Compute($quotient1)->cmp());
+ANS(Compute($remainder1)->cmp());
+#-ENDULETH-#
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+
+
+Recall that the division algorithm tells us that for any integer [`n`] and any positive integer
+
+d there exists unique values q and r such that [`d = dq + r`] with [`0 \le r < d`].
+
+Solution a:
+
+For [`n`] = [`145`] and [`d`] = [`17`] we notice that
+
+Since [`8 * 17 = 136`] and [`9 * 17 = 153`],
+
+hence [`q = 8 `] and [`r = 145 -136 = 9`].
+
+Therefore, [`145 = (8) 17 + 9`].
+
+Solution b:
+
+For [`n`] = [`-102`] and [`d`] = [`9`] we notice that
+
+Since [`-11 * 9 = -99`] and [`-12 * 9 = -108`],
+
+hence [`q = -12 `] and [`r = ( -108) - ( -102) = 6`].
+
+Therefore, [`-102 = (-12) 9 + 6`].
+END_PGML_SOLUTION
+
+ COMMENT('
+    Randomization provides 3200 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    There are 2 questions in every sets.<BR>
+    Made from a ULETH template.<BR>
+    '); 
+#-ENDULETH-#
+
+ENDDOCUMENT();

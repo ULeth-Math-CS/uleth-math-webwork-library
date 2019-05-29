@@ -1,0 +1,195 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject(Discrete Math)
+## DBchapter(06- Rosen Book)
+## DBsection(6.3)
+## Date(2018-05-28)
+## Institution(University of Lethbridge)
+## Author(Mainul Polash & Nicole Wilson)
+## KEYWORDS('ULETH-CPSC1820','Permutation', 'Combination')
+
+#################################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#################################
+#  Setup
+
+#-ULETH-#
+$random=random(1,2,1);
+$totalBits=random(1,12,1);
+$exactBits=random(3,$totalBits-1,1);
+$answerA= C($totalBits,$exactBits) + C(($totalBits-$exactBits+1),1) - C(($totalBits-($exactBits-1)+1),1);
+#-ENDULETH-#
+
+
+#####################################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+if($random==1)
+{
+BEGIN_PGML
+An [$totalBits]-bit string is an [$totalBits] digit binary number.
+
+a. How many [$totalBits]-bit strings contain exactly [$exactBits] ones, where  [$exactBits-1] ones are not adjacent? [_______][@ AnswerFormatHelp("numbers") @]*
+END_PGML
+}
+if($random==2)
+{
+BEGIN_PGML
+An [$totalBits]-bit string is an [$totalBits] digit binary number.
+
+ How many [$totalBits]-bit strings contain exactly [$exactBits] zeros, do not contain  [$exactBits-1] zeroes? [_______][@ AnswerFormatHelp("numbers") @]*
+END_PGML
+}
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-##$adjacent=random(2,$numberOne-1,1);
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS(Compute($answerA)->cmp());
+
+#-ENDULETH-#
+
+
+ ############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+if($random==1)
+{
+BEGIN_PGML_SOLUTION
+Solution:   The total number of strings with exactly [$exactBits] ones is counted by 
+
+    [`\left(
+        \begin{array}{c}
+          [$totalBits]\\
+          [$exactBits]
+        \end{array}
+      \right)`]
+      
+   Now, we have to substract the strings having [$exactBits] ones, which is counted by  
+   [`\left(
+        \begin{array}{c}
+          [$totalBits-$exactBits+2]\\
+          1
+        \end{array}
+      \right)`]
+      
+  But this will count those strings with [$exactBits] adjacent ones twice so we need to subtract that number from the previous count. 
+  
+ So,    
+ [`\left(
+        \begin{array}{c}
+          [$totalBits]\\
+          [$exactBits]
+        \end{array}
+      \right)
+      -
+      \left(
+      \left(
+        \begin{array}{c}
+          [$totalBits-$exactBits+2]\\
+          1
+        \end{array}
+      \right)
+      -
+       \left(
+        \begin{array}{c}
+          [$totalBits-$exactBits+1]\\
+          1
+        \end{array}
+      \right)
+      \right)
+      = [$answerA]
+      `]    
+    
+END_PGML_SOLUTION
+}
+else 
+{
+BEGIN_PGML_SOLUTION
+Solution:   The total number of strings with exactly [$exactBits] zeroes is counted by 
+
+    [`\left(
+        \begin{array}{c}
+          [$totalBits]\\
+          [$exactBits]
+        \end{array}
+      \right)`]
+      
+   Now, we have to substract the strings having [$exactBits] zeroes, which is counted by  
+   [`\left(
+        \begin{array}{c}
+          [$totalBits-$exactBits+2]\\
+          1
+        \end{array}
+      \right)`]
+      
+  But this will count those strings with [$exactBits] adjacent zeroes twice so we need to subtract that number from the previous count. 
+  
+ So,    
+ [`\left(
+        \begin{array}{c}
+          [$totalBits]\\
+          [$exactBits]
+        \end{array}
+      \right)
+      -
+      \left(
+      \left(
+        \begin{array}{c}
+          [$totalBits-$exactBits+2]\\
+          1
+        \end{array}
+      \right)
+      -
+       \left(
+        \begin{array}{c}
+          [$totalBits-$exactBits+1]\\
+          1
+        \end{array}
+      \right)
+      \right)
+      = [$answerA]
+      `]    
+    
+END_PGML_SOLUTION
+}
+    COMMENT('
+    Randomization provides different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    '); 
+#-ENDULETH-#
+
+ENDDOCUMENT();
+

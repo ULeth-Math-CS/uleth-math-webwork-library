@@ -1,0 +1,97 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject(Discrete Math)
+## DBchapter(06- Rosen Book)
+## DBsection(6.3)
+## Date(2018-05-29)
+## Institution(University of Lethbridge)
+## Author(Mainul Polash & Nicole Wilson)
+## KEYWORDS('ULETH-CPSC1820','Permutation', 'Combination')
+
+#################################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#################################
+#  Setup
+
+#-ULETH-#
+$range=random(1,500,1);
+$NumberOfElement=random(5,20,1);
+$answer= C ($range-1,$NumberOfElement);
+#-ENDULETH-#
+
+
+#####################################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+
+BEGIN_PGML
+In how many ways can a set of [$NumberOfElement] positive integers less than [$range] be chosen? [_______][@ AnswerFormatHelp("numbers") @]*
+
+
+Note: Euler's Number should be written in the following format ([`e`] + or [`e`] -).
+END_PGML
+
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-##$adjacent=random(2,$numberOne-1,1);
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS(Compute($answer)->cmp());
+
+#-ENDULETH-#
+
+
+ ############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+
+BEGIN_PGML_SOLUTION
+Since there is no repetition in a set, we are choosing [$NumberOfElement] distinct values from the [$range -1]   positive integers that are strictly less than [$range] (the values from 1 to [$range-1])so there are 
+[`\left(
+        \begin{array}{c}
+          [$range-1]\\
+          [$NumberOfElement]
+        \end{array}
+      \right)=[$answer]`]
+END_PGML_SOLUTION
+
+    COMMENT('
+    Randomization provides different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    '); 
+#-ENDULETH-#
+
+ENDDOCUMENT();
+

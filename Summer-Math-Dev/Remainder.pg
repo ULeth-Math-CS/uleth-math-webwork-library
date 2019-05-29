@@ -1,0 +1,179 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-06-30)
+## Institution(University of Lethbridge)
+## Author(Mainul Polash & Nicole Wilson)
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Makes it easier to add a named function to the context.
+  "parserFunction.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+Context("Numeric");
+#-ULETH-#
+# Defines the variable t as being a real number within the context.
+# Thus, when t is included in the question or answer, it will be
+# recognized as a real number variable instead of a letter.
+Context()->variables->are(t=>"Real");
+#-ENDULETH-#
+
+# Defines four random variables for this problem
+$n = random(100,500,1);
+$d = random(1,$n-1,1);
+
+$n1 = random(100,500,1);
+$d1 = random(1,$n1-1,1);
+# List of results of the function being evaluated with different t values.
+$a=10;
+$b=5;
+$c=Compute($a/$b);
+
+###########################
+#  Main Text
+
+#-ULETH-#
+# Initializes the p## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-06-30)
+## Institution(University of Lethbridge)
+## Author(Mainul Polash & Nicole Wilson)
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Makes it easier to add a named function to the context.
+  "parserFunction.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+Context("Numeric");
+#-ULETH-#
+# Defines the variable t as being a real number within the context.
+# Thus, when t is included in the question or answer, it will be
+# recognized as a real number variable instead of a letter.
+Context()->variables->are(t=>"Real");
+#-ENDULETH-#
+
+# Defines four random variables for this problem
+$n = random(100,500,1);
+$d = random(1,$n-1,1);
+
+$n1 = random(100,500,1);
+$d1 = random(1,$n1-1,1);
+# List of results of the function being evaluated with different t values.
+
+$quotient=int(Compute($n / $d))
+
+###########################
+#  Main Text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+Determine the quotient and the remainder when
+
+a. [`[$n]`] is divided by [`[$d]`].
+
+Quotient
+[________________][@ AnswerFormatHelp("numbers") @]*
+
+Remainder
+[________________][@ AnswerFormatHelp("numbers") @]*
+
+b. [`[$n1]`] is divided by [`[$d1]`].
+
+Quotient
+[________________][@ AnswerFormatHelp("numbers") @]*
+
+Remainder
+[________________][@ AnswerFormatHelp("numbers") @]*
+
+END_PGML
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+
+# The ordered parameter makes it so that the order of the different
+# pieces of the answer list matters.  E.g. 1, 0, 1 is not equivalent
+# to 0, 1, 1.
+#ANS($answer1->cmp(ordered=>1));
+#-ENDULETH-#
+
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();

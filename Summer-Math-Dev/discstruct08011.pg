@@ -1,0 +1,122 @@
+#-ULETH-#
+## DESCRIPTION
+## This is a template to set the questions regarding proof tiles. It's a basic #template.
+## ENDDESCRIPTION
+
+## DBsubject(Discrete Math)
+## DBchapter()
+## DBsection()
+## Date(2018-07-18)
+## Institution(University of Lethbridge)
+## Author(Mainul Polash & Nicole Wilson)
+## MO(0)
+## KEYWORDS('ULeth Template', 'ULETH-CPSC1820', 'Draggable Proof', 'Proof Tiles', 'Reconstruct Proof')
+#-ENDULETH-#
+
+#############################
+#  Initialization
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+# REQUIRED: Used for basic question and answer operations.
+"PGstandard.pl",
+# REQUIRED: Used for expression parsing.
+"MathObjects.pl",
+"draggableProof.pl",
+ # Required for proper text formatting.
+ "PGML.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+# Here is where the setup for the problem is done.
+# In general, this will include setting up any variables that are being
+# used in the question, including those that are equal to constants and formulas
+
+
+#-ULETH-#
+
+# Here we prepare the correct answer set.
+# We have two lists
+# One strings in the answer given in the correct order
+# followed by a list of strings that are not in the correct answer.
+$CorrectProof = DraggableProof([
+"Let n \(\in\ \mathbb{Z}\) then either \(n=0, n>0,\) or \(n<0\)",
+"Case 1: Assume n=0",
+"then \(n^2 - n + 1 = 0^2 - 0 +1 = 1>0.\) ",
+"Hence, if \(n=0\) then \(n^2 - n + 1 > 0.\)",
+"Case 2: Assume \(n>0\)",
+"Then \(n \geqslant 1\) so \(n^2 \geqslant n\) so \(n^2 - n \geqslant 0\) so \(n^2 - n + 1 \geqslant 1 > 0 \)",
+"Hence, if \(n>0\) then \(n^2 - n +1 >0\)",
+"Case 3: Assume \(n < 0\). Recall that \(n^2 > 0\), for any \(n\neq 0 \).  ",
+"So, \(n < 0 < n^2\) so \(n^2 - n > 0\) so \(n^2 -n + 1 > 1 > 0.\)",
+"Hence, if \(n < 0\) then \(n^2 - n + 1 > 0\).",
+"Since th einequality holds in all the cases we can conclude that if \(n\) is an integer then \(n^2 - n + 1\) is positive"
+],
+
+[
+"then \(n^2 -n = 0^2 - 0 = 0\) \(\geqslant\) 0 hence in all likelihood \(n^2 -n > 0\)",
+" then \(n	\cdot n > 0 \cdot n\) so \(n^2 -n > 0\) so \(n^2 - n + 1 > 1 > 0\)",
+"then \( 1 - n 	\geqslant 1\) so \(n(1-n) \geqslant 0 \cdot 1\) so \(n^2 - n \geqslant 0\) so \(n^2 - n + 1 \geqslant 1 >0.\)"
+],
+#Put all the entries under the left column and specify these as SourceLabel
+#TargetLabel is the column after ordering all the entries 
+SourceLabel => "Choose from these:",
+TargetLabel =>  "Place the numbers in increasing order here:",
+);
+
+Context()->texStrings;
+
+#############################
+#  Main text
+
+#-ULETH-#
+BEGIN_PGML
+Use the appropriate tiles below to reconstruct the proof by cases of the following conjecture.
+
+Prove that if n is an integer then [`n^2 - n + 1`] is positive.
+
+(Note: There is one correct order for the tiles in the proof and some of the tiles do not appear in correct the proof.).
+END_PGML
+BEGIN_TEXT
+$PAR
+\{ $CorrectProof->Print \}
+END_TEXT
+
+Context()->normalStrings;
+#-ENDULETH-#
+
+
+#############################
+#  Answer evaluation
+
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# Checks each entered answer against its associated solution.
+ANS($CorrectProof->cmp);
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+We have to consider all possible cases.Here in this problem there are 3 cases for n- zero, positive and negative. If [`n^2 - n +1`] holds positive for all three possible values of [`n`] then we can say the statement is true otherwise false.
+END_PGML_SOLUTION
+
+COMMENT(' '); 
+
+#-ENDULETH-#
+ENDDOCUMENT();

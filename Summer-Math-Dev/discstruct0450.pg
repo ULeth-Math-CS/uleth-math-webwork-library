@@ -1,0 +1,222 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+## DBsubject(Discrete Math)
+## DBchapter(04 Rosen Book)
+## DBsection()
+## Date(2018-05-14)
+## Institution(University of Lethbridge)
+## Author(Mainul Polash & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'ULETH-CPSC1820', 'Addition Table')
+
+
+
+#############################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "contextLimitedNumeric.pl"
+);
+
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+
+#-ULETH-#
+# Can switch to the LimitedNumeric Context if you don't want to
+# allow operations to be entered into the answer.
+Context("Numeric");
+# Context("LimitedNumeric");
+
+# 'p' is a random variable which define us which addition table we are going 
+#to set as our question.
+
+$p=random(5,8,1);
+#-ENDULETH-#
+
+@tableValue = ();
+# Set the value of the every entries of the table according to the formula 
+
+for($row=1;$row<=$p;$row++)
+{
+    for($col=1;$col<=$p;$col++)
+    {
+        $n= (($row - 1) + ($col - 1));
+        $div=int($n/$p);
+        $tableValue[$row][$col]= $n - ($p*$div);
+    }
+}
+
+
+# Print the table with titles.
+# Step 1. For each space in the table where you would like an answer blank,
+#   replace the $tableValue[row][col] with ans_rule(size), where size is a
+#   positive integer to represent the size of the answer blank. 
+#   the positions in the array containing the table values.
+
+if($p==5)
+{
+$table = $BCENTER.begintable(5) .
+#row( "Fire breathing",     ans_rule(5),      $tableValue[0][1],ans_rule(5),      $tableValue[0][3],ans_rule(5)) .
+row("+",0,1,2,3,4).
+row(0,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+row(1,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+row(2,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+row(3,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+row(4,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+endtable().$ECENTER;
+}
+if($p==6)
+{
+$table = $BCENTER.begintable(6) .
+#row( "Fire breathing",     ans_rule(5),      $tableValue[0][1],ans_rule(5),      $tableValue[0][3],ans_rule(5)) .
+row("+",0,1,2,3,4,5).
+row(0,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+row(1,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+row(2,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+row(3,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+row(4,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+row(5,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+endtable().$ECENTER;
+}
+if($p==7)
+{
+$table = $BCENTER.begintable(7 ) .
+#row( "Fire breathing",     ans_rule(5),      $tableValue[0][1],ans_rule(5),      $tableValue[0][3],ans_rule(5)) .
+row("+",0,1,2,3,4,5,6).
+row(0,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+row(1,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+row(2,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+row(3,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+row(4,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+row(5,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+row(6,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+endtable().$ECENTER;
+}
+if($p==8)
+{
+$table = $BCENTER.begintable(7 ) .
+#row( "Fire breathing",     ans_rule(5),      $tableValue[0][1],ans_rule(5),      $tableValue[0][3],ans_rule(5)) .
+row("+",0,1,2,3,4,5,6,7).
+row(0,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+row(1,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+row(2,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+row(3,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+row(4,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+row(5,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+row(6,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+row(7,ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5),ans_rule(5)).
+endtable().$ECENTER;
+}
+#-ENDULETH-#
+
+
+#############################
+#  Main text
+
+#-ULETH-#
+# Adds the problem text, number entry answer formatting help,
+# and the table of values.
+if($p==5)
+{
+BEGIN_PGML
+Complete the addition table for [`Z_{5}`].
+
+[@ AnswerFormatHelp("numbers") @]*
+[@ $table @]***
+END_PGML
+}
+if($p==6)
+{
+BEGIN_PGML
+Complete the addition table for [`Z_{6}`].
+
+[@ AnswerFormatHelp("numbers") @]*
+[@ $table @]***
+END_PGML
+}
+
+if($p==7)
+{
+BEGIN_PGML
+Complete the addition table for [`Z_{7}`].
+
+[@ AnswerFormatHelp("numbers") @]*
+[@ $table @]***
+END_PGML
+}
+
+if($p==8)
+{
+BEGIN_PGML
+Complete the addition table for [`Z_{7}`].
+
+[@ AnswerFormatHelp("numbers") @]*
+[@ $table @]***
+END_PGML
+}
+
+#-ENDULETH-#
+
+
+#############################
+#  Answer evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# Checks each entered answer against its associated solution value.
+# Step 2. Compute the proper answers for the questions based on where you
+#   placed the answer blanks.  Then, add answer checkers for each.
+#   Use ANS($tableValue[row][col]->cmp()); to call the checker,
+#   and make sure that the answers are in the same order as their associated
+#   blanks in the problem.  Note that rows take precedence over columns.
+#   In other words, a blank in row 1, col 1 will be checked before a blank
+#   at row 1, col 2, but after a blank at row 0, col 1.
+for($row=1;$row<=$p;$row++)
+{
+    for($col=1;$col<=$p;$col++)
+    {
+        $tableValue[$row][$col]=Compute($tableValue[$row][$col]);
+        ANS($tableValue[$row][$col]->cmp());
+
+    }
+}
+
+
+
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+Solution explanation goes here.
+END_PGML_SOLUTION
+
+  COMMENT('
+    Randomization provides 4 different possible versions of this question.<BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    '); 
+#-ENDULETH-#
+
+ENDDOCUMENT();

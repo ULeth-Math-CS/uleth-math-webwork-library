@@ -1,0 +1,138 @@
+## DESCRIPTION
+## ENDDESCRIPTION
+
+## DBsubject(Discrete Math)
+## DBchapter(06- Rosen Book)
+## DBsection(6.3)
+## Date(2018-05-17)
+## Institution(University of Lethbridge)
+## Author(Mainul Polash & Nicole Wilson)
+## MO(1)
+## KEYWORDS('counting', 'combinations', 'statistics and probability', 'Math Effect','ULETH-CPSC1820')
+
+
+#################################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type answers.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+#################################
+#  Setup
+
+#-ULETH-#
+$numberPeople=random(4,10,1);
+$m=random(2,4,1);
+$place=random(2,$numberPeople-1,1);
+$answerA=P($numberPeople,$m);
+$answerB=P($numberPeople-1,$numberPeople-1);
+
+
+#-ENDULETH-#
+
+
+#####################################
+#  Main textb. Suppose one of the player name is Iron Man. How many possible outcomes are there with  Iron Man taking [$place] place?
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+
+if($place==2)
+{
+BEGIN_PGML
+[$numberPeople] player spend an evening playing Wicked Grace. At eleventh
+bell they stopped and counted their winnings, there were no ties. 
+
+a. How many possible ways could the top [$m] final standings turn out (ie: first, second, third, and
+fourth place)? [_______][@ AnswerFormatHelp("numbers") @]*
+
+b. Suppose one of the player name is Iron Man. How many possible outcomes are there with  Iron Man taking [$place] nd place?
+ [_______][@ AnswerFormatHelp("numbers") @]*
+END_PGML
+}
+elsif ($place==3)
+{
+BEGIN_PGML
+[$numberPeople] player spend an evening playing Wicked Grace. At eleventh
+bell they stopped and counted their winnings, there were no ties. 
+
+a. How many possible ways could the top [$m] final standings turn out (ie: first, second, third, and
+fourth place)? [_______][@ AnswerFormatHelp("numbers") @]*
+b. Suppose one of the player name is Iron Man. How many possible outcomes are there with  Iron Man taking [$place] rd place?
+ [_______][@ AnswerFormatHelp("numbers") @]*
+END_PGML
+}
+else
+{
+BEGIN_PGML
+[$numberPeople] player spend an evening playing Wicked Grace. At eleventh
+bell they stopped and counted their winnings, there were no ties. 
+
+a. How many possible ways could the top [$m] final standings turn out (ie: first, second, third, and
+fourth place)? [_______][@ AnswerFormatHelp("numbers") @]*
+
+b. Suppose one of the player name is Iron Man. How many possible outcomes are there with  Iron Man taking [$place] th place?
+ [_______][@ AnswerFormatHelp("numbers") @]*
+END_PGML
+}
+#-ENDULETH-#
+
+
+############################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS(Compute($answerA)->cmp());
+ANS(Compute($answerB)->cmp());
+
+#-ENDULETH-#
+
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+
+BEGIN_PGML_SOLUTION
+Slution a:
+Here total player is [$numberPeople]. 
+
+So the first position can turn out in [`[$numberPeople]`] ways
+
+Similarly second position can turn out in [`[$numberPeople -1]`] ways and so on.
+
+According to the product rules, total number of ways is = [`[$numberPeople] * [$numberPeople -1]*.......*1 = P([$numberPeople],[$m]) = [$answerA] `] 
+
+Slution b:
+Position [`[$place]`] can be filled up by Iron Man in only [`1`] ways. Rest of the positions will be filled up in [$numberPeople -1] [`!`] ways. So total number of outcome is = [`[$answerB]`].
+
+END_PGML_SOLUTION
+
+    COMMENT('
+    Randomization provides different possible versions of this question.<BR>
+    This question has 2 parts. <BR>
+    Includes a solution set.<BR>
+    Made from a ULETH template.<BR>
+    ');
+#-ENDULETH-#
+
+ENDDOCUMENT();

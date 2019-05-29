@@ -1,0 +1,267 @@
+#-ULETH-#
+## DESCRIPTION
+## ENDDESCRIPTION
+
+## DBsubject(Discrete Math)
+## DBchapter()
+## DBsection()
+## Date(2018-06-04)
+## Institution(University of Lethbridge)
+## Author(Mainul Polash & Nicole Wilson)
+## MO(0)
+## KEYWORDS('ULeth Template', 'ULETH-CPSC1820', 'Draggable Proof', 'Proof Tiles')
+#-ENDULETH-#
+
+#############################
+#  Initialization
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+# REQUIRED: Used for basic question and answer operations.
+"PGstandard.pl",
+# REQUIRED: Used for expression parsing.
+"MathObjects.pl",
+"draggableProof.pl",
+ # Required for proper text formatting.
+ "PGML.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+# Here is where the setup for the problem is done.
+# In general, this will include setting up any variables that are being
+# used in the question, including those that are equal to constants and formulas
+
+
+#-ULETH-#
+
+# Here we prepare the correct answer set.
+# We have two lists
+# One strings in the answer given in the correct order
+# followed by a list of strings that are not in the correct answer.
+$random=random(1,4,1);
+
+if($random==1)
+{
+$CorrectProof = DraggableProof([
+"\(\forall_x\)",
+"\(\forall_y\)",
+"\(\exists_z\)",
+"E(y)\(\land\)P(x,y,z)",
+"\(\rightarrow\)",
+"E(z)"
+],
+
+[
+"\(\forall_z\)",
+"\(\exists_x\)",
+"\(\exists_y\)",
+"E(x)",
+"E(y)",
+"\(\neg\)",
+"\(\leftrightarrow\)",
+"\(\oplus\)",
+"\(\neg\)E(x)\(\land\)E(y)\(\land\)P(x,y,z)",
+"P(x,y,z)\(\land \neg\)E(z)",
+"\(\neg\)E(x)\(\land\)\(\neg\)E(y)",
+"P(x,y,z) \(\land\) E(z)",
+"E(x)\(\lor\)E(y)"
+],
+#Put all the entries under the left column and specify these as SourceLabel
+#TargetLabel is the column after ordering all the entries 
+SourceLabel => "Choose from these:",
+TargetLabel =>  "Predicate logic:",
+);
+}
+if($random==2)
+{
+$CorrectProof = DraggableProof([
+"\(\forall_x\)",
+"\(\forall_y\)",
+"\(\exists_z\)",
+"\(\neg\)E(x)\(\land\)E(y)\(\land\)P(x,y,z)",
+"\(\rightarrow\)",
+"\(\neg\)",
+"E(z)"
+],
+
+[
+
+"\(\forall_z\)",
+"\(\exists_x\)",
+"\(\exists_y\)",
+"E(x)",
+"E(y)",
+"\(\leftrightarrow\)",
+"\(\oplus\)",
+"E(y)\(\land\)P(x,y,z)",
+"P(x,y,z)\(\land \neg\)E(z)",
+"\(\neg\)E(x)\(\land\)\(\neg\)E(y)",
+"P(x,y,z) \(\land\) E(z)",
+"E(x)\(\lor\)E(y)"
+],
+#Put all the entries under the left column and specify these as SourceLabel
+#TargetLabel is the column after ordering all the entries 
+SourceLabel => "Choose from these:",
+TargetLabel =>  "Predicate logic:",
+);
+}
+if($random==3)
+{
+$CorrectProof = DraggableProof([
+"\(\forall_x\)",
+"\(\forall_y\)",
+"\(\forall_z\)",
+"P(x,y,z)\(\land \neg\)E(z)",
+"\(\rightarrow\)",
+"\(\neg\)E(x)\(\land\)\(\neg\)E(y)"
+],
+
+[
+"\(\exists_x\)",
+"\(\exists_y\)",
+"\(\exists_z\)",
+"E(x)",
+"E(y)",
+"E(z)",
+"\(\neg\)",
+"\(\leftrightarrow\)",
+"\(\oplus\)",
+"E(y)\(\land\)P(x,y,z)",
+"\(\neg\)E(x)\(\land\)E(y)\(\land\)P(x,y,z)",
+"P(x,y,z) \(\land\) E(z)",
+"E(x)\(\lor\)E(y)"
+],
+#Put all the entries under the left column and specify these as SourceLabel
+#TargetLabel is the column after ordering all the entries 
+SourceLabel => "Choose from these:",
+TargetLabel =>  "Predicate logic:",
+);
+}
+if($random==4)
+{
+$CorrectProof = DraggableProof([
+"\(\forall_x\)",
+"\(\forall_y\)",
+"\(\forall_z\)",
+"P(x,y,z) \(\land\) E(z)",
+"\(\rightarrow\)",
+"E(x)\(\lor\)E(y)"
+],
+
+[
+"\(\exists_x\)",
+"\(\exists_y\)",
+"\(\exists_z\)",
+"E(x)",
+"E(y)",
+"E(z)",
+"\(\neg\)",
+"\(\leftrightarrow\)",
+"\(\oplus\)",
+"E(y)\(\land\)P(x,y,z)",
+"\(\neg\)E(x)\(\land\)E(y)\(\land\)P(x,y,z)",
+"P(x,y,z)\(\land \neg\)E(z)",
+"\(\neg\)E(x)\(\land\)\(\neg\)E(y)"
+],
+#Put all the entries under the left column and specify these as SourceLabel
+#TargetLabel is the column after ordering all the entries 
+SourceLabel => "Choose from these:",
+TargetLabel =>  "Predicate logic:",
+);
+}
+#############################
+#  Main text
+
+#-ULETH-#
+if($random==1)
+{
+BEGIN_PGML
+Let [`U = \mathbb{Z}`] represent  "[`x`]  is even" and  [`P(x,y,z)`] represent "[`xy = z`]" .
+
+Translate the following English statement to propositional logic using the variables listed above.
+
+a. If you multiply any integer by an even integer then the product will be odd. 
+
+NOTE: You must drag the tile to the top of the right column then move it down into place.
+END_PGML
+BEGIN_TEXT
+$PAR
+\{ $CorrectProof->Print \}
+END_TEXT
+
+}
+
+if($random==2)
+{
+BEGIN_TEXT
+Let p represent "A student has a grade of at least C in CPSC1620.", q represent "A student passed CPSC1620.", r represent "A student can take CPSC2620.", and t represent "A student is ready to take CPSC2620."
+$BR$BR Translate the following English statement to propositional logic using the variables listed above.
+$BR$BR
+a. A student can take CPSC2620 unless they have not passed CPSC1620.
+$BR$BR
+NOTE: You must drag the tile to the top of the right column then move it down into place.
+$PAR
+\{ $CorrectProof->Print \}
+
+END_TEXT
+}
+if($random==4)
+{
+BEGIN_PGML
+Let [`U = \mathbb{Z}`] represent  "[`x`]  is even" and  [`P(x,y,z)`] represent "[`xy = z`]" .
+
+Translate the following English statement to propositional logic using the variables listed above.
+
+a. The product of two integers is even only if at least one of the integers is even.
+
+NOTE: You must drag the tile to the top of the right column then move it down into place.
+END_PGML
+BEGIN_TEXT
+$PAR
+\{ $CorrectProof->Print \}
+END_TEXT
+
+}
+
+Context()->normalStrings;
+#-ENDULETH-#
+
+
+#############################
+#  Answer evaluation
+
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# Checks each entered answer against its associated solution.
+ANS($CorrectProof->cmp);
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+BEGIN_PGML_SOLUTION
+p implies q means p only if q.  
+END_PGML_SOLUTION
+
+COMMENT('
+    Randomization provides different possible versions of this question.<BR>
+   
+    Made from a ULETH template.<BR>
+    '); 
+
+#-ENDULETH-#
+ENDDOCUMENT();

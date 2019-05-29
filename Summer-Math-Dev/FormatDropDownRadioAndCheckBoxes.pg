@@ -1,0 +1,153 @@
+## DESCRIPTION
+##
+## ENDDESCRIPTION
+
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2017-07-19)
+## Institution(University of Lethbridge)
+## Author(Mainul POlash & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'drop-down menu', 'pop-up menu', 'radio buttons', 'checkbox')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to provide contextual help for how to type inequalities/intervals.
+  "AnswerFormatHelp.pl",
+  # Provides greater control over the layout of the problem.
+  "PGML.pl",
+  # Used for course-specific initializations.
+  "PGcourse.pl",
+  "parserRadioButtons.pl",
+  "parserPopUp.pl",
+  "PGchoicemacros.pl"
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+
+#-ULETH-#
+# The first part is the question text.
+# Firstly I have added a Pop-up 
+# You can include more than one in a comma-separated list here.
+
+# Within the square brackets are the options that will be available in the
+# drop-down menu.  The last argument is the correct answer.
+$popup1 = PopUp(["?", "Proposition", "Not a Proposition"], "Proposition");
+$popup2 = PopUp(["?", "Proposition", "Not a Proposition"], "Proposition");
+$popup3 = PopUp(["?", "Proposition", "Not a Proposition"], "Not a Proposition");
+$popup4 = PopUp(["?", "Proposition", "Not a Proposition"], "Not a Proposition");
+$popup5 = PopUp(["?", "Proposition", "Not a Proposition"], "Proposition");
+$popup6 = PopUp(["?", "Proposition", "Not a Proposition"], "Not a Proposition");
+$popup7 = PopUp(["?", "Proposition", "Not a Proposition"], "Proposition");
+$popup8 = PopUp(["?", "Proposition", "Not a Proposition"], "Not a Proposition");
+$popup9 = PopUp(["?", "Proposition", "Not a Proposition"], "Proposition");
+$popup10 = PopUp(["?", "Proposition", "Not a Proposition"], "Proposition");
+
+
+#-ENDULETH-#
+
+
+###########################
+#  Main text
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML
+
+3+2=5
+
+[@ $popup1->menu() @]*
+
+Calgary is the Capital of Canada.
+
+[@ $popup2->menu() @]*
+
+[`x^{ 2 } `] is a prime number.
+
+[@ $popup3->menu() @]*
+
+Is the moon round?
+
+[@ $popup4->menu() @]*
+
+All the prime numbers are odd.
+
+[@ $popup5->menu() @]*
+
+This is not a proposition.
+
+[@ $popup6->menu() @]*
+
+If x equals to one then x=x+2. 
+
+[@ $popup7->menu() @]*
+
+What is the time now?
+
+[@ $popup8->menu() @]*
+
+Olivia has a mobile phone.
+
+[@ $popup9->menu() @]*
+
+All your answers are correct.
+
+[@ $popup10->menu() @]*
+
+END_PGML
+
+
+###########################
+#  Answer Evaluation
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# If you add additional questions, make sure you add answer checkers for them here!
+ANS($popup1->cmp());
+ANS($popup2->cmp());
+ANS($popup3->cmp());
+ANS($popup4->cmp());
+ANS($popup5->cmp());
+ANS($popup6->cmp());
+ANS($popup7->cmp());
+ANS($popup8->cmp());
+ANS($popup9->cmp());
+ANS($popup10->cmp());
+#-ENDULETH-#
+
+
+###########################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+BEGIN_PGML_SOLUTION
+END_PGML_SOLUTION
+
+COMMENT('Uses PGML.');
+#-ENDULETH-#
+
+ENDDOCUMENT();
