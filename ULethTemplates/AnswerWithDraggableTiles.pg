@@ -1,0 +1,125 @@
+#-ULETH-#
+## DESCRIPTION
+## This is a template for a question usting draggable tiles. 
+## ENDDESCRIPTION
+
+## DBsubject()
+## DBchapter()
+## DBsection()
+## Date(2018-05-14)
+## Institution(University of Lethbridge)
+## RevisedBy(Mainul Polash & Nicole Wilson)
+## MO(1)
+## KEYWORDS('ULeth Template', 'Draggable Proof', 'Proof Tiles')
+#-ENDULETH-#
+
+#############################
+#  Initialization
+DOCUMENT();
+
+# Contains a comma-separated list of macro filename strings.
+# Each file contains functionality necessary for the mathematical
+# functions being used in the problem.
+loadMacros(
+# REQUIRED: Used for basic question and answer operations.
+"PGstandard.pl",
+# REQUIRED: If used for expression parsing.
+"MathObjects.pl",
+"draggableProof.pl",
+# Required for proper text formatting.
+"PGML.pl",
+);
+
+# Sets up basic problem information.
+TEXT(beginproblem());
+
+
+#############################
+#  Setup
+# Here is where the setup for the problem is done.
+# In general, this will include setting up any variables that are being
+# used in the question, including those that are equal to constants and formulas
+
+
+#-ULETH-#
+
+# Here we prepare the correct answer set.
+# We have two lists of strings that appear on tiles
+# The first is the list of strings that form the correct answer they must be 
+# given in the correct order.
+# The second is a list of strings that are not in the correct answer.
+$CorrectProof = DraggableProof([
+"1",
+"\(\sqrt{2}\)",
+"\(\pi\)",
+"4",
+"\(4^2\)"
+],
+
+[
+"This is not a number",
+"Apple pie"
+],
+#Put all the entries under the left column and specify these as SourceLabel
+#TargetLabel is the column after ordering all the entries 
+SourceLabel => "Choose from these:",
+TargetLabel => "Place the numbers in increasing order here:",
+);
+
+Context()->texStrings;
+
+#############################
+#  Main text
+
+#-ULETH-#
+
+BEGIN_TEXT
+Enter question text here, for example:
+$BR$BR
+Place the numbers in increasing order by dragging them from the left column to the right column. Don't use tiles that don't contain numbers.
+$BR$BR
+NOTE: You must drag the tile to the top of the right column then move it down into place.
+$PAR
+\{ $CorrectProof->Print \}
+
+END_TEXT
+
+Context()->normalStrings;
+#-ENDULETH-#
+
+
+#############################
+#  Answer evaluation
+
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answer is correct. All they will be told is that it is incorrect or correct.
+$showPartialCorrectAnswers = 1;
+
+# Checks each entered answer against its associated solution.
+ANS($CorrectProof->cmp);
+#-ENDULETH-#
+
+
+#############################
+#  Solution
+
+#-ULETH-#
+# Any latex code must be between [` and `] to render properly.
+BEGIN_PGML_SOLUTION
+Solution text goes here.   
+
+For Example:
+
+Since "This is not a number" and "Apple pie" are not numbers we do not use those tiles.   
+
+Since [`\sqrt{2} \approx 1.4`], [`\pi \approx 3.14`], and [`4^2 = 16`] 
+
+clearly [`1 < \sqrt{2} < \pi < 4 < 4^2`].
+END_PGML_SOLUTION
+
+COMMENT('ULeth template. The solution uses PGML.'); 
+
+#-ENDULETH-#
+ENDDOCUMENT();

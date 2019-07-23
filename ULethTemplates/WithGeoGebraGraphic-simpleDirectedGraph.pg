@@ -1,0 +1,353 @@
+## DESCRIPTION
+## Students are asked to determine the degree of all the vertices of a 
+## simple graph. The number of vertices, letters to represent the vertices, 
+## and the probability that an edge will appear in the graph can be reset at 
+## the top of the set up area. 
+## ENDDESCRIPTION
+
+## DBsubject(Graph Theory)
+## DBchapter(Terminology)
+## DBsection(Misc.)
+## Date(2018-05-31)
+## Institution(University of Lethbridge)
+## Author(Nicole Wilson)
+## MO(1)
+## Level(2)
+## KEYWORDS('ULeth Template', 'GeoGebra applet example','simple undirected graph')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  # Used to support the GeoGebra applet.
+  "AppletObjects.pl",
+  # Formats problem data into two layout columns.
+  "unionTables.pl",
+  # Provides course-specific initializations.
+  "PGcourse.pl",
+  "PGML.pl"
+);
+
+TEXT(beginproblem());
+
+Context("Numeric");
+
+##########################################
+#  Setup
+#-ULETH-#
+# The vertices will be labelled consecutively from the start letter until 
+# numV are created. 
+# Do not set the number of vertices to a value less than 2.
+# There will always be an edge between the first two vertices, 
+# the probability of any other edge appearing depends on the 
+# probabilityOfEdge value set below. Only upper case letters can be used to 
+# represent the vertices. 
+
+$startLetter = 'A';
+$numV = random(4,7,1);
+$probabilityOfEdge = 0.2;
+#-ENDULETH-#
+
+@edgesStart = ();
+@edgesEnd = ();
+
+
+$verticesString = "";
+foreach my $i (0..$numV - 1) {
+# put all the vertex names into a string to be used by the javascript code
+# that creates the geogebra graph
+  $verticesString = $verticesString.chr(ord($startLetter) + $i);
+}
+
+# an edge is stored by putting the letters representing that edge in the 
+# parallel arrays edgesStart and edgesEnd. There is always an edge between 
+# the first two vertices, thereafter the probabilityOfEdge is used to 
+# randomly determine whether or not to draw an edge.
+$edgesString = "";
+$numEdges = 0;
+foreach my $j (0..$numV - 1){
+  foreach my $k ($j+1..$numV - 1){
+# Only add an edge if it is between the first to vertices or the random
+# value is low enough
+    if (($j==0 && $k==1) || random(0,1,0.01) <= $probabilityOfEdge){
+# Add the edge to the arrays
+        $edgesStart[$numEdges] = chr(ord($startLetter) + $j);
+        $edgesEnd[$numEdges] = chr(ord($startLetter) + $k);       
+# put the edge into a string to be used by the javascript code
+# that creates the geogebra graph
+        $edgesString 
+        = $edgesString.$edgesStart[$numEdges].$edgesEnd[$numEdges];
+        $numEdges++; 
+    }
+# Only add an edge if it is between the first to vertices or the random
+# value is low enough
+    if (random(0,1,0.01) <= $probabilityOfEdge){
+# Add the edge to the arrays
+        $edgesStart[$numEdges] = chr(ord($startLetter) + $k);
+        $edgesEnd[$numEdges] = chr(ord($startLetter) + $j);
+# put the edge into a string to be used by the javascript code
+# that creates the geogebra graph
+        $edgesString 
+        = $edgesString.$edgesStart[$numEdges].$edgesEnd[$numEdges];
+        $numEdges++;        
+    }
+  }
+}
+
+
+######################################
+# Create  link to applet:
+###################################
+# You can name your applet (anything reasonable :-) )
+# Adjust the height and width as desired
+# Paste the geogebra parameters in at the bottom of the page just above the
+# command end command so that they don't get in the way.
+# See the note down there for more information.
+###################################
+
+#-ULETH-#
+# Choose an appropriate name for your applet.  Can also leave as ggbfoo.
+$appletName = "ggbfoo";
+#-ENDULETH-#
+
+$applet =  GeogebraWebApplet(
+   code       => "geogebra.GeoGebraApplet",
+   archive    => "geogebra.jar",
+   codebase                 => findAppletCodebase("geogebra.jar"),
+   appletName              => $appletName,
+   appletId                    => $appletName,
+   submitActionAlias     => 'getAppletValues',  # default actionAlias
+   initializeActionAlias   => 'configure',  # default actionAlias
+   setStateAlias             => 'setXML',
+   getStateAlias             => 'getXML',
+   setConfigAlias           => '',
+   getConfigAlias           => '',
+   returnFieldName       => '',
+   #-ULETH-#
+   width                 => 400,              # may want to modify width
+   height                => 400,              # may want to modify height
+   #-ENDULETH-#
+   # mayscript             => "true",
+   #-ULETH-#
+   debugMode             => 0,   # set debugMode to 0 for no debug
+                                 # to 1 to make xml representation visible
+                                 # to 2 to add alerts detailing progression
+                                 # through the applet
+   #-ENDULETH-#
+   onInit                => 'ggbOnInit',
+   type                  => 'geogebraweb',
+   #submitActionScript    => qq{ getQE('answerBox').value = getAppletValues() },
+   submitActionScript => '',
+   selfLoading           => 1,
+
+   # Defined as a separate subroutine so the parameters can go at the bottom of
+   # the page.
+   params     => GEOGEBRA_PARAMS(),# paste parameters in
+
+);
+
+
+##################################
+# Setup GeogebraWebApplet --
+###################################
+
+###############################################
+#
+#  For persistence of GeoGebra applet state
+#  when answers are submitted or page is refreshed.
+#  Uses JavaScript interface to GeoGebra.
+#  This fetches the GeoGebra applet with $appletname.
+#  Note that this variable gets set in the "Create link to applet" section.
+
+HEADER_TEXT(
+qq!
+<script language="javascript">
+   function ggbOnInit(param) {
+       if (param == "$appletName") {
+           applet_loaded(param,1);  // report that applet is ready.
+           ww_applet_list[param].safe_applet_initialize(2);
+       }
+   }
+</script>
+<noscript>For this question to work properly,
+you must enable JavaScript, or use another browser
+(or computer) on which JavaScript works.</noscript>
+!);
+
+ 
+#######################################################
+#
+#  For setting initial values in GeoGebra from WeBWorK
+#  Uses JavaScript interface to GeoGebra.
+#  Note the area right under all the ///////////////.
+#  This is where you match up your variables from WeBWorK
+#  with your variables in GeoGebra.
+TEXT( MODES(TeX=>'', HTML=><<END_SCRIPT ) );
+<script language="javascript">
+function setAppletCoefficients() {
+   var applet=getApplet("$appletName");   // alert("Updating coefficients");
+   if (typeof(applet)!="undefined") {
+     if (typeof(applet.setValue)!="undefined") {
+
+     ////////////////////////////////////////////////////////////////
+     //  List the values of the parameters to be set in the applet here
+
+          // Set variables for GeoGebra from WebWork
+          // #-ULETH-#
+          // The vertices are drawn on a unit circle (the circle
+          // isn't visible) 
+          var v = "$verticesString";
+          for(var i=0;i<v.length;i++) {
+            applet.evalCommand(v.charAt(i)+"=("
+                               +Math.cos(i*2*Math.PI/v.length).toFixed(5)
+                               +","
+                               +Math.sin(i*2*Math.PI/v.length).toFixed(5)
+                               +")");
+          }
+          // The edges are drawn between the vertices as determined
+          // when filling the parallel arrays @edgesStart and @edgesEnd
+          var e = "$edgesString";
+          for(var i=0;i<e.length/2;i++) {
+            applet.evalCommand("e_"+i
+              +" = Vector("+e.charAt(2*i)
+              +",Midpoint(Midpoint("+e.charAt(2*i)
+              +","+e.charAt(2*i+1)+"),"+e.charAt(2*i+1)+"))");
+            applet.setLabelVisible("e_"+i,0);              
+            applet.evalCommand("s_"+i
+              +" = Segment("+e.charAt(2*i)+","+e.charAt(2*i+1)+")");
+            applet.setLabelVisible("s_"+i,0);
+          }
+
+          // Changing the text value will change the label text on the graph, and
+          // the coordinates at the end represent the point on the graph's grid
+          // where the label will be placed.
+          applet.evalCommand("ZoomIn[-1.25,-1.25,1.25,1.25]");
+          // #-ENDULETH-#
+     } else {
+          setTimeout("setAppletCoefficients()", 1000);
+     }
+   } else {
+      setTimeout("setAppletCoefficients()",1000);
+   }
+}
+ww_applet_list["$appletName"].setConfig = function() {setAppletCoefficients()};
+</script>
+END_SCRIPT
+
+
+#######################################
+# TEXT
+#######################################
+
+#-ULETH-#
+# Initializes the problem text and answer formatting help.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include 
+# the MathObject in your LaTeX brackets.
+$theAnswerPromptsAndBoxes 
+= "$BR $BR `deg^{-}($startLetter) = ` " .ans_rule(4)
+ ."$BR $BR `deg^{-}(".chr(ord($startLetter) + 1).") = ` " .ans_rule(4);
+foreach my $i (2..$numV-1) {
+  $theAnswerPromptsAndBoxes = $theAnswerPromptsAndBoxes 
+    ."$BR $BR `deg^{-}(".chr(ord($startLetter) + $i).") = ` " .ans_rule(4)
+}
+BEGIN_PGML
+[@
+ColumnTable("Determine the in-degree of each vertex seen in the graph `G=(V,E)`. 
+$BR
+(".helpLink('numbers')." formatting help)".
+$theAnswerPromptsAndBoxes 
+,
+$BCENTER.
+$BBOLD."Graph `G=(V,E)`".$EBOLD.$PAR.
+MODES(HTML=>$applet->insertAll(debug=>0, reinitialize_button=>1, includeAnswerBox=>0,), TeX=>$im).
+$ECENTER."You can drag to move the vertices or zoom in/out with the mouse wheel to see the graph or parts of it more clearly.".$BR."Note: a line segment between two vertices, say `v_0` and `v_1` with two arrows indicates that `(v_0,v_1) \in E` and `(v_1,v_0) \in E`"
+,
+indent => 0, separation => 30, valign => "TOP"
+);
+@]*
+END_PGML
+
+
+#########################################
+# ANSWER section
+#########################################
+
+#-ULETH-#
+# Setting this to 1 means that students will receive feedback on whether their
+# answers are correct.
+$showPartialCorrectAnswers = 1;
+
+# Determine the answers
+@inDegVertices = (0) x $numV;
+
+foreach my $i (0..$numEdges - 1) {
+  $inDegVertices[ord($edgesEnd[$i])-ord($startLetter)]++;
+}
+
+# Answer checker for all the degrees of Vertices
+foreach my $i (0..$numV-1){
+  ANS(Compute($inDegVertices[$i])->cmp);
+}
+
+#########################################
+# The applet as a base64 string
+#########################################
+
+sub GEOGEBRA_PARAMS {
+    my $result = {
+showResetIcon=>"false" ,
+enableRightClick=>"false" ,
+enableLabelDrags=>"false",
+showMenuBar=>"false" ,
+showToolBar=>"false",
+showAlgebraInput=>"false",
+useBrowserForJS=>"true",
+#-ULETH-#
+# In the GeoGebra desktop application, create your applet.  Once you are done,
+# press Ctrl + Shift + B.  This will copy the base64 string (like the one below)
+# to your clipboard.  Paste this string between the double quotes below.  Make
+# sure not to paste over the }; or $result lines that follow this section.
+# You should end up with (e.g. ggbbase64=>"skj8981519+!KJ!MSD!.....") as the
+# parameter below.
+ggbbase64=>"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"
+#-ENDULETH-#
+};
+
+$result;
+}
+
+############################
+#  Solution
+
+#-ULETH-#
+# Solution text to show after the due date.
+# If you have LaTeX code you want to display, enter it here in the [``] brackets.
+# If you want the previously-defined questions to display in LaTeX, include the
+# MathObject in your LaTeX brackets.
+  $edges = "";
+  foreach my $i (1..$numEdges - 1){
+    if ($edgesEnd[$i] eq $startLetter){
+      $edges = $edges . ', (' . $edgesStart[$i] . ', ' . $edgesEnd[$i] . ')';
+    }      
+  }
+  $edges = substr($edges,2);
+BEGIN_PGML_SOLUTION
+The in-degree of a vertex is the number of edges that end at that vertex.
+
+For example: [`deg^{-}([$startLetter]) = `] [$inDegVertices[0]] because it is at the end of the edges in this set, {[$edges]}.
+
+END_PGML_SOLUTION
+
+    COMMENT('Randomization provides millions of different possible versions of this question, but they are not all equally likely.<BR>
+    Includes a solution set.<BR>
+    Uses GeoGebraWeb (JavaScript).<BR>
+    Made from a ULETH template.<BR>
+    ');
+#-ENDULETH-#
+
+ENDDOCUMENT();
