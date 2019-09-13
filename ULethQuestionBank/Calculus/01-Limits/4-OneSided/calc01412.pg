@@ -233,6 +233,8 @@ In the remaining problems, assume [`a`] is an *integer* such that [`-3 \leq a \l
 a) [`\displaystyle \lim_{x \to a^{-}}g(x) = `] [___________] [@ AnswerFormatHelp("formulas") @]*
 b) [`\displaystyle \lim_{x \to a^{+}}g(x) = `] [___________] 
 c) [`\displaystyle \lim_{x \to a}g(x) = `] [___________] 
+
+Each answer should either be a formula involving [`a`] that works for each integer value, or DNE if the limit does not exist.
 END_PGML
 
 # Places the graph image in column2 (the rightmost) of the layout table.
