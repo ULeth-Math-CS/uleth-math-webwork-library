@@ -73,7 +73,7 @@ sub disSYS{
 do { $H = non_zero_random(-4, 4); $D = non_zero_random(0, 3); $F = non_zero_random(-3, 3);
      $E = non_zero_random( 0, 4); $G = non_zero_random(-3, 5); $C = non_zero_random( 0, 5);
      $A = non_zero_random( 0, 3); $N = non_zero_random( 0, 2); $B = non_zero_random( 0, 3);} 
-until($H != 1 && $H != -1 && $E != 1 && $F != $G && $D != $C);
+until($H != 1 && $H != -1 && $E != 1 && $F != $G && $D != $C  && $D != $B);
 
 $lambda = $A + ($D*$B);
 $x1 = $H;
@@ -102,7 +102,7 @@ $ds = disSYS($M);
 
 #-ULETH-#
 BEGIN_PGML
-###Reduce the following matrix to its Reduced Row-Echelon Form by following the instructions stated in each step.
+###Reduce the augmented matrix of the following system so that the coefficient matrix is in Reduced Row-Echelon Form by following the instructions stated in each step.
 [$ds].
 END_PGML
 #-ENDULETH-#
@@ -216,6 +216,7 @@ END_PGML
 Section::End();
 
 Section::Begin("Part 8");
+$M = Matrix([[$x1, $y1, $z1, 0,],[$x2, $y2, $z2, 0,],[$x3, $y3, $z3, 1,],]);
 BEGIN_PGML
 ####Finish simplifying the matrix.  
 The resulting matrix is:
