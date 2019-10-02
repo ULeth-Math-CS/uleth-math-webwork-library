@@ -58,6 +58,8 @@ $df2 = $f2->D('x');
 $g2 = Formula("cos(x)");
 $dg2 = $g2->D('x');
 
+$f = Formula("$f1*$g1+$f2*$g2")->reduce();
+
 $ans1 = Formula("$f2*$g2")->D('x')->reduce();
 
 $ans = Formula("$f1*$dg1 + $g1*$df1 + $ans1")->reduce();
@@ -70,7 +72,7 @@ $ans = Formula("$f1*$dg1 + $g1*$df1 + $ans1")->reduce();
 BEGIN_PGML
 Compute the derivative of the given function.
 
->>[``f(x) = [$f1*$g1] + [$f2*$g2].``]<<
+>>[``f(x) = [$f].``]<<
 
 [`f'(x) = `] [_____________________________________________] [@ AnswerFormatHelp("formulas") @]*
 END_PGML
