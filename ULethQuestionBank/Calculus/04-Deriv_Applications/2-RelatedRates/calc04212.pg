@@ -84,6 +84,21 @@ END_PGML
 
 #-ENDULETH-#
 
+#############################
+#  Hint
+#-ULETH-#
+
+BEGIN_PGML_HINT
+
+Note that the distance from floor to ceiling is always constant.
+Useful variables include the distance the worker has walked,
+and the length of rope between the worker and pulley.
+
+Since the total length of rope is constant,
+rope is coming out of the pulley at the same rate it's going in. 
+END_PGML_HINT
+
+#-ENDULETH-#
 
 #############################
 #  Solution
