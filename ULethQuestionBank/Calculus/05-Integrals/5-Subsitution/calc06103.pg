@@ -104,7 +104,7 @@ Context('Fraction');
 $coeff4 = Fraction(2, $e4p)->reduce;
 
 Context('Numeric');
-Context()->variables->set(x=>{limits=>[1,4]});
+Context()->variables->set(x=>{limits=>[-1,1]});
 $F4 = Formula(str($coeff4) . "($u4)^{$e4p}")->reduce();
 
 #-ENDULETH-#
