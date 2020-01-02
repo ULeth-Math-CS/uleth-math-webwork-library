@@ -111,6 +111,8 @@ The barn is [$barnLength]m long and the pen may not extend past the ends of the 
 There is [$fencingLength]m of fencing material available.
 What is the largest area pen that can be built?
 
+Note on entering units: if you're using the visual (WYSIWYG) editor, you'll have trouble entering units, especially for area. Using the toolbar on the right-hand side, click on the "Text mode" button (at the bottom of the toolbar) before entering your units.
+
 a. Let [`l`] and [`w`] represent the dimensions of the pen.
    Assume the side of the pen against the barn has a length of [`l`].
    Express the length, [`l`], in terms of [`w`].

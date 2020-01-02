@@ -68,7 +68,7 @@ $ans = Formula("$b - $ab x + ($a2b x^2)/2 - ($a3b x^3)/6")->reduce();
 BEGIN_PGML
 Find the Maclaurin polynomial of degree [$deg] for the given function. 
 
->>[``f(t) =  [$f]``]<<
+>>[``f(x) =  [$f]``]<<
 
 [`p_{[$deg]}(x) = `] [____________________________]{Compute($ans)} [@ AnswerFormatHelp("formulas") @]*
 END_PGML
