@@ -54,12 +54,12 @@ do{
         $r[$i] = random(2, 9)*non_zero_random(-1, 1);
         }until(abs($p[$i]) != abs($q[$i]) && abs($q[$i]) != abs($r[$i]) && abs($p[$i]) != abs($r[$i]));
     }
-    $P = Vector($p[0], $p[1], $p[2]);
-    $Q = Vector($q[0], $q[1], $q[2]);
-    $R = Vector($r[0], $r[1], $r[2]);
-    $PQ = ColumnVector($P - $Q);
-    $PR = ColumnVector($P - $R);
-    $QR = ColumnVector($Q - $R);
+    $P = Point($p[0], $p[1], $p[2]);
+    $Q = Point($q[0], $q[1], $q[2]);
+    $R = Point($r[0], $r[1], $r[2]);
+    $PQ = Vector($P - $Q);
+    $PR = Vector($P - $R);
+    $QR = Vector($Q - $R);
     $count = $count + 1;
 }until($PQ.$PR == 0 ^ $PR.$QR == 0 ^ $PQ.$QR == 0 ^ $count >= 40);
 
