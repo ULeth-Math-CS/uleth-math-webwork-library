@@ -108,7 +108,12 @@ $ds = disSYS($M);
 #-ULETH-#
 BEGIN_PGML
 [@ MODES(HTML=>"<style> a.btn.codeshard-btn {display:none; } .codeshard {border-radius:4px !important;}</style>", TeX=>"") @]*
-###Reduce the following matrix to its Reduced Row-Echelon Form by following the instructions in each step.
+###Reduce the augmented matrix of the following system so that the coefficient matrix is in Reduced Row-Echelon Form by following the instructions stated in each step.
+
+####Note: to proceed to the next step, hit the Enter key, or click the Preview My Answers button.
+
+You do not need to click Submit until the final step, or if you want to save your progress.
+
 [$ds] 
 END_PGML
 #-ENDULETH-#

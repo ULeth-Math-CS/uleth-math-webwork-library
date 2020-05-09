@@ -59,10 +59,10 @@ $A = Matrix([
 BEGIN_PGML
 ###Let [`A`] be the following 2x2 matrix.
 
->>[`A = [$A]`].<<   
+>>[`A = [$A]`].<<
 
 
-If we want to find the inverse of [`A`] (i.e [`A^{-1}`]) we can use the following formula:  
+If we want to find the inverse of [`A`] (i.e [`A^{-1}`]) we can use the following formula:
 
 >>###[`A^{-1} = \frac{1}{det(A)} adj(A)`].<<
 
@@ -78,8 +78,8 @@ END_PGML
 Section::End();
 
 $Aadj = Matrix([
-[$A->element(2,2), -$A->element(2,1),],
-[-$A->element(1,2), $A->element(1,1),],
+[$A->element(2,2), -$A->element(1,2),],
+[-$A->element(2,1), $A->element(1,1),],
 ]);
 Section::Begin("Part 2");
 BEGIN_PGML

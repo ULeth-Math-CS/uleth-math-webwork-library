@@ -71,7 +71,7 @@ $M6 = Matrix([
 
 $popupM1 = PopUp(["?", "Reduced row-echelon form", "row-echelon form", "neither"], "Reduced row-echelon form");
 $popupM2 = PopUp(["?", "Reduced row-echelon form", "row-echelon form", "neither"], "row-echelon form");
-$popupM3 = PopUp(["?", "Reduced row-echelon form", "row-echelon form", "neither"], "row-echelon form");
+$popupM3 = PopUp(["?", "Reduced row-echelon form", "row-echelon form", "neither"], "Reduced row-echelon form");
 $popupM4 = PopUp(["?", "Reduced row-echelon form", "row-echelon form", "neither"], "neither");
 $popupM5 = PopUp(["?", "Reduced row-echelon form", "row-echelon form", "neither"], "row-echelon form");
 $popupM6 = PopUp(["?", "Reduced row-echelon form", "row-echelon form", "neither"], "neither");

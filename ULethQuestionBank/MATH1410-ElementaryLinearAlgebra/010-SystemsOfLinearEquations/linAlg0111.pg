@@ -103,6 +103,11 @@ $ds = disSYS($M);
 #-ULETH-#
 BEGIN_PGML
 ###Reduce the augmented matrix of the following system so that the coefficient matrix is in Reduced Row-Echelon Form by following the instructions stated in each step.
+
+####Note: to proceed to the next step, use the Enter key, or click on the Preview My Answer Button.
+
+You do not need to click Submit until the final step, or if you want to save your progress.
+
 [$ds].
 END_PGML
 #-ENDULETH-#

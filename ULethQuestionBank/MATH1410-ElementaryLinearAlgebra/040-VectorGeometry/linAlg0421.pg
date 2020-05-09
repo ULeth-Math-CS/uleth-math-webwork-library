@@ -46,7 +46,7 @@ BEGIN_PGML
 
 Where [`\|\vec{u}\| = [$u]`] and [`\|\vec{v}\| = [$v]`], and the angle [`\theta`] between [`\vec{u}`] and [`\vec{v}`] is [`[$sign]\frac{\pi}{[$n]}`] in radians.
 
-[`\vec{u} \cdot \vec{v} = `] [_____] (to three decimals)
+[`\vec{u} \cdot \vec{v} = `] [_____] (give an exact value, or at least three decimal places)
 END_PGML
 #-ENDULETH-#
 
