@@ -70,9 +70,9 @@ $ans = Formula("$b*pi x^{pi - 1} + $ca x^{$a1}");
 BEGIN_PGML
 Compute the derivative of the given function.
 
->>[``f(t) =  [$f]``]<<
+>>[``f(x) =  [$f]``]<<
 
-[`f'(t) = `] [______________________] [@ AnswerFormatHelp("formulas") @]*
+[`f'(x) = `] [______________________] [@ AnswerFormatHelp("formulas") @]*
 END_PGML
 #-ENDULETH-#
 
