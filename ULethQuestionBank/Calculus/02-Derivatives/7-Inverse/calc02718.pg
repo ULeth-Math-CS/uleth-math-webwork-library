@@ -44,8 +44,8 @@ Context("Numeric");
 
 $choice1 = random(1,2,1);
 if ($choice1 == 1) {
-  $g1 = "\arcsin x";
-  $g2 = "\arccos x";
+  $g1 = "\arcsin(x)";
+  $g2 = "\arccos(x)";
 
   $g1_a = "arcsin(x)";
   $g2_a = "arccos(x)";
@@ -56,8 +56,8 @@ if ($choice1 == 1) {
   $g1p_a = "1/sqrt(1-x^2)";
   $g2p_a = "-1/sqrt(1-x^2)";
 } elsif($choice1 == 2) {
-  $g1 = "\arccos^{-1} x";
-  $g2 = "\arcsin^{-1} x";
+  $g1 = "\arccos(x)";
+  $g2 = "\arcsin(x)";
 
   $g1_a = "arccos(x)";
   $g2_a = "arcsin(x)";
@@ -67,44 +67,44 @@ if ($choice1 == 1) {
 
   $g1p_a = "-1/sqrt(1-x^2)";
   $g2p_a = "1/sqrt(1-x^2)";
-} 
+}
 
 $choice2 = random(1,6,1);
 if ($choice2 == 1) {
-  $f2 = "\sin x";
+  $f2 = "\sin(x)";
   $f2_a = "sin(x)";
 
-  $f2p = "\cos x";
+  $f2p = "\cos(x)";
   $f2p_a = "cos(x)";
 } elsif($choice2 == 2) {
-  $f2 = "\cos x";
+  $f2 = "\cos(x)";
   $f2_a = "cos(x)";
 
-  $f2p = "-\sin x";
+  $f2p = "-\sin(x)";
   $f2p_a = "-sin(x)";
 } elsif($choice2 == 3) {
   $f2 = "\tan x";
   $f2_a = "tan(x)";
 
-  $f2p = "\sec^2 x";
+  $f2p = "\sec^2 (x)";
   $f2p_a = "sec(x)^2";
 } elsif($choice2 == 4) {
-  $f2 = "\cot x";
+  $f2 = "\cot(x)";
   $f2_a = "cot(x)";
 
-  $f2p = "-\csc^2 x";
+  $f2p = "-\csc^2 (x)";
   $f2p_a = "-csc(x)^2";
 } elsif($choice2 == 5) {
-  $f2 = "\sec x";
+  $f2 = "\sec (x)";
   $f2_a = "sec(x)";
 
   $f2p = "\sec x \tan x";
   $f2p_a = "sec(x)*tan(x)";
 } elsif($choice2 == 6) {
-  $f2 = "\csc x";
+  $f2 = "\csc (x)";
   $f2_a = "csc(x)";
 
-  $f2p = "-\csc x \cot x";
+  $f2p = "-\csc (x) \cot (x)";
   $f2p_a = "-csc(x)*cot(x)";
 }
 
@@ -120,7 +120,7 @@ $ans2 = "($f2_a)($g2p_a) + ($f2p_a)($g2_a)";
 BEGIN_PGML
 Compute the derivative of the given functions.
 
-a) [` \dfrac{d}{dx}\left[ x[$g1] \right] = `][__________________________________________________]{Compute($ans1)} [@ AnswerFormatHelp("formulas") @]*  
+a) [` \dfrac{d}{dx}\left[ x[$g1] \right] = `][__________________________________________________]{Compute($ans1)} [@ AnswerFormatHelp("formulas") @]*
 b) [` \dfrac{d}{dx}\left[ ([$f2]) ([$g2]) \right] = `][__________________________________________________]{Compute($ans2)}
 END_PGML
 #-ENDULETH-#
@@ -137,7 +137,7 @@ Use the Product Rule with the rules for inverse trigonometric functions.
 >>[``
   \dfrac{d}{dx}\left[ x[$g1] \right] = x \cdot [$g1p] + (1)[$g1]
 ``]<<
-    
+
 >>[``
   \dfrac{d}{dx}\left[([$f2]) ([$g2])\right] = [$f2] \cdot [$g2p] + [$f2p] [$g2]
 ``]<<
@@ -160,4 +160,4 @@ $showPartialCorrectAnswers = 1;
     Includes a solution set.<BR>
     Made from a ULETH template.<BR>
     ');
-ENDDOCUMENT();    
+ENDDOCUMENT();

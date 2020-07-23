@@ -1,1 +1,0 @@
-A file to sit in each directory so it is not empty.
