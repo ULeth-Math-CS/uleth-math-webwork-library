@@ -55,7 +55,7 @@ else {
     $g = Formula("cos(x)");
     $gin = Formula("arccos(x)");
     $fa = $gin->substitute(x=>"x**$a");
-    $ans = Formula("sqrt(1-x**$a*2) / x**$a");
+    $ans = Formula("sqrt(1-(x**$a)**2) / x**$a");
 }
 
 $h = $f->substitute(x=>$fa);
