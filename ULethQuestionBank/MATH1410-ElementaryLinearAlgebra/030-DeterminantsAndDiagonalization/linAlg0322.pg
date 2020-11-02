@@ -31,7 +31,6 @@ loadMacros(
 
 TEXT(beginproblem());
 
-
 #############################
 #  Setup
 
@@ -42,7 +41,7 @@ Context("Matrix");
 # ans : the random value of the determinant for the question.
 # M : A solution matrix used to verify a student answer or act as a solution set.
 
-$ans = non_zero_random(-10,10,1);
+$ans = non_zero_random(-99,99,1);
 $M = Matrix([
 [$ans,6,1,9],
 [0,1,3,4],
@@ -59,21 +58,46 @@ $M = Matrix([
 #-ULETH-#
 
 BEGIN_PGML
-###Enter a non-diagonal 4x4 matrix with a determinant of [$ans].
+Enter a non-diagonal 4x4 matrix with a determinant of [$ans].
 
 [`A =`] [@ $M->ans_array(5) @]* [@ AnswerFormatHelp("matrices") @]*
 
 END_PGML
+
 #-ENDULETH-#
 
-
 #-ULETH-#
+
 $showPartialCorrectAnswers = 0;
 ANS( $M->cmp(
      checker => sub {
        my ($M,$student,$ansHash) = @_; 
        my ($sdet)=$student->det();
-       return ($sdet != $ans or $student->is_symmetric ? 0 : 1);
+       if ( $sdet != $ans ) {
+         $ansHash->{ans_message} = "The determinant of your matrix is not $ans." unless $ansHash->{isPreview};
+         return 0;
+       }
+       # Check if diagonal
+       my $isDiag = 1;
+       my $zz = Real(0);
+       for ( my $ii = 1; $ii <= 3 ; $ii++ ) {
+         for ( my $jj = 1 + $ii; $jj <= 4 ; $jj++ ) {
+           if ( ( $student->element($ii,$jj) != $zz ) || ( $student->element($jj,$ii) != $zz ) ) {
+             $isDiag = 0;
+             last;
+           }
+          last if ( $isDiag == 0 );
+         }
+       }
+       if ( $isDiag == 1 ) {
+         $ansHash->{ans_message} = "Your matrix is a diagonal matrix so does not satisfy the conditions." unless $ansHash->{isPreview};
+         return 0;
+       } else {
+         return 1;
+       }
+       # should not get here
+       $ansHash->{ans_message} = "Error in the grading code. Please report this." unless $ansHash->{isPreview};
+       return 0;
        }
 ));
 #-ENDULETH-#
@@ -89,12 +113,12 @@ SOLUTION:
 
 One possible solution is [`A = [$M]`].
 
-We know that the determinant of any upper triangular matrix is the product of the element along the diagonal. So by placing [`[$ans]`] anywhere on the diagonal and filling the upper half of the matrix with any numbers (since they do not effect the determinant).
+We know that the determinant of any upper triangular matrix is the product of the element along the diagonal. So by placing [`[$ans]`] anywhere on the diagonal (with other diagonal entries equal to 1) and filling the upper half of the matrix with any numbers (since they do not effect the determinant), we can construct an example.
 
 END_PGML_SOLUTION
 
 COMMENT('
-    Randomization provides 19 different possible versions of this question.<BR>
+    Randomization provides 197 different possible versions of this question.<BR>
     Includes a solution set.<BR>
     Recommended Settings:<BR>
     - Weight: 2<BR>

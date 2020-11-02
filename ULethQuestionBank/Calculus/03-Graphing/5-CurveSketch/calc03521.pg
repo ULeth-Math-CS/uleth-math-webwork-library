@@ -59,6 +59,7 @@ $ddf = Formula("{$a3*x + $ah4}/{4(x+$h)*sqrt{x+$h}}")->reduce();
 
 $not_infl = -4*$h/3;
 
+$crit0 = -$h;
 $crit1 = -$ah2/$a3;
 
 Context("Interval");
@@ -69,7 +70,7 @@ $I4 = Interval((-$h, inf));
 
 @domain = Compute($I1);
 
-$crit = List($crit1);
+$crit = List($crit0, $crit1);
 
 $infl = "DNE";
 $POI = List($infl);
@@ -106,9 +107,10 @@ if ($a > 0) {
 Context("Point");
 
 $y1 = (-2*$a*$h/3)*sqrt($h/3);
+$p0 = Point(($crit0, 0));
 $p1 = Point(($crit1, $y1));
 
-$ans_points = List($p1);
+$ans_points = List($p0,$p1);
 
 #-ENDULETH-#
 
@@ -128,7 +130,7 @@ Enter *DNE* if an answer does not exist.
 
 
 
-[`\text{2.}`]  Find the critical values of [`f`].  
+[`\text{2.}`]  Find the critical numbers of [`f`].  
 [____________________]{Compute($crit)} (Separate multiple answers with commas.)
 
 
@@ -149,8 +151,8 @@ Enter *DNE* if an answer does not exist.
 
 
 [`\text{6.}`]  Use a number line analysis to complete the following (enter answers as intervals).  
-[`f`] is increasing on: [______________________________]{Compute(@ans_inc)}  
-[`f`] is decreasing on: [______________________________]{Compute(@ans_dec)}  
+[`f`] is increasing on: [______________________________]{Compute(@ans_inc)->cmp(requireParenMatch => 0)}  
+[`f`] is decreasing on: [______________________________]{Compute(@ans_dec)->cmp(requireParenMatch => 0)}  
 [`f`] is concave up on: [______________________________]{Compute(@ans_cu)}  
 [`f`] is concave down on: [______________________________]{Compute(@ans_cd)}  
 

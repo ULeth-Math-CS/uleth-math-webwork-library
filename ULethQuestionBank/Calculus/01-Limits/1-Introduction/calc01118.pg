@@ -89,6 +89,8 @@ Suppose [`f(x) = [$f]`] and [`a = [$a]`].
 
 Using [`h = \pm 0.1, \pm 0.01`], approximate the limit of the difference quotient [` \displaystyle \lim_{h \to 0} \frac{f(a+h) - f(a)}{h} `].
 
+Suggestion: you may find it easier to first simiplify algebraically, and then put in the different values for [`h`].
+
 When [` h = [$a1] `], [`\frac{f(a+h) - f(a)}{h} =`] [______] [@ AnswerFormatHelp("numbers") @]*
 
 When [` h = [$a01] `], [`\frac{f(a+h) - f(a)}{h} =`] [______] 
