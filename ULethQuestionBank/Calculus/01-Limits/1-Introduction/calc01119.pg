@@ -58,9 +58,8 @@ $diff = ($f->substitute(x=>"$a + x") - $f->eval(x=>$a))/x;
 
 #Values used in the table of approximations
 $a1=0.1;
-$a01=0.01;
-
 $ax1=-0.1;
+$a01=0.01;
 $ax01=-.01;
 
 
@@ -133,8 +132,8 @@ $solutionexits=1;
 #-ENDULETH#
 
 ANS($aa1->cmp);
-ANS($aa01->cmp);
 ANS($aax1->cmp);
+ANS($aa01->cmp);
 ANS($aax01->cmp);
 
 COMMENT('

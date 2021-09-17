@@ -58,9 +58,8 @@ $diff = ($f->substitute(x=>"$a*pi + x") - $f->eval(x=>$a*pi))/x;
 
 #Values used in the table of approximations
 $a1=0.1;
-$a01=0.01;
-
 $ax1=-0.1;
+$a01=0.01;
 $ax01=-.01;
 
 #Values used in the table
@@ -130,8 +129,8 @@ $solutionexits=1;
 #-ENDULETH#
 
 ANS($aa1->cmp);
-ANS($aa01->cmp);
 ANS($aax1->cmp);
+ANS($aa01->cmp);
 ANS($aax01->cmp);
 
 COMMENT('

@@ -97,6 +97,8 @@ numerically. Enter *INF* for [`\infty`], *-INF*
 for [`-\infty`], or *DNE* if the limit does not exist,
 but is neither [`\infty`] nor [`-\infty`].
 
+Don't forget to check for common factors.
+If you forget how to factor a cubic, try an online calculator.
 
 >>[``
   f(x) = [$f]

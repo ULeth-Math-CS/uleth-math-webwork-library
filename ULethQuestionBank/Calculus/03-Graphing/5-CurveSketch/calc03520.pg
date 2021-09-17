@@ -147,7 +147,8 @@ Enter *DNE* if an answer does not exist.
 
 
 
-[`\text{3.}`] List the [`x`]-values of any possible points of inflection of [`f`].  
+[`\text{3.}`] List the [`x`]-values of any possible points of inflection of [`f`].  (You will probably require technology to solve for the zero(s) in the numerator.)
+
 [____________________]{Compute($POI)}  (Separate multiple answers with commas.)
 
 
