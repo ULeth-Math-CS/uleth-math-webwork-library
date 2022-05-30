@@ -68,6 +68,8 @@ Find the Taylor polynomial of degree [$deg] at [`a = [$c]`] for the given functi
 >>[``f(x) =  [$f]``]<<
 
 [`p_{[$deg]}(x) = `] [____________________________________________________]{Compute($ans)} [@ AnswerFormatHelp("formulas") @]*
+
+Note: if your answer is not accepted using an exact value (like [`\ln(10)`]), try using an approximation to 5 decimal places (like 2.30259).
 END_PGML
 #-ENDULETH-#
 
