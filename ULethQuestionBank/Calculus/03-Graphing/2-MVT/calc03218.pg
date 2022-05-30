@@ -102,9 +102,9 @@ Set [`f'(c) = \dfrac{f(b) - f(a)}{b-a}`] and solve for [`c`]:
 
 [``
   \begin{array}{rcl}
-    3c^2 - [$b2] c - [$coef1] &=& \dfrac{[$y2] - [$y1]}{[$p2] - [$p1]}  = [$slope]\\
+    6c^2 - [$b2] c - [$coef1] &=& \dfrac{[$y2] - [$y1]}{[$p2] - [$p1]}  = [$slope]\\
     &&\\
-    3c^2 - [$b]2 c + [$c]2 &=& 0 \\
+    6c^2 - [$b2] c + [$c2] &=& 0 \\
     c &=& [$crit1], [$crit2].
   \end{array}
 ``]

@@ -76,9 +76,9 @@ of [$rate] ft/s.
 How fast is the weight rising
 when the worker has walked
 
-10 feet? [____________]{Compute($r1)} [@ AnswerFormatHelp("numbers") @]*  
+10 feet? [____________]{Compute($r1)} ft/s [@ AnswerFormatHelp("numbers") @]*  
 
-30 feet? [____________]{Compute($r2)}
+30 feet? [____________]{Compute($r2)} ft/s
 
 END_PGML
 
