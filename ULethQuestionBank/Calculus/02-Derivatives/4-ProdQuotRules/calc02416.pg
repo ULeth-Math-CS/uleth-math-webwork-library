@@ -67,8 +67,8 @@ if ($r==1) {
   $g_ans = Formula("tan(t) + $b");
   $gp_ans = Formula("(sec(t))^2");
 } else {
-  $g = Formula("cot t + $b");
-  $gp = Formula("-csc^2 t");
+  $g = Formula("cot(t) + $b");
+  $gp = Formula("-csc^2(t)");
   $g_ans = Formula("cot(t) + $b");
   $gp_ans = Formula("-(csc(t))^2");
 }
