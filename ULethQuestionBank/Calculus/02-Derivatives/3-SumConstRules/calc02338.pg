@@ -122,7 +122,7 @@ Scaffold::End();
 
 BEGIN_PGML_SOLUTION
 
-The line tangent to [`f(x)`] at [`x=[$c]`] meets the function at [`x = [$c]`] and therefore [`([$c], f([$c])`] is on the tangent line, where [`f([$c]) = [$m]([$c]) + ([$b]) = [$ans1]`]. 
+The line tangent to [`f(x)`] at [`x=[$c]`] meets the function at [`x = [$c]`] and therefore [`([$c], f([$c]))`] is on the tangent line, where [`f([$c]) = [$m]([$c]) + ([$b]) = [$ans1]`]. 
 
 We use the Power Rule determine that [`f'(x) = [$ans2]`]. The slope of the tangent line at [`x = [$c]`] is [`f'([$c]) = [$ans3]`].
 
