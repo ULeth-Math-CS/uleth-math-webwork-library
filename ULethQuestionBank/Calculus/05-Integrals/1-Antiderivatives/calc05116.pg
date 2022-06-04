@@ -51,9 +51,9 @@ $b = random(2,20,1)*random(-1,1,2);
 $c = random(2,20,1);
 $d = random(2,20,1);
 
-$integranda=Formula("$a sin x");
-$integrandb=Formula("$b sec^2 s");
-$integrandc=Formula("$c sec{t} tan{t} + $d csc{t} cot{t}");
+$integranda="$a \sin x";
+$integrandb="b \sec^2 s";
+$integrandc="$c \sec{t} \tan{t} + $d \csc{t} \cot{t}";
 
 $antideriva=Formula("-$a cos(x)");
 $antiderivb=Formula("$b tan(s)");
