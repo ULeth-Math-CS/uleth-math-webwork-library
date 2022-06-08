@@ -46,20 +46,20 @@ $a = random(2,9,1);
 
 $r = random(1,2,1);
 if ($r==1) {
-  $f = "$a \sec x";
+  $f = Formula("$a sec x")->reduce();
 
-  $df1 = "$a \sec x \tan x";
+  $df1 = Compute($f->D('x'));
   $ans1 = Compute("$a sec(x) tan(x)");
 
-  $df2 = Compute("$a(sec x)(sec^2 x) + (sec x tan x)(tan x)");
+  $df2 = Compute("$a(sec x)(sec^2x) + (sec x tan x)(tan x)");
   $ans2 = Compute("$a(sec(x)^3 + sec(x) * tan(x)^2)");
 } else {
-  $f = "$a \csc x";
+  $f = Formula("$a csc x")->reduce();
 
-  $df1 = "-$a \csc x \cot x";
+  $df1 = Compute($f->D('x'));
   $ans1 = Compute("-$a csc(x) cot(x)");
 
-  $df2 = "-$a((\csc x)(-\csc^2 x) + (-\csc x \cot x)(\cot x))";
+  $df2 = Compute("$-$a(csc x)(-csc^2x) + (-csc x cot x)(cot x)");
   $ans2 = Compute("$a (csc(x)^3 + csc(x) cot(x)^2)");
 }
 
