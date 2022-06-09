@@ -117,9 +117,9 @@ Scaffold::End();
 #  Solution
 BEGIN_PGML_SOLUTION
 
-The line tangent to [`f(x)`] at [`x=[$c]`] meets the function at [`x = [$c]`] and therefore [`([$c], f([$c])`] is on the tangent line, where [`f([$c]) = [$a]*\sin([$c]) = [$a]\cdot 1 = [$ans1]`]. 
+The line tangent to [`f(x)`] at [`x=[$c]`] meets the function at [`x = [$c]`] and therefore [`([$c], f([$c]))`] is on the tangent line, where [`f([$c]) = [$a]*\sin([$c]) = [$a]\cdot 1 = [$ans1]`]. 
 
-The derivative of [`\sin(x)`] is [`\cos(x)`], so we determine that [`f'(x) = [$ans2]`]. The slope of the tangent line at [`x = [$c]`] is [`f'([$c]) = 1`].
+The derivative of [`\sin(x)`] is [`\cos(x)`], so we determine that [`f'(x) = [$ans2]`]. The slope of the tangent line at [`x = [$c]`] is [`f'([$c]) = [$ans3]`].
 
 Recall: (the _point-slope_ form of a line) a line with slope [`m`] which passes through the point [`(x_0, y_0)`] has the form [`y - y_0 = m(x-x_0)`].
 

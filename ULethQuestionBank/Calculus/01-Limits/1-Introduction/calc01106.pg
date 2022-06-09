@@ -69,7 +69,7 @@ $aa0001=$f->eval(x=>$a0001);
 $aax002=$f->eval(x=>$ax002);
 $aax001=$f->eval(x=>$ax001);
 $aax0005=$f->eval(x=>$ax0005);
-$aax0001=$f->eval(x=>$a0001);
+$aax0001=$f->eval(x=>$ax0001);
 
 #Evaluate the limit
 $limi= $f->eval(x=>$a);
