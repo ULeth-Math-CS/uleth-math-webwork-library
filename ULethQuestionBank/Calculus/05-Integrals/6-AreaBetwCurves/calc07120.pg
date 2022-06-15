@@ -125,8 +125,8 @@ $ans = $F1 - $F2;
 # MathObject in your LaTeX brackets.
 $column2 = PGML::Format2(<<'END_PGML');
 Find the area  of the region enclosed between 
- [` f(x) = [$f] `] and
- [` g(x) = [$g]`]. 
+ [` f(x) = [$g] `] and
+ [` g(x) = [$f]`]. 
 
 Area = [____________________] [@ AnswerFormatHelp("numbers") @]*
 
@@ -172,7 +172,7 @@ ANS( Compute($ans)->cmp );
 BEGIN_PGML_SOLUTION
 
 The area between curves is found using the 
-definite integral [` \int_{a}^b \left( f(x) - g(x) \right) \, dx`].
+definite integral [` \int_{a}^b \left( g(x) - f(x) \right) \, dx`].
 First determine the points of intersection by
 solving (possibly via the quadratic formula):
 >>[``
