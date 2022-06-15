@@ -78,10 +78,6 @@ Context("Interval");
 @ans_cu = Interval("($crit, INF)");
 @ans_cd = Interval("(-INF, $crit)");
 
-Context("Point");
-$y1 = ($crit)**3 + $b2*($crit**2) + $b1*($crit) + $d;
-$infl = Point("($crit, $y1)");
-
 $max = List("$c1");
 $min = List("$c2");
 
@@ -106,6 +102,14 @@ Enter *DNE* if an answer does not exist.
 [`\text{b)}`] Determine the intervals on which [`f`] is concave up/down:  
 [`f`] is concave up on: [________________________]{Compute(@ans_cu)}  
 [`f`] is concave down on: [________________________]{Compute(@ans_cd)}
+
+END_PGML
+
+Context("Point");
+$y1 = ($crit)**3 + $b2*($crit**2) + $b1*($crit) + $d;
+$infl = Point("($crit, $y1)");
+
+BEGIN_PGML
 
 [`\text{c)}`] Based on your answers in (a) and (b), determine the inflection points of [`f`]:  
 [_____________________]{Compute($infl)} [@ AnswerFormatHelp("numbers") @]*  
