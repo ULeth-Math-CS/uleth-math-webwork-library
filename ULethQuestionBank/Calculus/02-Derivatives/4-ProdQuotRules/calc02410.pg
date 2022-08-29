@@ -106,7 +106,7 @@ Section::Begin("Product Rule - Part 2");
 BEGIN_PGML
 Using the derivatives from Part 1 and the Product Rule,
 
-[``h'(s) = \left[\frac{f}{g}\right]' 
+[``h'(s) = (f \cdot g)'(s) 
 = f'\cdot g + f\cdot g' = ``]
 [`\Big(`][_____]{Compute($df)}[`\Big)`][`\cdot`][`\Big(`][_____]{Compute($g)}[`\Big)`] [`+`] [`\Big(`][_____]{Compute($f)}[`\Big)`][`\cdot`][`\Big(`][_____]{Compute($dg)}[`\Big)`].
 

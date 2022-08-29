@@ -130,6 +130,16 @@ Enter *DNE* if an answer does not exist.
 [`f`] is concave up on: [______________________________]{Compute(@ans_cu)}  
 [`f`] is concave down on: [______________________________]{Compute(@ans_cd)}  
 
+END_PGML
+
+Context("Point");
+
+$y1 = $k;
+$p1 = Point(($crit1, $y1));
+
+$ans_points = List($p1);
+
+BEGIN_PGML
 
 [`\text{7.}`] Evaluate [`f`] at each critical point and possible point
 of inflection.  List all such points below.
