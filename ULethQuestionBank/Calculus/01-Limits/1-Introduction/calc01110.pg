@@ -44,6 +44,7 @@ TEXT(beginproblem());
 #   Setup
 #-ULETH-#
 Context("Numeric")->variables->are(x=>"Real");
+Context()->flags->set(tolerance => 0.015, tolType => "absolute");
 
 #Randomize the question parameters. 
 $a=random(1,10,1)*random(-1,1,2);
@@ -55,7 +56,7 @@ $apc = $a+$c;
 $ab = $a*$b;
 $ac = $a*$c;
 
-$f = Formula("(x^2 -$apb*x + $ab)/(x^2 -$apc*x + $ac)");
+$f = Formula("(x^2 -$apb*x + $ab)/(x^2 -$apc*x + $ac)")->reduce();
 
 #Values used in the table of approximations
 $a002=$a+0.002;
