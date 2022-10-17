@@ -43,7 +43,7 @@ TEXT(beginproblem());
 Context("Numeric");
 
 $r = random(2,4,1);
-Context()->flags->set(limits=>[-0.95,0.95]);
+Context()->flags->set(limits=>[0,0.90]);
 if ($r==2) {
   $g = "\sqrt{x}";
   $g_a = "sqrt(x)";
@@ -62,7 +62,7 @@ if ($choice1 == 1) {
   $fp = "\frac{1}{\sqrt{1 - x^2}}";
   $fp_a = "1/sqrt(1-x^2)";
 
-  $deriv = "\frac{1}{\sqrt{1 - ($g)^2}} \cdot $gp}";
+  $deriv = "\frac{1}{\sqrt{1 - ($g)^2}} \cdot $gp";
   $ans = "1/sqrt(1 - ($g_a)^2) * $gp_a";
 } elsif($choice1 == 2) {
   $f = "\arccos";
