@@ -43,7 +43,7 @@ TEXT(beginproblem());
 #-ULETH-#
 
 ## number in ULETH text for Theorem: Derivatives of Inverse Functions ##
-$thm = "2.7.1";
+$thm = "2.7.7";
 
 Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
 
