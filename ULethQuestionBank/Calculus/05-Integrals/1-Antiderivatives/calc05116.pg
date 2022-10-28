@@ -52,7 +52,7 @@ $c = random(2,20,1);
 $d = random(2,20,1);
 
 $integranda=Formula("$a sin x");
-$integrandb=Formula("b sec^2s");
+$integrandb=Formula("$b sec^2s");
 $integrandc=Formula("$c sec{t} tan{t} + $d csc{t} cot{t}");
 
 $antideriva=Formula("-$a cos(x)");
