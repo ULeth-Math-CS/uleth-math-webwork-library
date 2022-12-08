@@ -62,7 +62,7 @@ BEGIN_PGML
 
 Evaluate the definite integral.
 
-[`\displaystyle\int_{-\frac{\pi}{2}}^{\frac{\pi}{2}} [$f1] \, dx `] = [____________]{$ans} [` + C`]. [@ AnswerFormatHelp("numbers") @]*
+[`\displaystyle\int_{-\frac{\pi}{2}}^{\frac{\pi}{2}} [$f1] \, dx `] = [____________]{$ans}. [@ AnswerFormatHelp("numbers") @]*
 
 
 END_PGML
