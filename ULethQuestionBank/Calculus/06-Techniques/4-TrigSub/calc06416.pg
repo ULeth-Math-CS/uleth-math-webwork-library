@@ -167,6 +167,8 @@ BEGIN_PGML_HINT
 Complete the following reference triangle where [`x = [$sb]\sec(t)`] to help find the value of [`\tan(t)`].
 
 [@ image($image, width => 200, tex_size => 300) @]*
+
+Your answer for the integral may require absolute values.
 END_PGML_HINT
 
 BEGIN_PGML_SOLUTION
