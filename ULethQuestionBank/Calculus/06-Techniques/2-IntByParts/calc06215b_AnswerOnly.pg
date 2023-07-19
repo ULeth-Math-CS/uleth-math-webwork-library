@@ -80,7 +80,7 @@ $Checker = sub {
 
 BEGIN_PGML
 
-[``\int e^{[$a]x}\cos([$b]x)\;dx =``][________________________________________________]{$ans->cmp(checker=>$Checker)}[`+ C`]
+[``\int e^{[$a]x}\cos([$b]x)\;dx =\;``][________________________________________________]{$ans->cmp(checker=>$Checker)}[`\;+ \;C`]
 
 END_PGML
 
