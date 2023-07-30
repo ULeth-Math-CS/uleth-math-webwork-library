@@ -63,13 +63,13 @@ $Checker = sub {
 
 BEGIN_PGML
 
-[``\int x\sin([$n]x)\;dx``] = [____________________________]{$ans->cmp(checker=>$Checker)} [` + C`]
+[``\int x\sin([$n]x)\;dx =\;``][____________________________]{$ans->cmp(checker=>$Checker)} [`\; + \;C`]
 
 
 END_PGML
 
 BEGIN_PGML_SOLUTION
-The integrand contains an Algebraic term ([`x`]) and a trig term ([`\sin([$n]x)`]). This suggests letting [`u`] be the algebraic term, so [`u = x`] and [`dv = \sin([$n]x)`]. This makes [`du = 1\;dx`] and [`v = -\frac{1}{[$n]}\cos([$n]x)`].
+The integrand contains an Algebraic term ([`x`]) and a trig term ([`\sin([$n]x)`]). This suggests letting [`u`] be the algebraic term, so [`u = x`] and [`dv = \sin([$n]x)dx`]. This makes [`du = 1\;dx`] and [`v = -\frac{1}{[$n]}\cos([$n]x)`].
 
 The Integration by Parts formula gives
 
