@@ -63,9 +63,9 @@ $ans = Formula("1 - x/$a + x^2/($a)^2 - x^3/($a)^3 + x^4/($a)^4")->reduce();
 BEGIN_PGML
 Find the Maclaurin polynomial of degree [$deg] for the given function. 
 
->>[``f(t) =  [$f]``]<<
+>>[``f(x) =  [$f]``]<<
 
-[`p_{[$deg]}(t) = `] [____________________________________________________]{Compute($ans)} [@ AnswerFormatHelp("formulas") @]*
+[`p_{[$deg]}(x) = `] [____________________________________________________]{Compute($ans)} [@ AnswerFormatHelp("formulas") @]*
 END_PGML
 #-ENDULETH-#
 
