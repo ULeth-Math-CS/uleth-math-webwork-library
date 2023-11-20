@@ -170,8 +170,8 @@ END_PGML
 BEGIN_TEXT
 \{
   DataTable([
-    [PGML('u = [`[$u]`]'),' ',PGML('v =[__________]{$v1->cmp(checker=>$v1Checker)}')],
-    [PGML('du =[______]{$du->cmp(checker=>$duChecker)}dx'),' ',PGML('dv = [___________]{$dv1}dx')]
+    [PGML('u = [`[$u]`]'),' ',PGML('v = [__________]{$v1->cmp(checker=>$v1Checker)}')],
+    [PGML('du = [______]{$du->cmp(checker=>$duChecker)} dx'),' ',PGML('dv = [___________]{$dv1} dx')]
   ], align=>'lll',
 );
 \}
@@ -182,7 +182,7 @@ BEGIN_PGML
 
 Now substitute all of this into the Integration by Parts formula, giving
 
->>[``\int e^{[$a]x}\sin([$b]x)\;dx``] = [_________________]{$IBP1a} - [``\int``][_________________]{$IBP1b}[`dx`]<<
+>>[``\int e^{[$a]x}\sin([$b]x)\;dx =\;``][_________________]{$IBP1a} [``\; - \int\;``][_________________]{$IBP1b}[`\;dx`]<<
 
 
 
@@ -226,8 +226,8 @@ BEGIN_TEXT
 
 \{
   DataTable([
-    [PGML('u = [______]{$u->cmp(checker=>$u2Checker)}'), ,' ',PGML('v =[__________]{$v2->cmp(checker=>$v2Checker)}')],
-    [PGML('du =[______]{$du->cmp(checker=>$duChecker)}dx'),' ',PGML('dv =[__________]{$dv2->cmp(checker=>$dv2Checker)}dx')]
+    [PGML('u = [______]{$u->cmp(checker=>$u2Checker)}'), ,' ',PGML('v = [__________]{$v2->cmp(checker=>$v2Checker)}')],
+    [PGML('du = [______]{$du->cmp(checker=>$duChecker)} dx'),' ',PGML('dv = [__________]{$dv2->cmp(checker=>$dv2Checker)} dx')]
   ], align=>'lll',
 );
 \}
@@ -238,7 +238,7 @@ BEGIN_PGML
 
 Now substitute all of this into the Integration by Parts formula, giving
 
->>[``\int e^{[$a]x}\cos([$b]x)\;dx``] = [_________________]{$IBP2a} - [``\int``][_________________]{$IBP2b}[`dx`]<<
+>>[``\int e^{[$a]x}\cos([$b]x)\;dx =\;``][_________________]{$IBP2a} [``\; - \int\;``][_________________]{$IBP2b}[`\;dx`]<<
 
 
 END_PGML
@@ -281,7 +281,7 @@ Now substitute the step 2 result into the result from step 1.
 
 This gives you the term [``\int e^{[$a]x}\sin([$b]x)\;dx``] on both sides of the equation. Now solve this equation for [``\int e^{[$a]x}\sin([$b]x)\;dx``]. (Be careful of the parentheses!)
 
-[``\int e^{[$a]x}\sin([$b]x)\;dx =``][________________________________________________]{$ans->cmp(upToConstant=>1)}[`+ C`]
+[``\int e^{[$a]x}\sin([$b]x)\;dx =\;``][________________________________________________]{$ans->cmp(upToConstant=>1)}[`\;+ \;C`]
 
 END_PGML
 

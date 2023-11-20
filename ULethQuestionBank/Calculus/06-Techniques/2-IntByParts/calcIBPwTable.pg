@@ -8,6 +8,7 @@
 ## Institution(Agnes Scott College)
 ## Author(Larry Riddle)
 ## Level(4)
+## MO(1)
 ## Language(en)
 ## KEYWORDS('Integration by parts', 'table')
 
@@ -71,7 +72,7 @@ LayoutTable(
 
 The function [`f`]  has a continuous second derivative. The table above gives values of [`f`] and its first derivative at selected values of [`x`]. Use integration by parts to help evaluate the following definite integral using data from the table.
 
-[``\int_{[$lower]}^{[$upper]} xf''(x)\;dx =``][_____]{$ans}
+[``\int_{[$lower]}^{[$upper]} xf''(x)\;dx =\;``][_____]{$ans}
 
 END_PGML
 

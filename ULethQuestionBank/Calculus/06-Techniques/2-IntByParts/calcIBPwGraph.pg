@@ -7,6 +7,7 @@
 ## DBsection(Integration by parts (without trigonometric functions))
 ## Institution(Agnes Scott College)
 ## Author(Larry Riddle)
+## M(0)
 ## Level(4)
 ## Language(en)
 ## KEYWORDS('Integration by parts', 'graph')
@@ -78,7 +79,7 @@ BEGIN_PGML
 
 The graph of the differentiable function [`f`] is shown above. The area in the first quadrant bounded by the graph of [`y=f(x)`], the [`x`]-axis, and the [`y`]-axis is equal to [$area]. Use integration by parts to help evaluate the following definite integral using information about the function [`f`].
 
-[``\int_{0}^{[$b]} ([$m]x+[$c])f'(x)\;dx =``][_____]{$ans}
+[``\int_{0}^{[$b]} ([$m]x+[$c])f'(x)\;dx =\;``][_____]{$ans}
 
 END_PGML
 

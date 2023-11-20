@@ -74,8 +74,8 @@ END_PGML
 BEGIN_TEXT
 \{
   DataTable([
-    [PGML('u = [______]{$u->cmp(checker=>$uChecker)}'), ,' ',PGML('v =[__________]{$v}')],
-    [PGML('du =[______]{$du}dx'),' ',PGML('dv =[__________]{$dv->cmp(checker=>$dvChecker)}dx')]
+    [PGML('u = [______]{$u->cmp(checker=>$uChecker)}'), ,' ',PGML('v = [__________]{$v}')],
+    [PGML('du = [______]{$du} dx'),' ',PGML('dv = [__________]{$dv->cmp(checker=>$dvChecker)} dx')]
   ], align=>'lll',
 );
 \}
@@ -86,17 +86,17 @@ BEGIN_PGML
 
 Now substitute all of this into the Integration by Parts formula, giving
 
->>[``\int x^[$n]\ln(x)\;dx``] = [____________]{$ibp1} - [``\int``][____________]{$ibp2}[`dx`]<<
+>>[``\int x^[$n]\ln(x)\;dx =\;``][____________]{$ibp1}[``\; - \int\;``][____________]{$ibp2}[`\;dx`]<<
 
 Complete the last integration to get
 
->>[``\int x^[$n]\ln(x)\;dx``] = [____________________________]{$ans->cmp(upToConstant=>1)} [` + C`]<<
+>>[``\int x^[$n]\ln(x)\;dx =\;``][____________________________]{$ans->cmp(upToConstant=>1)} [`\; + \;C`]<<
 
 
 END_PGML
 
 BEGIN_PGML_SOLUTION
-The integrand contains an Algebraic term ([`x^[$n]`]) and a logarithmic term ([` \ln(x)`]). This suggests letting [`u`] be the logarithmic term, so [`u = \ln(x)`] and [`dv = x^[$n]`]. This makes [`du = \frac{1}{x}\;dx`] and [`v = \frac{1}{[$n+1]} x^{[$n+1]}`].
+The integrand contains an Algebraic term ([`x^[$n]`]) and a logarithmic term ([` \ln(x)`]). This suggests letting [`u`] be the logarithmic term, so [`u = \ln(x)`] and [`dv = x^[$n]dx`]. This makes [`du = \frac{1}{x}\;dx`] and [`v = \frac{1}{[$n+1]} x^{[$n+1]}`].
 
 The Integration by Parts formula gives
 

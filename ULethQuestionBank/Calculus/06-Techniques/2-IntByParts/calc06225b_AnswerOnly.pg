@@ -60,12 +60,12 @@ $Checker = sub {
 
 BEGIN_PGML
 
-[``\int [$f]\;dx``] = [____________________________]{$ans->cmp(checker=>$Checker)} [` + C`]
+[``\int [$f]\;dx\ =\;``][____________________________]{$ans->cmp(checker=>$Checker)} [`\; + \;C`]
 
 END_PGML
 
 BEGIN_PGML_SOLUTION
-The integrand contains an Algebraic term ([`x^{[$n]}`]) and a logarithmic term ([` \ln(x)`]). This suggests letting [`u`] be the logarithmic term, so [`u = \ln(x)`] and [`dv = x^[$n]`]. This makes [`du = \frac{1}{x}\;dx`] and [`v = \frac{1}{[$n+1]} x^{[$n+1]}`].
+The integrand contains an Algebraic term ([`x^{[$n]}`]) and a logarithmic term ([` \ln(x)`]). This suggests letting [`u`] be the logarithmic term, so [`u = \ln(x)`] and [`dv = x^{[$n]}dx`]. This makes [`du = \frac{1}{x}\;dx`] and [`v = \frac{1}{[$n+1]} x^{[$n+1]}`].
 
 The Integration by Parts formula gives
 

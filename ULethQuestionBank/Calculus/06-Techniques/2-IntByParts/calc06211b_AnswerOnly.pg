@@ -69,12 +69,12 @@ $Checker = sub {
 
 BEGIN_PGML
 
-[``\int (x+[$a])e^{[$n]x}\;dx``] = [____________________________]{$ans->cmp(checker=>$Checker)} [` + C`]
+[``\int (x+[$a])e^{[$n]x}\;dx =;``][____________________________]{$ans->cmp(checker=>$Checker)} [`\; + \;C`]
 
 END_PGML
 
 BEGIN_PGML_SOLUTION
-The integrand contains an Algebraic term ([`x+[$a]`]) and an exponential term ([` e^{[$n]x}`]). This suggests letting [`u`] be the algebraic term, so [`u = x+[$a]`] and [`dv =  e^{[$n]x}`]. This makes [`du = 1\;dx`] and [`v = [$n1]e^{[$n]x}`].
+The integrand contains an Algebraic term ([`x+[$a]`]) and an exponential term ([` e^{[$n]x}`]). This suggests letting [`u`] be the algebraic term, so [`u = x+[$a]`] and [`dv =  e^{[$n]x}dx`]. This makes [`du = 1\;dx`] and [`v = [$n1]e^{[$n]x}`].
 
 The Integration by Parts formula gives
 
