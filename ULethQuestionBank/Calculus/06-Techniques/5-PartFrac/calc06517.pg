@@ -97,7 +97,7 @@ $multians = MultiAnswer($C, $A, $den1, $B, $den2)->with(
           if (($f2==$f2stu && $b2!=$bstu) || ($f1==$f2stu && $a1!=$bstu )) {
              $ok2 = 0;          
           }
-          return [$ok1,1,$ok2,1];
+          return [1,$ok1,1,$ok2,1];
       } elsif ( $f1stu*$f2stu != $f1*$f2 ) {
           $self->setMessage(2,"Check your factorization of the denominator");
           $self->setMessage(4,"Check your factorization of the denominator");
