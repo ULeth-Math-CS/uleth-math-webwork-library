@@ -29,7 +29,7 @@ loadMacros(
 TEXT(beginproblem());
 
 Context("Fraction");
-
+Context() -> variables -> set(x =>{limits => [0.5,2]});
 $n = random(2,12)*random(-1,1,2);
 $an = abs($n);
 $f = $n > 0 ? "x^{$n}\ln(x)" : "\frac{\ln(x)}{x^{$an}}";
