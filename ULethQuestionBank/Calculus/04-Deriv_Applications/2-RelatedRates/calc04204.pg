@@ -52,8 +52,6 @@ $x1 = $rate/(4*$pi);
 $x2 = $rate/(400*$pi);
 $x3 = $rate/(40000*$pi);
 
-$cmps3 = "\(\text{cm}^3/\text{s}\)";
-$cmps = "\(\text{cm}/\text{s}\)";
 #############################
 #   Problem Text
 #-ULETH-#
@@ -61,14 +59,14 @@ $cmps = "\(\text{cm}/\text{s}\)";
 BEGIN_PGML
 
 A spherical balloon is inflated with air flowing
-at a rate of [$rate] [$cmps3].
+at a rate of [$rate] [`\text{cm}^3/\text{s}`].
 How fast is the radius of the balloon increasing
 when the radius is:
 
 
-a. 1 cm? [_________________________]{Compute($x1)} [$cmps] [@ AnswerFormatHelp("numbers") @]*  
-b. 10 cm? [_________________________]{Compute($x2)} [$cmps]  
-c. 100 cm? [_________________________]{Compute($x3)} [$cmps]  
+a. 1 cm? [_________________________]{Compute($x1)} cm/s [@ AnswerFormatHelp("numbers") @]*  
+b. 10 cm? [_________________________]{Compute($x2)} cm/s
+c. 100 cm? [_________________________]{Compute($x3)} cm/s
 
 END_PGML
 

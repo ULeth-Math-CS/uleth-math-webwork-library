@@ -53,8 +53,6 @@ $x1 = $r/(2*$pi);
 $x2 = $r/(20*$pi);
 $x3 = $r/(200*$pi);
 
-$cmps3 = "\(\text{cm}^3/\text{s}\)";
-$cmps = "\(\text{cm}/\text{s}\)";
 #############################
 #   Problem Text
 #-ULETH-#
@@ -62,13 +60,13 @@ $cmps = "\(\text{cm}/\text{s}\)";
 BEGIN_PGML
 
 Water flows onto a flat surface at a rate of
-[$r] [$cmps3] forming a circular puddle
+[$r] [`\text{cm}^3/\text{s}`] forming a circular puddle
 10 mm deep.  How fast is the radius growing
 when the radius is:  
 
-a. 1 cm? [_________________________]{Compute($x1)} [$cmps]  [@ AnswerFormatHelp("numbers") @]*  
-b. 10 cm? [_________________________]{Compute($x2)} [$cmps]  
-c. 100 cm? [_________________________]{Compute($x3)} [$cmps]  
+a. 1 cm? [_________________________]{Compute($x1)} cm/s  [@ AnswerFormatHelp("numbers") @]*  
+b. 10 cm? [_________________________]{Compute($x2)} cm/s
+c. 100 cm? [_________________________]{Compute($x3)} cm/s
 
 
 
@@ -80,11 +78,10 @@ END_PGML
 #############################
 #  Solution
 #-ULETH-#
-$cmps = "\(\text{cm}^2/\text{s}\)";
 BEGIN_PGML_SOLUTION
 
 Since the puddle is uniformly 10 mm (i.e., 1 cm) deep, the
-area of the circle is increasing at a rate of [$r] [$cmps3].  
+area of the circle is increasing at a rate of [$r] [`\text{cm}^2/\text{s}`].  
 Start with the area formula for a circle, [`A = \pi r^2`].
 Taking time-derivatives (i.e, derivatives with respect to [`t`]) of both sides, we find that 
 

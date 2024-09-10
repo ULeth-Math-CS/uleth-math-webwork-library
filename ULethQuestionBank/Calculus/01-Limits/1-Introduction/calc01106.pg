@@ -210,7 +210,7 @@ $column1 = PGML::Format(<<END_PGML);
 
 Approximate the given limit using the provided graph.
 
-If the limit does not exist, enter *DNE*.
+If the limit does not exist, enter [|DNE|].
 
 [``\lim_{x \to $a} (x^2 + $b x + $c) = ``] [______] [@ AnswerFormatHelp("numbers") @]*
 

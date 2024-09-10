@@ -56,16 +56,13 @@ $ans = 2*$h*$h*$h;
 
 
 if ($h <= 20) {
-$units3 = "\(\text{in}^3\)";
-$units = "\(\text{in}\)";
+$units = "in";
 }
 elsif ($h <= 40) {
-$units3 = "\(\text{cm}^3\)";
-$units = "\(\text{cm}\)";
+$units = "cm";
 }
 else {
-$units3 = "\(\text{mm}^3\)";
-$units = "\(\text{mm}\)";
+$units = "mm";
 }
 
 #############################
@@ -76,16 +73,16 @@ BEGIN_PGML
 
 The [$country] Postal Service charges more for
 boxes whose combined length and girth exceeds
-[$max] [$units].  
+[`[$max] \text{[$units]}`].  
 The length of a package is the length
 [`\ell`] of its longest side; the girth is the perimeter
 of the cross section, [`2w + 2h`].
 
 What is the maximum volume of a package with
 a square cross section ( [`w = h`] ) that
-does not exceed the [$max] [$units] standard?
+does not exceed the [`[$max] \text{[$units]}`] standard?
 
-Maximum volume [`V =`] [__________]{Compute($ans)} [$units3] [@ AnswerFormatHelp("numbers") @]*  
+Maximum volume [`V =`] [__________]{Compute($ans)} [`\text{[$units]}^3`]s [@ AnswerFormatHelp("numbers") @]*  
 
 
 END_PGML

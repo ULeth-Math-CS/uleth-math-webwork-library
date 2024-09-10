@@ -214,6 +214,8 @@ Suppose [``f(x) = $f``]
 
 and approximate the given limit using the provided graph.
 
+If the limit does not exist, enter [|DNE|].
+
 [``\lim_{x \to $a} \, f(x) = ``] [______] [@ AnswerFormatHelp("numbers") @]*
 
 END_PGML

@@ -62,8 +62,6 @@ $x3 = -$spd*$m / (sqrt($a3));
 
 if ($ladder == 11){$art = "An"}
 else {$art = "A"};
-
-$units = "\(\text{ft}/\text{s}\)";
 #############################
 #   Problem Text
 #-ULETH-#
@@ -71,15 +69,15 @@ $units = "\(\text{ft}/\text{s}\)";
 BEGIN_PGML
 
 [$art] [$ladder] foot ladder is leaning against a house while
-the base is pulled away at a constant rate of [$spd] [$units].
+the base is pulled away at a constant rate of [$spd] ft/s.
 At what rate is the top of the ladder sliding down the
 side of the house when the base is:
 
 
 
-a. 1 foot from the house? [_________________________]{Compute($x1)} [$units] [@ AnswerFormatHelp("numbers") @]*  
-b. 5 feet from the house? [_________________________]{Compute($x2)} [$units]  
-c. [$m] feet from the house? [_________________________]{Compute($x3)} [$units]  
+a. 1 foot from the house? [_________________________]{Compute($x1)} ft/s [@ AnswerFormatHelp("numbers") @]*
+b. 5 feet from the house? [_________________________]{Compute($x2)} ft/s
+c. [$m] feet from the house? [_________________________]{Compute($x3)} ft/s
 
 END_PGML
 
