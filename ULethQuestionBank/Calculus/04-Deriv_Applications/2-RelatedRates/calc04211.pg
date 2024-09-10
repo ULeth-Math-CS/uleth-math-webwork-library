@@ -58,9 +58,6 @@ $num = $rate * 16;
 $r1 = $num/$pi;
 $r2 = $num/(100*$pi);
 $r3 = $num/($h3**2 * $pi);
-
-$units3 = "\(\text{ft}^3/\text{min}\)";
-$units = "\(\text{ft}/\text{min}\)";
 #############################
 #   Problem Text
 #-ULETH-#
@@ -69,13 +66,13 @@ BEGIN_PGML
 
 An inverted cylindrical cone,  [$h0] feet deep and [$r0]
 feet across at the top, is being filled with water at
-a rate of [$rate] [$units3].  At what rate is
+a rate of [$rate] [`\text{ft}^3/\text{min}`].  At what rate is
 the water rising in the tank when the depth of
 the water is:
 
-a. 1 foot? [_________________________]{Compute($r1)} [$units] [@ AnswerFormatHelp("numbers") @]*  
-b. 10 feet? [_________________________]{Compute($r2)} [$units]  
-c. [$h3] feet? [_________________________]{Compute($r3)} [$units]  
+a. 1 foot? [_________________________]{Compute($r1)} ft/min [@ AnswerFormatHelp("numbers") @]*  
+b. 10 feet? [_________________________]{Compute($r2)} ft/min
+c. [$h3] feet? [_________________________]{Compute($r3)} ft/min
 
 END_PGML
 
