@@ -108,7 +108,7 @@ END_PGML
 #-ULETH-#
 BEGIN_PGML_SOLUTION
 
-The difference quotient [`\frac{f(a+h) - f(a)}{h}`] becomes [` [$diff->substitute(x=>h)->reduce()]`].
+The difference quotient [`\frac{f(a+h) - f(a)}{h}`] becomes [` [$diff->substitute(x=>"h")->reduce()]`].
 
 Evaluations of the difference quotient for each [`h`] are given in the following table.
 
