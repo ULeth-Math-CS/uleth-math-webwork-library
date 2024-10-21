@@ -31,7 +31,7 @@ loadMacros(
   "PGML.pl",
   # Used to provide contextual help for how to type answers.
   "AnswerFormatHelp.pl",
-  	'contextFraction.pl',
+	'contextFraction.pl',
 );
 
 # Sets up basic problem information.
@@ -43,7 +43,7 @@ TEXT(beginproblem());
 #-ULETH-#
 
 ## number in ULETH text for Theorem: Derivatives of Inverse Functions ##
-$thm = "2.7.1";
+$thm = "2.7.6";
 
 Context("Numeric")->noreduce('(-x)-y','(-x)+y)');
   Context()->flags->set(
