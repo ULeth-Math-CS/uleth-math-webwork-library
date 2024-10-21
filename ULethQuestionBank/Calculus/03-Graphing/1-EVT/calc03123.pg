@@ -53,24 +53,16 @@ do {
   $a = random(2,10,1);
 } until (gcd($a, $b) == 1);
 
-$amb = $a - $b;
-if ($amb < 0) {
-  $e_num = -$amb;
-  $e_den = $b;
-  $e = Formula("$e_num / $e_den");
+$bma = $b - $a;
+$e_arg = Formula("$bma / $b");
   
-} else {
-  $e_num = $amb;
-  $e_den = $b;
-  $e = Formula("-$e_num / $e_den");
-}  
 
 $f = Formula("{$a + $b ln x}/{x}")->reduce();
 
 $ansmin="DNE";
 $min_x = "DNE";
 
-$max_x = Formula("e^($e_num/$b)"); 
+$max_x = Formula("e^($bma/$b)"); 
 $ansmax= Formula("$b/$max_x");
 
 #-ENDULETH-#
@@ -115,12 +107,12 @@ Set the derivative equal to zero to locate all critical numbers:
   \end{array}
 `]
 
-Since the interval [`(0,\infty)`] is not closed, we should examine the behavior of [`f(x)`] around the critical point [`x  = e^{[$e]}`] to determine what kind of extrema occurs at this point. One can observe that, for [`x`] in [`(0, e^{[$e]})`], [`f'(x)`] is positive, while for [`x`] in [`(e^{[$e]}, \infty)`], [`f'(x)`] is negative. This means the function increases for [`x`] up to [`e^{[$e]}`], then decreases, so [`f`] has an absolute maximum located at [`x = e^{[$e]}`] and no absolute minimum.
+Since the interval [`(0,\infty)`] is not closed, we should examine the behavior of [`f(x)`] around the critical point [`x  = e^{[$e]}`] to determine what kind of extrema occurs at this point. One can observe that, for [`x`] in [`(0, e^{[$e]})`], [`f'(x)`] is positive, while for [`x`] in [`(e^{[$e_arg]}, \infty)`], [`f'(x)`] is negative. This means the function increases for [`x`] up to [`e^{[$e_arg]}`], then decreases, so [`f`] has an absolute maximum located at [`x = e^{[$e_arg]}`] and no absolute minimum.
 
 The absolute maximum value is:
 [`
-  f(e^{[$e]}) = \frac{[$a] + [$b] \ln\left(e^{[$e]}\right)}{e^{[$e]}} =
-  \frac{[$b]}{e^{[$e]}} =
+  f(e^{[$e_arg]}) = \frac{[$a] + [$b] \ln\left(e^{[$e_arg]}\right)}{e^{[$e_arg]}} =
+  \frac{[$b]}{e^{[$e_arg]}} =
   [$ansmax].
 `]
 
