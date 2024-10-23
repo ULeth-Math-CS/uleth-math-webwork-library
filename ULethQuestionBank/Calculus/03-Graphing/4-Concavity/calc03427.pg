@@ -85,7 +85,8 @@ In the following questions, consider the function
 
 >>[`f(x) = \displaystyle [$f].`]<<
 
-Enter *DNE* if an answer does not exist.
+Enter *DNE* if an answer does not exist. If there is more than one interval in an answer, type “U” (for union) between the intervals.
+
 ----
 [`\text{a)}`] Determine the intervals on which [`f`] is concave up/down:  
 [`f`] is concave up on: [________________________]{Compute(@ans_cu)}   [@ AnswerFormatHelp("intervals") @]*  

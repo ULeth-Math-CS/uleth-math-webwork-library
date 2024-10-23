@@ -93,7 +93,7 @@ In the following questions, consider the function
 
 >>[`f(x) = \displaystyle [$f].`]<<
 
-Enter *DNE* if an answer does not exist.
+Enter *DNE* if an answer does not exist. If there is more than one interval in an answer, type "U" (for union) between the intervals.
 ----
 [`\text{a)}`] Give the domain of [`f`] (in interval notation): [________________________]{Compute(@domain)}  [@ AnswerFormatHelp("intervals") @]*
 
