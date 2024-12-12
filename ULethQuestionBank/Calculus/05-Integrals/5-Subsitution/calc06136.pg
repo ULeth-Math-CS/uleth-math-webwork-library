@@ -63,7 +63,7 @@ $cc = str($c1);
 $f1 = "\dfrac{$aa x^3 + $bb x^2 + $cc x + $d1}{x}";
 
 #### Answers ####
-Context("Fraction");
+Context("Fraction")->flags->set(limits=>[1,2]);
 $F1 = Formula("($a1/3)x^3 + ($b1/2)x^2 + $c1 x + $d1 ln(x)")->reduce;
 
 #-ENDULETH-#
