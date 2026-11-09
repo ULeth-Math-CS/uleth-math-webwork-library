@@ -43,7 +43,7 @@ sub disSYS{
     $M = shift;
     @dim = $M->dimensions;
     @d = @_;
-    $data = "\[ \left\lbrace\begin{array}{";
+    $data = "\left\lbrace\begin{array}{";
     @var = ("x", "y", "z");
 
     for (my $i = 0; $i < $dim[1]; $i++) { $data = $data."r"; }
@@ -68,7 +68,7 @@ sub disSYS{
                 $nonzero = 1;
 				if ($j == $dim[1] - 2 && $i != $dim[0] - 1) {$data = $data." & = & ".$M->element($i+1,$j+2)." \\";} 
 				elsif ($j == $dim[1] - 2 && $i == $dim[0] - 1) {$data = $data." & = & ".$M->element($i+1,$j+2);}}}}
-    $data = $data."\end{array}\right. \]";
+    $data = $data."\end{array}\right.";
 	return $data;}
     
 do { $H = non_zero_random(-4, 4); $D = non_zero_random(0, 3); $F = non_zero_random(-3, 3);
@@ -106,7 +106,8 @@ $popup2 = PopUp(["?", "One solution", "Infinetely many solutions", "No solution"
 #-ULETH-#
 BEGIN_PGML
 ###Solve the following system of equations.
-[$ds].
+
+[``[$ds].``]
 END_PGML
 
 $x1 = $x1/$H;

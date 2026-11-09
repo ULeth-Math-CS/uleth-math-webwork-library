@@ -43,7 +43,7 @@ sub disSYS{
     $M = shift;
     @dim = $M->dimensions;
     @d = @_;
-    $data = "\[ \left\lbrace\begin{array}{";
+    $data = "\left\lbrace\begin{array}{";
     @var = ("x", "y", "z");
 
     for (my $i = 0; $i < $dim[1]; $i++) { $data = $data."r"; }
@@ -68,7 +68,7 @@ sub disSYS{
                 $nonzero = 1;
 				if ($j == $dim[1] - 2 && $i != $dim[0] - 1) {$data = $data." & = & ".$M->element($i+1,$j+2)." \\";} 
 				elsif ($j == $dim[1] - 2 && $i == $dim[0] - 1) {$data = $data." & = & ".$M->element($i+1,$j+2);}}}}
-    $data = $data."\end{array}\right. \]";
+    $data = $data."\end{array}\right.";
 	return $data;}
     
 do { $L = non_zero_random(-4, 4); $J = non_zero_random(-3, 5); $K = non_zero_random(-3, 5);
@@ -112,7 +112,8 @@ BEGIN_PGML
 ####Note: to proceed to the next step, hit the Enter key, or click the Preview My Answers button.
 
 You do not need to click Submit until the final step, or if you want to save your progress.
-[$ds]
+
+[``[$ds]``]
 END_PGML
 #-ENDULETH-#
 
