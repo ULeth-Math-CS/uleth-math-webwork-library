@@ -43,7 +43,7 @@ Context("Numeric");
 
 
 $D = random(1,5,1);
-$L = random(4,12,1);
+$L = random($D+1,12,1);
 $Ds = $D**2;
 
 if ($D == 1) {$plur = "mile";}
